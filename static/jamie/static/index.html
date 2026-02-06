@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio - Jamie Cheung</title>
+    <link rel="icon" href="./favicon.png">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="content-type" content="text/html">
+    <meta name="keywords" content="Jamie Cheung, Music, Viola, Multillingual, Linguistics, Geography, Maps, Hong Kong, Cantonese, Science, Biology, History, Chemistry, Geopolitics, Palo Alto, Conductor, Chinese, China, US, United States of America, Violin">
+    <meta name="author" content="Jamie Cheung">
+    <meta property="og:url" content="https://www.jamiecheung.site">
+    <meta property="og:site_name" content="Jamie Cheung">
+    <meta property="og:description" content="Jamie Cheung is a high school student in Palo Alto, CA with an interest in biology, human geography, and music. ">
+    <meta name="description" content="Jamie Cheung is a high school student in Palo Alto, CA with an interest in biology, human geography, and music.">
+    <meta property="og:title" content="Portfolio - Jamie Cheung">
+    <meta property="og:image" content="">
+    <meta name="theme-color" content="#90EE90">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #003d21;
+            --secondary-color: #00ff88;
+            --text-color: #333;
+            --bg-color: #f4f4f9;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 10;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .page-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .text-content {
+            flex: 1;
+            min-width: 300px;
+            background: #23272A;
+            margin-top: 40px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            color: white;
+        }
+
+        .text-content h2 {
+            color: var(--secondary-color) ;
+            margin-bottom: 5px;
+            font-size: 2rem;
+            padding-bottom: 5px;
+        }
+
+        .text-content h4 {
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .text-content ul {
+            list-style-position: inside;
+            margin-left: 10px;
+        }
+
+        .text-content li {
+            margin-bottom: 10px;
+        }
+
+        .text-content a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .text-content a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Quote Styling */
+        .quote-container {
+            margin: 30px 0;
+            padding: 30px 30px 30px 70px;
+            background-color: #f0f7ff;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #444;
+            position: relative;
+        }
+        
+        .quote-container::before {
+            content: "“";
+            font-size: 5rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            line-height: 1;
+            font-family: Georgia, serif;
+        }
+        .quote-container::after {
+            content: "”";
+            font-size: 5rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            line-height: 1;
+            font-family: Georgia, serif;
+        }
+        /* Gallery Styling */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .gallery-grid figure {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+        img.no-lightbox {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .no-lightbox:hover {
+            transform: translateY(-5px);
+        }
+        /* ------------------------ */
+
+        .gallery-grid img:hover {
+            transform: translateY(-5px);
+        }
+
+        figcaption {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: white;
+            font-style: italic;
+        }
+
+        /* Infobox Styling */
+        .infobox {
+            border: 1px solid #a2a9b1;
+            border-spacing: 3px;
+            background-color: #23272A;
+            width: 320px;
+            margin-top: 40px;
+            padding: 0.25em;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+            align-self: flex-start;
+            border: none;
+        }
+
+        .infobox h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: white;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .infobox .infobox-image {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .infobox-details {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .infobox-details th
+        ,
+        .infobox-details td {
+            padding: 0.2em 0.25em;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+            word-break: break-word;
+            color: white;
+        }
+
+        .infobox-details th {
+            color: white;
+            font-weight: 600;
+            width: 100px;
+        }
+
+        .infobox-details tr:last-child th,
+        .infobox-details tr:last-child td {
+            border-bottom: none;
+        }
+        .infobox-details a {
+            color: white ;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .infobox-details a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+            cursor: zoom-out;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            cursor: grab;
+            transition: transform 0.2s ease;
+            user-select: none;
+            transform-origin: center center;
+            will-change: transform;
+            width: auto;
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 2rem;
+            color: #fff;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 45px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 1000;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes zoomOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.8); opacity: 0; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .infobox {
+                width: 100%;
+                max-width: 100%;
+                order: -1;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+
+        <div class="text-content">
+
+            <div class="quote-container">
+                You won't improve unless you struggle in practice.
+            </div>
+
+            <h2>About Me</h2>
+            <p>Hi! I am a high school student living in Palo Alto, California and I am passionate about biology, human geography, and music!</p>
+            <h2>My Projects</h2>
+            <figure>
+                <a href="https://docs.google.com/document/d/1zEfXiqQWIkVNNpejpA0K8_xMtS_dQiZAUbl1Vy1ySLU/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+                <img src="./2025 SFCM Certificate.png" alt="2025 SFCM Certifcate" class="no-lightbox">
+                </a>
+                <figcaption>SFCM Certificate Program Scholar Paper 2025</figcaption>
+                </figure>
+            <h4>Image Gallery:</h4>
+            <div class="gallery-grid">
+                <figure>
+                    <img src="./pangaea.png" alt="Pangaea">
+                    <figcaption>The world 250 million years into the future</figcaption>
+                </figure>
+            </div>
+            
+            
+        </div> <aside class="infobox">
+            <h2>Jamie Cheung</h2>
+            <figure class="infobox-image">
+            </figure>
+            <table class="infobox-details">
+                <tr>
+                    <th>Grade</th>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <th>School</th>
+                    <td>Henry M. Gunn High School</td>
+                </tr>
+                <tr>
+                    <th>Locations</th>
+                    <td>Hong Kong<br>San Francisco Bay Area</td>
+                </tr>
+                 <tr>
+                    <th>Languages Spoken</th>
+                    <td>Cantonese<br>English<br>Mandarin<br>French</td>
+                </tr>
+                <tr>
+                    <th>Last Updated</th>
+                    <td>November 30, 2025</td>
+                </tr>
+                <tr>
+                    <th>Contact Me</th>
+                    <td>
+                        <a href="/cdn-cgi/l/email-protection#7c161d1115191f141909121b4f4e4e3c1b111d1510521f1311" target="_blank"><i class="bi bi-envelope"></i></a>
+                        <a href="https://www.linkedin.com/in/jamieccheung/" target="_blank"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://youtube.com/@jamieccheung?sub_confirmation=1" target="_blank"><i class="bi bi-youtube"></i></a>
+                        <a href="https://www.instagram.com/jamieccheung/" target="_blank"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.strava.com/athletes/128876680" target="_blank"><i class="bi bi-strava"></i></a>
+                        <a href="https://musescore.com/user/57710324" target="_blank"><i class="bi bi-file-earmark-music-fill"></i></a>
+                        <a href="https://open.spotify.com/user/31exlzt2s55doolqsl66snw3kxma" target="_blank"><i class="bi bi-spotify"></i></a>
+                        <a href="https://en.wikipedia.org/wiki/User:Studious_Human" target="_blank"><i class="bi bi-wikipedia"></i></a>
+                        </td>
+                </tr>
+            </table>
+        </aside>
+
+    </div>
+    <div class="lightbox-overlay" id="lightbox">
+        <div class="close-btn" id="lightbox-close">×</div>
+        <img src="" alt="Zoomed image" id="lightbox-img" class="lightbox-img">
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const closeBtn = document.getElementById("lightbox-close");
+
+        const megaScale = 2.25;     // mega zoom scale (clicked zoom-in)
+        let isLightboxOpen = false;
+        let isMegaZoom = false;   // toggle mega zoom state
+
+        // Update transform origin and scale based on mouse position and zoom state
+        function updateTransform(xPercent, yPercent) {
+            lightboxImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+            lightboxImg.style.transform = `scale(${megaScale})`;
+        }
+
+        // Reset zoom and transform origin to normal
+        function resetTransform() {
+            lightboxImg.style.transformOrigin = `50% 50%`;
+            lightboxImg.style.transform = `scale(1)`;
+        }
+
+        // Open lightbox - no zoom, just show big image scaled max 90%
+        document.querySelectorAll("img:not(#lightbox-img):not(.no-lightbox)").forEach(img => {
+            img.style.cursor = "zoom-in";
+            img.addEventListener("click", () => {
+                lightboxImg.src = img.src;
+                lightbox.style.display = "flex";
+                isLightboxOpen = true;
+                isMegaZoom = false;
+                lightboxImg.style.animation = "zoomIn 0.3s ease";
+                lightboxImg.style.cursor = "zoom-in";
+                resetTransform();
+            });
+        });
+
+        // Close lightbox handlers
+        function closeLightbox() {
+            if (!isLightboxOpen) return;
+            isLightboxOpen = false;
+            isMegaZoom = false;
+            lightboxImg.style.animation = "zoomOut 0.3s ease";
+            setTimeout(() => {
+                lightbox.style.display = "none";
+                lightboxImg.src = "";
+                resetTransform();
+            }, 300);
+        }
+
+        closeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeLightbox();
+        });
+
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Mouse move on image: only active if mega zoom, control zoom focus
+        lightboxImg.addEventListener("mousemove", (e) => {
+            if (!isLightboxOpen || !isMegaZoom) return;
+
+            const rect = lightboxImg.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+
+            const xPercent = Math.min(Math.max(x * 100, 0), 100);
+            const yPercent = Math.min(Math.max(y * 100, 0), 100);
+
+            updateTransform(xPercent, yPercent);
+        });
+
+        // Reset transform on mouse leave if mega zoomed
+        lightboxImg.addEventListener("mouseleave", () => {
+            if (isMegaZoom) {
+                return;
+            }
+            resetTransform();
+        });
+
+        // Toggle mega zoom on image click inside lightbox
+        lightboxImg.addEventListener("click", (e) => {
+            if (!isLightboxOpen) return;
+            e.stopPropagation(); // prevent overlay click close
+
+            isMegaZoom = !isMegaZoom;
+            if (isMegaZoom) {
+                // start mega zoom focused center
+                lightboxImg.style.cursor = "zoom-out";
+                lightboxImg.style.transformOrigin = `50% 50%`;
+                lightboxImg.style.transform = `scale(${megaScale})`;
+            } else {
+                // back to normal big image
+                lightboxImg.style.cursor = "zoom-in";
+                resetTransform();
+            }
+        });
+    </script>
+
+</body>
+</html>

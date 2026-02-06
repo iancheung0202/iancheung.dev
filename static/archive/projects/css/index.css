@@ -1,0 +1,86 @@
+/* CSS for the mainpage */
+
+/* jumbotron */
+.jumbotron {
+  height: 300px;
+  background-color: white;
+}
+
+#page-title{
+  margin-top: 70px;
+}
+
+#content{
+  font-family: Arial, sans-serif
+}
+
+#icons {
+  color: black;
+  font-size: 1.5em;
+  margin-top: 40px;
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+p {
+  align-content: center;
+}
+
+h3 {
+  padding-bottom: 15px;
+}
+
+h4 {
+  padding-right: 200px;
+}
+
+#tabs{
+  margin: auto; 
+}
+
+img{
+  padding-right: 60px;
+}
+
+.workplace{
+  font-size: 0.8em;
+  color: darkslategrey;
+}
+
+img.resize{
+  max-width: 100%;
+}
+
+#cheese {
+  max-width: 50%; 
+}
+
+.row {
+  display: flex;
+  padding-bottom: 50px;
+}
+
+.column{
+  flex: 50%;
+  width: 100%;
+}
+
+#project-heading{
+  padding-bottom: 20px;
+}
+
+#project-image{
+  padding-bottom: 25px;
+}
+
+#work{
+  padding-bottom: 25px;
+}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}

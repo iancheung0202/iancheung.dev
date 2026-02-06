@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio - Jamie Cheung</title>
+    <link rel="icon" href="./favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital@1&amp;family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="content-type" content="text/html">
+    <meta name="keywords" content="Jamie Cheung, Music, Viola, Composition, Composer, French, Geography, Maps, Hong Kong, Cantonese, Science, Biology, History">
+    <meta name="author" content="Jamie Cheung">
+    <meta property="og:url" content="https://www.jamiecheung.site">
+    <meta property="og:site_name" content="Jamie Cheung">
+    <meta property="og:description" content="Jamie Cheung is a 16-year-old high school student with a interest in geopolitics, biochemistry, and linguistics. As a classical violist, Jamie is dedicated to bring music to his community through performing and volunteering.">
+    <meta name="description" content="Jamie Cheung is a 16-year-old high school student with a interest in geopolitics, biochemistry, and linguistics. As a classical violist, Jamie is dedicated to bring music to his community through performing and volunteering.">
+    <meta property="og:title" content="Portfolio - Jamie Cheung">
+    <meta property="og:image" content="https://static.wixstatic.com/media/8ea1d5_c6112d2f1f80461d942eb59c6701fa07~mv2.jpg/v1/crop/x_0,y_5,w_2000,h_2073/fill/w_280,h_290,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Jamie_Cheung.jpg">
+    <meta name="theme-color" content="#90EE90">
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #ffffff;
+            color: #202122;
+            margin: 0;
+            padding: 0;
+        }
+        .mw-page-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1em;
+            background-color: #ffffff;
+        }
+        h1 {
+            font-family: 'Linux Libertine', 'Georgia', Times, serif;
+            border-bottom: 1px solid #a2a9b1;
+            font-weight: normal;
+            margin-bottom: 0.25em;
+            padding-bottom: 0.25em;
+            font-size: 1.8em;
+        }
+        h2 {
+            font-family: 'Linux Libertine', 'Georgia', Times, serif;
+            border-bottom: 1px solid #a2a9b1;
+            font-weight: normal;
+            margin-top: 1em;
+            margin-bottom: 0.25em;
+            padding-bottom: 0.25em;
+            font-size: 1.5em;
+        }
+        p {
+            margin: 0.5em 0;
+            line-height: 1.6;
+        }
+        a {
+            color: #0645ad;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #0b0080;
+        }
+        ul {
+            list-style-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='13'%3E%3Ccircle cx='2.5' cy='9' r='2.5' fill='%23202122'/%3E%3C/svg%3E");
+            margin: 0.3em 0 0 1.6em;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 0.1em;
+        }
+        /* Infobox */
+        .infobox {
+            border: 1px solid #a2a9b1;
+            border-spacing: 3px;
+            background-color: #f8f9fa;
+            color: black;
+            margin: 0.5em 0 0.5em 1em;
+            padding: 0.2em;
+            float: right;
+            clear: right;
+            font-size: 88%;
+            line-height: 1.5em;
+            width: 22em;
+        }
+        .infobox th {
+            vertical-align: top;
+            text-align: left;
+            padding: 0.2em 0.4em;
+        }
+        .infobox td {
+            vertical-align: top;
+            padding: 0.2em 0.4em;
+        }
+        .infobox-header {
+            text-align: center;
+            font-weight: bold;
+            background-color: #b0c4de;
+            font-size: 125%;
+        }
+        .infobox-image {
+            text-align: center;
+        }
+        .infobox-image img {
+            max-width: 220px;
+            height: auto;
+        }
+        /* Site Sub */
+        #siteSub {
+            display: block;
+            font-size: 92%;
+            color: #54595d;
+            margin-top: 0;
+            margin-bottom: 1.4em;
+        }
+        /* Gallery */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .gallery-item {
+            margin: 5px;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            padding: 5px;
+            text-align: center;
+            width: 220px;
+        }
+        .gallery-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        .gallery-caption {
+            font-size: 0.85em;
+            padding-top: 5px;
+            line-height: 1.3;
+        }
+        /* References */
+        .references {
+            font-size: 90%;
+        }
+        
+        /* Lightbox Styles (Preserved) */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            overflow: hidden;
+            cursor: zoom-out;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            cursor: grab;
+            transition: transform 0.2s ease;
+            user-select: none;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 2rem;
+            color: #fff;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 45px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 1000;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes zoomOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.8); opacity: 0; }
+        }
+    </style>
+</head>
+<body data-new-gr-c-s-check-loaded="14.1264.0" data-gr-ext-installed="" monica-id="ofpnmcalabcbjgholdjcjblkibolbppb" monica-version="7.9.8">
+    <div class="mw-page-container">
+        <h1 class="firstHeading">Jamie Cheung</h1>
+        <div id="siteSub">From Wikipedia, the free encyclopedia</div>
+        
+        <div class="mw-body-content">
+            <table class="infobox">
+                <tbody><tr>
+                    <th colspan="2" class="infobox-header">Jamie Cheung</th>
+                </tr>
+                <tr>
+                    <td colspan="2" class="infobox-image">
+                        <img src="https://static.wixstatic.com/media/8ea1d5_c6112d2f1f80461d942eb59c6701fa07~mv2.jpg/v1/crop/x_0,y_5,w_2000,h_2073/fill/w_280,h_290,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Jamie_Cheung.jpg" alt="Jamie Cheung" style="cursor: zoom-in;">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Born</th>
+                    <td>2009 (age 16)</td>
+                </tr>
+                <tr>
+                    <th scope="row">Occupation</th>
+                    <td>Student, Musician</td>
+                </tr>
+                <tr>
+                    <th scope="row">Instruments</th>
+                    <td>Viola, Violin, Piano</td>
+                </tr>
+                <tr>
+                    <th scope="row">Known for</th>
+                    <td>Classical Music, Science Olympiad</td>
+                </tr>
+            </tbody></table>
+
+            <p><b>Jamie Cheung</b> is a 16-year-old high school student, classical violist, and aspiring polymath. He is known for his interest in geopolitics, biochemistry, and linguistics.</p>
+            
+            <div class="quote" style="background-color: #f9f9f9; border: 1px solid #ccc; padding: 10px; margin: 10px 0; font-style: italic;">
+                "You won't improve unless you struggle in practice."
+                <div style="text-align: right; font-style: normal;">— Jamie, 2025</div>
+            </div>
+
+            <h2>Biography</h2>
+            <p>Jamie lives in the <a href="https://en.wikipedia.org/wiki/Holocene">Holocene Epoch</a>. He is an avid reader and believes in the importance of lifelong learning. A native <a href="https://en.wikipedia.org/wiki/Cantonese">Cantonese</a> speaker, he is also studying French. He identifies as a <a href="https://en.wikipedia.org/wiki/Hongkongers">HongKonger</a>.</p>
+
+            <h2>Interests</h2>
+            <ul>
+                <li><b>Academics:</b> Geopolitics, geography, biology, chemistry, and history.</li>
+                <li><b>Music:</b> Classical music performance on viola, violin, and piano.</li>
+                <li><b>Advocacy:</b> Support for green energy.</li>
+                <li><b>Extracurriculars:</b> Science Olympiad, debate, and Model United Nations.</li>
+            </ul>
+
+            <h2>Gallery</h2>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="./pangaea.png" alt="Pangaea" style="cursor: zoom-in;">
+                    <div class="gallery-caption">The world 250 million years into the future</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="./antarctica.png" alt="Antarctic Base Map" style="cursor: zoom-in;">
+                    <div class="gallery-caption">Antarctic Base Map</div>
+                </div>
+            </div>
+
+            <h2>References</h2>
+            <div class="references">
+                <ol>
+                    <li><a href="#">^</a> Personal Portfolio of Jamie Cheung, accessed 2025.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox" style="display: none;">
+        <div class="close-btn" id="lightbox-close">×</div>
+        <img src="" alt="Zoomed image" id="lightbox-img" class="lightbox-img" style="animation: 0.3s ease 0s 1 normal none running zoomOut; cursor: zoom-in; transform-origin: 50% 50%; transform: scale(1);">
+    </div>
+
+    <script>
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const closeBtn = document.getElementById("lightbox-close");
+
+        const megaScale = 2.25;        // mega zoom scale (clicked zoom-in)
+        let isLightboxOpen = false;
+        let isMegaZoom = false;     // toggle mega zoom state
+
+        // Update transform origin and scale based on mouse position and zoom state
+        function updateTransform(xPercent, yPercent) {
+            lightboxImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+            lightboxImg.style.transform = `scale(${megaScale})`;
+        }
+
+        // Reset zoom and transform origin to normal
+        function resetTransform() {
+            lightboxImg.style.transformOrigin = `50% 50%`;
+            lightboxImg.style.transform = `scale(1)`;
+        }
+
+        // Open lightbox - no zoom, just show big image scaled max 90%
+        document.querySelectorAll("img:not(#lightbox-img)").forEach(img => {
+            img.style.cursor = "zoom-in";
+            img.addEventListener("click", () => {
+                lightboxImg.src = img.src;
+                lightbox.style.display = "flex";
+                isLightboxOpen = true;
+                isMegaZoom = false;
+                lightboxImg.style.animation = "zoomIn 0.3s ease";
+                lightboxImg.style.cursor = "zoom-in";
+                resetTransform();
+            });
+        });
+
+        // Close lightbox handlers
+        function closeLightbox() {
+            if (!isLightboxOpen) return;
+            isLightboxOpen = false;
+            isMegaZoom = false;
+            lightboxImg.style.animation = "zoomOut 0.3s ease";
+            setTimeout(() => {
+                lightbox.style.display = "none";
+                lightboxImg.src = "";
+                resetTransform();
+            }, 300);
+        }
+
+        closeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeLightbox();
+        });
+
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Mouse move on image: only active if mega zoom, control zoom focus
+        lightboxImg.addEventListener("mousemove", (e) => {
+            if (!isLightboxOpen || !isMegaZoom) return;
+
+            const rect = lightboxImg.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+
+            const xPercent = Math.min(Math.max(x * 100, 0), 100);
+            const yPercent = Math.min(Math.max(y * 100, 0), 100);
+
+            updateTransform(xPercent, yPercent);
+        });
+
+        // Reset transform on mouse leave if mega zoomed
+        lightboxImg.addEventListener("mouseleave", () => {
+            if (isMegaZoom) {
+                return;
+            }
+            resetTransform();
+        });
+
+        // Toggle mega zoom on image click inside lightbox
+        lightboxImg.addEventListener("click", (e) => {
+            if (!isLightboxOpen) return;
+            e.stopPropagation(); // prevent overlay click close
+
+            isMegaZoom = !isMegaZoom;
+            if (isMegaZoom) {
+                // start mega zoom focused center
+                lightboxImg.style.cursor = "zoom-out";
+                lightboxImg.style.transformOrigin = `50% 50%`;
+                lightboxImg.style.transform = `scale(${megaScale})`;
+            } else {
+                // back to normal big image
+                lightboxImg.style.cursor = "zoom-in";
+                resetTransform();
+            }
+        });
+    </script>
+</body>
+
+</html>

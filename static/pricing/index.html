@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Discord Bot Pricing - Ian Cheung</title>
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="keywords" content="Ian Cheung, Discord Bot, Custom Bot, Bot Development, Python, JavaScript, Moderation, Economy, Leveling">
+  <meta name="author" content="Ian Cheung">
+  <meta property="og:url" content="https://www.iancheung.dev/pricing">
+  <meta property="og:title" content="Custom Discord Bot Pricing">
+  <meta property="og:description" content="Get your dream custom Discord bot. One simple plan, unlimited features.">
+  <meta property="og:image" content="https://www.iancheung.dev/assets/img/favicon.png">
+  <meta name="theme-color" content="#1e90ff">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            discord: {
+              bg: '#23252e',
+              dark: '#17171c',
+              darker: '#0a0c10',
+              light: '#2a324a',
+              blurple: '#4361ee',
+              'blurple-hover': '#3a56d4',
+              green: '#10b981',
+              text: '#94a3b8',
+              header: '#ffffff',
+              red: '#ef4444',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .card-hover:hover { transform: translateY(-4px); transition: all 0.2s ease; }
+    /* Horizontal scrolling for trusted servers on mobile */
+    .scroller {
+      mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    }
+    .scroller__inner {
+      width: max-content;
+      flex-wrap: nowrap;
+      animation: scroll 40s linear infinite;
+    }
+    @keyframes scroll {
+      to { transform: translate(calc(-50% - 0.5rem)); }
+    }
+    /* If span and has discord-text-green class, add a svg inside */
+    span.text-discord-green::before {
+      content: "";
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      min-width: 1.2em;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 1.6665L3.28571 8.33317L1 5.6665' stroke='%2310b981' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+      position: relative;
+      top: -0.1em;
+    }
+  </style>
+</head>
+<body class="bg-discord-bg text-discord-text min-h-screen">
+
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto pt-20 pb-12 px-6 text-center z-10 relative">
+      <h1 class="text-4xl md:text-6xl font-extrabold text-discord-header mb-6 tracking-tight">
+        One Bot. <span class="text-discord-blurple">Unlimited Possibilities.</span>
+      </h1>
+      <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+        Stop paying for generic public bots. Get a fully custom Discord bot tailored specifically to your community's needs, hosted 24/7.
+      </p>
+      <div class="flex justify-center gap-4">
+        <a href="#pricing" class="bg-discord-blurple hover:bg-discord-blurple-hover text-white font-bold py-3 px-8 rounded-2xl transition-all transform hover:scale-105 shadow-lg shadow-discord-blurple/25">
+          View Pricing
+        </a>
+        <a href="https://discord.com/users/692254240290242601" target="_blank" class="bg-discord-light hover:bg-discord-light/80 text-white font-bold py-3 px-8 rounded-2xl transition-all">
+          Message for Free Consultation
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Grid ("Everything Included") -->
+  <div class="max-w-6xl mx-auto py-16 px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-discord-header mb-4">Everything You Need</h2>
+      <p class="text-gray-400">All features are included in the custom bot package. No hidden fees.</p>
+    </div>
+
+    <!-- Special Offer Banner -->
+    <div class="mb-16 relative group">
+      <div class="absolute -inset-1 bg-gradient-to-r from-discord-blurple via-purple-600 to-pink-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+      <div class="relative bg-discord-dark border border-discord-light p-6 md:p-8 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-6">
+        <div class="flex-1 text-center md:text-left">
+          <h3 class="text-xl md:text-2xl font-bold text-white mb-2">
+            Own a Server with 2,000+ Members?
+          </h3>
+          <p class="text-gray-400 leading-relaxed">
+            I offer <b class="text-discord-green font-bold">free custom bot development</b> for established communities to help them grow even further.
+            <span class="block text-sm mt-1 text-gray-500 italic">(While not required, payments are still gratefully accepted to support hosting and development time.)</span>
+          </p>
+        </div>
+        <div class="flex-shrink-0">
+          <a href="https://discord.com/users/692254240290242601" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-discord-light hover:bg-discord-light/80 transition-all border-white/5 hover:border-white/10 shadow-lg whitespace-nowrap">
+             Claim Free Bot
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+       <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 text-purple-500 text-xl">🎨</div>
+        <h3 class="text-white font-bold text-lg mb-2">Custom Branding</h3>
+        <p class="text-sm">Your bot name, avatar, bio, and status. Fully customizable to make your server look professional.</p>
+      </div>
+
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4 text-orange-500 text-xl">⭐</div>
+        <h3 class="text-white font-bold text-lg mb-2">Custom Commands</h3>
+        <p class="text-sm">Create simple text or slash commands, and auto-responses to messages or interactions.</p>
+      </div>
+
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-slate-500/20 rounded-lg flex items-center justify-center mb-4 text-slate-500 text-xl">🛠️</div>
+        <h3 class="text-white font-bold text-lg mb-2">Staff Tools</h3>
+        <p class="text-sm">Staff list, member reports, staff applications, and other utilities for your staff team.</p>
+      </div>
+      
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-discord-blurple/20 rounded-lg flex items-center justify-center mb-4 text-discord-blurple text-xl">🛡️</div>
+        <h3 class="text-white font-bold text-lg mb-2">Advanced Moderation</h3>
+        <p class="text-sm">Auto-mod, logging, anti-spam, and custom punishment systems tailored to your rules.</p>
+      </div>
+
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-discord-green/20 rounded-lg flex items-center justify-center mb-4 text-discord-green text-xl">💰</div>
+        <h3 class="text-white font-bold text-lg mb-2">Economy & Shop</h3>
+        <p class="text-sm">Server-specific currency, custom shops, items, gacha games, trading, and economy minigames.</p>
+      </div>
+
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-4 text-yellow-500 text-xl">📊</div>
+        <h3 class="text-white font-bold text-lg mb-2">Leveling & Ranks</h3>
+        <p class="text-sm">Custom XP formulas, role rewards, leaderboards, and beautiful custom rank cards matching your theme.</p>
+      </div>
+
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center mb-4 text-red-500 text-xl">🎫</div>
+        <h3 class="text-white font-bold text-lg mb-2">Ticket System</h3>
+        <p class="text-sm">Advanced support tickets or ModMail, transcripts, multi-panels, and staff performance tracking.</p>
+      </div>
+
+      <div class="bg-discord-dark p-6 rounded-xl border border-discord-light transition-colors duration-300">
+        <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mb-4 text-pink-500 text-xl">🎉</div>
+        <h3 class="text-white font-bold text-lg mb-2">Events & Giveaways</h3>
+        <p class="text-sm">Tournament scheduling, complex giveaway requirements, suggestion rewards, starboards, and more.</p>
+      </div>
+
+    </div>
+
+    <!-- Migration Note -->
+    <div class="mt-8 bg-discord-light/10 border border-discord-light/50 rounded-xl p-6 flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left transition-all hover:bg-discord-light/20">
+        <div class="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center text-cyan-400 text-2xl flex-shrink-0">
+            🔄
+        </div>
+        <div>
+            <h4 class="text-white font-bold text-lg">Switching from another bot?</h4>
+            <p class="text-gray-400 text-sm">I can seamlessly replace old systems and transfer your existing ranks, currency, and data so no one loses progress.</p>
+        </div>
+    </div>
+  </div>
+
+  <!-- Pricing Section -->
+  <div id="pricing" class="max-w-6xl mx-auto py-16 px-6">
+
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-discord-header mb-4">Simple, Transparent Pricing</h2>
+      <p class="text-gray-400">Choose the billing cycle that works best for you. All plans include 24/7 hosting and are listed in USD.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-center">
+
+      <!-- Lifetime -->
+      <div class="bg-discord-dark rounded-lg p-8 border-2 border-discord-green shadow-xl relative flex flex-col h-full bg-opacity-100">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-lg">
+          Biggest Savings
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Lifetime</h3>
+        <p class="text-gray-400 text-sm mb-6">Pay once, own it forever.</p>
+        <div class="mb-4">
+          <span class="text-4xl font-extrabold text-white">$149.99</span>
+          <span class="text-gray-500"> one-time</span>
+        </div>
+        <p class="text-discord-blurple text-sm font-semibold mb-6">Billed $149.99 one-time</p>
+        <ul class="space-y-4 mb-8">
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> <strong>Everything in Yearly</strong>
+          </li>
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span><span class="underline decoration-dotted cursor-help" title="I can guarantee at least 5-10 years but depends on whether I'm alive.">Lifetime</span> Hosting
+          </li>
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> Full Source Code Ownership
+          </li>
+        </ul>
+        
+        <!-- PayPal Lifetime -->
+        <div id="paypal-container-FQ6SDQBQX7Y58" class="w-full text-center z-20 relative"></div>
+        <script src="https://www.paypal.com/sdk/js?client-id=BAAdNp3n05n3R6dVeyGw-qqtf-9YGH2eDK7O3jV2S24iGItFfzdBW1c48OKGhomU8HAfvAnsIokHG9UCkw&components=hosted-buttons&enable-funding=venmo&currency=USD" data-namespace="paypalLifetime"></script>
+        <script>
+          paypalLifetime.HostedButtons({
+            hostedButtonId: "FQ6SDQBQX7Y58",
+            style: {
+              height: 40
+            }
+          }).render("#paypal-container-FQ6SDQBQX7Y58")
+          .then(() => {
+              const container = document.getElementById("paypal-container-FQ6SDQBQX7Y58");
+              
+              const hide = (el) => { if(el) el.style.display = 'none'; };
+
+              // Set fixed amount for Lifetime plan
+              const input = container.querySelector("input[type='number']#amount");
+              if (input) {
+                  input.value = "149.99";
+                  input.dispatchEvent(new Event('change', { bubbles: true }));
+                  hide(input);
+                  if (input.parentElement) hide(input.parentElement);
+              }
+              hide(container.querySelector(".amount-container"));
+              hide(container.querySelector(".item-description"));
+              
+              const img = container.querySelector(".css-au42bs");
+              if (img) img.style.width = "100px";
+              
+              const descLabel = container.querySelector("#desc-label");
+              if (descLabel) descLabel.remove();
+
+              const labels = container.querySelectorAll("label");
+              labels.forEach(label => label.remove());
+
+              container.querySelectorAll("br").forEach(br => br.remove());
+          });
+        </script>
+      </div>
+
+      <!-- Yearly -->
+      <div class="bg-discord-dark rounded-lg p-8 border-2 border-discord-blurple shadow-2xl relative flex flex-col h-full">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-discord-blurple to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+          Most Popular
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Yearly</h3>
+        <p class="text-gray-400 text-sm mb-6">Save 25% compared to monthly.</p>
+        <div class="mb-4">
+          <span class="text-4xl font-extrabold text-white">$7.50</span>
+          <span class="text-gray-500">/mo</span>
+        </div>
+        <p class="text-discord-blurple text-sm font-semibold mb-6">Billed $90 yearly</p>
+        <ul class="space-y-4 mb-8">
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> <strong>Everything in Monthly</strong>
+          </li>
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> Priority Support
+          </li>
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> Free Feature Updates
+          </li>
+        </ul>
+        
+        <!-- PayPal Yearly -->
+        <div id="paypal-button-container-P-4PH659821A279584HNFQF6HI" class="w-full z-20 relative"></div>
+        <script src="https://www.paypal.com/sdk/js?client-id=AZwvXo4kUCGeqEyEE2kvXCrK0Co5bigwFxRqE_o07fftmliE0OitqQdvNiFptr45vgS85nuLscgrJDvy&vault=true&intent=subscription" data-sdk-integration-source="button-factory" data-namespace="paypalSub"></script>
+        <script>
+          paypalSub.Buttons({
+              style: {
+                  shape: 'rect',
+                  color: 'gold',
+                  layout: 'vertical',
+                  label: 'subscribe',
+                  height: 40
+              },
+              createSubscription: function(data, actions) {
+                return actions.subscription.create({
+                  /* Creates the subscription */
+                  plan_id: 'P-4PH659821A279584HNFQF6HI'
+                });
+              },
+              onApprove: function(data, actions) {
+                alert(data.subscriptionID); 
+              }
+          }).render('#paypal-button-container-P-4PH659821A279584HNFQF6HI');
+        </script>
+      </div>
+      
+      <!-- Monthly -->
+      <div class="bg-discord-dark rounded-lg p-8 border border-discord-light flex flex-col h-full opacity-90 hover:opacity-100">
+        <h3 class="text-xl font-bold text-white mb-2">Monthly</h3>
+        <p class="text-gray-400 text-sm mb-6">Great for short-term projects.</p>
+        <div class="mb-4">
+          <span class="text-4xl font-extrabold text-white">$9.99</span>
+          <span class="text-gray-500">/mo</span>
+        </div>
+        <p class="text-discord-blurple text-sm font-semibold mb-6">Billed $9.99 monthly</p>
+        <ul class="space-y-4 mb-8">
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> Unlimited Features & Commands
+          </li>
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> 24/7 Cloud Hosting
+          </li>
+          <li class="flex items-center gap-3 text-sm text-gray-300">
+            <span class="text-discord-green"></span> Standard Support
+          </li>
+        </ul>
+        
+        <!-- PayPal Monthly -->
+        <div id="paypal-button-container-P-04987991F38734811NFQF5KI" class="w-full z-20 relative"></div>
+        <script>
+          paypalSub.Buttons({
+              style: {
+                  shape: 'rect',
+                  color: 'gold',
+                  layout: 'vertical',
+                  label: 'subscribe',
+                  height: 40
+              },
+              createSubscription: function(data, actions) {
+                return actions.subscription.create({
+                  /* Creates the subscription */
+                  plan_id: 'P-04987991F38734811NFQF5KI'
+                });
+              },
+              onApprove: function(data, actions) {
+                alert(data.subscriptionID); // You can add optional success message for the subscriber here
+              }
+          }).render('#paypal-button-container-P-04987991F38734811NFQF5KI'); // Renders the PayPal button
+        </script>
+      </div>
+
+    </div>
+    
+    <div class="text-center mt-12">
+        <p class="text-gray-500 text-sm italic">
+            Payments are processed securely. Development begins immediately after consultation. <br>
+            Please <a href="https://discord.com/users/692254240290242601" class="text-discord-blurple hover:underline">contact me on Discord</a> to discuss your bot before purchasing.
+        </p>
+    </div>
+  </div>
+
+  <!-- Trusted By Section -->
+  <div class="bg-discord-dark py-16 border-t border-discord-light">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-2xl font-bold text-center text-white mb-4">Trusted by 300+ Communities</h2>
+      <p class="text-center text-gray-400 mb-12">These are some of the most popular servers that proudly use my public bots and/or custom bots.</p>
+      
+      <!-- Grid Layout for Desktop -->
+      <div id="server-grid" class="flex flex-wrap justify-center gap-6 min-h-[100px]">
+          <div class="text-gray-400 italic w-full text-center">Loading trusted servers...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-discord-darker py-8 text-center text-gray-500 text-sm">
+    <p>© 2026 <a href="https://iancheung.dev" target="_blank" class="hover:text-white transition-colors">Ian Cheung</a>. All rights reserved.</p>
+    <p class="mt-2">Not affiliated with Discord Inc.</p>
+  </footer>
+
+  <script>
+    const inviteCodes = ["mysticraft", "4gkW32U5EZ", "yj7rYCYxxS", "liyue", "celestial", "kaW5pjvEcP", "EJ8zxxBauz", "liyuepavilion", "ABMNKauUgG", "visionholders", "AG4CwUQCyh", "JeNEfH6Mc7"];
+    const container = document.getElementById('server-grid');
+
+    async function fetchServerDetails() {
+        // Create an array of promises to fetch all invites in parallel
+        const promises = inviteCodes.map(code => 
+            fetch(`https://discord.com/api/v9/invites/${code}?with_counts=true`)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.json();
+                })
+                .then(data => ({ code, data }))
+                .catch(err => {
+                    console.error(`Failed to fetch invite ${code}:`, err);
+                    return { code, data: null };
+                })
+        );
+
+        // Wait for all requests to finish
+        const results = await Promise.all(promises);
+        
+        // Clear loading state
+        if (results.some(r => r.data)) {
+            container.innerHTML = '';
+        } else {
+            container.innerHTML = '<div class="text-red-400 italic">Unable to load servers.</div>';
+            return;
+        }
+
+        // Render in order
+        let renderedCount = 0;
+        results.forEach(({ code, data }) => {
+            if (!data || !data.guild) return;
+            renderedCount++;
+
+            const guild = data.guild;
+            const memberCount = data.approximate_member_count;
+            const iconUrl = guild.icon 
+                ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+                : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+            // Truncate name logic: 2 words, unless starting with "The" then 3
+            let displayName = guild.name;
+            const words = displayName.trim().split(/\s+/);
+            let limit = 2;
+            if (words.length > 0 && (words[0].toLowerCase() === 'the' || words[0].toLowerCase() === '🏮')) {
+                limit = 3;
+            }
+            if (words.length > limit) {
+                displayName = words.slice(0, limit).join(' ');
+            }
+
+            const card = document.createElement('a');
+            card.href = `https://discord.gg/${code}`;
+            card.target = "_blank";
+            // Added relative overflow-hidden for the ribbon
+            card.className = "relative overflow-hidden group flex items-center gap-3 bg-discord-bg p-3 pr-6 rounded-lg border border-discord-light transition-colors opacity-0 animate-fade-in";
+            // Add fade in animation style
+            card.style.animation = "fadeIn 0.5s ease-out forwards";
+
+            // Ribbon for the first 3 servers
+            let ribbonHtml = "";
+            if (renderedCount <= 3) {
+                 ribbonHtml = `
+                    <div class="absolute top-[10px] -right-[32px] bg-gradient-to-r from-discord-blurple to-purple-600 text-white text-[9px] font-bold px-10 py-[2px] rotate-45 shadow-md z-10 select-none border-y border-white/10 tracking-wider">
+                        &nbsp; &nbsp; &nbsp; &nbsp; MAIN BOT
+                    </div>
+                 `;
+            }
+
+            card.innerHTML = `
+                ${ribbonHtml}
+                <img src="${iconUrl}" class="w-10 h-10 rounded-full flex-shrink-0" alt="${guild.name}">
+                <div class="text-left min-w-0">
+                    <div class="text-white font-bold text-sm transition-colors truncate">${displayName}</div>
+                    <div class="text-xs text-gray-500">${memberCount.toLocaleString()} members</div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+        });
+    }
+
+    // Add simple keyframes for fade in
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Start fetching
+    fetchServerDetails();
+
+    // on window load, change element with class 'css-1b6cd97' margin top -2em and margin bottom 0em
+    window.onload = () => {
+        const el = document.querySelector('.css-1b6cd97');
+        if (el) {
+            el.style.marginTop = '-2em';
+            el.style.marginBottom = '0em';
+        }
+    };
+  </script>
+
+</body>
+</html>
