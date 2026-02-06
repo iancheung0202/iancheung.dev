@@ -217,10 +217,21 @@
         }
 
         .pixel-icon {
-            font-size: 20px;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
             user-select: none;
         }
+
+        .icon-check { background-image: url('https://iancheung.dev/assets/img/checked.webp'); }
+        .icon-uncheck { background-image: url('https://iancheung.dev/assets/img/unchecked.png'); }
+        .icon-edit { background-image: url('https://iancheung.dev/assets/img/edit.webp'); }
+        .icon-destroy { background-image: url('https://iancheung.dev/assets/img/tnt.webp'); }
+
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 12px; }
@@ -342,12 +353,6 @@
                             if (d < new Date() && !todo.completed) dueClass += " overdue";
                         }
 
-                        // Pixel Art Icons
-                        const iconCheck = `<img src="https://iancheung.dev/assets/img/checked.webp" alt="Check" style="width: 24px; height: 24px;">`;
-                        const iconUncheck = `<img src="https://iancheung.dev/assets/img/unchecked.png" alt="Uncheck" style="width: 24px; height: 24px;">`;
-                        const iconEdit = `<img src="https://iancheung.dev/assets/img/edit.webp" alt="Edit" style="width: 24px; height: 24px;">`;
-                        const iconDestroy = `<img src="https://iancheung.dev/assets/img/tnt.webp" alt="Destroy" style="width: 24px; height: 24px;">`;
-
                         div.innerHTML = `
                             <div class="task-info">
                                 <div class="task-title">${escapeHtml(todo.title)}</div>
@@ -359,13 +364,13 @@
                             
                             <!-- Inventory Slots -->
                             <div class="inv-slot" title="Complete" onclick="toggleTodo(${index})">
-                                <span class="pixel-icon">${todo.completed ? iconCheck : iconUncheck}</span>
+                                <span class="pixel-icon ${todo.completed ? 'icon-check' : 'icon-uncheck'}"></span>
                             </div>
                             <div class="inv-slot" title="Edit" onclick="editTodo(${index})">
-                                <span class="pixel-icon">${iconEdit}</span>
+                                <span class="pixel-icon icon-edit"></span>
                             </div>
                             <div class="inv-slot" title="Destroy" onclick="deleteTodo(${index})">
-                                <span class="pixel-icon">${iconDestroy}</span>
+                                <span class="pixel-icon icon-destroy"></span>
                             </div>
                         `;
                         list.appendChild(div);
