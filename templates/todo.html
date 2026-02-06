@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survival List</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mc-bg: #151515;
+            --mc-btn: #7d7d7d;
+            --mc-btn-hover: #9e9e9e;
+            --mc-btn-border-light: #c6c6c6;
+            --mc-btn-border-dark: #3b3b3b;
+            --mc-text: #ffffff;
+            --mc-text-shadow: #3f3f3f;
+            --mc-input-bg: #000000;
+            --slot-bg: #8b8b8b;
+            --slot-border-light: #fff;
+            --slot-border-dark: #373737;
+        }
+
+        body {
+            background-color: var(--mc-bg);
+            /* Minecraft Panorama Background */
+            background-image: url('https://external-preview.redd.it/_1pJrHwb2YPVbxayqOAPpmtxhbNZzAHBt2E9ZCx-PYA.jpg?auto=webp&s=87599a92b9173f2d6ca8443b2a5b8d70d2a761c6');
+            background-size: cover;
+            background-position: center;
+            font-family: 'VT323', monospace;
+            color: var(--mc-text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Animated Panoramic Background Effect */
+        @keyframes pan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.animated-bg {
+            animation: pan 240s ease-in-out infinite;
+            background-size: 300% 300%; 
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        /* Minecraft UI Window Style */
+        .mc-window {
+            background-color: #C6C6C6;
+            border: 4px solid #000;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            image-rendering: pixelated;
+        }
+
+        .mc-title-bar {
+            padding: 5px 10px;
+            color: #404040;
+            font-size: 24px;
+            text-shadow: none;
+            margin-bottom: 5px;
+        }
+
+        .mc-panel {
+            border: 2px solid;
+            border-color: #fff #555 #555 #fff;
+            background: #C6C6C6;
+            padding: 15px;
+            margin: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            text-shadow: 4px 4px var(--mc-text-shadow);
+            color: #fff;
+            margin: 0 0 20px 0;
+            font-size: 48px;
+            letter-spacing: 2px;
+        }
+
+        /* Form Inputs */
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .mc-input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mc-input-group label {
+            color: #404040;
+            margin-bottom: 2px;
+            font-size: 18px;
+        }
+
+        .mc-input {
+            background: var(--mc-input-bg);
+            border: 2px solid #A0A0A0; 
+            border-bottom-color: #FFF;
+            border-right-color: #FFF;
+            color: #fff;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            padding: 8px;
+            margin-bottom: 5px;
+            outline: none;
+        }
+        .mc-input:focus { border: 2px solid #FFF; border-bottom-color: #A0A0A0; border-right-color: #A0A0A0; background: #222; }
+
+        /* Buttons */
+        .mc-btn {
+            background: var(--mc-btn);
+            border: 2px solid;
+            border-color: var(--mc-btn-border-light) var(--mc-btn-border-dark) var(--mc-btn-border-dark) var(--mc-btn-border-light);
+            color: #fff;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            padding: 5px 20px;
+            cursor: pointer;
+            text-shadow: 2px 2px #3f3f3f;
+        }
+        .mc-btn:active {
+            border-color: var(--mc-btn-border-dark) var(--mc-btn-border-light) var(--mc-btn-border-light) var(--mc-btn-border-dark);
+            padding-top: 7px;
+            padding-bottom: 3px;
+        }
+        .mc-btn:hover { background: var(--mc-btn-hover); }
+
+        /* Task List */
+        .task-list {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 2px solid #555;
+            background: #000000aa;
+            padding: 10px;
+        }
+
+        .task-item {
+            background: #C6C6C6;
+            margin-bottom: 8px;
+            border: 2px solid #555;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            transition: transform 0.1s;
+        }
+
+        .task-item:hover {
+            background: #D6D6D6;
+        }
+        
+        .task-item.completed {
+            opacity: 0.7;
+            background: #888;
+        }
+        
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: #444;
+        }
+
+        .task-info {
+            flex: 1;
+            padding-left: 10px;
+            color: #333;
+        }
+
+        .task-meta {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .task-title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .task-due.overdue { color: #AA0000; font-weight: bold; }
+        .task-due.soon { color: #AA5500; }
+
+        /* Inventory Slot Buttons */
+        .inv-slot {
+            width: 36px;
+            height: 36px;
+            background: #8B8B8B;
+            border: 2px solid;
+            border-color: #373737 #FFF #FFF #373737;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .inv-slot:active {
+             border-color: #FFF #373737 #373737 #FFF;
+        }
+        .inv-slot:hover {
+            background: #9B9B9B;
+        }
+
+        .pixel-icon {
+            font-size: 20px;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+            user-select: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #000; border-left: 2px solid #555; }
+        ::-webkit-scrollbar-thumb { background: #888; border: 2px solid #fff; }
+
+    </style>
+</head>
+<body class="animated-bg">
+
+    <div class="container">
+        {% if logged_in %}
+            <div class="mc-window">
+                <div class="mc-title-bar">Inventory</div>
+                <div class="mc-panel">
+                    
+                    <!-- Input Form -->
+                    <div style="margin-bottom: 15px; border-bottom: 2px solid #888; padding-bottom: 15px;">
+                        <div class="form-row">
+                            <div class="mc-input-group" style="flex: 2;">
+                                <label>Title</label>
+                                <input type="text" id="task-title" class="mc-input" placeholder="e.g. Midterm, Homework, Project" autofocus>
+                            </div>
+                             <div class="mc-input-group">
+                                <label>Class / Organization</label>
+                                <input type="text" id="task-org" class="mc-input" placeholder="e.g. Stats 133, Psych C127, Eng 125">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                           
+                            <div class="mc-input-group" style="max-width: 50%;">
+                                <label>Due Date</label>
+                                <input type="datetime-local" id="task-due" class="mc-input">
+                            </div>
+                            <div class="mc-input-group">
+                                <label style="visibility: hidden;">Spacer</label>
+                                <button onclick="addTodo()" id="craft-btn" class="mc-btn" style="width: 100%;">Craft Task</button>
+                            </div>
+                        </div>
+                        <div id="error-display" style="color: #AA0000; text-align: center; height: 1em;"></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
+                        <span style="color: #404040;">Active Quests</span>
+                        
+                    </div>
+
+                    <div id="todo-list" class="task-list">
+                        <div style="color: #fff; text-align: center;">Loading world...</div>
+                    </div>
+
+                    <div style="margin-top: 10px; text-align: center;">
+                        <form method="POST" style="display: inline;">
+                            <input type="hidden" name="logout" value="true">
+                            <button type="submit" class="mc-btn" style="background: #A00; width: auto; font-size: 18px;">Disconnect</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <script>
+                let todos = [];
+                let editingId = null;
+
+                async function fetchTodos() {
+                    try {
+                        const res = await fetch('/todo', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({action: 'get'})
+                        });
+                        if (res.ok) {
+                            todos = await res.json();
+                            renderTodos();
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+
+                async function saveTodos() {
+                    await fetch('/todo', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({action: 'save', todos: todos})
+                    });
+                    renderTodos();
+                }
+
+                function renderTodos() {
+                    const list = document.getElementById('todo-list');
+                    list.innerHTML = '';
+                    
+                    // Sort: Completed last, then by Date
+                    const sortedTodos = [...todos].sort((a, b) => {
+                        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+                        if (!a.due) return 1;
+                        if (!b.due) return -1;
+                        return new Date(a.due) - new Date(b.due);
+                    });
+
+                    if (sortedTodos.length === 0) {
+                        list.innerHTML = '<div style="color: #aaa; text-align: center; padding: 20px;">No active quests.</div>';
+                        return;
+                    }
+
+                    sortedTodos.forEach((todo) => {
+                        const index = todos.indexOf(todo);
+
+                        const div = document.createElement('div');
+                        div.className = `task-item ${todo.completed ? 'completed' : ''}`;
+                        
+                        let dateStr = "";
+                        let dueClass = "task-due";
+                        if (todo.due) {
+                            const d = new Date(todo.due);
+                            dateStr = d.toLocaleDateString('en-US') + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            if (d < new Date() && !todo.completed) dueClass += " overdue";
+                        }
+
+                        // Pixel Art Icons
+                        const iconCheck = `<img src="https://iancheung.dev/assets/img/checked.webp" alt="Check" style="width: 24px; height: 24px;">`;
+                        const iconUncheck = `<img src="https://iancheung.dev/assets/img/unchecked.png" alt="Uncheck" style="width: 24px; height: 24px;">`;
+                        const iconEdit = `<img src="https://iancheung.dev/assets/img/edit.webp" alt="Edit" style="width: 24px; height: 24px;">`;
+                        const iconDestroy = `<img src="https://iancheung.dev/assets/img/tnt.webp" alt="Destroy" style="width: 24px; height: 24px;">`;
+
+                        div.innerHTML = `
+                            <div class="task-info">
+                                <div class="task-title">${escapeHtml(todo.title)}</div>
+                                <div class="task-meta">
+                                    <span style="color: #5555FF;">${todo.org ? '[' + escapeHtml(todo.org) + ']' : ''}</span> 
+                                    ${dateStr ? `<span class="${dueClass}">Due: ${dateStr}</span>` : ''}
+                                </div>
+                            </div>
+                            
+                            <!-- Inventory Slots -->
+                            <div class="inv-slot" title="Complete" onclick="toggleTodo(${index})">
+                                <span class="pixel-icon">${todo.completed ? iconCheck : iconUncheck}</span>
+                            </div>
+                            <div class="inv-slot" title="Edit" onclick="editTodo(${index})">
+                                <span class="pixel-icon">${iconEdit}</span>
+                            </div>
+                            <div class="inv-slot" title="Destroy" onclick="deleteTodo(${index})">
+                                <span class="pixel-icon">${iconDestroy}</span>
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    });
+                }
+
+                function addTodo() {
+                    const titleInput = document.getElementById('task-title');
+                    const orgInput = document.getElementById('task-org');
+                    const dueInput = document.getElementById('task-due');
+                    const errorDiv = document.getElementById('error-display');
+
+                    const title = titleInput.value.trim();
+                    if (!title) {
+                        errorDiv.innerText = "Error: Quest requires a title.";
+                        return;
+                    }
+                    errorDiv.innerText = "";
+
+                    if (editingId) {
+                        const todo = todos.find(t => t.id === editingId);
+                        if (todo) {
+                            todo.title = title;
+                            todo.org = orgInput.value.trim();
+                            todo.due = dueInput.value;
+                        }
+                        editingId = null;
+                        document.getElementById('craft-btn').innerText = "Craft Task";
+                    } else {
+                        todos.push({
+                            title: title,
+                            org: orgInput.value.trim(),
+                            due: dueInput.value,
+                            completed: false,
+                            id: Date.now() // Simple ID
+                        });
+                    }
+
+                    titleInput.value = '';
+                    orgInput.value = '';
+                    dueInput.value = '';
+                    
+                    saveTodos();
+                }
+
+                function editTodo(index) {
+                    const todo = todos[index];
+                    document.getElementById('task-title').value = todo.title || '';
+                    document.getElementById('task-org').value = todo.org || '';
+                    document.getElementById('task-due').value = todo.due || '';
+                    
+                    editingId = todo.id;
+                    document.getElementById('craft-btn').innerText = "Edit Task";
+                    document.querySelector('.mc-input-group input').focus();
+                }
+
+                function toggleTodo(index) {
+                    todos[index].completed = !todos[index].completed;
+                    saveTodos();
+                }
+
+                function deleteTodo(index) {
+                    // if(confirm("Destroy this item?")) {
+                    todos.splice(index, 1);
+                    saveTodos();
+                    // }
+                }
+
+                function escapeHtml(text) {
+                    if (!text) return "";
+                    return text
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                }
+
+                fetchTodos();
+            </script>
+
+        {% else %}
+            <div class="mc-window" style="width: 400px; margin: 0 auto;">
+                <div class="mc-title-bar">Server Authentication</div>
+                <div class="mc-panel" style="text-align: center;">
+                    <h1>LOCKED</h1>
+                    
+                    {% if error %}
+                        <div style="background: #AA0000; color: #fff; padding: 5px; margin-bottom: 10px; border: 2px solid #500;">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST">
+                        <div style="text-align: left; margin-bottom: 5px; color: #404040;">Password</div>
+                        <input type="password" name="password" class="mc-input" style="width: 100%; box-sizing: border-box; margin-bottom: 20px;" autofocus required>
+                        <button type="submit" class="mc-btn" style="width: 100%;">Join Server</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle, transparent 50%, #000 150%); z-index: 5;"></div>
+
+</body>
+</html>
