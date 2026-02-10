@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Survival List</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --mc-bg: #151515;
@@ -229,8 +230,12 @@
 
         .icon-check { background-image: url('https://iancheung.dev/assets/img/checked.webp'); }
         .icon-uncheck { background-image: url('https://iancheung.dev/assets/img/unchecked.png'); }
+        .icon-pin { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0JBMjIyMiI+PHBhdGggZD0iTTE2IDlWNGgxYzAuNTUgMCAxLTAuNDUgMS0xcy0wLjQ1LTEtMS0xSDdDNi40NSAyIDYgMi40NSA2IDNzMC40NSAxIDEgMWgxdjVjMCAxLjY2LTEuMzQgMy0zIDN2Mmg1Ljk3djdsMSAxIDEtMXYtN0gxOXYtMmMtMS42NiAwLTMtMS4zNC0zLTN6Ii8+PC9zdmc+'); }
+        .icon-unpin { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzU1NSI+PHBhdGggZD0iTTE2IDlWNGgxYzAuNTUgMCAxLTAuNDUgMS0xcy0wLjQ1LTEtMS0xSDdDNi40NSAyIDYgMi40NSA2IDNzMC40NSAxIDEgMWgxdjVjMCAxLjY2LTEuMzQgMy0zIDN2Mmg1Ljk3djdsMSAxIDEtMXYtN0gxOXYtMmMtMS42NiAwLTMtMS4zNC0zLTN6Ii8+PC9zdmc+'); opacity: 0.5; }
         .icon-edit { background-image: url('https://iancheung.dev/assets/img/edit.webp'); }
         .icon-destroy { background-image: url('https://iancheung.dev/assets/img/tnt.webp'); }
+
+        .task-title p { margin: 0; display: inline; }
 
 
         /* Scrollbar */
@@ -326,8 +331,9 @@
                     const list = document.getElementById('todo-list');
                     list.innerHTML = '';
                     
-                    // Sort: Completed last, then by Date
+                    // Sort: Pinned first, then Completed last, then by Date
                     const sortedTodos = [...todos].sort((a, b) => {
+                        if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
                         if (a.completed !== b.completed) return a.completed ? 1 : -1;
                         if (!a.due) return 1;
                         if (!b.due) return -1;
@@ -347,22 +353,50 @@
                         
                         let dateStr = "";
                         let dueClass = "task-due";
+                        let relativeTimeStr = "";
+
                         if (todo.due) {
                             const d = new Date(todo.due);
                             dateStr = d.toLocaleDateString('en-US') + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                             if (d < new Date() && !todo.completed) dueClass += " overdue";
+
+                            if (!todo.completed) {
+                                const now = new Date();
+                                const diff = d - now;
+                                const isOverdue = diff < 0;
+                                const absDiff = Math.abs(diff);
+                                const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                
+                                const timeText = ((days > 0) ? days + " days " : "") + hours + " hours";
+                                if (isOverdue) {
+                                    relativeTimeStr = ` <span style="font-size: 0.9em; opacity: 0.8;">(${timeText} ago)</span>`;
+                                } else {
+                                    relativeTimeStr = ` <span style="font-size: 0.9em; opacity: 0.8;">(in ${timeText})</span>`;
+                                }
+                            }
+                        }
+
+                        let titleHtml = escapeHtml(todo.title);
+                        if (typeof marked !== 'undefined') {
+                             try {
+                                 titleHtml = marked.parse(todo.title);
+                             } catch(e) { console.error("Markdown error", e); }
                         }
 
                         div.innerHTML = `
                             <div class="task-info">
-                                <div class="task-title">${escapeHtml(todo.title)}</div>
+                                <div class="task-title">${titleHtml}</div>
                                 <div class="task-meta">
                                     <span style="color: #5555FF;">${todo.org ? '[' + escapeHtml(todo.org) + ']' : ''}</span> 
-                                    ${dateStr ? `<span class="${dueClass}">Due: ${dateStr}</span>` : ''}
+                                    ${dateStr ? `<span class="${dueClass}">Due: ${dateStr}${relativeTimeStr}</span>` : ''}
                                 </div>
                             </div>
                             
                             <!-- Inventory Slots -->
+                            <div class="inv-slot" title="${todo.pinned ? 'Unpin' : 'Pin'}" onclick="togglePin(${index})">
+                                <span class="pixel-icon ${todo.pinned ? 'icon-pin' : 'icon-unpin'}"></span>
+                            </div>
                             <div class="inv-slot" title="Complete" onclick="toggleTodo(${index})">
                                 <span class="pixel-icon ${todo.completed ? 'icon-check' : 'icon-uncheck'}"></span>
                             </div>
@@ -405,6 +439,7 @@
                             org: orgInput.value.trim(),
                             due: dueInput.value,
                             completed: false,
+                            pinned: false,
                             id: Date.now() // Simple ID
                         });
                     }
@@ -427,16 +462,21 @@
                     document.querySelector('.mc-input-group input').focus();
                 }
 
+                function togglePin(index) {
+                    todos[index].pinned = !todos[index].pinned;
+                    saveTodos();
+                }
+
                 function toggleTodo(index) {
                     todos[index].completed = !todos[index].completed;
                     saveTodos();
                 }
 
                 function deleteTodo(index) {
-                    // if(confirm("Destroy this item?")) {
-                    todos.splice(index, 1);
-                    saveTodos();
-                    // }
+                    if (confirm("Destroy this item?")) {
+                        todos.splice(index, 1);
+                        saveTodos();
+                    }
                 }
 
                 function escapeHtml(text) {
