@@ -150,6 +150,13 @@
    * Activate/show sections on load with hash links
    */
   window.addEventListener('load', () => {
+    let viewModeBtn = select("#toggle-button");
+    const userTheme = localStorage.getItem("theme");
+    viewModeBtn.click()
+    if (!userTheme || userTheme === "light") {
+      viewModeBtn.click()
+    } 
+
     if (window.location.hash) {
       let initial_nav = select(window.location.hash)
 
@@ -172,119 +179,24 @@
         }, 350);
 
         scrollto(window.location.hash)
-        windowDiv = document.querySelector(".window-div");
+        let windowDiv = select(".window-div");
         windowDiv.style.visibility = "hidden";
         windowDiv.style.display = "none";
       }
     }
   });
 
-  /**
-   * Skills animation
-   */
-  let skilsContent = select('.skills-content');
-  if (skilsContent) {
-    new Waypoint({
-      element: skilsContent,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = select('.progress .progress-bar', true);
-        progress.forEach((el) => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%'
-        });
-      }
-    })
-  }
-
-  /**
-   * Testimonials slider
-   */
-  // new Swiper('.testimonials-slider', {
-  //   speed: 600,
-  //   loop: true,
-  //   autoplay: {
-  //     delay: 5000,
-  //     disableOnInteraction: false
-  //   },
-  //   slidesPerView: 'auto',
-  //   pagination: {
-  //     el: '.swiper-pagination',
-  //     type: 'bullets',
-  //     clickable: true
-  //   },
-  //   breakpoints: {
-  //     320: {
-  //       slidesPerView: 1,
-  //       spaceBetween: 20
-  //     },
-
-  //     1200: {
-  //       slidesPerView: 3,
-  //       spaceBetween: 20
-  //     }
-  //   }
-  // });
-
-  /**
-   * Portfolio isotope and filter
-   */
-  window.addEventListener('load', () => {
-    let portfolioContainer = select('.portfolio-container');
-    if (portfolioContainer) {
-      let portfolioIsotope = new Isotope(portfolioContainer, {
-        itemSelector: '.portfolio-item',
-        layoutMode: 'fitRows'
-      });
-
-      let portfolioFilters = select('#portfolio-flters li', true);
-
-      on('click', '#portfolio-flters li', function(e) {
-        e.preventDefault();
-        portfolioFilters.forEach(function(el) {
-          el.classList.remove('filter-active');
-        });
-        this.classList.add('filter-active');
-
-        portfolioIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-      }, true);
-    }
-
+  const toggleButton = select("#toggle-button");
+  toggleButton.addEventListener("click", function() {
+    localStorage.setItem("theme", document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light");
   });
 
   /**
-   * Initiate portfolio lightbox 
+   * Initiate Bootstrap tooltips
    */
-  // const portfolioLightbox = GLightbox({
-  //   selector: '.portfolio-lightbox'
-  // });
-
-  /**
-   * Initiate portfolio details lightbox 
-   */
-  // const portfolioDetailsLightbox = GLightbox({
-  //   selector: '.portfolio-details-lightbox',
-  //   width: '90%',
-  //   height: '90vh'
-  // });
-
-  /**
-   * Portfolio details slider
-   */
-  // new Swiper('.portfolio-details-slider', {
-  //   speed: 400,
-  //   loop: true,
-  //   autoplay: {
-  //     delay: 5000,
-  //     disableOnInteraction: false
-  //   },
-  //   pagination: {
-  //     el: '.swiper-pagination',
-  //     type: 'bullets',
-  //     clickable: true
-  //   }
-  // });
+  select('[data-toggle="tooltip"]', true).forEach(tooltipTriggerEl => {
+    new bootstrap.Tooltip(tooltipTriggerEl)
+  })
 
   /**
    * Initiate Pure Counter 
@@ -292,60 +204,3 @@
   new PureCounter();
 
 })()
-
-
-function resumeAcademic() {
-  $("#resume-all").removeClass("resume-active");
-  $(".resume-item-academic").css("visibility", "visible")
-  $(".resume-item-academic").css("display", "block")
-  $(".resume-item-music").css("visibility", "hidden")
-  $(".resume-item-music").css("display", "none")
-  $(".resume-item-coding").css("visibility", "hidden")
-  $(".resume-item-coding").css("display", "none")
-  $(".resume-item-others").css("visibility", "hidden")
-  $(".resume-item-others").css("display", "none")
-}
-function resumeMusic() {
-  $("#resume-all").removeClass("resume-active");
-  $(".resume-item-academic").css("visibility", "hidden")
-  $(".resume-item-academic").css("display", "none")
-  $(".resume-item-music").css("visibility", "visible")
-  $(".resume-item-music").css("display", "block")
-  $(".resume-item-coding").css("visibility", "hidden")
-  $(".resume-item-coding").css("display", "none")
-  $(".resume-item-others").css("visibility", "hidden")
-  $(".resume-item-others").css("display", "none")
-}
-function resumeCoding() {
-  $("#resume-all").removeClass("resume-active");
-  $(".resume-item-academic").css("visibility", "hidden")
-  $(".resume-item-academic").css("display", "none")
-  $(".resume-item-music").css("visibility", "hidden")
-  $(".resume-item-music").css("display", "none")
-  $(".resume-item-coding").css("visibility", "visible")
-  $(".resume-item-coding").css("display", "block")
-  $(".resume-item-others").css("visibility", "hidden")
-  $(".resume-item-others").css("display", "none")
-}
-function resumeOthers() {
-  $("#resume-all").removeClass("resume-active");
-  $(".resume-item-academic").css("visibility", "hidden")
-  $(".resume-item-academic").css("display", "none")
-  $(".resume-item-music").css("visibility", "hidden")
-  $(".resume-item-music").css("display", "none")
-  $(".resume-item-coding").css("visibility", "hidden")
-  $(".resume-item-coding").css("display", "none")
-  $(".resume-item-others").css("visibility", "visible")
-  $(".resume-item-others").css("display", "block")
-}
-function resumeAll() {
-  $("#resume-all").addClass("resume-active");
-  $(".resume-item-academic").css("visibility", "visible")
-  $(".resume-item-academic").css("display", "block")
-  $(".resume-item-music").css("visibility", "visible")
-  $(".resume-item-music").css("display", "block")
-  $(".resume-item-coding").css("visibility", "visible")
-  $(".resume-item-coding").css("display", "block")
-  $(".resume-item-others").css("visibility", "visible")
-  $(".resume-item-others").css("display", "block")
-}
