@@ -34,7 +34,7 @@
     (function() {
         // ls *.jpg *.jpeg *.png 2>/dev/null | sed -e 's/^/"/' -e 's/$/",/' | sed '$s/,$//' | (echo '[' && cat - && echo ']') > manifest.json
         var bgPath = 'assets/img/bg/';
-        fetch(bgPath + 'manifest.json', {cache: 'no-store'}).then(function(resp) {
+        fetch(bgPath + 'manifest.json').then(function(resp) {
             if (!resp.ok) return;
             return resp.json();
         }).then(function(list) {
@@ -42,11 +42,14 @@
             var idx = Math.floor(Math.random() * list.length);
             var filename = list[idx];
             var url = bgPath + encodeURIComponent(filename);
-            console.log('Selected header background image:', filename);
             var header = select('#header');
-            if (header) header.style.backgroundImage = "linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('" + url + "')";
             var filenameElem = select('#photo-filename');
-            if (filenameElem) filenameElem.textContent = filename.replace(/\.[^/.]+$/, "");
+            var preloadImg = new Image();
+            preloadImg.onload = function() {
+                if (header) header.style.backgroundImage = "linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('" + url + "')";
+                if (filenameElem) filenameElem.textContent = filename.replace(/\.[^/.]+$/, "");
+            };
+            preloadImg.src = url;
         });
     })();
 
@@ -57,74 +60,142 @@
     let activityStartTimes = [];
     async function fetchDiscordActivity() {
         const feed = select('#discord-activity-feed');
+        const customStatusArea = select('#dc-custom-status-area');
+        const statusBadge = select('#dc-status-badge');
+        const symbol = document.querySelector('.dc-status-symbol');
         try {
             const res = await fetch('https://activity.fischl.app');
             if (!res.ok) throw new Error('Network error');
             const data = await res.json();
-            if (!data.activity || !Array.isArray(data.activity) || data.activity.length === 0) {
-                feed.innerHTML = `
-                <div class="discord-activity-box">
-                    <div class="discord-icon-container"><i class="bi bi-activity"></i></div>
-                    <div class="discord-activity-content">
-                        <span class="discord-activity-title">No Discord activity found</span><br>
-                        <span class="discord-activity-description">I'm probably offline or AFK on Discord. Check back soon for live updates!</span>
-                    </div>
-                </div>
-                `;
-            return;
+
+            if (data.discord_user && data.discord_user.avatar) {
+                const avatarEl = select('#dc-avatar');
+                if (avatarEl) {
+                    avatarEl.src = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.png?size=128`;
+                }
             }
-            activityStartTimes = data.activity.map(act => act.timestamps && act.timestamps.start ? parseInt(act.timestamps.start, 10) : null);
-            feed.innerHTML = data.activity.map((a, i) => renderActivity(a, i)).join('');
+
+            if (!data.activity || !Array.isArray(data.activity) || data.activity.length === 0) {
+                if (customStatusArea) customStatusArea.innerHTML = '';
+                feed.innerHTML = `
+                <div class="dc-no-activity">
+                    <i class="bi bi-moon-stars" style="font-size:24px;opacity:0.4;"></i>
+                    <span>No activity right now. Check back soon!</span>
+                </div>`;
+                statusBadge.setAttribute('data-status', "Offline");
+                statusBadge.setAttribute('title', "Offline");
+                statusBadge.style.backgroundColor = '#80848e';
+                symbol.classList.remove('dc-status-dnd-symbol');
+                symbol.classList.add('dc-status-offline-symbol');
+                return;
+            } else {
+                // Has activity = online (DND)
+                statusBadge.setAttribute('data-status', "Do Not Disturb");
+                statusBadge.setAttribute('title', "Do Not Disturb");
+                statusBadge.style.backgroundColor = '#d5363c';
+                symbol.classList.remove('dc-status-offline-symbol');
+                symbol.classList.add('dc-status-dnd-symbol');
+
+            }
+
+            const customStatus = data.activity.find(a => parseInt(a.type) === 4);
+            const regularActivities = data.activity.filter(a => parseInt(a.type) !== 4);
+
+            if (customStatusArea) {
+                if (customStatus) {
+                    let emojiHtml = '';
+                    if (customStatus.emoji && customStatus.emoji.name) {
+                        if (customStatus.emoji.id) {
+                            const ext = (customStatus.emoji.animated === true || customStatus.emoji.animated === 'True' || customStatus.emoji.animated === 'true') ? 'gif' : 'png';
+                            emojiHtml = `<img src="https://cdn.discordapp.com/emojis/${customStatus.emoji.id}.${ext}" class="dc-custom-status-emoji-img" alt="${customStatus.emoji.name}">`;
+                        } else {
+                            emojiHtml = `<span class="dc-custom-status-emoji">${customStatus.emoji.name}</span>`;
+                        }
+                    }
+                    const statusText = customStatus.state || customStatus.name || '';
+                    customStatusArea.innerHTML = `
+                    <div class="dc-custom-status-box">
+                        ${emojiHtml}
+                        <span class="dc-custom-status-text">${statusText}</span>
+                    </div>`;
+                } else {
+                    customStatusArea.innerHTML = '';
+                }
+            }
+
+            activityStartTimes = regularActivities.map(act => act.timestamps && act.timestamps.start ? parseInt(act.timestamps.start, 10) : null);
+            if (regularActivities.length === 0) {
+                feed.innerHTML = '';
+            } else {
+                feed.innerHTML = regularActivities.map((a, i) => renderActivity(a, i)).join('');
+            }
             updateActivityTimers();
         } catch (e) {
-            feed.innerHTML = '<div style="color:#e74c3c">Failed to load Discord status.</div>';
+            if (feed) feed.innerHTML = '<div class="dc-no-activity" style="color:#f23f43">Failed to load Discord status.</div>';
             console.error(e);
         }
     }
 
     function renderActivity(act, idx) {
-        let icon = '';
-        if (act.emoji && act.emoji.name) {
-            // Custom Discord emoji (static or animated)
-            if (act.emoji.id) {
-                const ext = (act.emoji.animated === true || act.emoji.animated === 'True' || act.emoji.animated === 'true') ? 'gif' : 'png';
-                icon = `<img src="https://cdn.discordapp.com/emojis/${act.emoji.id}.${ext}" alt="${act.emoji.name}" class="discord-activity-image" style="${act.emoji.animated ? 'image-rendering:auto;' : ''}">`;
-            } else {
-                // Unicode emoji fallback
-                icon = `<span>${act.emoji.name}</span>`;
-            }
-        } else if (act.name === 'Spotify' && act.assets && act.assets.large_image) {
-            // Spotify album art
-            const img = act.assets.large_image.startsWith('spotify:')
-            ? `https://i.scdn.co/image/${act.assets.large_image.replace('spotify:', '')}`
-            : act.assets.large_image;
-            icon = `<img src="${img}" class="discord-activity-image">`;
-        } else if (act.assets && act.assets.large_image) {
-            // Generic large image
-            icon = `<img src="https://cdn.discordapp.com/app-assets/${act.application_id}/${act.assets.large_image}.png" class="discord-activity-image">`;
+        let sectionLabel;
+        const type = parseInt(act.type);
+        if (type === 2 || act.name === 'Spotify') {
+            sectionLabel = 'LISTENING TO SPOTIFY';
+        } else if (type === 1) {
+            sectionLabel = 'LIVE ON TWITCH';
+        } else if (type === 3) {
+            sectionLabel = 'WATCHING';
         } else {
-            icon = `<i class="bi bi-activity"></i>`;
+            sectionLabel = 'PLAYING';
         }
 
-        let main = `<span class="discord-activity-title">${act.name || 'Unknown Activity'}</span>`;
-        if (act.details) main += ` <br><span class="discord-activity-description">${act.details}</span>`;
-        if (act.state) main += `<br><span class="discord-activity-description">${act.state}</span>`;
+        let largeImg;
+        if (act.name === 'Spotify' && act.assets && act.assets.large_image) {
+            const src = act.assets.large_image.startsWith('spotify:')
+                ? `https://i.scdn.co/image/${act.assets.large_image.replace('spotify:', '')}`
+                : act.assets.large_image;
+            largeImg = `<img src="${src}" class="dc-activity-large-img" alt="${act.name}">`;
+        } else if (act.assets && act.assets.large_image && act.application_id) {
+            largeImg = `<img src="https://cdn.discordapp.com/app-assets/${act.application_id}/${act.assets.large_image}.png" class="dc-activity-large-img" alt="${act.name}" onerror="this.outerHTML='<div class=\'dc-activity-icon-placeholder\'><i class=\'bi bi-controller\'></i></div>'">`;
+        } else {
+            largeImg = `<div class="dc-activity-icon-placeholder"><i class="bi bi-controller"></i></div>`;
+        }
 
-        let timer = '';
+        let smallImg = '';
+        if (act.assets && act.assets.small_image && act.application_id) {
+            smallImg = `<img src="https://cdn.discordapp.com/app-assets/${act.application_id}/${act.assets.small_image}.png" class="dc-activity-small-img" alt="" onerror="this.style.display='none'">`;
+        }
+
+        let timerHtml = '';
         if (act.timestamps && act.timestamps.start) {
-            timer = `<div class="discord-activity-timer-container">
-                        <span class="discord-activity-timer" data-idx="${idx}">00:00:00</span>
-                    </div>`;
+            timerHtml = `<div class="dc-activity-timer"><span class="discord-activity-timer" data-idx="${idx}">00:00:00</span></div>`;
         }
 
-        return `<div class="discord-activity-box">
-            <div class="discord-icon-container">${icon}</div>
-            <div class="discord-activity-content">${main}${timer}</div>
+        return `<div>
+            <div class="dc-activity-section-label">${sectionLabel}</div>
+            <div class="dc-activity-box">
+                <div class="dc-activity-thumb-wrap">${largeImg}${smallImg}</div>
+                <div class="dc-activity-info">
+                    <div class="dc-activity-name">${act.name || 'Unknown'}</div>
+                    ${act.details ? `<div class="dc-activity-detail">${act.details}</div>` : ''}
+                    ${act.state ? `<div class="dc-activity-state">${act.state}</div>` : ''}
+                    ${timerHtml}
+                </div>
+            </div>
         </div>`;
     }
 
     fetchDiscordActivity();
-    setInterval(fetchDiscordActivity, 10000);
+    let discordPollInterval = setInterval(fetchDiscordActivity, 10000);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            clearInterval(discordPollInterval);
+        } else {
+            fetchDiscordActivity();
+            discordPollInterval = setInterval(fetchDiscordActivity, 10000);
+        }
+    });
 
     function updateActivityTimers() {
         const now = Date.now();
@@ -143,17 +214,36 @@
 
     setInterval(updateActivityTimers, 1000);
 
+    /**
+     * Copy user ID button
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+        const copyBtn = select('#dc-copy-btn');
+        if (!copyBtn) return;
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText('692254240290242601').then(() => {
+                copyBtn.innerHTML = '<i class="bi bi-check2"></i>';
+                setTimeout(() => { copyBtn.innerHTML = '<i class="bi bi-copy"></i>'; }, 1500);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = '692254240290242601';
+                ta.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                copyBtn.innerHTML = '<i class="bi bi-check2"></i>';
+                setTimeout(() => { copyBtn.innerHTML = '<i class="bi bi-copy"></i>'; }, 1500);
+            });
+        });
+    });
+
 
     /**
      * Initialize window-div behavior and buttons
      */
-    let windowDiv = select(".window-div");
 
-    function adjustHeightAndMargin() {
-        windowDiv.style.height = 'auto';  // Only adjust margin, never set height
-        const lastChild = windowDiv.lastElementChild;
-        if (lastChild) {lastChild.style.marginBottom = '30px';}
-    }
+    let windowDiv = select(".window-div");
 
     const toggleLightDarkButton = select('#toggle-button');
 
@@ -210,20 +300,6 @@
         }
     })});
 
-    function adjustMargin() {
-        const lastChild = windowDiv.lastElementChild;
-        
-        if (lastChild) {
-            lastChild.style.marginBottom = '30px';
-        }
-    }
-
-    adjustMargin();
-
-    // Adjust the margin if content dynamically changes
-    const observer = new MutationObserver(adjustMargin);
-    observer.observe(windowDiv, { childList: true, subtree: true, characterData: true });
-
     document.addEventListener('DOMContentLoaded', function () {
         const windowDiv = select('.window-div');
         const windowBar = select('.window-bar');
@@ -263,10 +339,9 @@
                 windowDiv.style.alignSelf = 'flex-start';
                 windowDiv.style.minHeight = '';
                 windowDiv.style.maxHeight = '';
-                windowDiv.querySelector('p').style.display = 'block';
                 personalInformation.style.display = 'block';
                 isMinimized = false;
-                adjustHeightAndMargin();
+                windowDiv.style.height = 'auto'; 
             } else {
                 // Minimize
                 if (isMaximized) {return;}
@@ -274,8 +349,6 @@
                 windowDiv.style.alignSelf = 'flex-start';
                 windowDiv.style.minHeight = '';
                 windowDiv.style.maxHeight = '';
-                windowDiv.querySelector('p').style.display = 'none';
-                windowDiv.querySelector('h1').style.paddingBottom = '0';
                 personalInformation.style.display = 'none';
                 isMinimized = true;
             }
@@ -297,7 +370,6 @@
                 windowDiv.style.alignSelf = 'flex-start';
                 windowDiv.style.minHeight = '';
                 windowDiv.style.maxHeight = '';
-                adjustMargin();
                 windowDiv.style.borderRadius = originalStyle.borderRadius || '15px';
                 windowBar.style.borderRadius = originalStyle.borderRadius || '15px 15px 0 0';
                 windowDiv.style.zIndex = originalStyle.zIndex || '';
@@ -346,6 +418,8 @@
 
                 isMaximized = true;
             }
+            const profileCard = document.querySelector('#dc-profile-card');
+            if (profileCard) profileCard.classList.toggle('dc-expanded', isMaximized);
             shellInABox.style.display = isMaximized ? 'block' : 'none'; 
         });
     });
@@ -364,7 +438,7 @@
             select(".subtitle", true).forEach(el => el.style.fontFamily = "monospace");
             button.classList.add("a-active");
         }
-        adjustHeightAndMargin();
+        windowDiv.style.height = 'auto'; 
     });
 
 
@@ -626,6 +700,13 @@
             newHoverIconBox = hoverIconBoxBlack;
             newFooterColor = footerGreen;
             toggleLightDarkButton.setAttribute('title', 'Enable Light Mode');
+            // Discord card — dark mode
+            document.documentElement.style.setProperty('--dc-card-bg', '#232428');
+            document.documentElement.style.setProperty('--dc-card-section-bg', '#2b2d31');
+            document.documentElement.style.setProperty('--dc-card-text', '#f2f3f5');
+            document.documentElement.style.setProperty('--dc-card-text-muted', '#b5bac1');
+            document.documentElement.style.setProperty('--dc-card-divider', '#3a3b3e');
+            document.documentElement.style.setProperty('--dc-avatar-border-color', '#232428');
         } else { // Currently dark mode, set to light mode
             newBgColor = white;
             newTextColor = black;
@@ -637,6 +718,13 @@
             newHoverIconBox = hoverIconBoxWhite;
             newFooterColor = footerBlue;
             toggleLightDarkButton.setAttribute('title', 'Enable Dark Mode');
+            // Discord card — light mode
+            document.documentElement.style.setProperty('--dc-card-bg', '#f2f3f5');
+            document.documentElement.style.setProperty('--dc-card-section-bg', '#e3e5e8');
+            document.documentElement.style.setProperty('--dc-card-text', '#2e3035');
+            document.documentElement.style.setProperty('--dc-card-text-muted', '#5c5f66');
+            document.documentElement.style.setProperty('--dc-card-divider', '#d4d5d7');
+            document.documentElement.style.setProperty('--dc-avatar-border-color', '#f2f3f5');
         }
 
         document.documentElement.style.setProperty('--background-color', newBgColor);
@@ -701,7 +789,6 @@
         }
     });
     mobileNavObserver.observe(navbar, { attributes: true, attributeFilter: ['class'] });
-    console.log('Mobile nav observer set up.');
 
 
     /**
@@ -742,7 +829,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         select('.playlist-videos', true).forEach(container => {
-            loadPlaylist(container);
+            const playlistObserver = new IntersectionObserver((entries, obs) => {
+                if (entries[0].isIntersecting) {
+                    loadPlaylist(container);
+                    obs.disconnect();
+                }
+            }, { rootMargin: '100px' });
+            playlistObserver.observe(container);
         });
     });
 
@@ -784,7 +877,16 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        loadMediumPosts();
+        const mediumContainer = select('#medium-posts-container');
+        if (mediumContainer) {
+            const mediumObserver = new IntersectionObserver((entries, obs) => {
+                if (entries[0].isIntersecting) {
+                    loadMediumPosts();
+                    obs.disconnect();
+                }
+            }, { rootMargin: '200px' });
+            mediumObserver.observe(mediumContainer);
+        }
     });
 
 
@@ -960,6 +1062,15 @@
             output.appendChild(loadingDiv);
             
             try {
+                if (typeof loadPyodide === 'undefined') {
+                    await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
+                        s.onload = resolve;
+                        s.onerror = () => reject(new Error('Failed to load Pyodide'));
+                        document.head.appendChild(s);
+                    });
+                }
                 pyodide = await loadPyodide();
                 pyodide.setStdout({ batched: (msg) => {
                     const respDiv = document.createElement('div');

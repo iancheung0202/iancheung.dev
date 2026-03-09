@@ -33,23 +33,23 @@
   </script>
   <style>
     :root {
-      --accent: #5724D5;
-      --accent-dim: rgba(87, 36, 213, 0.08);
-      --accent-hover: #4A1DB5;
-      --green: #059669;
-      --green-dim: rgba(5, 150, 105, 0.1);
-      --bg: #F5F5F7;
-      --surface: #FFFFFF;
-      --surface-2: #F0F0F4;
-      --border: rgba(0, 0, 0, 0.07);
-      --border-bright: rgba(0, 0, 0, 0.14);
-      --text-muted: #9FA3B0;
-      --text-body: #5C6070;
-      --text-primary: #0A0A0F;
+      --accent: #a855f7;
+      --accent-dim: rgba(168, 85, 247, 0.2);
+      --accent-hover: #c084fc;
+      --green: #10b981;
+      --green-dim: rgba(16, 185, 129, 0.2);
+      --bg: #030305;
+      --surface: rgba(20, 20, 30, 0.4);
+      --surface-2: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-bright: rgba(168, 85, 247, 0.6);
+      --text-muted: #8b949e;
+      --text-body: #c9d1d9;
+      --text-primary: #ffffff;
       --radius: 14px;
       --radius-sm: 8px;
-      --shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
-      --shadow-hover: 0 8px 24px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --shadow-hover: 0 0 25px rgba(168, 85, 247, 0.3), inset 0 0 15px rgba(255,255,255,0.05);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,7 +58,10 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
       color: var(--text-body);
       min-height: 100vh;
       overflow-x: hidden;
@@ -66,6 +69,16 @@
 
     /* ── PAGE WRAPPER ── */
     .page-wrap { position: relative; z-index: 1; }
+    .page-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-size: 50px 50px;
+      background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      z-index: -1;
+      pointer-events: none;
+    }
 
     /* ── BENTO GRID ── */
     .bento-grid {
@@ -120,6 +133,14 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+    .typewriter-cursor {
+      font-weight: 800;
+      color: var(--accent);
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
     }
     .hero-sub {
       font-size: 14px;
@@ -262,46 +283,6 @@
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-
-    /* ── OFFER STRIP ── */
-    .offer-strip {
-      background: linear-gradient(135deg, rgba(87,36,213,0.05) 0%, rgba(155,89,208,0.05) 50%, rgba(236,72,153,0.04) 100%);
-      border: 1px solid rgba(87, 36, 213, 0.15);
-      border-radius: var(--radius-sm);
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      position: relative;
-      overflow: hidden;
-    }
-    .offer-strip-text h3 {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-    .offer-strip-text p {
-      font-size: 12px;
-      color: var(--text-body);
-      line-height: 1.55;
-    }
-    .offer-strip-text b { color: var(--green); font-weight: 700; }
-    .offer-strip-text em { color: var(--text-muted); font-style: italic; font-size: 11px; }
-    .offer-strip .btn-claim {
-      flex-shrink: 0;
-      font-size: 12px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: var(--text-primary);
-      border: none;
-      color: #fff;
-      font-weight: 600;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-    .offer-strip .btn-claim:hover { background: #2a2a3f; }
 
     /* ── PRICING ROW ── */
     .pricing-row-panel {
@@ -577,6 +558,114 @@
       .hero-panel { padding: 28px 22px; }
       .trusted-section { padding-left: 12px; padding-right: 12px; }
     }
+
+    /* ── ADVANCED FUTURISTIC EFFECTS ── */
+    .hero-panel, .feat-card, .plan-card, .trusted-inner, .hero-mini-card {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    @keyframes gradientGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .offer-glow-card {
+      background: linear-gradient(270deg, rgba(87,36,213,0.15), rgba(155,89,208,0.15), rgba(236,72,153,0.15), rgba(87,36,213,0.15));
+      background-size: 300% 300%;
+      animation: gradientGlow 6s ease infinite;
+      border-color: rgba(236, 72, 153, 0.3) !important;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.15), inset 0 0 15px rgba(236, 72, 153, 0.05);
+    }
+    
+    /* Interactive mouse-tracking glare */
+    .tilt-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        400px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(255, 255, 255, 0.1),
+        transparent 40%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .tilt-card:hover::after {
+      opacity: 1;
+    }
+
+    /* Button neon glow */
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+    }
+    .btn-secondary:hover {
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* ── CARD COVER REVEAL ── */
+    .card-cover {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 10, 15, 0.975);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: inset 0 0 40px rgba(168, 85, 247, 0.15);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .card-cover::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.2), transparent);
+      transform: skewX(-20deg) translateX(-100%);
+      animation: swipeGlow 2.5s infinite;
+    }
+
+    @keyframes swipeGlow {
+      100% { transform: skewX(-20deg) translateX(100%); }
+    }
+
+    .card-cover-text {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(168, 85, 247, 0.7), 0 0 20px rgba(168, 85, 247, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-cover-text svg {
+      animation: slideRight 1.5s infinite;
+    }
+
+    @keyframes slideRight {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
+
+    .tilt-card:hover .card-cover,
+    .tilt-card:active .card-cover,
+    .tilt-card.revealed .card-cover {
+      opacity: 0;
+      transform: translateX(105%);
+    }
   </style>
 </head>
 <body>
@@ -591,7 +680,7 @@
       <!-- ── HERO PANEL ── -->
       <div class="hero-panel reveal">
         <h1 class="hero-title">
-          One Bot.<br><span class="accent">Unlimited Possibilities.</span>
+          One Bot.<br><span class="accent" id="typewriter-text">Unlimited Possibilities.</span><span class="typewriter-cursor">|</span>
         </h1>
         <p class="hero-sub">
           Stop paying for generic public bots. Get a fully custom Discord bot tailored specifically to your community's needs, hosted 24/7.
@@ -603,19 +692,17 @@
           </a>
         </div>
 
-        <!-- Special Offer Banner (inside hero) -->
-        <div class="offer-strip" style="margin-top: 28px;">
-          <div class="offer-strip-text" style="flex:1">
-            <h3>Own a Server with 10,000+ Members?</h3>
-            <p>
-              I offer <b>free custom bot development</b> for established communities to help them grow even further.
-              <em>(While not required, payments are still gratefully accepted to support hosting and development time.)</em>
-            </p>
+        <div class="hero-mini-cards" style="margin-top: 28px;">
+          <!-- Special Offer Banner (inside hero) -->
+          <div class="hero-mini-card offer-glow-card">
+            <div class="hero-mini-icon" style="background:rgba(236,72,153,0.1)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div>
+              <h4>Own a Server with 10k+ Members?</h4>
+              <p>I offer <b>free custom bot development</b> for established communities to help them grow. <em>(Payments still gratefully accepted)</em></p>
+            </div>
           </div>
-          <a href="https://discord.com/users/692254240290242601" target="_blank" class="btn-claim">Claim Free Bot</a>
-        </div>
-
-        <div class="hero-mini-cards">
           <div class="hero-mini-card">
             <div class="hero-mini-icon" style="background:rgba(6,182,212,0.1)">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
@@ -646,34 +733,42 @@
 
         <div class="features-bento">
           <div class="feat-card tilt-card" style="--accent: #a855f7;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(168,85,247,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="#a855f7"/><circle cx="17.5" cy="10.5" r=".5" fill="#a855f7"/><circle cx="8.5" cy="7.5" r=".5" fill="#a855f7"/><circle cx="6.5" cy="12.5" r=".5" fill="#a855f7"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div><div class="feat-title">Custom Branding</div></div>
             <p class="feat-desc">Your bot name, avatar, bio, and status. Fully customizable to make your server look professional.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #f97316;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(249,115,22,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div><div class="feat-title">Custom Commands</div></div>
             <p class="feat-desc">Create simple text or slash commands, and auto-responses to messages or interactions.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #64748b;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(100,116,139,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div class="feat-title">Staff Tools</div></div>
             <p class="feat-desc">Staff list, member reports, staff applications, and other utilities for your staff team.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #4361ee;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(67,97,238,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4361ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="feat-title">Advanced Moderation</div></div>
             <p class="feat-desc">Auto-mod, logging, anti-spam, and custom punishment systems tailored to your rules.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #10b981;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(16,185,129,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="feat-title">Economy &amp; Shop</div></div>
             <p class="feat-desc">Server-specific currency, custom shops, items, gacha games, trading, and economy minigames.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #eab308;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(234,179,8,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="feat-title">Leveling &amp; Ranks</div></div>
             <p class="feat-desc">Custom XP formulas, role rewards, leaderboards, and beautiful custom rank cards matching your theme.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #ef4444;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(239,68,68,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div><div class="feat-title">Ticket System</div></div>
             <p class="feat-desc">Advanced support tickets or ModMail, transcripts, multi-panels, and staff performance tracking.</p>
           </div>
           <div class="feat-card tilt-card" style="--accent: #ec4899;">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="feat-header"><div class="feat-icon-wrap" style="background:rgba(236,72,153,0.1)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="feat-title">Events &amp; Giveaways</div></div>
             <p class="feat-desc">Tournament scheduling, complex giveaway requirements, suggestion rewards, starboards, and more.</p>
           </div>
@@ -691,6 +786,7 @@
 
           <!-- Monthly -->
           <div class="plan-card plan-monthly tilt-card reveal">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="plan-name">Monthly</div>
             <div class="plan-desc">Great for short-term projects.</div>
             <div class="plan-price-wrap">
@@ -708,6 +804,7 @@
 
           <!-- Yearly -->
           <div class="plan-card plan-yearly tilt-card reveal" style="animation-delay:0.08s">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="plan-badge">Most Popular</div>
             <div class="plan-name" style="margin-top:22px">Yearly</div>
             <div class="plan-desc">Save 25% compared to monthly.</div>
@@ -747,11 +844,12 @@
 
           <!-- Lifetime -->
           <div class="plan-card plan-lifetime tilt-card reveal" style="animation-delay:0.16s">
+            <div class="card-cover"><div class="card-cover-text">Swipe to Reveal <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div></div>
             <div class="plan-badge">Biggest Savings</div>
             <div class="plan-name" style="margin-top:22px">Lifetime</div>
             <div class="plan-desc">Pay once, own it forever.</div>
             <div class="plan-price-wrap">
-              <span class="plan-price">$199.99</span><span class="plan-price-period"> one-time</span>
+              <span class="plan-price">$199.99</span><span class="plan-price-period"></span>
             </div>
             <div class="plan-billing">Billed $199.99 one-time</div>
             <ul class="plan-features">
@@ -1014,6 +1112,13 @@
 
     /* ── 3D TILT ON CARDS ── */
     document.querySelectorAll('.tilt-card').forEach(card => {
+      // Swipe to reveal logic
+      ['mouseenter', 'touchstart'].forEach(evt => {
+        card.addEventListener(evt, () => {
+          card.classList.add('revealed');
+        }, { once: true });
+      });
+
       card.addEventListener('mousemove', e => {
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width  - 0.5;
@@ -1061,6 +1166,43 @@
         if (rect.top < window.innerHeight + 200) el.classList.add('in-view');
       }, 80 + i * 60);
     });
+
+    /* ── TYPEWRITER EFFECT ── */
+    const phrases = ["Unlimited Possibilities.", "Every Feature.", "Absolute Control.", "Completely Custom."];
+    let currentPhraseIndex = 0;
+    let isDeleting = false;
+    let charIndex = phrases[0].length;
+    const typewriterEl = document.getElementById("typewriter-text");
+
+    function typeEffect() {
+      const currentPhrase = phrases[currentPhraseIndex];
+      if (isDeleting) {
+        charIndex--;
+      } else {
+        charIndex++;
+      }
+
+      typewriterEl.textContent = currentPhrase.substring(0, charIndex);
+
+      let typeSpeed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        typeSpeed = 2500; // Pause at end of phrase
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+        typeSpeed = 500; // Pause before typing next phrase
+      }
+
+      setTimeout(typeEffect, typeSpeed);
+    }
+
+    // Start effect shortly after load
+    setTimeout(() => {
+      isDeleting = true;
+      typeEffect();
+    }, 2500);
   </script>
 
 </body>

@@ -8,12 +8,20 @@
     <title>Ian Cheung - Portfolio</title>
     <link href="assets/img/favicon.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://activity.fischl.app">
+    <link rel="dns-prefetch" href="https://api.rss2json.com">
+    <link rel="dns-prefetch" href="https://www.googleapis.com">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"></noscript>
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
     <meta name="keywords" content="Ian Cheung, Music, Violin, Composition, Composer, Web Developer, Python, HTML, CSS, JavaScript, Ian, Coding">
     <meta name="author" content="Ian Cheung">
     <meta property="og:url" content="https://www.iancheung.dev">
@@ -70,10 +78,10 @@
                   <a class="nav-link page" href="#music" id="navMusic">music</a>
                 </li>
                 <li class="nav-divider page">/</li>
-                <li>
+                <!-- <li>
                   <a class="nav-link page" href="#blog">blog</a>
                 </li>
-                <li class="nav-divider page">/</li>
+                <li class="nav-divider page">/</li> -->
                 <li>
                   <a class="non-nav-link page" href="resume.pdf" target="_blank">resume</a>
                 </li>
@@ -83,9 +91,8 @@
             <div class="container">
               <div class="row clearfix">
                 <div class="col-lg-11 col-md-11" style="word-break: break-word;">
-                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">Hi! I'm a full-stack developer, data scientist, and musician from Hong Kong. I currently study Applied Mathematics and Data Science at the University of California, Berkeley.</h2>
-                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">I'm interested in building things that people can actually use. I've worked on Discord bots, data analysis projects, or websites like this one. Automating tasks and visualizing data is my cup of tea. 🍵</h2>
-                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">In my free time, I teach Python to students of all ages with my beginner-friendly curricula, and volunteer as a math mentor in local K-12 schools. I enjoy making technical topics accessible and helping others discover the fun in technology and solving problems.</h2>
+                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">Hi! I'm a full-stack developer, data scientist, and musician from Hong Kong. I'm currently studying Applied Mathematics and Data Science at the University of California, Berkeley.</h2>
+                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">In my free time, I'm interested in building things that I or people can actually use. I've worked on Discord bots, data analysis, or personal websites like this one. Automating tasks is my cup of tea! 🍵</h2>
                 </div>
               </div>
             </div>
@@ -125,19 +132,52 @@
               </div>
               <div id="window-body-wrapper">
                 <div id="curious-section">
-                  <h1 class="curious-title">Curious what I'm up to? </h1>
-                  <p class="curious-description">You can spy on what I'm doing, listening to, or building in real time! These activities are fetched from my Discord profile using a <a href="https://activity.fischl.app/" target="_blank" title="Custom API Endpoint">custom API endpoint</a> I built. Enjoy stalking! 😄</p>
-                  <div class="discord-about-me container">
-                    <div class="row">
-                      <div class="section-title">
-                        <div class="row content">
-                          <div id="discord-activity-feed">
-                            <div class="discord-activity-box">
-                              <div class="discord-icon-container"><i class="bi bi-discord"></i></div>
-                              <div class="discord-activity-content">
-                                <span class="discord-activity-title">Loading Discord status...</span>
-                              </div>
-                            </div>
+                  <div class="discord-about-me">
+                    <div id="dc-profile-card">
+                      <div class="dc-banner" id="dc-banner"></div>
+                      <div class="dc-header-row">
+                        <div class="dc-avatar-container">
+                          <div class="dc-avatar-ring">
+                            <img class="dc-avatar-img" id="dc-avatar" src="https://cdn.discordapp.com/avatars/692254240290242601/f2629db9da31f30fb3b8738b39e7346f.png?size=1024" alt="ian.">
+                          </div>
+                          <span class="dc-status-badge" id="dc-status-badge" data-status="offline" title="Offline"><div class="dc-status-symbol dc-status-offline-symbol"></div></span>
+                        </div>
+                        <div id="dc-custom-status-area"></div>
+                      </div>
+                      <div class="dc-profile-body">
+                        <div class="dc-name-block">
+                          <div class="dc-display-name">ian.
+                            <a href="https://discord.gg/mysticraft" target="_blank"><span class="dc-badge"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" class="dc-badge-img" alt="">MYST</span></a>
+                            <button class="dc-copy-btn" id="dc-copy-btn" title="Copy User ID"><i class="bi bi-copy"></i></button>
+                          </div>
+                          <div class="dc-username-pronouns">
+                            <span class="dc-username">iancheung.dev</span>
+                            <span class="dc-dot-sep">•</span>
+                            <span class="dc-pronouns">he/him</span>
+                          </div>
+                        </div>
+                        <div class="dc-divider"></div>
+                        <div class="dc-section-block dc-section-inline">
+                          <span class="dc-section-label">GAME COLLECTION</span>
+                          <div class="dc-games-row">
+                            <img class="dc-game-thumb"
+                                 src="https://cdn.discordapp.com/app-icons/1402418491272986635/166fbad351ecdd02d11a3b464748f66b.png?size=128"
+                                 title="Minecraft" alt="Minecraft"
+                                 onerror="this.style.display='none'">
+                            <img class="dc-game-thumb"
+                                 src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC80SEQzUWJTN0g3VnJkUE1ENVp2eC5wbmcifQ:supercell:m3Kilkm5YQ79_Njnrsso7xomOdmXqQlrAZPacydXARM?width=128&height=128"
+                                 title="Clash Royale" alt="Clash Royale"
+                                 onerror="this.style.display='none'">
+                            <img class="dc-game-thumb"
+                                 src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC83Z3RXWGp1Sm5TMlpDWG1Db2tTZC5wbmcifQ:supercell:VSJq-hqEuQm-KltmcyeZuofET4OrgzLTfo81s1YQXeQ?width=128&height=128"
+                                 title="Brawl Stars" alt="Brawl Stars"
+                                 onerror="this.style.display='none'">
+                          </div>
+                        </div>
+                        <div class="dc-divider"></div>
+                        <div id="discord-activity-feed">
+                          <div class="dc-no-activity">
+                            <span>Loading activity...</span>
                           </div>
                         </div>
                       </div>
@@ -220,7 +260,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://tierlist.mysticraft.xyz" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/tierlist-demo.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/tierlist-demo.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       MystiCraft Tierlist 
                       <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
@@ -241,7 +281,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://servercv.com" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/servercv-demo.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/servercv-demo.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       ServerCV 
                       <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
@@ -265,7 +305,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://fischl.app" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/fischl-demo.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/fischl-demo.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       Fischl 
                       <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
@@ -290,7 +330,7 @@
                 <a href="https://cloud.iancheung.dev/s/tDFi7PzcbNfELyP" target="_blank">
                 
                   <div class="icon-box">
-                    <img src="assets/img/collisioneers.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/collisioneers.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       Analysis of California Traffic Collisions
                     </h4>
@@ -305,7 +345,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://colab.research.google.com/drive/1P-HjOVVsKfAfO2tAeJwsaQFkiGEL9XEF?usp=sharing" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/obj_dect.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/obj_dect.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       Object Detection
                     </h4>
@@ -326,7 +366,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://iancheung0202.github.io/RecycleSorter/" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/original.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/original.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       RecycleSorter
                     </h4>
@@ -346,7 +386,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/htmlessentials.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/htmlessentials.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       HTML Essentials
                     </h4>
@@ -361,7 +401,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://github.com/iancheung0202/dodge-n-shoot" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/dodge-n-shoot.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/dodge-n-shoot.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       Dodge n' Shoot
                     </h4>
@@ -378,7 +418,7 @@
               <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
                 <a href="https://iancheung0202.github.io/lsc-library-attendance-2021-22/" target="_blank">
                   <div class="icon-box">
-                    <img src="assets/img/library-attendance.png" class="img-fluid project-img" height="200px">
+                    <img src="assets/img/library-attendance.png" class="img-fluid project-img" height="200px" loading="lazy">
                     <h4>
                       Librarian Attendance System
                     </h4>
@@ -575,7 +615,6 @@
           document.write(new Date().getFullYear());
         </script> Ian Cheung | 📸 <b id="photo-filename">Loading background...</b></span>
     </div>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <script src="assets/js/extensions.js"></script>
     <script src="https://widget.tagembed.com/embed.min.js"></script>
     <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>

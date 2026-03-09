@@ -38,6 +38,10 @@ def home():
 def pricing_page():
     return send_from_directory("static/pricing", "index.html")
 
+@app.route("/game/")
+def game_page():
+    return app.send_static_file("game.html")
+
 TODO_FILE = 'templates/todos.json'
 
 def get_todos():
