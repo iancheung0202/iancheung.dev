@@ -38,14 +38,6 @@ def home():
 def pricing_page():
     return send_from_directory("static/pricing", "index.html")
 
-@app.route("/privacy/")
-def privacy_page():
-    return send_from_directory("static/privacy", "index.html")
-
-@app.route("/jamie/")
-def jamie_page():
-    return send_from_directory("static/jamie", "index.html")
-
 TODO_FILE = 'templates/todos.json'
 
 def get_todos():
