@@ -893,38 +893,141 @@
      */
     const YOUTUBE_API_KEY = 'AIzaSyB7CFUxCc-mPxPRWncGpwlrq20-j3_bbTk';
 
+    function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function parseDuration(iso) {
+        const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        if (!m) return '';
+        const h = parseInt(m[1] || 0), min = parseInt(m[2] || 0), s = parseInt(m[3] || 0);
+        if (h > 0) return `${h}:${String(min).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        return `${min}:${String(s).padStart(2,'0')}`;
+    }
+
+    function formatViews(count) {
+        const n = parseInt(count);
+        if (n >= 1000000) return `${+(n/1000000).toFixed(1)}M views`;
+        if (n >= 1000) return `${+(n/1000).toFixed(1)}K views`;
+        return `${n} views`;
+    }
+
+    function timeAgoString(dateStr) {
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const d = Math.floor(diff / 86400000);
+        if (d >= 365) { const y = Math.floor(d/365); return `${y} year${y>1?'s':''} ago`; }
+        if (d >= 30)  { const mo = Math.floor(d/30);  return `${mo} month${mo>1?'s':''} ago`; }
+        if (d >= 1)   return `${d} day${d>1?'s':''} ago`;
+        const h = Math.floor(diff / 3600000);
+        if (h >= 1)   return `${h} hour${h>1?'s':''} ago`;
+        const min = Math.floor(diff / 60000);
+        return min >= 1 ? `${min} minute${min>1?'s':''} ago` : 'Just now';
+    }
+
+    async function fetchChannelStats() {
+        try {
+            const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=UCMUa8dSkwbs4E22RxlFu34g&key=${YOUTUBE_API_KEY}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            const item = data.items?.[0];
+            if (!item) return;
+            const snippet = item.snippet || {};
+            const stats   = item.statistics || {};
+
+            const avatarEl = select('#yt-channel-avatar-img');
+            if (avatarEl && snippet.thumbnails?.high?.url) {
+                avatarEl.src = snippet.thumbnails.high.url;
+            }
+
+            const nameEl = select('#yt-channel-name-text');
+            if (nameEl && snippet.title) {
+                nameEl.textContent = snippet.title;
+            }
+
+            const handleEl = select('#yt-channel-handle-text');
+            if (handleEl && snippet.customUrl) {
+                handleEl.textContent = snippet.customUrl;
+            }
+
+            const vidEl = select('#yt-video-count');
+            if (vidEl && stats.videoCount) vidEl.textContent = stats.videoCount + ' videos';
+
+            const subCounter = select('#yt-sub-purecounter');
+            if (subCounter && stats.subscriberCount) {
+                const count = parseInt(stats.subscriberCount);
+                subCounter.setAttribute('data-purecounter-end', count);
+                subCounter.textContent = count;
+                new PureCounter();
+            }
+        } catch (e) {
+            console.error('Channel stats error:', e);
+        }
+    }
+
     async function loadPlaylist(container) {
         const playlistId = container.dataset.playlist;
-        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${YOUTUBE_API_KEY}&maxResults=50`;
         try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('API request failed');
-            const data = await res.json();
-            container.innerHTML = data.items.map(item => {
-                const thumb = item.snippet.thumbnails && item.snippet.thumbnails.medium ? item.snippet.thumbnails.medium.url : (item.snippet.thumbnails && item.snippet.thumbnails.default ? item.snippet.thumbnails.default.url : '');
-                const videoId = item.snippet.resourceId && item.snippet.resourceId.videoId ? item.snippet.resourceId.videoId : '';
-                if (!thumb || !videoId) return '';
+            const items = [];
+            let pageToken = '';
+            do {
+                const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${YOUTUBE_API_KEY}&maxResults=50${pageToken ? '&pageToken=' + encodeURIComponent(pageToken) : ''}`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Playlist API error');
+                const data = await res.json();
+                items.push(...(data.items || []));
+                pageToken = data.nextPageToken || '';
+            } while (pageToken);
+
+            if (!items.length) {
+                container.innerHTML = '<div class="col-12 text-muted py-3">No videos found.</div>';
+                return;
+            }
+
+            const videoIds = items.map(i => i.snippet?.resourceId?.videoId).filter(Boolean);
+            const details = {};
+            for (let i = 0; i < videoIds.length; i += 50) {
+                const batch = videoIds.slice(i, i + 50).join(',');
+                const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${batch}&key=${YOUTUBE_API_KEY}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    (data.items || []).forEach(v => {
+                        details[v.id] = { duration: v.contentDetails?.duration, viewCount: v.statistics?.viewCount };
+                    });
+                }
+            }
+
+            container.innerHTML = items.map(item => {
+                const videoId = item.snippet?.resourceId?.videoId;
+                if (!videoId) return '';
+                const title    = escapeHtml(item.snippet.title || '');
+                const thumb    = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                const detail   = details[videoId] || {};
+                const duration = detail.duration  ? parseDuration(detail.duration)  : '';
+                const views    = detail.viewCount ? formatViews(detail.viewCount)   : '';
+                const ago      = item.snippet.publishedAt ? timeAgoString(item.snippet.publishedAt) : '';
+                const meta     = [views, ago].filter(Boolean).join(' · ');
                 return `
-                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch" style="flex: 0 0 auto; width: 250px; margin-right: 10px !important; padding-bottom: -10px !important;">
-                        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
-                            <div class="icon-box">
-                                <img src="${thumb}" class="img-fluid project-img" alt="${item.snippet.title}">
-                                <h6><b>${item.snippet.title}</b></h6>
-                                <!-- Upload Date -->
-                                <p style="font-size: small; color: var(--fade-text-color) !important;">Uploaded on ${new Date(item.snippet.publishedAt).toLocaleDateString()}</p>
-                                <br><small><p style="color: var(--fade-text-color) !important;">Watch on &nbsp;<i class="bi bi-youtube" style="color: red !important;"></i> YouTube</p></small>
-                            </div>
-                        </a>
-                    </div>
-                `;
+                <div class="col">
+                    <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener noreferrer" class="yt-video-link">
+                        <div class="yt-thumb-wrap">
+                            <img src="${thumb}" class="yt-thumb" alt="${title}" loading="lazy">
+                            ${duration ? `<span class="yt-duration">${duration}</span>` : ''}
+                        </div>
+                        <div class="mt-2">
+                            <p class="yt-video-title mb-1">${title}</p>
+                            ${meta ? `<p class="yt-video-meta mb-0">${meta}</p>` : ''}
+                        </div>
+                    </a>
+                </div>`;
             }).join('');
         } catch (e) {
             console.error(e);
-            container.innerHTML = `<p>Failed to load playlist: ${e.message}</p>`;
+            container.innerHTML = '<div class="col-12 text-muted py-3">Could not load videos. Please try again later.</div>';
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        fetchChannelStats();
         select('.playlist-videos', true).forEach(container => {
             const playlistObserver = new IntersectionObserver((entries, obs) => {
                 if (entries[0].isIntersecting) {

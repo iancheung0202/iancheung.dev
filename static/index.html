@@ -93,8 +93,8 @@
             <div class="container">
               <div class="row clearfix">
                 <div class="col-lg-11 col-md-11" style="word-break: break-word;">
-                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">Hi! I'm a full-stack developer, data scientist, and musician from Hong Kong. I'm currently studying Applied Mathematics and Data Science at the University of California, Berkeley.</h2>
-                  <h2 style="line-height: 150%; font-size: medium;" class="subtitle">In my free time, I'm interested in building things that I or people can actually use. I've worked on Discord bots, data analysis, or personal websites like this one. Automating tasks is my cup of tea! 🍵</h2>
+                  <h2 class="subtitle">Hi! I'm a full-stack developer, data scientist, and musician from Hong Kong. I'm currently studying Applied Mathematics and Data Science at the University of California, Berkeley.</h2>
+                  <h2 class="subtitle">In my free time, I'm interested in building things that I or people can actually use. I've worked on Discord bots, data analysis, or personal websites like this one. Automating tasks is my cup of tea! 🍵</h2>
                 </div>
               </div>
             </div>
@@ -134,7 +134,7 @@
               </div>
               <div id="window-body-wrapper">
                 <div id="curious-section">
-                  <div class="discord-about-me">
+                  <div class="discord-about-me p-0">
                     <div id="dc-profile-card">
                       <div class="dc-banner" id="dc-banner"></div>
                       <div class="dc-header-row">
@@ -147,21 +147,21 @@
                         <div id="dc-custom-status-area"></div>
                       </div>
                       <div class="dc-profile-body">
-                        <div class="dc-name-block">
-                          <div class="dc-display-name">ian.
+                        <div class="dc-name-block mb-2">
+                          <div class="dc-display-name d-flex align-items-center flex-wrap">ian.
                             <a href="https://discord.gg/mysticraft" target="_blank"><span class="dc-badge"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" class="dc-badge-img" alt="">MYST</span></a>
                             <button class="dc-copy-btn" id="dc-copy-btn" title="Copy User ID"><i class="bi bi-copy"></i></button>
                           </div>
-                          <div class="dc-username-pronouns">
+                          <div class="dc-username-pronouns d-flex align-items-center gap-1">
                             <span class="dc-username">iancheung.dev</span>
                             <span class="dc-dot-sep">•</span>
                             <span class="dc-pronouns">he/him</span>
                           </div>
                         </div>
                         <div class="dc-divider"></div>
-                        <div class="dc-section-block dc-section-inline">
+                        <div class="dc-section-block dc-section-inline d-flex align-items-center gap-2 mb-1">
                           <span class="dc-section-label">GAME COLLECTION</span>
-                          <div class="dc-games-row">
+                          <div class="dc-games-row d-flex gap-1">
                             <img class="dc-game-thumb"
                                  src="https://cdn.discordapp.com/app-icons/1402418491272986635/166fbad351ecdd02d11a3b464748f66b.png?size=128"
                                  title="Minecraft" alt="Minecraft"
@@ -358,37 +358,60 @@
     <section id="music">
       <div class="resume">
         <div class="about-me container">
-          <div class="section-title">
-            <a href="https://www.youtube.com/@iancheung0202" target="_blank"><p><i class="bi bi-youtube" style="color: red !important;"></i> Official Artist Channel <i class="bi bi-apple-music" style="color: black !important;"></i></a></p>
+          <div class="pt-4 pb-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <img id="yt-channel-avatar-img" class="yt-channel-avatar" alt="Ian Cheung">
+              <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                  <span class="yt-channel-name" id="yt-channel-name-text">Ian Cheung</span>
+                  <span class="yt-oac-badge" title="Official Artist Channel">
+                    <i class="bi bi-music-note"></i> Official Artist Channel
+                  </span>
+                </div>
+                <div class="yt-channel-meta d-flex align-items-center flex-wrap gap-1">
+                  <span id="yt-channel-handle-text">@iancheung0202</span>
+                  <span>·</span>
+                  <span>he/him</span>
+                  <span>·</span>
+                  <span><span id="yt-sub-purecounter" data-purecounter-start="0" data-purecounter-end="0" data-purecounter-duration="1" class="purecounter">0</span> subscribers</span>
+                  <span>·</span>
+                  <span id="yt-video-count">0 videos</span>
+                </div>
+                <a href="https://www.youtube.com/@iancheung0202?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="yt-subscribe-btn mt-2">Subscribe</a>
+              </div>
+            </div>
           </div>
-          
-          <div class="row">
-            <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
-              <ul class="nav nav-tabs music-tabs" id="musicTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="composition-tab" data-bs-toggle="tab" data-bs-target="#composition" type="button" role="tab" aria-controls="composition" aria-selected="true">Compositions</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="solo-tab" data-bs-toggle="tab" data-bs-target="#solo" type="button" role="tab" aria-controls="solo" aria-selected="false">Solo</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="chamber-tab" data-bs-toggle="tab" data-bs-target="#chamber" type="button" role="tab" aria-controls="chamber" aria-selected="false">Chamber Music</button>
-                </li>
-              </ul>
-              <div class="tab-content" id="musicTabsContent">
-                <div class="tab-pane fade show active" id="composition" role="tabpanel" aria-labelledby="composition-tab">
-                  <div class="playlist-videos" data-playlist="PLpUrrjNSgaH7PepiRWjm7J4Qmwm3IOhNY" style="display: flex; overflow-x: auto; gap: 10px; padding: 10px 0;"></div>
+          <div>
+            <ul class="nav music-tabs" id="musicTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="composition-tab" data-bs-toggle="tab" data-bs-target="#composition" type="button" role="tab" aria-controls="composition" aria-selected="true">Compositions</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="solo-tab" data-bs-toggle="tab" data-bs-target="#solo" type="button" role="tab" aria-controls="solo" aria-selected="false">Solo</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="chamber-tab" data-bs-toggle="tab" data-bs-target="#chamber" type="button" role="tab" aria-controls="chamber" aria-selected="false">Chamber Music</button>
+              </li>
+            </ul>
+            <div class="tab-content pt-3" id="musicTabsContent">
+              <div class="tab-pane fade show active" id="composition" role="tabpanel" aria-labelledby="composition-tab">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH7PepiRWjm7J4Qmwm3IOhNY">
+                  <div class="col-12 text-center text-muted py-3"><small><i class="bi bi-arrow-clockwise"></i> Loading videos...</small></div>
                 </div>
-                <div class="tab-pane fade" id="solo" role="tabpanel" aria-labelledby="solo-tab">
-                  <div class="playlist-videos" data-playlist="PLpUrrjNSgaH4qflv_8jZQe_59uJHeiDPy" style="display: flex; overflow-x: auto; gap: 10px; padding: 10px 0;"></div>
+              </div>
+              <div class="tab-pane fade" id="solo" role="tabpanel" aria-labelledby="solo-tab">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH4qflv_8jZQe_59uJHeiDPy">
+                  <div class="col-12 text-center text-muted py-3"><small><i class="bi bi-arrow-clockwise"></i> Loading videos...</small></div>
                 </div>
-                <div class="tab-pane fade" id="chamber" role="tabpanel" aria-labelledby="chamber-tab">
-                  <div class="playlist-videos" data-playlist="PLpUrrjNSgaH6byLvURf5Yt1qxkuJobSa4" style="display: flex; overflow-x: auto; gap: 10px; padding: 10px 0;"></div>
+              </div>
+              <div class="tab-pane fade" id="chamber" role="tabpanel" aria-labelledby="chamber-tab">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH6byLvURf5Yt1qxkuJobSa4">
+                  <div class="col-12 text-center text-muted py-3"><small><i class="bi bi-arrow-clockwise"></i> Loading videos...</small></div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div class="row" style="margin-top: 20px;">
             <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
               <h3>Violinist.</h3>
@@ -400,7 +423,7 @@
                       document.write('<span data-purecounter-start="0" data-purecounter-end="' + years + '" data-purecounter-duration="1" class="purecounter">' + years + '</span>');
                      </script>
                     <p style="text-align: center;">Years of Music Education</p>
-                  </div>
+                </div>
               </div>
               <p>
                 <small class="paragraph">I have studied violin for 11 years, most recently with Professor Chen Zhao of the San Francisco Symphony and Conservatory of Music, where I attended the Pre-College Program (2023–2025). In the 2024–25 season, I served as co-concertmaster of the San Francisco Symphony Youth Orchestra. Born and raised in Hong Kong, I studied with Professor Michael Ma, former Head of Strings at the Hong Kong Academy for Performing Arts, and Ms. Li Junjun. In 2022, I earned the Fellowship of Trinity College London (FTCL) Level 7 Diploma in Violin Performance.</small>
@@ -418,7 +441,7 @@
       </div>
     </section>
 
-    <section id="blog" class="resume">
+    <!-- <section id="blog" class="resume">
       <div class="about-me container">
         <div class="row">
           <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
@@ -446,7 +469,7 @@
         </div>
         <br>
       </div>
-    </section>
+    </section> -->
 
 
     <div class="credits">

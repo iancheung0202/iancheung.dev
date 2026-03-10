@@ -191,9 +191,6 @@
 
   const toggleButton = select("#toggle-button");
   toggleButton.addEventListener("click", function() {
-    // extensions.js updates the button title before this handler runs.
-    // Title "Enable Light Mode"  → we just switched TO dark.
-    // Title "Enable Dark Mode"   → we just switched TO light.
     const isDark = select("#toggle-button").getAttribute('title') === 'Enable Light Mode';
     localStorage.setItem("theme", isDark ? 'dark' : 'light');
   });
