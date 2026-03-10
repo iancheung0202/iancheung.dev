@@ -150,12 +150,15 @@
    * Activate/show sections on load with hash links
    */
   window.addEventListener('load', () => {
-    let viewModeBtn = select("#toggle-button");
-    const userTheme = localStorage.getItem("theme");
-    viewModeBtn.click()
-    if (!userTheme || userTheme === "light") {
-      viewModeBtn.click()
-    } 
+    const storedTheme = localStorage.getItem("theme");
+
+    const targetTheme = storedTheme
+      ? storedTheme
+      : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    if (window.applyTheme) {
+      window.applyTheme(targetTheme === 'dark', false);
+    }
 
     if (window.location.hash) {
       let initial_nav = select(window.location.hash)
@@ -188,7 +191,11 @@
 
   const toggleButton = select("#toggle-button");
   toggleButton.addEventListener("click", function() {
-    localStorage.setItem("theme", document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light");
+    // extensions.js updates the button title before this handler runs.
+    // Title "Enable Light Mode"  → we just switched TO dark.
+    // Title "Enable Dark Mode"   → we just switched TO light.
+    const isDark = select("#toggle-button").getAttribute('title') === 'Enable Light Mode';
+    localStorage.setItem("theme", isDark ? 'dark' : 'light');
   });
 
   /**

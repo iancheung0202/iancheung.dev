@@ -22,6 +22,8 @@
     <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
     <meta name="keywords" content="Ian Cheung, Music, Violin, Composition, Composer, Web Developer, Python, HTML, CSS, JavaScript, Ian, Coding">
     <meta name="author" content="Ian Cheung">
     <meta property="og:url" content="https://www.iancheung.dev">
@@ -67,23 +69,23 @@
             <nav id="navbar" class="navbar">
               <ul>
                 <li>
-                  <a class="nav-link active" href="#header" id="home">home</a>
+                  <a class="nav-link active" href="#header" id="home" data-pitch="C4">home</a>
                 </li>
                 <li class="nav-divider page">/</li>
                 <li>
-                  <a class="nav-link page" href="#coding" id="navCoding">projects</a>
+                  <a class="nav-link page" href="#coding" id="navCoding" data-pitch="E4">projects</a>
                 </li>
                 <li class="nav-divider page">/</li>
                 <li>
-                  <a class="nav-link page" href="#music" id="navMusic">music</a>
+                  <a class="nav-link page" href="#music" id="navMusic" data-pitch="G4">music</a>
                 </li>
                 <li class="nav-divider page">/</li>
                 <!-- <li>
-                  <a class="nav-link page" href="#blog">blog</a>
+                  <a class="nav-link page" href="#blog" data-pitch="C5">blog</a>
                 </li>
                 <li class="nav-divider page">/</li> -->
                 <li>
-                  <a class="non-nav-link page" href="resume.pdf" target="_blank">resume</a>
+                  <a class="non-nav-link page" href="resume.pdf" target="_blank" data-pitch="C5">resume</a>
                 </li>
               </ul>
               <i class="bi bi-list mobile-nav-toggle" id="mobile-nav-toggle"></i>
@@ -243,200 +245,37 @@
 
     <section id="coding" class="resume">
       <div class="about-me container">
-        <div class="row">
-          <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
-            <h3>Web Developer, Data Scientist &amp; Python Programmer.</h3>
-            <p>
-              <small class="paragraph">My name is Ian, and I am a front-end web developer, Discord bot developer, and data scientist. It was actually the onset of the pandemic and the shift to online schooling that prompted my interest in coding. Having my routine disrupted, I felt compelled to learn something new, particularly with the abundance of free time available due to online schooling. Thus, I began dedicating my evenings and weekends to constructing (horrible) websites for myself and my friends. Now, programming is still one of my most fulfilling hobbies, most notably due to the ability to create products I or someone else could use. Mastering computer programming also allows me to think independently, solve problems, and be resilient when facing seemingly impossible challenges. </small>
-            </p>
-            <p>
-              <small class="paragraph">As such, I am very eager to explore coding outside of school through developing mini-games, websites, and Discord bots. Particularly, this website is used for me to learn more about front-end web development, as well as showcasing my achievements and the projects that I completed. Here are some things I'm proud of in my journey of being a developer so far:</small>
-            </p>
-            <p>
-              <small class="paragraph">As I am pursuing programming as a hobby, I try to make myself useful by contributing to the community around me through writing projects or applications for others to use, as well as tutoring young students. This allows me to give back to my community, which in turn encourages young kids who might have the potential to become good critical thinkers to start coding early.</small>
-            </p>
-            <br>
-            <div class="row">
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://tierlist.mysticraft.xyz" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/tierlist-demo.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      MystiCraft Tierlist 
-                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
-                        <span class="checkmark-icon">
-                          <svg viewBox="0 0 24 24">
-                            <polyline points="3 11 7 17 20 7" />
-                          </svg>
-                        </span>
-                        APP
-                      </div>
-                    </h4>
-                    <p>Web + Discord Application 
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Client Project"></i>
-                    </p>
-                  </div>
-                </a>
+        <!-- <div class="row">
+          <div class="col-lg-12 pt-4 pt-lg-0 content" > -->
+            <div class="ide-showcase" id="ide-showcase" aria-label="Project showcase" data-aos="fade-left">
+              <div class="ide-sidebar">
+                <div class="ide-sidebar-title">
+                  <i class="bi bi-files"></i>
+                  <span>EXPLORER</span>
+                </div>
+                <div class="ide-folder-row" id="ide-folder-toggle">
+                  <i class="bi bi-chevron-down ide-chevron"></i>
+                  <i class="bi bi-folder2-open" style="color:#efc46e"></i>
+                  <span>projects</span>
+                </div>
+                <ul class="ide-file-list" id="ide-file-list" role="listbox" aria-label="Project files"></ul>
               </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://servercv.com" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/servercv-demo.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      ServerCV 
-                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
-                        <span class="checkmark-icon">
-                          <svg viewBox="0 0 24 24">
-                            <polyline points="3 11 7 17 20 7" />
-                          </svg>
-                        </span>
-                        APP
-                      </div>
-                    </h4>
-                    <p>Web + Discord Application 
-                      <a href="https://github.com/iancheung0202/ServerCV" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://fischl.app" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/fischl-demo.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      Fischl 
-                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
-                        <span class="checkmark-icon">
-                          <svg viewBox="0 0 24 24">
-                            <polyline points="3 11 7 17 20 7" />
-                          </svg>
-                        </span>
-                        APP
-                      </div>
-                    </h4>
-                    <p>Verified Discord Python Bot 
-                      <a href="https://github.com/iancheung0202/Fischl" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://cloud.iancheung.dev/s/tDFi7PzcbNfELyP" target="_blank">
-                
-                  <div class="icon-box">
-                    <img src="assets/img/collisioneers.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      Analysis of California Traffic Collisions
-                    </h4>
-                    <p>Exploratory Data Analysis Project <a href="https://github.com/iancheung0202/Traffic-Collisions-Analysis" target="_blank">
-                      <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                    </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Stanford University DATASCI 112"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://colab.research.google.com/drive/1P-HjOVVsKfAfO2tAeJwsaQFkiGEL9XEF?usp=sharing" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/obj_dect.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      Object Detection
-                    </h4>
-                    <p>Python Neural Network Project <a href="https://cloud.iancheung.dev/s/ByorKiXfbQaHAMc" target="_blank">
-                        <i class="ri-slideshow-3-line" id="normal-text" data-toggle="tooltip" data-placement="top" title="Project Description + Demo"></i>
-                      </a>
-                      <!--<a href="https://colab.research.google.com/drive/16pHtFNER0nHd_uQSO80RnsVZ40g1isDb?usp=sharing" target="_blank"><i class="bi-plus-circle-fill" id="normal-text" data-toggle="tooltip" data-placement="top" title="Real-time Detection Application"></i></a>-->
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Best Project Presentation for Inspirit AI"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>This application only runs on Google Colab.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://iancheung0202.github.io/RecycleSorter/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/original.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      RecycleSorter
-                    </h4>
-                    <p>JavaScript Image Classification Project <a href="https://github.com/iancheung0202/RecycleSorter" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Most Creative Award Entry for GunnHacks 9.0"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>This application currently does not support all browsers.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/htmlessentials.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      HTML Essentials
-                    </h4>
-                    <p>Publication <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
-                        <i class="bi bi-eye" id="normal-text" data-toggle="tooltip" data-placement="top" title="View PDF"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://github.com/iancheung0202/dodge-n-shoot" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/dodge-n-shoot.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      Dodge n' Shoot
-                    </h4>
-                    <p>Python Mini-game <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Project for Python Game Development by UCode"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>You must install Python & Pygame on your local machine to run it.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://iancheung0202.github.io/lsc-library-attendance-2021-22/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/library-attendance.png" class="img-fluid project-img" height="200px" loading="lazy">
-                    <h4>
-                      Librarian Attendance System
-                    </h4>
-                    <p>HTML, CSS & JS Front-end System <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Adopted by LSC Library Board while serving as Chief IT Developer during 2021-22"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>This system is depreciated and does not work as intended.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
+              <div class="ide-editor-pane">
+                <div class="ide-tab-bar" id="ide-tab-bar" role="tablist"></div>
+                <div class="ide-scroll-area" id="ide-scroll-area" role="region" aria-label="Project details"></div>
+                <div class="ide-status-bar">
+                  <span class="ide-status-left">
+                    <i class="bi bi-git"></i>
+                    <span>main</span>
+                  </span>
+                  <span class="ide-status-right">
+                    <span id="ide-status-filename">—</span>
+                    &nbsp;·&nbsp; UTF-8
+                  </span>
+                </div>
               </div>
             </div>
-            <div class="col-lg-12">
+            <!-- <div class="col-lg-12">
               <h3 class="resume-title">
                 <i class="bi bi-person"></i> Experience
               </h3>
@@ -467,14 +306,14 @@
                   <div class="col-lg-6">
                     <p class="paragraph">Inspired to bridge the digital divide in our community, we provide support in computer science to middle and high school kids who may not receive it at home, and encourage kids consider tech as a career, regardless of their background. As an instructor, I fully designed a cirriculum for 6-12 years old to learn Python in a fun and rewarding way, all while mastering the basics of programming in Python. </p>
                   </div>
-                  <!-- <div class="col-lg-4 col-md-8">
+                  <div class="col-lg-4 col-md-8">
                     <a href="https://drive.google.com/drive/folders/1FiYVVwxnvKQCv9WU3sMp46D4Jc2xZ2Bp?usp=sharing" target="_blank">
                       <div id="courseGuide">
                         <h4>View Course Materials <i class="bi bi-box-arrow-up-right"></i>
                         </h4>
                       </div>
                     </a>
-                  </div> -->
+                  </div>
                 </div>
               </div>
               <div class="resume-item resume-item-coding">
@@ -491,14 +330,14 @@
                   <div class="col-lg-6">
                     <p class="paragraph">Every Sunday, I witnessed young kids' enthusiasm and creativity flourish as they learned coding fundamentals by programming robots and building LEGOs. We provided individual support and created a supportive environment for the children to grow, try, and learn. Moreover, explaining seemingly simple concepts to children significantly improved my communication and problem-solving skills as well. </p>
                   </div>
-                  <!-- <div class="col-lg-6 images-container">
+                  <div class="col-lg-6 images-container">
                     <div class="image-wrapper">
                       <img src="https://peninsula360press.com/wp-content/uploads/2022/05/MAKERSPACE-FOTO-NOTA-1024x768.jpg">
                     </div>
                     <div class="image-wrapper">
                       <img src="assets/img/LegoRobotics-RedwoodCityPublicLibrary.jpg">
                     </div>
-                  </div> -->
+                  </div> 
                 </div>
               </div>
               <div class="resume-item resume-item-coding">
@@ -509,9 +348,9 @@
                 </p>
                 <p class="paragraph">My primary role was to oversee the library's technological infrastructure and I was responsible for managing and maintaining the library's hardware and software, as well as implementing new technologies to improve the library's operations and services. I had worked closely with the library committee team and <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank" style="color: #47aeff;">developed an automatic clock-in system</a> for school librarians, resulting in a significant improvement in our efficiency in recording attendance. </p>
               </div>
-            </div>
-          </div>
-        </div>
+            </div> -->
+          <!-- </div>
+        </div> -->
       </div>
       </div>
     </section>

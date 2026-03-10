@@ -125,7 +125,11 @@
 
             activityStartTimes = regularActivities.map(act => act.timestamps && act.timestamps.start ? parseInt(act.timestamps.start, 10) : null);
             if (regularActivities.length === 0) {
-                feed.innerHTML = '';
+                feed.innerHTML = `
+                <div class="dc-no-activity">
+                    <i class="bi bi-moon-stars" style="font-size:24px;opacity:0.4;"></i>
+                    <span>No activity right now. Check back soon!</span>
+                </div>`;
             } else {
                 feed.innerHTML = regularActivities.map((a, i) => renderActivity(a, i)).join('');
             }
@@ -432,10 +436,12 @@
         if (button.classList.contains("a-active")) {
             document.getElementsByTagName("BODY")[0].style.fontFamily = "Open Sans";
             select(".subtitle", true).forEach(el => el.style.fontFamily = "Open Sans");
+            document.documentElement.style.setProperty('--ui-font', '"Open Sans", sans-serif');
             button.classList.remove("a-active");
         } else {
             document.getElementsByTagName("BODY")[0].style.fontFamily = "monospace";
             select(".subtitle", true).forEach(el => el.style.fontFamily = "monospace");
+            document.documentElement.style.setProperty('--ui-font', 'monospace');
             button.classList.add("a-active");
         }
         windowDiv.style.height = 'auto'; 
@@ -665,12 +671,8 @@
      */
     toggleLightDarkButton.setAttribute('title', 'Enable Dark Mode');
 
-    on('click', '#toggle-button', () => {
-        const rootStyles = getComputedStyle(document.documentElement);
-
-        const currentBgColor = rootStyles.getPropertyValue('--background-color').trim();
-        
-        const white = 'rgb(250, 250, 230)';
+    window.applyTheme = function(isDark, playTone = false) {
+        const white = 'rgb(253, 253, 230)';
         const black = 'rgb(0, 0, 0)';
         const fadedBlack = 'rgb(40, 39, 39)';
         const veryFadedBlack = 'rgb(0, 0, 0, 0.2)';
@@ -685,11 +687,11 @@
         const green = 'rgb(24, 210, 110)';
         const iconBoxBlack = 'rgba(255, 255, 255, 0.08)';
         const hoverIconBoxBlack = 'rgba(255, 255, 255, 0.12)';
-        const footerGreen = 'rgb(50, 67, 40)';
+        const footerGreen = 'rgb(32, 37, 29)';
 
         let newBgColor, newTextColor, newFadedColor, newVeryFadedColor, newHeaderColor, newHeaderBg, newIconBox, newHoverIconBox, newFooterColor;
 
-        if (currentBgColor == white) { // Currently light mode, set to dark mode
+        if (isDark) { // set to dark mode
             newBgColor = black;
             newTextColor = white;
             newFadedColor = fadedWhite;
@@ -700,14 +702,56 @@
             newHoverIconBox = hoverIconBoxBlack;
             newFooterColor = footerGreen;
             toggleLightDarkButton.setAttribute('title', 'Enable Light Mode');
-            // Discord card — dark mode
             document.documentElement.style.setProperty('--dc-card-bg', '#232428');
             document.documentElement.style.setProperty('--dc-card-section-bg', '#2b2d31');
             document.documentElement.style.setProperty('--dc-card-text', '#f2f3f5');
             document.documentElement.style.setProperty('--dc-card-text-muted', '#b5bac1');
             document.documentElement.style.setProperty('--dc-card-divider', '#3a3b3e');
             document.documentElement.style.setProperty('--dc-avatar-border-color', '#232428');
-        } else { // Currently dark mode, set to light mode
+
+            if (playTone && typeof Tone !== 'undefined') {
+                Tone.start();
+                if (!window.webSynth) {
+                    window.webSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+                    window.webSynth.volume.value = -12;
+                }
+                const now = Tone.now();
+                ["B2", "Gb3", "B3"].forEach((note, i) => {
+                    window.webSynth.triggerAttackRelease(note, "8n", now + i * 0.2);
+                });
+            }
+            
+            select('#home').setAttribute('data-pitch', 'B3');
+            select('#navCoding').setAttribute('data-pitch', 'Eb4');
+            select('#navMusic').setAttribute('data-pitch', 'Gb4');
+            select('a[href="resume.pdf"]')?.setAttribute('data-pitch', 'B4');
+            // IDE dark theme
+            document.documentElement.style.setProperty('--ide-bg', '#1e1e1e');
+            document.documentElement.style.setProperty('--ide-sidebar-bg', '#252526');
+            document.documentElement.style.setProperty('--ide-border', '#474747');
+            document.documentElement.style.setProperty('--ide-border-inner', '#3c3c3c');
+            document.documentElement.style.setProperty('--ide-tab-bg', '#2d2d2d');
+            document.documentElement.style.setProperty('--ide-tab-active-bg', '#1e1e1e');
+            document.documentElement.style.setProperty('--ide-tab-text', '#969696');
+            document.documentElement.style.setProperty('--ide-tab-active-text', '#ffffff');
+            document.documentElement.style.setProperty('--ide-tab-hover-bg', '#292929');
+            document.documentElement.style.setProperty('--ide-tab-hover-text', '#cccccc');
+            document.documentElement.style.setProperty('--ide-item-hover-bg', '#2a2d2e');
+            document.documentElement.style.setProperty('--ide-file-active-bg', '#094771');
+            document.documentElement.style.setProperty('--ide-file-text', '#cccccc');
+            document.documentElement.style.setProperty('--ide-sidebar-title-text', '#bbbbbb');
+            document.documentElement.style.setProperty('--ide-scrollbar-thumb', '#424242');
+            document.documentElement.style.setProperty('--ide-scrollbar-track', '#1e1e1e');
+            document.documentElement.style.setProperty('--ide-img-bg', '#1a1a1a');
+            document.documentElement.style.setProperty('--ide-card-bg', '#252526');
+            document.documentElement.style.setProperty('--ide-text', '#ffffff');
+            document.documentElement.style.setProperty('--ide-text-muted', '#cccccc');
+            document.documentElement.style.setProperty('--ide-subtitle-text', '#858585');
+            document.documentElement.style.setProperty('--ide-linenum-text', '#5a5a5a');
+            document.documentElement.style.setProperty('--ide-link-text', '#3794ff');
+            document.documentElement.style.setProperty('--ide-link-hover', '#60a9ff');
+            document.documentElement.style.setProperty('--ide-shadow', 'rgba(0,0,0,0.5)');
+        } else { // set to light mode
             newBgColor = white;
             newTextColor = black;
             newFadedColor = fadedBlack;
@@ -718,13 +762,55 @@
             newHoverIconBox = hoverIconBoxWhite;
             newFooterColor = footerBlue;
             toggleLightDarkButton.setAttribute('title', 'Enable Dark Mode');
-            // Discord card — light mode
             document.documentElement.style.setProperty('--dc-card-bg', '#f2f3f5');
             document.documentElement.style.setProperty('--dc-card-section-bg', '#e3e5e8');
             document.documentElement.style.setProperty('--dc-card-text', '#2e3035');
             document.documentElement.style.setProperty('--dc-card-text-muted', '#5c5f66');
             document.documentElement.style.setProperty('--dc-card-divider', '#d4d5d7');
             document.documentElement.style.setProperty('--dc-avatar-border-color', '#f2f3f5');
+
+            if (playTone && typeof Tone !== 'undefined') {
+                Tone.start();
+                if (!window.webSynth) {
+                    window.webSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+                    window.webSynth.volume.value = -12;
+                }
+                const now = Tone.now();
+                ["C3", "G3", "C4"].forEach((note, i) => {
+                    window.webSynth.triggerAttackRelease(note, "8n", now + i * 0.2);
+                });
+            }
+            
+            select('#home').setAttribute('data-pitch', 'C4');
+            select('#navCoding').setAttribute('data-pitch', 'E4');
+            select('#navMusic').setAttribute('data-pitch', 'G4');
+            select('a[href="resume.pdf"]')?.setAttribute('data-pitch', 'C5');
+            // IDE light theme
+            document.documentElement.style.setProperty('--ide-bg', '#ffffff');
+            document.documentElement.style.setProperty('--ide-sidebar-bg', '#f3f3f3');
+            document.documentElement.style.setProperty('--ide-border', '#e7e7e7');
+            document.documentElement.style.setProperty('--ide-border-inner', '#e0e0e0');
+            document.documentElement.style.setProperty('--ide-tab-bg', '#ececec');
+            document.documentElement.style.setProperty('--ide-tab-active-bg', '#ffffff');
+            document.documentElement.style.setProperty('--ide-tab-text', '#8e8e8e');
+            document.documentElement.style.setProperty('--ide-tab-active-text', '#333333');
+            document.documentElement.style.setProperty('--ide-tab-hover-bg', '#e0e0e0');
+            document.documentElement.style.setProperty('--ide-tab-hover-text', '#333333');
+            document.documentElement.style.setProperty('--ide-item-hover-bg', '#e5e5e5');
+            document.documentElement.style.setProperty('--ide-file-active-bg', '#0060c0');
+            document.documentElement.style.setProperty('--ide-file-text', '#333333');
+            document.documentElement.style.setProperty('--ide-sidebar-title-text', '#6f6f6f');
+            document.documentElement.style.setProperty('--ide-scrollbar-thumb', '#c2c2c2');
+            document.documentElement.style.setProperty('--ide-scrollbar-track', '#f5f5f5');
+            document.documentElement.style.setProperty('--ide-img-bg', '#e8e8e8');
+            document.documentElement.style.setProperty('--ide-card-bg', '#f5f5f5');
+            document.documentElement.style.setProperty('--ide-text', '#1a1a1a');
+            document.documentElement.style.setProperty('--ide-text-muted', '#555555');
+            document.documentElement.style.setProperty('--ide-subtitle-text', '#777777');
+            document.documentElement.style.setProperty('--ide-linenum-text', '#999999');
+            document.documentElement.style.setProperty('--ide-link-text', '#0066cc');
+            document.documentElement.style.setProperty('--ide-link-hover', '#004499');
+            document.documentElement.style.setProperty('--ide-shadow', 'rgba(0,0,0,0.15)');
         }
 
         document.documentElement.style.setProperty('--background-color', newBgColor);
@@ -736,7 +822,18 @@
         document.documentElement.style.setProperty('--icon-box', newIconBox);
         document.documentElement.style.setProperty('--hover-icon-box', newHoverIconBox);
         document.documentElement.style.setProperty('--footer-background-color', newFooterColor);
-        bootstrap.Tooltip.getInstance(toggleLightDarkButton).setContent({ '.tooltip-inner': toggleLightDarkButton.getAttribute('title') });
+        
+        const tooltip = bootstrap.Tooltip.getInstance(toggleLightDarkButton);
+        if (tooltip) {
+            tooltip.setContent({ '.tooltip-inner': toggleLightDarkButton.getAttribute('title') });
+        }
+    };
+
+    on('click', '#toggle-button', () => {
+        const title = toggleLightDarkButton.getAttribute('title');
+        const isCurrentlyLight = title === 'Enable Dark Mode';
+        
+        window.applyTheme(isCurrentlyLight, true);
     });
 
 
@@ -1201,4 +1298,395 @@
             }
         });
     });
+
+    /**
+     * Pitch playback on nav hover
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof Tone !== 'undefined') {
+            let audioUnlocked = false;
+
+            const unlockAudio = async () => {
+                if (!audioUnlocked) {
+                    await Tone.start();
+                    if (!window.webSynth) {
+                        window.webSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+                        window.webSynth.volume.value = -12; // Lower the volume to prevent it from being too loud
+                    }
+                    audioUnlocked = true;
+                    document.removeEventListener('click', unlockAudio);
+                    document.removeEventListener('keydown', unlockAudio);
+                    document.removeEventListener('touchstart', unlockAudio);
+                }
+            };
+
+            document.addEventListener('click', unlockAudio);
+            document.addEventListener('keydown', unlockAudio);
+            document.addEventListener('touchstart', unlockAudio);
+            
+            document.querySelectorAll('#navbar a').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    const pitch = item.getAttribute('data-pitch');
+                    if (pitch && audioUnlocked && window.webSynth) {
+                        window.webSynth.triggerAttackRelease(pitch, "16n");
+                    }
+                });
+            });
+        }
+    });
+
+    /**
+     * IDE Project Showcase
+     */
+    var IDE_PROJECTS = [
+        {
+            id: 'readme',
+            title: 'README',
+            filename: 'README.md',
+            fileColor: '#c1d9ef',
+            type: 'readme',
+            lines: [
+                '# Full Stack Developer & Data Scientist.',
+                'My name is Ian, and I am a full-stack web developer, Discord bot developer, and data scientist. It was actually the onset of the pandemic and the shift to online schooling that prompted my interest in coding. Having my routine disrupted, I felt compelled to learn something new, particularly with the abundance of free time available due to online schooling. Thus, I began dedicating my evenings and weekends to constructing (horrible) websites for myself and my friends. Now, programming is still one of my most fulfilling hobbies, most notably due to the ability to create products I or someone else could use. Mastering computer programming also allows me to think independently, solve problems, and be resilient when facing seemingly impossible challenges.',
+                'As such, I am very eager to explore coding outside of school through developing mini-games, websites, and Discord bots. Particularly, this website is used for me to learn more about front-end web development, as well as showcasing my achievements and the projects that I completed.',
+                'As I am pursuing programming as a hobby, I try to make myself useful by contributing to the community around me through writing projects or applications for others to use, as well as tutoring young students. This allows me to give back to my community, which in turn encourages young kids who might have the potential to become good critical thinkers to start coding early.'
+            ]
+        },
+        {
+            id: 'mysticraft-tierlist',
+            title: 'MystiCraft Tierlist',
+            filename: 'tierlist.html',
+            fileColor: '#4fc1ff',
+            subtitle: 'Web + Discord Application',
+            link: 'https://tierlist.mysticraft.xyz',
+            image: 'assets/img/tierlist-demo.png',
+            tags: [
+                { label: 'FastAPI', bg: '#3178c6' },
+                { label: 'MariaDB', bg: '#20232a', fg: '#61dafb' },
+                { label: 'Discord.py', bg: '#5865f2' },
+                { label: 'Client Project', bg: '#b45309' }
+            ],
+            verified: true,
+            sourceLink: 'https://github.com/iancheung0202/MystiCraft-Tierlist',
+            description: 'A full-stack tier list web application integrated with a Discord bot for displaying player rankings and leaderboards for various combat gamemodes on the MystiCraft Minecraft server.',
+        },
+        {
+            id: 'servercv',
+            title: 'ServerCV',
+            filename: 'servercv.html',
+            fileColor: '#4fc1ff',
+            subtitle: 'Web + Discord Application',
+            link: 'https://servercv.com',
+            image: 'assets/img/servercv-demo.png',
+            tags: [
+                { label: 'Discord.py', bg: '#5865f2' },
+                { label: 'Flask', bg: '#3178c6' },
+                { label: 'Tailwind CSS', bg: '#3c873a' },
+                { label: 'PayPal SDK', bg: '#00b0f4' }
+            ],
+            verified: true,
+            sourceLink: 'https://github.com/iancheung0202/ServerCV',
+            description: 'ServerCV generates elegant, shareable resume-style portfolios for Discord server moderators and owners. Perfect for staff applications and sharing your moderation history in the Discord community.',
+        },
+        {
+            id: 'fischl',
+            title: 'Fischl',
+            filename: 'fischl.py',
+            fileColor: '#3572A5',
+            subtitle: 'Verified Discord Python Bot',
+            link: 'https://fischl.app',
+            image: 'assets/img/fischl-demo.png',
+            tags: [
+                { label: 'Discord.py', bg: '#5865f2' },
+                { label: 'Firebase', bg: '#3e3a37', fg: '#fe9f64' },
+                { label: 'PostgreSQL', bg: '#2edcd7', fg: '#000000' },
+                { label: 'Grafana & Prometheus', bg: '#c27c0e' },
+                { label: 'PayPal SDK', bg: '#00b0f4' }
+            ],
+            verified: true,
+            sourceLink: 'https://github.com/iancheung0202/Fischl',
+            description: 'Fischl is a verified, multi-purpose, Genshin Impact-themed Discord bot with a variety of features like tickets, co-op matchmaking, welcomer, chat minigames, birthday wishes, and more. Over 100,000 users across all servers.',
+        },
+        {
+            id: 'traffic-collisions',
+            title: 'CA Traffic Collisions',
+            filename: 'analysis.ipynb',
+            fileColor: '#f37626',
+            subtitle: 'Exploratory Data Analysis',
+            link: 'https://cloud.iancheung.dev/s/tDFi7PzcbNfELyP',
+            image: 'assets/img/collisioneers.png',
+            tags: [
+                { label: 'Matplotlib', bg: '#130654' },
+                { label: 'Scikit-learn', bg: '#11557c' },
+                { label: 'DATASCI 112', bg: '#8c1515' }
+            ],
+            verified: false,
+            sourceLink: 'https://github.com/iancheung0202/Traffic-Collisions-Analysis',
+            description: "A EDA project using a dataset from the California Highway Patrol with ~5 million records from 2001-2020. The study identifies high-risk corridors, correlates weather and time-of-day factors with severity, and visualizes county-level hotspots geospatially. Final project for Stanford's DATASCI 112.",
+        },
+        {
+            id: 'object-detection',
+            title: 'Object Detection',
+            filename: 'model.py',
+            fileColor: '#3572A5',
+            subtitle: 'Python Neural Network Project',
+            link: 'https://colab.research.google.com/drive/1P-HjOVVsKfAfO2tAeJwsaQFkiGEL9XEF?usp=sharing',
+            image: 'assets/img/obj_dect.png',
+            tags: [
+                { label: 'TensorFlow', bg: '#ff6f00' },
+                { label: 'OpenCV', bg: '#5c3ee8' },
+                { label: 'Inspirit AI', bg: '#0d6efd' }
+            ],
+            verified: false,
+            sourceLink: null,
+            description: "A real-time web object detection pipeline using TensorFlow. The model identifies and locates multiple objects in a single frame with bounding boxes and confidence scores. Awarded 'Best Project Presentation' at the Inspirit AI program.",
+        },
+        {
+            id: 'recyclesorter',
+            title: 'RecycleSorter',
+            filename: 'classifier.js',
+            fileColor: '#f0db4f',
+            subtitle: 'JavaScript Image Classification',
+            link: 'https://iancheung0202.github.io/RecycleSorter/',
+            image: 'assets/img/original.png',
+            tags: [
+                { label: 'TensorFlow.js', bg: '#ff6f00' },
+                { label: 'GunnHacks 9.0', bg: '#2e7d32' }
+            ],
+            verified: false,
+            sourceLink: 'https://github.com/iancheung0202/RecycleSorter',
+            description: "RecycleSorter uses a browser-based ML model to classify uploaded photos as recyclable, compostable, or landfill waste. Built in 24 hours at GunnHacks 9.0, it earned the Most Creative Award for its accessible, zero-install approach to sustainable education.",
+        },
+        {
+            id: 'html-essentials',
+            title: 'HTML Essentials',
+            filename: 'html-essentials.pdf',
+            fileColor: '#e34c26',
+            subtitle: 'Publication',
+            link: 'https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST',
+            image: 'assets/img/htmlessentials.png',
+            tags: [
+                { label: 'HTML/CSS', bg: '#e34c26' },
+                { label: 'Educational', bg: '#0288d1' },
+                { label: 'Personal Project', bg: '#6a1b9a' }
+            ],
+            verified: false,
+            sourceLink: null,
+            description: "A beginner-friendly book covering core HTML and CSS concepts. Used as supplementary material for GunnHacks 11.0 coding workshops and written to lower the barrier for first-time web developers.",
+        },
+        {
+            id: 'dodge-n-shoot',
+            title: "Dodge n' Shoot",
+            filename: 'game.py',
+            fileColor: '#3572A5',
+            subtitle: 'Python Mini-game',
+            link: null,
+            image: 'assets/img/dodge-n-shoot.png',
+            tags: [
+                { label: 'Pygame', bg: '#248457' },
+                { label: 'uCode', bg: '#e53935' }
+            ],
+            verified: false,
+            sourceLink: 'https://github.com/iancheung0202/dodge-n-shoot',
+            description: "A left-right arcade game where the player dodges incoming projectiles to survive with the ability to shoot enemies. Built competely from scratch (no AI) with Pygame as a final project for uCode's Python Game Development course. Features progressive difficulty, sprite animations, and sound effects.",
+        },
+        {
+            id: 'library-attendance',
+            title: 'Librarian Attendance',
+            filename: 'attendance.html',
+            fileColor: '#4fc1ff',
+            subtitle: 'HTML, CSS & JS Front-end System',
+            link: 'https://iancheung0202.github.io/lsc-library-attendance-2021-22/',
+            image: 'assets/img/library-attendance.png',
+            tags: [
+                { label: 'JavaScript', bg: '#b5860d' },
+                { label: 'HTML/CSS', bg: '#e34c26' },
+                { label: 'Google Sheets API', bg: '#1b5e20' },
+                { label: 'LSC Library Board', bg: '#1565c0' }
+            ],
+            verified: false,
+            sourceLink: 'https://github.com/iancheung0202/lsc-library-attendance-2021-22',
+            description: "An automatic clock-in system built for La Salle College's library board. Librarians scan their student ID to log attendance, and the system exports data to Google Sheets. Officially adopted in 2021-22 and reduced manual entry effort by over 80%.",
+        }
+    ];
+
+    function ideEscapeHtml(s) {
+        return s
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function initIdeShowcase() {
+        var fileList   = document.getElementById('ide-file-list');
+        var tabBar     = document.getElementById('ide-tab-bar');
+        var scrollArea = document.getElementById('ide-scroll-area');
+        if (!fileList || !tabBar || !scrollArea) return;
+
+        IDE_PROJECTS.forEach(function(proj, idx) {
+            var li = document.createElement('li');
+            li.className = 'ide-file-item' + (idx === 0 ? ' active' : '');
+            li.setAttribute('role', 'option');
+            li.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+            li.dataset.idx = idx;
+            var icon = proj.type === 'readme'
+                ? '<i class="bi bi-markdown" style="color:' + proj.fileColor + '"></i>'
+                : '<i class="bi bi-file-earmark-code" style="color:' + proj.fileColor + '"></i>';
+            li.innerHTML = icon + '<span>' + ideEscapeHtml(proj.filename) + '</span>';
+            li.addEventListener('click', function() {
+                scrollToIdeProject(parseInt(this.dataset.idx, 10));
+            });
+            fileList.appendChild(li);
+        });
+
+        IDE_PROJECTS.forEach(function(proj, idx) {
+            var tab = document.createElement('div');
+            tab.className = 'ide-tab' + (idx === 0 ? ' active' : '');
+            tab.setAttribute('role', 'tab');
+            tab.dataset.idx = idx;
+            var icon = proj.type === 'readme'
+                ? '<i class="bi bi-markdown" style="color:' + proj.fileColor + '"></i>'
+                : '<i class="bi bi-file-earmark-code" style="color:' + proj.fileColor + '"></i>';
+            tab.innerHTML =
+                icon +
+                '<span>' + ideEscapeHtml(proj.filename) + '</span>' +
+                '<span class="ide-tab-close" aria-hidden="true">&#215;</span>';
+            tab.addEventListener('click', function() {
+                scrollToIdeProject(parseInt(this.dataset.idx, 10));
+            });
+            tabBar.appendChild(tab);
+        });
+
+        IDE_PROJECTS.forEach(function(proj, idx) {
+            var block = document.createElement('div');
+            block.className = 'ide-project-block';
+            block.id = 'ide-block-' + idx;
+
+            if (proj.type === 'readme') {
+                var rowsHtml = proj.lines.map(function(l, i) {
+                    var isHeading = l.charAt(0) === '#';
+                    var text = l;
+                    var content = isHeading
+                        ? '<h3 class="ide-readme-heading" contenteditable="true">' + ideEscapeHtml(text) + '</h3>'
+                        : '<p class="ide-readme-para" contenteditable="true">' + ideEscapeHtml(l) + '</p>';
+                    return '<div class="ide-readme-row">' +
+                               '<span class="ide-readme-linenum">' + (i + 1) + '</span>' +
+                               content +
+                           '</div>';
+                }).join('');
+                block.innerHTML = '<div class="ide-readme-block">' + rowsHtml + '</div>';
+            } else {
+                var verifiedHtml = proj.verified
+                    ? '<span class="ide-verified">' +
+                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+                      '<polyline points="3 11 7 17 20 7"/></svg> APP</span>'
+                    : '';
+
+                var badgesHtml = proj.tags.map(function(t) {
+                    var fg = t.fg || '#fff';
+                    return '<span class="ide-badge" style="background:' + t.bg + ';color:' + fg + '">' +
+                           ideEscapeHtml(t.label) + '</span>';
+                }).join('');
+
+                var sourceHtml = proj.sourceLink
+                    ? '<a href="' + proj.sourceLink + '" target="_blank" rel="noopener noreferrer" class="ide-proj-link">' +
+                      '<i class="bi bi-code-slash"></i> Source Code</a>'
+                    : '';
+
+                var viewHtml = proj.link
+                    ? '<a href="' + proj.link + '" target="_blank" rel="noopener noreferrer" class="ide-proj-link">' +
+                      '<i class="bi bi-box-arrow-up-right"></i> View Project</a>'
+                    : '';
+
+                block.innerHTML =
+                    '<div class="ide-project-card">' +
+                      '<div class="ide-project-img-wrap">' +
+                        '<img src="' + proj.image + '" alt="' + ideEscapeHtml(proj.title) + '" loading="lazy">' +
+                      '</div>' +
+                      '<div class="ide-project-body">' +
+                        '<div class="ide-proj-title-row">' +
+                          '<span class="ide-proj-title">' + ideEscapeHtml(proj.title) + '</span>' +
+                          verifiedHtml +
+                        '</div>' +
+                        '<div class="ide-proj-subtitle"><i class="bi bi-code-square"></i> ' + ideEscapeHtml(proj.subtitle) + '</div>' +
+                        '<div class="ide-badges">' + badgesHtml + '</div>' +
+                        '<p class="ide-proj-desc">' + ideEscapeHtml(proj.description) + '</p>' +
+                        '<div class="ide-proj-links">' + sourceHtml + viewHtml + '</div>' +
+                      '</div>' +
+                    '</div>';
+            }
+            scrollArea.appendChild(block);
+        });
+
+        var statusEl = document.getElementById('ide-status-filename');
+        if (statusEl && IDE_PROJECTS.length) {
+            statusEl.textContent = IDE_PROJECTS[0].filename;
+        }
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var idx = parseInt(entry.target.id.replace('ide-block-', ''), 10);
+                    setActiveIdeProject(idx);
+                }
+            });
+        }, {
+            root: scrollArea,
+            rootMargin: '0px 0px -55% 0px',
+            threshold: 0
+        });
+
+        scrollArea.querySelectorAll('.ide-project-block').forEach(function(block) {
+            observer.observe(block);
+        });
+
+        var folderToggle = document.getElementById('ide-folder-toggle');
+        if (folderToggle) {
+            folderToggle.addEventListener('click', function() {
+                var chevron = this.querySelector('.ide-chevron');
+                var collapsed = chevron.classList.contains('collapsed');
+                chevron.classList.toggle('collapsed', !collapsed);
+                fileList.style.display = collapsed ? '' : 'none';
+            });
+        }
+    }
+
+    function setActiveIdeProject(idx) {
+        var fileItems = document.querySelectorAll('.ide-file-item');
+        fileItems.forEach(function(item, i) {
+            var active = (i === idx);
+            item.classList.toggle('active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        if (fileItems[idx]) {
+            fileItems[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        }
+        var tabs = document.querySelectorAll('.ide-tab');
+        tabs.forEach(function(tab, i) {
+            tab.classList.toggle('active', i === idx);
+        });
+        if (tabs[idx]) {
+            tabs[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        }
+        var statusEl = document.getElementById('ide-status-filename');
+        if (statusEl && IDE_PROJECTS[idx]) {
+            statusEl.textContent = IDE_PROJECTS[idx].filename;
+        }
+    }
+
+    function scrollToIdeProject(idx) {
+        var block = document.getElementById('ide-block-' + idx);
+        var scrollArea = document.getElementById('ide-scroll-area');
+        if (block && scrollArea) {
+            var top = block.getBoundingClientRect().top
+                      - scrollArea.getBoundingClientRect().top
+                      + scrollArea.scrollTop - 20; // 20px padding 
+            scrollArea.scrollTo({ top: top, behavior: 'smooth' });
+        }
+        setActiveIdeProject(idx);
+    }
+
+    document.addEventListener('DOMContentLoaded', initIdeShowcase);
+
 })();
