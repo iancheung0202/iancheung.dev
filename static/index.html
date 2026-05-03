@@ -69,15 +69,15 @@
             <nav id="navbar" class="navbar">
               <ul>
                 <li>
-                  <a class="nav-link active" href="#header" id="home" data-pitch="C4">home</a>
+                  <a class="nav-link active" href="#header" id="home" data-pitch="C4">intro</a>
                 </li>
                 <li class="nav-divider page">/</li>
-                <li>
-                  <a class="nav-link page" href="#coding" id="navCoding" data-pitch="E4">projects</a>
+                <!-- <li>
+                  <a class="nav-link page" href="#projects" id="navProjects" data-pitch="E4">projects</a>
                 </li>
-                <li class="nav-divider page">/</li>
+                <li class="nav-divider page">/</li> -->
                 <li>
-                  <a class="nav-link page" href="#music" id="navMusic" data-pitch="G4">music</a>
+                  <a class="nav-link page" href="#music" id="navMusic" data-pitch="E4">music</a>
                 </li>
                 <li class="nav-divider page">/</li>
                 <!-- <li>
@@ -85,7 +85,11 @@
                 </li>
                 <li class="nav-divider page">/</li> -->
                 <li>
-                  <a class="non-nav-link page" href="resume.pdf" target="_blank" data-pitch="C5">resume</a>
+                  <a class="non-nav-link page" href="https://home.iancheung.dev" target="_blank" data-pitch="G4" id="homelab-nav-link">homelab</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="non-nav-link page" href="resume.pdf" target="_blank" data-pitch="C5" id="resume-nav-link">resume</a>
                 </li>
               </ul>
               <i class="bi bi-list mobile-nav-toggle" id="mobile-nav-toggle"></i>
@@ -93,30 +97,79 @@
             <div class="container">
               <div class="row clearfix">
                 <div class="col-lg-11 col-md-11" style="word-break: break-word;">
-                  <h2 class="subtitle">Hi! I'm a full-stack developer, data scientist, and musician from Hong Kong. I'm currently studying Applied Mathematics and Data Science at the University of California, Berkeley.</h2>
-                  <h2 class="subtitle">In my free time, I'm interested in building things that I or people can actually use. I've worked on Discord bots, data analysis, or personal websites like this one. Automating tasks is my cup of tea! 🍵</h2>
+                  <h2 class="subtitle">Hi! I'm a <span id="fullstack-text" tabindex="0">full-stack developer</span>, data engineer, and <span id="social-media-manager-text" tabindex="0">social media manager</span> from Hong Kong. I'm currently studying <span id="applied-math-text" tabindex="0">Applied Mathematics and Data Science at the University of California, Berkeley</span>.</h2>
+                  <h2 class="subtitle">My goal is to build systems that I or people can actually use. I've worked on <span id="discord-bots-text" tabindex="0">Discord</span> bots, data analysis, personal and client websites like this one. Automating tasks is my cup of tea! 🍵</h2>
+                  <h2 class="subtitle">Interested in checking out my work or hiring me? Feel free to visit my <span id="github-easter-egg-text" tabindex="0">Github</span> or my <span id="resume-easter-egg-text" tabindex="0">resume</span>. Definitely <span id="reach-out-text" tabindex="0">reach out</span> if you would like to collaborate! 🐳</h2>
                 </div>
               </div>
             </div>
             <div class="social-links">
-              <a href="mailto:ian@iancheung.dev" class="email">
+              <a href="mailto:ian@iancheung.dev" class="email" id="email-icon-link">
                 <i class="bi bi-envelope-fill"></i>
               </a>
-              <a href="https://www.linkedin.com/in/iancheung0202" class="linkedin" target="_blank">
-                <i class="bi bi-linkedin"></i>
-              </a>
-              <a href="https://instagram.com/iancheung0202" class="instagram" target="_blank">
-                <i class="bi bi-instagram"></i>
-              </a>
-              <a href="https://discord.com/users/692254240290242601" class="discord" target="_blank">
-                <i class="bi bi-discord"></i>
-              </a>
-              <a href="https://www.youtube.com/channel/UCMUa8dSkwbs4E22RxlFu34g/" class="youtube" target="_blank">
-                <i class="bi bi-youtube"></i>
-              </a>
-              <a href="https://github.com/iancheung0202" class="github" target="_blank">
+              <a href="https://github.com/iancheung0202" class="github" target="_blank" id="github-icon-link">
                 <i class="bi bi-github"></i>
               </a>
+              <a href="https://www.linkedin.com/in/iancheung0202" class="linkedin" target="_blank" id="linkedin-icon-link">
+                <i class="bi bi-linkedin"></i>
+              </a>
+              <div class="dropdown social-dropdown">
+                <a href="#" class="discord dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-label="Discord" id="discord-icon-link">
+                  <i class="bi bi-discord"></i>
+                </a>
+                <ul class="dropdown-menu social-dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="https://discord.com/users/692254240290242601" target="_blank" rel="noopener noreferrer">Personal Profile</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/ucberkeley" target="_blank" rel="noopener noreferrer">School Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/BXkc8CC4uJ" target="_blank" rel="noopener noreferrer">Coding Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/4gkW32U5EZ" target="_blank" rel="noopener noreferrer">Brawl Stars Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/mysticraft" target="_blank" rel="noopener noreferrer">Minecraft Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/celestial" target="_blank" rel="noopener noreferrer">Genshin Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://fischl.app" target="_blank" rel="noopener noreferrer">Fischl Bot</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://subscriber.iancheung.dev" target="_blank" rel="noopener noreferrer">Subscriber Role Bot</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown social-dropdown">
+                <a href="#" class="instagram dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-label="Instagram" id="instagram-icon-link">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <ul class="dropdown-menu social-dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="https://instagram.com/iancheung0202" target="_blank" rel="noopener noreferrer">Personal Account</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://instagram.com/ianbrawlstarsyt" target="_blank" rel="noopener noreferrer">Gaming Account</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown social-dropdown">
+                <a href="#" class="youtube dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-label="YouTube" id="youtube-icon-link">
+                  <i class="bi bi-youtube"></i>
+                </a>
+                <ul class="dropdown-menu social-dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="https://www.youtube.com/@iancheung0202" target="_blank" rel="noopener noreferrer">Official Music Artist Channel</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://www.youtube.com/@ianbrawlstars" target="_blank" rel="noopener noreferrer">Partnered Gaming Channel</a>
+                  </li>
+                </ul>
+              </div>
               <a href="https://www.strava.com/athletes/126909167" class="strava" target="_blank">
                 <i class="bi bi-strava"></i>
               </a>
@@ -218,8 +271,8 @@
                           <div class="window-button green"></div>
                         </div>
                         <div style="background: white; padding: 6px 12px; border-radius: 8px 8px 0 0; font-size: 12px; font-family: sans-serif; flex: 0 1 auto; min-width: 120px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 2px rgba(0,0,0,0.1);">
-                           <img src="https://ssh.iancheung.dev/favicon.ico" style="width: 14px; height: 14px; opacity: 0.8;">
-                           <span id="browser-tab-title" style="color: #3c4043;">Shell In A Box</span>
+                           <img src="assets/img/favicon.png" style="width: 14px; height: 14px; opacity: 0.8;">
+                           <span id="browser-tab-title" style="color: #3c4043;">Ian's Homelab&nbsp;&nbsp;&nbsp;</span>
                         </div>
                       </div>
 
@@ -229,10 +282,10 @@
                           <i class="bi bi-arrow-right" id="browser-forward-btn" style="cursor: pointer; opacity: 0.6;"></i>
                           <i class="bi bi-arrow-clockwise" style="cursor: pointer;" onclick="const iframe = document.getElementById('browser-iframe'); const addr = document.getElementById('browser-address-bar'); iframe.src = addr.value;"></i>
                         </div>
-                        <input type="text" id="browser-address-bar" value="https://ssh.iancheung.dev/" style="flex: 1; background: #f1f3f4; border: none; border-radius: 16px; padding: 6px 16px; font-size: 13px; outline: none; color: #202124; font-family: inherit;">
+                        <input type="text" id="browser-address-bar" value="https://home.iancheung.dev/" style="flex: 1; background: #f1f3f4; border: none; border-radius: 16px; padding: 6px 16px; font-size: 13px; outline: none; color: #202124; font-family: inherit;">
                       </div>
 
-                      <iframe id="browser-iframe" src="https://ssh.iancheung.dev/" style="width: 100%; flex: 1; min-height: 500px; border: none; background: white; padding: 10px;" allow="clipboard-read; clipboard-write; self" onload="this.contentWindow.focus()"></iframe>
+                      <iframe id="browser-iframe" src="https://home.iancheung.dev/" style="width: 100%; flex: 1; min-height: 500px; border: none;" allow="clipboard-read; clipboard-write; self" onload="this.contentWindow.focus()"></iframe>
                     </div>
                   </div>
                 </div>
@@ -242,118 +295,288 @@
         </div>
       </div>
     </header>
-
-    <section id="coding" class="resume">
+    
+    <!-- <section id="projects" class="resume">
       <div class="about-me container">
-        <!-- <div class="row">
-          <div class="col-lg-12 pt-4 pt-lg-0 content" > -->
-            <div class="ide-showcase" id="ide-showcase" aria-label="Project showcase" data-aos="fade-left">
-              <div class="ide-sidebar">
-                <div class="ide-sidebar-title">
-                  <i class="bi bi-files"></i>
-                  <span>EXPLORER</span>
-                </div>
-                <div class="ide-folder-row" id="ide-folder-toggle">
-                  <i class="bi bi-chevron-down ide-chevron"></i>
-                  <i class="bi bi-folder2-open" style="color:#efc46e"></i>
-                  <span>projects</span>
-                </div>
-                <ul class="ide-file-list" id="ide-file-list" role="listbox" aria-label="Project files"></ul>
+        <div class="row">
+          <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
+            <h3><i class="bi bi-person"></i> Full Stack Developer &amp; Data Engineer.</h3>
+            <p>
+              <small id="paragraph">My name is Ian, and I am a full-stack web developer, Discord bot developer, and data engineer. It was actually the onset of the pandemic and the shift to online schooling that prompted my interest in coding. Having my routine disrupted, I felt compelled to learn something new, particularly with the abundance of free time available due to online schooling. Thus, I began dedicating my evenings and weekends to constructing (horrible) websites for myself and my friends. Now, programming is still one of my most fulfilling hobbies, most notably due to the ability to create products I or someone else could use. Mastering computer programming also allows me to think independently, solve problems, and be resilient when facing seemingly impossible challenges.</small>
+            </p>
+            <p>
+              <small id="paragraph">As such, I am very eager to explore coding outside of school through developing mini-games, websites, and Discord bots. Particularly, this website is used for me to learn more about front-end web development, as well as showcasing my achievements and the projects that I completed.</small>
+            </p>
+            <div class="row">
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://tierlist.mysticraft.xyz/" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/tierlist-demo.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      MystiCraft Tierlist 
+                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
+                        <span class="checkmark-icon">
+                          <svg viewbox="0 0 24 24">
+                            <polyline points="3 11 7 17 20 7"/>
+                          </svg>
+                        </span>
+                        APP
+                      </div>
+                    </h4>
+                    <p>Web + Discord Application 
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Client Project"></i>
+                    </p>
+                  </div>
+                </a>
               </div>
-              <div class="ide-editor-pane">
-                <div class="ide-tab-bar" id="ide-tab-bar" role="tablist"></div>
-                <div class="ide-scroll-area" id="ide-scroll-area" role="region" aria-label="Project details"></div>
-                <div class="ide-status-bar">
-                  <span class="ide-status-left">
-                    <i class="bi bi-git"></i>
-                    <span>main</span>
-                  </span>
-                  <span class="ide-status-right">
-                    <span id="ide-status-filename">—</span>
-                    &nbsp;·&nbsp; UTF-8
-                  </span>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://servercv.com/" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/servercv-demo.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      ServerCV 
+                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
+                        <span class="checkmark-icon">
+                          <svg viewbox="0 0 24 24">
+                            <polyline points="3 11 7 17 20 7"/>
+                          </svg>
+                        </span>
+                        APP
+                      </div>
+                    </h4>
+                    <p>Web + Discord Application 
+                      <a href="https://github.com/iancheung0202/ServerCV" target="_blank">
+                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
+                      </a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://fischl.app/" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/fischl-demo.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      Fischl 
+                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
+                        <span class="checkmark-icon">
+                          <svg viewbox="0 0 24 24">
+                            <polyline points="3 11 7 17 20 7"/>
+                          </svg>
+                        </span>
+                        APP
+                      </div>
+                    </h4>
+                    <p>Verified Discord Python Bot 
+                      <a href="https://github.com/iancheung0202/Fischl" target="_blank">
+                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
+                      </a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://cloud.iancheung.dev/s/tDFi7PzcbNfELyP" target="_blank">
+                
+                  <div class="icon-box">
+                    <img src="assets/img/collisioneers.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      Analysis of California Traffic Collisions
+                    </h4>
+                    <p>Exploratory Data Analysis Project <a href="https://github.com/iancheung0202/Traffic-Collisions-Analysis" target="_blank">
+                      <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
+                    </a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Stanford University DATASCI 112"></i>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://colab.research.google.com/drive/1P-HjOVVsKfAfO2tAeJwsaQFkiGEL9XEF?usp=sharing" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/obj_dect.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      Object Detection
+                    </h4>
+                    <p>Python Neural Network Project <a href="https://cloud.iancheung.dev/s/ByorKiXfbQaHAMc" target="_blank">
+                        <i class="ri-slideshow-3-line" id="normal-text" data-toggle="tooltip" data-placement="top" title="Project Description + Demo"></i>
+                      </a>
+                      <a href="https://colab.research.google.com/drive/16pHtFNER0nHd_uQSO80RnsVZ40g1isDb?usp=sharing" target="_blank"><i class="bi-plus-circle-fill" id="normal-text" data-toggle="tooltip" data-placement="top" title="Real-time Detection Application"></i></a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Best Project Presentation for Inspirit AI"></i>
+                    </p>
+                    <p>
+                      <small>
+                        <em>This application only runs on Google Colab.</em>
+                      </small>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://iancheung0202.github.io/RecycleSorter/" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/original.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      RecycleSorter
+                    </h4>
+                    <p>JavaScript Image Classification Project <a href="https://github.com/iancheung0202/RecycleSorter" target="_blank">
+                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
+                      </a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Most Creative Award Entry for GunnHacks 9.0"></i>
+                    </p>
+                    <p>
+                      <small>
+                        <em>This application currently does not support all browsers.</em>
+                      </small>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/htmlessentials.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      HTML Essentials
+                    </h4>
+                    <p>Publication <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
+                        <i class="bi bi-eye" id="normal-text" data-toggle="tooltip" data-placement="top" title="View PDF"></i>
+                      </a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://github.com/iancheung0202/dodge-n-shoot" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/dodge-n-shoot.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      Dodge n' Shoot
+                    </h4>
+                    <p>Python Mini-game <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Project for Python Game Development by UCode"></i>
+                    </p>
+                    <p>
+                      <small>
+                        <em>You must install Python &amp; Pygame on your local machine to run it.</em>
+                      </small>
+                    </p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
+                <a href="https://iancheung0202.github.io/lsc-library-attendance-2021-22/" target="_blank">
+                  <div class="icon-box">
+                    <img src="assets/img/library-attendance.png" class="img-fluid project-img" height="200px">
+                    <h4>
+                      Librarian Attendance System
+                    </h4>
+                    <p>HTML, CSS &amp; JS Front-end System <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank">
+                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
+                      </a>
+                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Adopted by LSC Library Board while serving as Chief IT Developer during 2021-22"></i>
+                    </p>
+                    <p>
+                      <small>
+                        <em>This system is depreciated and does not work as intended.</em>
+                      </small>
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div> 
+            <div class="row">
+              <div class="col-lg-6">
+                <h3 class="resume-title resume-title-left">
+                  <i class="bi bi-code"></i> Projects
+                </h3>
+                <div class="resume-item resume-item-left resume-item-coding">
+                  <h4>MystiCraft Tierlist</h4>
+                  <h5>2024 - 2025</h5>
+                  <p>
+                    <em>Web + Discord Application</em>
+                  </p>
+                  <small id="paragraph">A web and Discord application for creating and sharing tier lists. This is a verified Discord application showcasing full-stack development with a client project.</small>
+                </div>
+                <div class="resume-item resume-item-left resume-item-coding">
+                  <h4>ServerCV</h4>
+                  <h5>2023 - 2024</h5>
+                  <p>
+                    <em>Web + Discord Application</em>
+                  </p>
+                  <small id="paragraph">A web and Discord application for managing server CVs. <a href="https://github.com/iancheung0202/ServerCV" target="_blank">Source code available on GitHub.</a></small>
+                </div>
+                <div class="resume-item resume-item-left resume-item-coding">
+                  <h4>Fischl</h4>
+                  <h5>2023 - Present</h5>
+                  <p>
+                    <em>Verified Discord Python Bot</em>
+                  </p>
+                  <small id="paragraph">A verified Discord bot built in Python with advanced features and community support. <a href="https://github.com/iancheung0202/Fischl" target="_blank">Source code on GitHub.</a></small>
+                </div>
+                <div class="resume-item resume-item-left resume-item-coding">
+                  <h4>Analysis of California Traffic Collisions</h4>
+                  <h5>2024</h5>
+                  <p>
+                    <em>Exploratory Data Analysis Project</em>
+                  </p>
+                  <small id="paragraph">A comprehensive exploratory data analysis of California traffic collision data using Python. <a href="https://github.com/iancheung0202/Traffic-Collisions-Analysis" target="_blank">Stanford University DATASCI 112</a></small>
+                </div>
+              </div>
+              
+              <div class="col-lg-6">
+                <h3 class="resume-title">
+                  <i class="bi bi-briefcase"></i> Experience
+                </h3>
+                <div class="resume-item resume-item-coding">
+                  <h4>Mathematics Mentor</h4>
+                  <h5>September 2025 - Current</h5>
+                  <a href="https://publicservice.berkeley.edu/programs/bridging-berkeley/" target="_blank">
+                    <p>
+                      <em>Bridging Berkeley</em>
+                    </p>
+                  </a>
+                  <small id="paragraph">Every Tuesdays and Thursdays, I provide math mentorship and academic support to 20 students in a local middle school in Berkeley after school.</small>
+                </div>
+                <div class="resume-item resume-item-coding">
+                  <h4>Vice President for Education</h4>
+                  <h4>Beginning Programming in Python Instructor</h4>
+                  <h5>April 2023 - April 2025</h5>
+                  <a href="https://www.openbrackets.us/" target="_blank">
+                    <p>
+                      <em>OpenBrackets</em>
+                    </p>
+                  </a>
+                  <small id="paragraph">Inspired to bridge the digital divide in our community, we provide support in computer science to middle and high school kids who may not receive it at home, and encourage kids consider tech as a career, regardless of their background. As an instructor, I fully designed a <a href="https://drive.google.com/drive/folders/1FiYVVwxnvKQCv9WU3sMp46D4Jc2xZ2Bp?usp=sharing" target="_blank">curriculum</a> for 6-12 years old to learn Python in a fun and rewarding way, all while mastering the basics of programming in Python. </small>
+                </div>
+                <div class="resume-item resume-item-coding">
+                  <a href="https://www.redwoodcity.org/departments/library/volunteer" target="_blank">
+                    <h4>Coding Club Teaching Assistant</h4>
+                  </a>
+                  <h5>June 2023 - August 2023</h5>
+                  <a href="https://www.redwoodcity.org/departments/library/volunteer" target="_blank">
+                    <p>
+                      <em>Redwood City Public Library</em>
+                    </p>
+                  </a>
+                  <small id="paragraph">Every Sunday, I witnessed young kids' enthusiasm and creativity flourish as they learned coding fundamentals by programming robots and building LEGOs. We provided individual support and created a supportive environment for the children to grow, try, and learn. Moreover, explaining seemingly simple concepts to children significantly improved my communication and problem-solving skills as well. </small>
+                </div>
+                <div class="resume-item resume-item-coding">
+                  <h4>Chief IT Developer</h4>
+                  <h5>September 2021- June 2022</h5>
+                  <p>
+                    <em>La Salle College Library Board</em>
+                  </p>
+                  <small id="paragraph">My primary role was to oversee the library's technological infrastructure and I was responsible for managing and maintaining the library's hardware and software, as well as implementing new technologies to improve the library's operations and services. I had worked closely with the library committee team and <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank" style="color: #47aeff;">developed an automatic clock-in system</a> for school librarians, resulting in a significant improvement in our efficiency in recording attendance. </small>
                 </div>
               </div>
             </div>
-            <!-- <div class="col-lg-12">
-              <h3 class="resume-title">
-                <i class="bi bi-person"></i> Experience
-              </h3>
-              <div class="resume-item resume-item-coding">
-                <h4>Mathematics Mentor</h4>
-                <h5>September 2025 - Current</h5>
-                <a href="https://publicservice.berkeley.edu/programs/bridging-berkeley/" target="_blank">
-                  <p>
-                    <em>Bridging Berkeley</em>
-                  </p>
-                </a>
-                <div class="row">
-                  <div class="col-lg-6">
-                    <p class="paragraph">Every Tuesdays and Thursdays, I provide math mentorship and academic support to 20 students in a local middle school in Berkeley after school.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="resume-item resume-item-coding">
-                <h4>Vice President for Education</h4>
-                <h4>Beginning Programming in Python Instructor</h4>
-                <h5>April 2023 - April 2025</h5>
-                <a href="https://www.openbrackets.us/" target="_blank">
-                  <p>
-                    <em>OpenBrackets</em>
-                  </p>
-                </a>
-                <div class="row">
-                  <div class="col-lg-6">
-                    <p class="paragraph">Inspired to bridge the digital divide in our community, we provide support in computer science to middle and high school kids who may not receive it at home, and encourage kids consider tech as a career, regardless of their background. As an instructor, I fully designed a cirriculum for 6-12 years old to learn Python in a fun and rewarding way, all while mastering the basics of programming in Python. </p>
-                  </div>
-                  <div class="col-lg-4 col-md-8">
-                    <a href="https://drive.google.com/drive/folders/1FiYVVwxnvKQCv9WU3sMp46D4Jc2xZ2Bp?usp=sharing" target="_blank">
-                      <div id="courseGuide">
-                        <h4>View Course Materials <i class="bi bi-box-arrow-up-right"></i>
-                        </h4>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="resume-item resume-item-coding">
-                <a href="https://www.redwoodcity.org/departments/library/volunteer" target="_blank">
-                  <h4>Coding Club Teaching Assistant</h4>
-                </a>
-                <h5>June 2023 - August 2023</h5>
-                <a href="https://www.redwoodcity.org/departments/library/volunteer" target="_blank">
-                  <p>
-                    <em>Redwood City Public Library</em>
-                  </p>
-                </a>
-                <div class="row">
-                  <div class="col-lg-6">
-                    <p class="paragraph">Every Sunday, I witnessed young kids' enthusiasm and creativity flourish as they learned coding fundamentals by programming robots and building LEGOs. We provided individual support and created a supportive environment for the children to grow, try, and learn. Moreover, explaining seemingly simple concepts to children significantly improved my communication and problem-solving skills as well. </p>
-                  </div>
-                  <div class="col-lg-6 images-container">
-                    <div class="image-wrapper">
-                      <img src="https://peninsula360press.com/wp-content/uploads/2022/05/MAKERSPACE-FOTO-NOTA-1024x768.jpg">
-                    </div>
-                    <div class="image-wrapper">
-                      <img src="assets/img/LegoRobotics-RedwoodCityPublicLibrary.jpg">
-                    </div>
-                  </div> 
-                </div>
-              </div>
-              <div class="resume-item resume-item-coding">
-                <h4>Chief IT Developer</h4>
-                <h5>September 2021- June 2022</h5>
-                <p>
-                  <em>La Salle College Library Board</em>
-                </p>
-                <p class="paragraph">My primary role was to oversee the library's technological infrastructure and I was responsible for managing and maintaining the library's hardware and software, as well as implementing new technologies to improve the library's operations and services. I had worked closely with the library committee team and <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank" style="color: #47aeff;">developed an automatic clock-in system</a> for school librarians, resulting in a significant improvement in our efficiency in recording attendance. </p>
-              </div>
-            </div> -->
-          <!-- </div>
-        </div> -->
+          </div>
+        </div>
       </div>
-      </div>
-    </section>
+    </section> -->
 
     <section id="music">
       <div class="resume">
@@ -396,17 +619,17 @@
             <div class="tab-content pt-3" id="musicTabsContent">
               <div class="tab-pane fade show active" id="composition" role="tabpanel" aria-labelledby="composition-tab">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH7PepiRWjm7J4Qmwm3IOhNY">
-                  <div class="col-12 text-center text-muted py-3"><small><i class="bi bi-arrow-clockwise"></i> Loading videos...</small></div>
+                  <div class="col-12 text-center text-muted py-3"><small>Loading...</small></div>
                 </div>
               </div>
               <div class="tab-pane fade" id="solo" role="tabpanel" aria-labelledby="solo-tab">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH4qflv_8jZQe_59uJHeiDPy">
-                  <div class="col-12 text-center text-muted py-3"><small><i class="bi bi-arrow-clockwise"></i> Loading videos...</small></div>
+                  <div class="col-12 text-center text-muted py-3"><small>Loading...</small></div>
                 </div>
               </div>
               <div class="tab-pane fade" id="chamber" role="tabpanel" aria-labelledby="chamber-tab">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH6byLvURf5Yt1qxkuJobSa4">
-                  <div class="col-12 text-center text-muted py-3"><small><i class="bi bi-arrow-clockwise"></i> Loading videos...</small></div>
+                  <div class="col-12 text-center text-muted py-3"><small>Loading...</small></div>
                 </div>
               </div>
             </div>

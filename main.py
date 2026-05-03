@@ -38,6 +38,14 @@ def home():
 def pricing_page():
     return send_from_directory("static/pricing", "index.html")
 
+@app.route("/class/")
+def grade_page():
+    return send_from_directory("static/class", "index.html")
+
+@app.route("/proposal/")
+def proposal_page():
+    return send_from_directory("static/proposal", "index.html")
+
 @app.route("/game/")
 def game_page():
     return app.send_static_file("game.html")

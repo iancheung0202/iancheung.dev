@@ -1,0 +1,962 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stat</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#geospatial-data">1) GEOSPATIAL DATA</a>
+<ul>
+<li><a href="#what-is-geospatial-data">What is geospatial data?</a></li>
+<li><a href="#section-1-coordinate-reference-systems-crs">Section 1: Coordinate Reference Systems (CRS)</a></li>
+<li><a href="#section-2-vector-data-and-the-sf-package">Section 2: Vector Data and the sf Package</a></li>
+<li><a href="#section-3-making-maps-with-ggplot-and-geom_sf">Section 3: Making Maps with ggplot() and geom_sf()</a></li>
+<li><a href="#section-4-interactive-maps-with-ggiraph-geom_sf_interactive">Section 4: Interactive Maps with ggiraph (geom_sf_interactive)</a></li>
+<li><a href="#section-5-interactive-maps-with-leaflet">Section 5: Interactive Maps with leaflet</a></li>
+<li><a href="#section-6-raster-data-with-terra">Section 6: Raster Data with terra</a></li>
+</ul>
+</li>
+<li><a href="#text-analysis">TEXT ANALYSIS</a>
+<ul>
+<li><a href="#the-big-picture">The Big Picture</a></li>
+<li><a href="#section-7-getting-text-into-r-and-tokenizing">Section 7: Getting Text Into R and Tokenizing</a></li>
+<li><a href="#section-8-stop-words-and-frequency-analysis">Section 8: Stop Words and Frequency Analysis</a></li>
+<li><a href="#section-9-sentiment-analysis">Section 9: Sentiment Analysis</a></li>
+</ul>
+</li>
+<li><a href="#shiny-dashboards-leaflet">SHINY DASHBOARDS (LEAFLET)</a>
+<ul>
+<li><a href="#section-10-shiny--leaflet-integration">Section 10: Shiny + Leaflet Integration</a></li>
+</ul>
+</li>
+<li><a href="#quick-reference">QUICK REFERENCE</a></li>
+<li><a href="#final-practice-quiz">FINAL PRACTICE QUIZ</a></li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="geospatial-data">1) GEOSPATIAL DATA</h1>
+<h2 id="what-is-geospatial-data">What is geospatial data?</h2>
+<p>It’s data that describes things that exist somewhere on Earth. A city, a hurricane track, a country boundary, a temperature reading — all of these can be stored as geospatial data. There are two fundamentally different ways to represent geography:</p>
+<ul>
+<li><strong>Vector data</strong> — describes discrete, bounded things using shapes (points, lines, polygons). Example: “California is this specific polygon shape.”</li>
+<li><strong>Raster data</strong> — describes continuous things using a grid of cells, like pixels in an image. Example: “The temperature at every point on a map.”</li>
+</ul>
+<h2 id="section-1-coordinate-reference-systems-crs">Section 1: Coordinate Reference Systems (CRS)</h2>
+<h3 id="the-core-problem">The core problem</h3>
+<p>The Earth is a 3D sphere. Maps are 2D. You have to decide how to “project” the sphere onto a flat surface — and every method distorts <em>something</em> (area, shape, distance, or direction). There is no perfect map projection.</p>
+<p>Additionally, before you even project, you need a way to specify locations on the sphere. That’s what a <strong>Coordinate Reference System (CRS)</strong> does — it defines what the numbers (coordinates) actually mean.</p>
+<h3 id="two-types-of-crs">Two types of CRS</h3>
+<p><strong>Geographic CRS (GCS)</strong> — coordinates are in <em>degrees</em> of latitude and longitude. No projection has been applied; you’re working on the sphere.</p>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Code</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WGS84</td>
+<td>EPSG:4326</td>
+<td>GPS, Google Maps, cell phones — the universal standard</td>
+</tr>
+<tr>
+<td>NAD83</td>
+<td>EPSG:4269</td>
+<td>US government data, US Census shapefiles</td>
+</tr>
+</tbody>
+</table><p><strong>Projected CRS (PCS)</strong> — coordinates are in <em>meters or feet</em>, because a projection has been applied to flatten the sphere. Used when you need accurate measurements on a local scale.</p>
+<blockquote>
+<p><strong>EPSG codes</strong> are just internationally standardized ID numbers for CRS definitions. EPSG:4326 = WGS84. Think of them like zip codes for coordinate systems.</p>
+</blockquote>
+<h3 id="why-does-this-matter">Why does this matter?</h3>
+<p>If you have two datasets in different CRS, they won’t line up on a map. You have to transform them to match. Also, <strong>leaflet (the interactive map tool) only accepts WGS84 (EPSG:4326)</strong>. If your data is in anything else, you must convert it first.</p>
+<h3 id="how-to-checkchange-crs-in-r">How to check/change CRS in R</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># See what CRS an sf object currently uses</span>
+st_crs<span class="token punctuation">(</span>my_sf_object<span class="token punctuation">)</span>
+
+<span class="token comment"># Transform to WGS84 (required before leaflet)</span>
+my_sf_object <span class="token operator">&lt;-</span> my_sf_object <span class="token operator">|</span><span class="token operator">&gt;</span>
+  st_transform<span class="token punctuation">(</span>crs <span class="token operator">=</span> <span class="token number">4326</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Change the projection used to DRAW a ggplot map (doesn't change the data)</span>
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> world2<span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  coord_sf<span class="token punctuation">(</span>crs <span class="token operator">=</span> <span class="token string">"+proj=moll"</span><span class="token punctuation">)</span>  <span class="token comment"># Mollweide projection — good for world maps</span>
+  <span class="token comment"># Other options: "+proj=cea", "+proj=ortho", "+proj=merc"</span>
+</code></pre>
+<p><code>st_transform()</code> actually converts the underlying coordinates. <code>coord_sf(crs = ...)</code> just changes how ggplot draws the map visually.</p>
+<h3 id="sample-quiz-questions-—-crs">Sample Quiz Questions — CRS</h3>
+<p><strong>Q1:</strong> You load a shapefile from the US Census Bureau. It uses NAD83 (EPSG:4269). You want to display it on a leaflet map. What must you do first?</p>
+<p><strong>A:</strong> Call <code>st_transform(crs = 4326)</code> to convert to WGS84 before passing it to leaflet.</p>
+<p><strong>Q2:</strong> True or False: <code>coord_sf(crs = "+proj=moll")</code> permanently changes the CRS of your sf data object.</p>
+<p><strong>A:</strong> False. It only affects how ggplot draws the map. The underlying data is unchanged.</p>
+<p><strong>Q3:</strong> What is the difference between a Geographic CRS and a Projected CRS?</p>
+<p><strong>A:</strong> A Geographic CRS uses degrees (lat/lon) on a sphere. A Projected CRS uses meters or feet on a flat surface — the sphere has been mathematically “flattened.”</p>
+<h2 id="section-2-vector-data-and-the-sf-package">Section 2: Vector Data and the <code>sf</code> Package</h2>
+<h3 id="what-is-vector-data">What is vector data?</h3>
+<p>Vector data represents geographic features as one of three geometry types:</p>
+<ul>
+<li><strong>Point</strong> — a single location. Example: a city, a fire station, a GPS waypoint.</li>
+<li><strong>Line</strong> (LineString) — a sequence of connected points. Example: a road, a river, a flight path.</li>
+<li><strong>Polygon</strong> — a closed shape. Example: a country border, a lake, a fire perimeter.</li>
+</ul>
+<p>A collection of features (multiple points, or multiple polygons) is called a <strong>layer</strong>.</p>
+<h3 id="what-is-an-sf-object">What is an <code>sf</code> object?</h3>
+<p><code>sf</code> stands for <strong>simple features</strong>, which is an international standard for storing vector geospatial data. In R, an <code>sf</code> object is just a <strong>regular data frame with an extra column called <code>geometry</code></strong>. Each row is one feature (one country, one fire, one city). Each column is an attribute (population, name, area). The <code>geometry</code> column stores the actual shape.</p>
+<pre class=" language-r"><code class="prism  language-r">class<span class="token punctuation">(</span>world2<span class="token punctuation">)</span>
+<span class="token comment"># [1] "sf"         "data.frame"</span>
+<span class="token comment"># It IS a data frame. You can use dplyr on it!</span>
+
+names<span class="token punctuation">(</span>world2<span class="token punctuation">)</span>
+<span class="token comment"># [1] "sovereignt" "pop_est" "gdp_md" ... "geometry"</span>
+<span class="token comment"># The last column is always geometry</span>
+
+head<span class="token punctuation">(</span>world2<span class="token punctuation">)</span>
+<span class="token comment"># Shows: Geometry type, Dimension, Bounding box, CRS</span>
+<span class="token comment"># Then the actual rows of data</span>
+</code></pre>
+<h3 id="key-facts-about-sf-objects">Key facts about sf objects</h3>
+<ul>
+<li><strong>One geometry type per object</strong> — you can’t mix points and polygons in the same sf object.</li>
+<li><strong>The geometry column is “sticky”</strong> — when you use <code>filter()</code>, <code>mutate()</code>, etc., the geometry column follows along automatically. This is useful, but can slow down pure data analysis.</li>
+<li><strong>Always carries CRS info</strong> — the sf object remembers what coordinate system it’s in.</li>
+</ul>
+<h3 id="removing-the-geometry-column-for-speed-during-eda">Removing the geometry column (for speed during EDA)</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Clean way</span>
+dat_only <span class="token operator">&lt;-</span> st_drop_geometry<span class="token punctuation">(</span>my_sf_object<span class="token punctuation">)</span>
+
+<span class="token comment"># The result is a regular data frame with no geometry column</span>
+<span class="token comment"># Use this when you want to do data analysis without slow spatial operations</span>
+</code></pre>
+<h3 id="loading-vector-data-from-different-sources">Loading vector data from different sources</h3>
+<p><strong>From the <code>rnaturalearth</code> package</strong> (pre-built world/country/state maps):</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># World country outlines as polygons</span>
+world2 <span class="token operator">&lt;-</span> ne_countries<span class="token punctuation">(</span>returnclass <span class="token operator">=</span> <span class="token string">"sf"</span><span class="token punctuation">)</span>
+<span class="token comment"># returnclass = "sf" means: give me an sf object (not a plain data frame)</span>
+
+<span class="token comment"># US states</span>
+usa_states <span class="token operator">&lt;-</span> ne_states<span class="token punctuation">(</span>
+  country <span class="token operator">=</span> <span class="token string">"United States of America"</span><span class="token punctuation">,</span>
+  returnclass <span class="token operator">=</span> <span class="token string">"sf"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Filter to just California</span>
+cal_map <span class="token operator">&lt;-</span> ne_states<span class="token punctuation">(</span>country <span class="token operator">=</span> <span class="token string">"United States of America"</span><span class="token punctuation">,</span> returnclass <span class="token operator">=</span> <span class="token string">"sf"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  filter<span class="token punctuation">(</span>name <span class="token operator">==</span> <span class="token string">"California"</span><span class="token punctuation">)</span>
+</code></pre>
+<p><strong>From the <code>usmap</code> package</strong> (includes Alaska and Hawaii, properly positioned):</p>
+<pre class=" language-r"><code class="prism  language-r">us_states <span class="token operator">&lt;-</span> us_map<span class="token punctuation">(</span>regions <span class="token operator">=</span> <span class="token string">"states"</span><span class="token punctuation">)</span>
+<span class="token comment"># Columns: fips (state code), abbr (CA), full (California), geom (geometry)</span>
+<span class="token comment"># WARNING: This uses NAD27 projection (NOT WGS84). Must st_transform() before leaflet.</span>
+</code></pre>
+<p><strong>From a shapefile</strong> (downloaded from the internet, e.g., fire perimeters):</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># A shapefile is NOT one file — it's a FOLDER of files</span>
+<span class="token comment"># Required files inside folder: .shp, .dbf, .shx</span>
+<span class="token comment"># Pass the FOLDER NAME to st_read(), not any individual file</span>
+
+cal_perims <span class="token operator">&lt;-</span> st_read<span class="token punctuation">(</span><span class="token string">"California_Fire_Perimeters_(1950+)"</span><span class="token punctuation">)</span>
+<span class="token comment"># Output tells you: geometry type, number of features, number of fields, CRS</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-sf-objects">Sample Quiz Questions — sf Objects</h3>
+<p><strong>Q1:</strong> You call <code>filter(world2, continent == "Africa")</code> on an sf object. What happens to the geometry column?</p>
+<p><strong>A:</strong> The geometry column follows along automatically (“sticky geometry”). The result is still an sf object with geometry for African countries only.</p>
+<p><strong>Q2:</strong> What is the difference between <code>st_drop_geometry()</code> and <code>filter()</code>?</p>
+<p><strong>A:</strong> <code>st_drop_geometry()</code> removes the geometry column entirely, returning a plain data frame. <code>filter()</code> keeps the geometry and returns an sf object, just with fewer rows.</p>
+<p><strong>Q3:</strong> You try to load a shapefile by calling <code>st_read("data/fires.shp")</code> but get an error saying the file is missing. What is most likely the problem?</p>
+<p><strong>A:</strong> Shapefiles are actually multiple files (.shp, .dbf, .shx, etc.) that must all be in the same folder. You should pass the folder name to <code>st_read()</code>, not an individual <code>.shp</code> file path. Also, required companion files might be missing.</p>
+<p><strong>Q4:</strong> True or False: An sf object can contain both point and polygon geometries at the same time.</p>
+<p><strong>A:</strong> False. Each sf object can only have one geometry type.</p>
+<h2 id="section-3-making-maps-with-ggplot-and-geom_sf">Section 3: Making Maps with <code>ggplot()</code> and <code>geom_sf()</code></h2>
+<h3 id="the-basic-idea">The basic idea</h3>
+<p><code>geom_sf()</code> is a special ggplot geometry that knows how to draw sf objects. It automatically reads the <code>geometry</code> column and draws the appropriate shapes (points, lines, polygons).</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Simplest possible map — draws all world countries</span>
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> world2<span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment"># Output: a world map with country borders, gray fill, white background</span>
+</code></pre>
+<h3 id="customizing-fill-and-border-color">Customizing fill and border color</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Static colors — not mapped to any data variable</span>
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> us_states<span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span>fill <span class="token operator">=</span> <span class="token string">"steelblue"</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span>
+<span class="token comment"># fill = the inside color of each polygon</span>
+<span class="token comment"># color = the border/outline color</span>
+</code></pre>
+<h3 id="adding-text-labels-to-the-map">Adding text labels to the map</h3>
+<pre class=" language-r"><code class="prism  language-r">ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> us_states<span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf_text<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>label <span class="token operator">=</span> abbr<span class="token punctuation">)</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span>
+<span class="token comment"># geom_sf_text automatically places labels at the centroid of each polygon</span>
+<span class="token comment"># abbr is a column in us_states that has state abbreviations like "CA", "TX"</span>
+</code></pre>
+<h3 id="zooming-in-on-a-region">Zooming in on a region</h3>
+<pre class=" language-r"><code class="prism  language-r">ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> world2<span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  coord_sf<span class="token punctuation">(</span>xlim <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">130</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ylim <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">55</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># xlim = range of longitudes (x-axis = east-west)</span>
+<span class="token comment"># ylim = range of latitudes (y-axis = north-south)</span>
+<span class="token comment"># This zooms into North America without dropping any data</span>
+</code></pre>
+<h3 id="combining-a-map-layer-with-regular-data-e.g.-storm-paths">Combining a map layer with regular data (e.g., storm paths)</h3>
+<pre class=" language-r"><code class="prism  language-r">ggplot<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>                                          <span class="token comment"># empty ggplot — data specified per layer</span>
+  geom_sf<span class="token punctuation">(</span>data <span class="token operator">=</span> world2<span class="token punctuation">)</span> <span class="token operator">+</span>                          <span class="token comment"># sf layer: world map as background</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> storms75<span class="token punctuation">,</span>                       <span class="token comment"># regular ggplot layer: storm positions</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> long<span class="token punctuation">,</span> y <span class="token operator">=</span> lat<span class="token punctuation">,</span> color <span class="token operator">=</span> name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_path<span class="token punctuation">(</span>data <span class="token operator">=</span> storms75<span class="token punctuation">,</span>                        <span class="token comment"># connects points in order (draws paths)</span>
+            aes<span class="token punctuation">(</span>x <span class="token operator">=</span> long<span class="token punctuation">,</span> y <span class="token operator">=</span> lat<span class="token punctuation">,</span> color <span class="token operator">=</span> name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  coord_sf<span class="token punctuation">(</span>xlim <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">110</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ylim <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">65</span><span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment"># zoom to North Atlantic</span>
+</code></pre>
+<blockquote>
+<p>When mixing sf and non-sf layers, leave <code>ggplot()</code> empty and specify <code>data =</code> inside each <code>geom_()</code> call.</p>
+</blockquote>
+<h3 id="choropleth-maps-—-coloring-polygons-by-a-data-value">Choropleth maps — coloring polygons by a data value</h3>
+<p>A <strong>choropleth</strong> is a map where each region (state, country, county) is colored according to a numeric variable. Example: coloring US states by average income, or by number of fires.</p>
+<p>The workflow:</p>
+<ol>
+<li>Get an sf object (the map shapes)</li>
+<li>Get a data frame with the values you want to color by</li>
+<li>Join them together (matching states to their values)</li>
+<li>Plot with <code>aes(fill = your_variable)</code></li>
+</ol>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Step 1: get map shapes</span>
+us_states <span class="token operator">&lt;-</span> us_map<span class="token punctuation">(</span>regions <span class="token operator">=</span> <span class="token string">"states"</span><span class="token punctuation">)</span>   <span class="token comment"># has columns: fips, abbr, full, geom</span>
+
+<span class="token comment"># Step 2: get data (e.g., average salary by state)</span>
+salaries <span class="token operator">&lt;-</span> read_csv<span class="token punctuation">(</span><span class="token string">"salaries.csv"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  mutate<span class="token punctuation">(</span>Average <span class="token operator">=</span> as.numeric<span class="token punctuation">(</span>str_remove_all<span class="token punctuation">(</span>Average<span class="token punctuation">,</span> <span class="token string">"[,$]"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># str_remove_all removes $ and , characters before converting to number</span>
+
+<span class="token comment"># Step 3: join — sf object MUST be on the left side</span>
+joined <span class="token operator">&lt;-</span> inner_join<span class="token punctuation">(</span>us_states<span class="token punctuation">,</span> salaries<span class="token punctuation">,</span> by <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"full"</span> <span class="token operator">=</span> <span class="token string">"State"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># "full" is the column name in us_states, "State" is the column name in salaries</span>
+<span class="token comment"># The result is still an sf object (geometry travels with the left table)</span>
+
+<span class="token comment"># Step 4: plot</span>
+ggplot<span class="token punctuation">(</span>joined<span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>fill <span class="token operator">=</span> Average<span class="token punctuation">)</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme_void<span class="token punctuation">(</span><span class="token punctuation">)</span>   <span class="token comment"># removes axis labels, gridlines — cleaner for maps</span>
+</code></pre>
+<h3 id="color-scale-options-for-choropleth-maps">Color scale options for choropleth maps</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Smooth gradient between two colors</span>
+scale_fill_gradient<span class="token punctuation">(</span>low <span class="token operator">=</span> <span class="token string">"#1b4bab"</span><span class="token punctuation">,</span> high <span class="token operator">=</span> <span class="token string">"#d7e1f5"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Gradient with a midpoint (diverging — good for showing above/below average)</span>
+scale_fill_gradient2<span class="token punctuation">(</span>low <span class="token operator">=</span> <span class="token string">"blue"</span><span class="token punctuation">,</span> mid <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">,</span> high <span class="token operator">=</span> <span class="token string">"red"</span><span class="token punctuation">,</span> midpoint <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Multiple colors (e.g., from RColorBrewer — a library of curated color palettes)</span>
+scale_fill_gradientn<span class="token punctuation">(</span>colors <span class="token operator">=</span> brewer.pal<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"Purples"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># brewer.pal(n, name) creates a vector of n colors from the named palette</span>
+
+<span class="token comment"># Discrete steps instead of smooth gradient (easier to read category boundaries)</span>
+scale_fill_stepsn<span class="token punctuation">(</span>colors <span class="token operator">=</span> brewer.pal<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"Purples"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  breaks <span class="token operator">=</span> seq<span class="token punctuation">(</span><span class="token number">45000</span><span class="token punctuation">,</span> <span class="token number">80000</span><span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Viridis — colorblind-friendly palettes</span>
+scale_fill_viridis_c<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment"># _c = continuous data</span>
+scale_fill_viridis_b<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment"># _b = binned (discrete steps)</span>
+scale_fill_viridis_d<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment"># _d = discrete/categorical data</span>
+scale_fill_viridis_c<span class="token punctuation">(</span>direction <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment"># reverse the color direction</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-ggplot-maps">Sample Quiz Questions — ggplot maps</h3>
+<p><strong>Q1:</strong> What is a choropleth map?</p>
+<p><strong>A:</strong> A map where geographic regions (countries, states, counties) are filled with a color that represents a numerical value of some variable — like income, population, or temperature.</p>
+<p><strong>Q2:</strong> You have an sf object <code>us_states</code> and a data frame <code>df</code> with a column <code>State</code> (state names) and <code>value</code>. Write the join command to combine them for a choropleth, knowing <code>us_states</code> has a column called <code>full</code>.</p>
+<p><strong>A:</strong> <code>joined &lt;- inner_join(us_states, df, by = c("full" = "State"))</code><br>
+The sf object must go on the left side.</p>
+<p><strong>Q3:</strong> What does <code>theme_void()</code> do to a ggplot map?</p>
+<p><strong>A:</strong> It removes all non-data elements — axis labels, tick marks, gridlines, background — leaving just the map itself. This is standard practice for maps since axes showing latitude/longitude are usually clutter.</p>
+<p><strong>Q4:</strong> What is the difference between <code>scale_fill_viridis_c()</code> and <code>scale_fill_viridis_b()</code>?</p>
+<p><strong>A:</strong> <code>_c</code> is for continuous data (smooth gradient). <code>_b</code> is for binned data (discrete color steps). Binned is easier for readers to assign a specific value range to a color.</p>
+<h2 id="section-4-interactive-maps-with-ggiraph-geom_sf_interactive">Section 4: Interactive Maps with <code>ggiraph</code> (<code>geom_sf_interactive</code>)</h2>
+<h3 id="the-idea">The idea</h3>
+<p><code>ggiraph</code> is a package that makes ggplot charts interactive by adding tooltips (text that appears when you hover). For maps, you swap <code>geom_sf()</code> for <code>geom_sf_interactive()</code>, then wrap the whole plot with <code>girafe()</code>.</p>
+<pre class=" language-r"><code class="prism  language-r">library<span class="token punctuation">(</span>ggiraph<span class="token punctuation">)</span>
+
+<span class="token comment"># Step 1: Build the plot using geom_sf_interactive instead of geom_sf</span>
+gmap <span class="token operator">&lt;-</span> joined_data <span class="token operator">|</span><span class="token operator">&gt;</span>
+  mutate<span class="token punctuation">(</span>Label <span class="token operator">=</span> paste0<span class="token punctuation">(</span>full<span class="token punctuation">,</span> <span class="token string">": $"</span><span class="token punctuation">,</span> Average<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>   <span class="token comment"># create tooltip text</span>
+  ggplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>fill <span class="token operator">=</span> Average<span class="token punctuation">,</span> tooltip <span class="token operator">=</span> Label<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>     <span class="token comment"># tooltip goes inside aes()</span>
+  geom_sf_interactive<span class="token punctuation">(</span>color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>             <span class="token comment"># interactive version of geom_sf</span>
+  scale_fill_gradientn<span class="token punctuation">(</span>colors <span class="token operator">=</span> brewer.pal<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"Purples"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme_void<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Step 2: Render as interactive HTML widget</span>
+girafe<span class="token punctuation">(</span>ggobj <span class="token operator">=</span> gmap<span class="token punctuation">)</span>
+<span class="token comment"># Output: a map where hovering over a state shows the tooltip text</span>
+</code></pre>
+<p>For more complex tooltips with formatting:</p>
+<pre class=" language-r"><code class="prism  language-r">geom_sf_interactive<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>
+  fill <span class="token operator">=</span> winner<span class="token punctuation">,</span>
+  tooltip <span class="token operator">=</span> sprintf<span class="token punctuation">(</span><span class="token string">"%s\nDem: %s%%\nRep: %s%%"</span><span class="token punctuation">,</span> full<span class="token punctuation">,</span> DEMOCRAT<span class="token punctuation">,</span> REPUBLICAN<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># sprintf() is like paste0() but lets you embed values into a template string</span>
+<span class="token comment"># \n = newline, %s = string placeholder, %% = literal percent sign</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-ggiraph">Sample Quiz Questions — ggiraph</h3>
+<p><strong>Q1:</strong> Where does the <code>tooltip</code> argument go in <code>geom_sf_interactive()</code>?</p>
+<p><strong>A:</strong> Inside <code>aes()</code> — it must be mapped to a column name or expression, not a static string outside aes.</p>
+<p><strong>Q2:</strong> After building a ggplot with <code>geom_sf_interactive()</code>, what function do you call to make it actually interactive?</p>
+<p><strong>A:</strong> <code>girafe(ggobj = p)</code> where <code>p</code> is your ggplot object.</p>
+<h2 id="section-5-interactive-maps-with-leaflet">Section 5: Interactive Maps with <code>leaflet</code></h2>
+<h3 id="what-is-leaflet">What is leaflet?</h3>
+<p>Leaflet is a JavaScript mapping library, wrapped for R. Unlike ggplot (which produces a static image), leaflet produces an <strong>interactive web map</strong> where users can zoom, pan, and click on features. It loads real map tiles (like Google Maps) as the background.</p>
+<h3 id="the-build-order-always-the-same">The build order (always the same)</h3>
+<pre class=" language-r"><code class="prism  language-r">leaflet<span class="token punctuation">(</span><span class="token punctuation">)</span>          <span class="token operator">|</span><span class="token operator">&gt;</span>   <span class="token comment"># 1. Create the widget (optionally pass a data frame)</span>
+  addTiles<span class="token punctuation">(</span><span class="token punctuation">)</span>       <span class="token operator">|</span><span class="token operator">&gt;</span>   <span class="token comment"># 2. Add a background map (default: OpenStreetMap)</span>
+  addMarkers<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>  <span class="token operator">|</span><span class="token operator">&gt;</span>   <span class="token comment"># 3. Add your data as a layer</span>
+  setView<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>          <span class="token comment"># 4. Set the starting view (optional)</span>
+</code></pre>
+<h3 id="background-map-tile-options">Background map tile options</h3>
+<pre class=" language-r"><code class="prism  language-r">addTiles<span class="token punctuation">(</span><span class="token punctuation">)</span>                                     <span class="token comment"># Default: OpenStreetMap (street map)</span>
+addProviderTiles<span class="token punctuation">(</span><span class="token string">"CartoDB.Positron"</span><span class="token punctuation">)</span>           <span class="token comment"># Clean, minimal, light gray</span>
+addProviderTiles<span class="token punctuation">(</span><span class="token string">"Esri.WorldImagery"</span><span class="token punctuation">)</span>          <span class="token comment"># Satellite imagery</span>
+addProviderTiles<span class="token punctuation">(</span><span class="token string">"Esri.WorldTopoMap"</span><span class="token punctuation">)</span>          <span class="token comment"># Terrain map with elevation</span>
+addProviderTiles<span class="token punctuation">(</span><span class="token string">"NASAGIBS.ViirsEarthAtNight2012"</span><span class="token punctuation">)</span>  <span class="token comment"># Earth at night (lights)</span>
+</code></pre>
+<h3 id="the-tilde--syntax-—-critical">The tilde <code>~</code> syntax — critical!</h3>
+<p>In leaflet, you reference data columns using <code>~column_name</code>. The tilde <code>~</code> tells leaflet “look up this column from the data.” Without it, leaflet treats the value as a constant.</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Data frame version: pass data to leaflet(), use ~ to reference columns</span>
+storms75 <span class="token operator">|</span><span class="token operator">&gt;</span>
+  leaflet<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  addTiles<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  addCircles<span class="token punctuation">(</span>
+    lng <span class="token operator">=</span> <span class="token operator">~</span>long<span class="token punctuation">,</span>        <span class="token comment"># ~ means: use the "long" column from the data</span>
+    lat <span class="token operator">=</span> <span class="token operator">~</span>lat<span class="token punctuation">,</span>         <span class="token comment"># ~ means: use the "lat" column from the data</span>
+    label <span class="token operator">=</span> <span class="token operator">~</span>name<span class="token punctuation">,</span>      <span class="token comment"># tooltip label: the "name" column</span>
+    radius <span class="token operator">=</span> <span class="token number">50000</span><span class="token punctuation">,</span>     <span class="token comment"># constant (no ~) — same radius for all circles, in meters</span>
+    fillOpacity <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="types-of-markerslayers-you-can-add">Types of markers/layers you can add</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Pin-style markers (for small numbers of points)</span>
+addMarkers<span class="token punctuation">(</span>lng <span class="token operator">=</span> <span class="token operator">~</span>lng<span class="token punctuation">,</span> lat <span class="token operator">=</span> <span class="token operator">~</span>lat<span class="token punctuation">,</span> popup <span class="token operator">=</span> <span class="token string">"Fixed text"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Small colored circles (for many points)</span>
+addCircleMarkers<span class="token punctuation">(</span>lng <span class="token operator">=</span> <span class="token operator">~</span>long<span class="token punctuation">,</span> lat <span class="token operator">=</span> <span class="token operator">~</span>lat<span class="token punctuation">,</span>
+                 radius <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">,</span>          <span class="token comment"># size in pixels (constant)</span>
+                 color <span class="token operator">=</span> <span class="token string">"blue"</span><span class="token punctuation">,</span>
+                 stroke <span class="token operator">=</span> <span class="token boolean">FALSE</span><span class="token punctuation">,</span>      <span class="token comment"># no border around circle</span>
+                 fillOpacity <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">,</span>
+                 popup <span class="token operator">=</span> <span class="token operator">~</span>as.character<span class="token punctuation">(</span>datetime<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># click to see value</span>
+
+<span class="token comment"># Circles scaled by a variable (like hurricane wind radius)</span>
+addCircles<span class="token punctuation">(</span>lng <span class="token operator">=</span> <span class="token operator">~</span>long<span class="token punctuation">,</span> lat <span class="token operator">=</span> <span class="token operator">~</span>lat<span class="token punctuation">,</span>
+           radius <span class="token operator">=</span> <span class="token operator">~</span>wind <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span>     <span class="token comment"># radius in meters, scaled by wind column</span>
+
+<span class="token comment"># Polygons (for sf objects like fire perimeters, country borders)</span>
+addPolygons<span class="token punctuation">(</span>fillColor <span class="token operator">=</span> <span class="token string">"red"</span><span class="token punctuation">,</span>
+            fillOpacity <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+            weight <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>              <span class="token comment"># border line thickness</span>
+            label <span class="token operator">=</span> <span class="token operator">~</span>FIRE_NAME<span class="token punctuation">)</span>      <span class="token comment"># hover label</span>
+</code></pre>
+<h3 id="color-coding-markers-by-a-variable">Color-coding markers by a variable</h3>
+<p>In ggplot you’d write <code>aes(color = variable)</code>. In leaflet, you can’t do that directly. Instead, you create a <strong>color palette function</strong> first, then call it with the column name.</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># For a CATEGORICAL variable (like storm names, states)</span>
+pal <span class="token operator">&lt;-</span> colorFactor<span class="token punctuation">(</span>palette <span class="token operator">=</span> <span class="token string">"viridis"</span><span class="token punctuation">,</span> domain <span class="token operator">=</span> storms75<span class="token operator">$</span>name<span class="token punctuation">)</span>
+<span class="token comment"># colorFactor assigns one distinct color per category</span>
+<span class="token comment"># domain tells it what all the possible values are</span>
+
+<span class="token comment"># For a CONTINUOUS variable (like temperature, income)</span>
+pal <span class="token operator">&lt;-</span> colorNumeric<span class="token punctuation">(</span>palette <span class="token operator">=</span> <span class="token string">"Blues"</span><span class="token punctuation">,</span> domain <span class="token operator">=</span> data<span class="token operator">$</span>value<span class="token punctuation">)</span>
+
+<span class="token comment"># For BINNED ranges of a continuous variable</span>
+pal <span class="token operator">&lt;-</span> colorBin<span class="token punctuation">(</span>palette <span class="token operator">=</span> <span class="token string">"RdYlGn"</span><span class="token punctuation">,</span> domain <span class="token operator">=</span> data<span class="token operator">$</span>value<span class="token punctuation">)</span>
+
+<span class="token comment"># Use the palette function inside addCircles or addPolygons:</span>
+addCircles<span class="token punctuation">(</span>color <span class="token operator">=</span> <span class="token operator">~</span>pal<span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment"># pal(name) = "what color should 'Hurricane Allen' be?"</span>
+<span class="token comment"># NOT: color = ~name  ← this does NOT work</span>
+</code></pre>
+<h3 id="adding-a-legend">Adding a legend</h3>
+<pre class=" language-r"><code class="prism  language-r">addLegend<span class="token punctuation">(</span>
+  position <span class="token operator">=</span> <span class="token string">"bottomright"</span><span class="token punctuation">,</span>  <span class="token comment"># or "bottomleft", "topleft", "topright"</span>
+  pal <span class="token operator">=</span> pal<span class="token punctuation">,</span>                 <span class="token comment"># same palette function you used for colors</span>
+  values <span class="token operator">=</span> <span class="token operator">~</span>name<span class="token punctuation">,</span>            <span class="token comment"># column whose values determine the colors</span>
+  title <span class="token operator">=</span> <span class="token string">"Storm"</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="setting-the-initial-view">Setting the initial view</h3>
+<pre class=" language-r"><code class="prism  language-r">setView<span class="token punctuation">(</span>
+  lng <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">122.26</span><span class="token punctuation">,</span>   <span class="token comment"># longitude of center</span>
+  lat <span class="token operator">=</span> <span class="token number">37.87</span><span class="token punctuation">,</span>     <span class="token comment"># latitude of center</span>
+  zoom <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">)</span>       <span class="token comment"># zoom level: 1=world, 5=country, 10=city, 15=neighborhood, 18=building</span>
+</code></pre>
+<h3 id="displaying-sf-polygon-data-in-leaflet">Displaying sf polygon data in leaflet</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># CRITICAL: Must convert to WGS84 first!</span>
+cal_perims <span class="token operator">|</span><span class="token operator">&gt;</span>
+  st_transform<span class="token punctuation">(</span>crs <span class="token operator">=</span> <span class="token number">4326</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>           <span class="token comment"># convert from whatever CRS it is to WGS84</span>
+  leaflet<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  addProviderTiles<span class="token punctuation">(</span><span class="token string">"Esri.WorldTopoMap"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  addPolygons<span class="token punctuation">(</span>
+    color <span class="token operator">=</span> <span class="token string">"red"</span><span class="token punctuation">,</span>
+    fillOpacity <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+    weight <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>
+    label <span class="token operator">=</span> <span class="token operator">~</span>FIRE_NAME<span class="token punctuation">)</span>                 <span class="token comment"># hover over a polygon to see the fire name</span>
+</code></pre>
+<h3 id="html-in-popups-for-richer-click-to-see-info">HTML in popups (for richer click-to-see info)</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Popups appear when you CLICK on a marker/polygon</span>
+popup <span class="token operator">=</span> <span class="token operator">~</span>paste0<span class="token punctuation">(</span><span class="token string">"&lt;b&gt;"</span><span class="token punctuation">,</span> name<span class="token punctuation">,</span> <span class="token string">"&lt;/b&gt;&lt;br&gt;Category: "</span><span class="token punctuation">,</span> category<span class="token punctuation">)</span>
+<span class="token comment"># &lt;b&gt;...&lt;/b&gt; = bold text</span>
+<span class="token comment"># &lt;br&gt; = line break</span>
+<span class="token comment"># You can use basic HTML tags inside popup text</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-leaflet">Sample Quiz Questions — Leaflet</h3>
+<p><strong>Q1:</strong> What is wrong with this code?</p>
+<pre class=" language-r"><code class="prism  language-r">leaflet<span class="token punctuation">(</span>storms<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span> addTiles<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span> addCircles<span class="token punctuation">(</span>color <span class="token operator">=</span> <span class="token operator">~</span>name<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>A:</strong> You can’t directly map a column to color in leaflet using <code>~column_name</code>. You need to first create a color palette function with <code>colorFactor()</code> (or similar), then use <code>color = ~pal(name)</code>.</p>
+<p><strong>Q2:</strong> What does the zoom level of 1 show vs. zoom level 15 in leaflet’s <code>setView()</code>?</p>
+<p><strong>A:</strong> Zoom 1 shows the entire world. Zoom 15 shows a neighborhood-level view.</p>
+<p><strong>Q3:</strong> You have fire perimeter data loaded as an sf object in NAD83 projection. When you try to display it in leaflet, it doesn’t show up correctly. What is the fix?</p>
+<p><strong>A:</strong> Call <code>st_transform(crs = 4326)</code> before passing it to leaflet. Leaflet only accepts WGS84 (EPSG:4326) coordinates.</p>
+<p><strong>Q4:</strong> What is the difference between <code>addMarkers()</code>, <code>addCircleMarkers()</code>, and <code>addCircles()</code> in leaflet?</p>
+<p><strong>A:</strong> <code>addMarkers()</code> uses pin icons, good for a small number of labeled points. <code>addCircleMarkers()</code> uses small circles of fixed pixel size, good for many points. <code>addCircles()</code> uses circles whose radius is in real-world meters, so they can be scaled by a data variable (e.g., hurricane wind speed).</p>
+<p><strong>Q5:</strong> True or False: In leaflet, you reference a data column for the <code>label</code> argument by writing <code>label = name</code>.</p>
+<p><strong>A:</strong> False. You need the tilde: <code>label = ~name</code>.</p>
+<h2 id="section-6-raster-data-with-terra">Section 6: Raster Data with <code>terra</code></h2>
+<h3 id="what-is-raster-data">What is raster data?</h3>
+<p>A raster is a grid of equally-sized cells, like pixels in an image. Each cell covers a geographic area and has one value (temperature, elevation, rainfall, vegetation index, etc.). It’s the right format for continuous data that changes smoothly across space.</p>
+<p><strong>NetCDF</strong> (<code>.nc</code> files) is a common raster format used for climate data. A NetCDF file can contain many <strong>layers</strong> — think of it like a stack of raster grids, one per time step.</p>
+<h3 id="loading-and-exploring-raster-data">Loading and exploring raster data</h3>
+<pre class=" language-r"><code class="prism  language-r">library<span class="token punctuation">(</span>terra<span class="token punctuation">)</span>
+
+dat <span class="token operator">&lt;-</span> rast<span class="token punctuation">(</span><span class="token string">"nclimgrid_tavg.nc"</span><span class="token punctuation">)</span>
+<span class="token comment"># rast() is the terra function to read raster files</span>
+<span class="token comment"># "tavg" = average temperature</span>
+
+dat
+<span class="token comment"># Shows you:</span>
+<span class="token comment"># - dimensions: number of rows, columns, layers</span>
+<span class="token comment"># - resolution: size of each cell in degrees</span>
+<span class="token comment"># - extent: geographic bounding box (min/max lat/lon)</span>
+<span class="token comment"># - CRS: coordinate reference system</span>
+<span class="token comment"># - layer names and time values</span>
+</code></pre>
+<h3 id="selecting-a-specific-layer-time-step">Selecting a specific layer (time step)</h3>
+<pre class=" language-r"><code class="prism  language-r">dat<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>       <span class="token comment"># First layer — e.g., January 1895</span>
+dat<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1564</span><span class="token punctuation">]</span><span class="token punctuation">]</span>    <span class="token comment"># Layer number 1564</span>
+</code></pre>
+<p><strong>How to calculate which layer corresponds to a date:</strong></p>
+<pre><code>layer = (year - start_year) * 12 + month_number
+
+Example: April 2025, data starts in 1895:
+layer = (2025 - 1895) * 12 + 4 = 130 * 12 + 4 = 1564
+</code></pre>
+<h3 id="plotting-raster-data">Plotting raster data</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Quick plot (base R)</span>
+plot<span class="token punctuation">(</span>dat<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1564</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>                         <span class="token comment"># grayscale by default</span>
+plot<span class="token punctuation">(</span>dat<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1564</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> col <span class="token operator">=</span> viridis<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment"># viridis color palette, 100 color steps</span>
+
+<span class="token comment"># Convert Celsius to Fahrenheit directly in the plot</span>
+plot<span class="token punctuation">(</span>dat<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1564</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">9</span><span class="token operator">/</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">32</span><span class="token punctuation">)</span>
+<span class="token comment"># You can do math on a raster object and it applies to every cell</span>
+</code></pre>
+<h3 id="converting-raster-to-data-frame-for-ggplot">Converting raster to data frame for ggplot</h3>
+<pre class=" language-r"><code class="prism  language-r">apr_2025 <span class="token operator">&lt;-</span> as.data.frame<span class="token punctuation">(</span>dat<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1564</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> xy <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>
+<span class="token comment"># as.data.frame converts the raster grid to one row per cell</span>
+<span class="token comment"># xy = TRUE adds x (longitude) and y (latitude) columns</span>
+<span class="token comment"># Result: a regular data frame with columns x, y, and the value column (e.g., tavg_1564)</span>
+</code></pre>
+<h3 id="plotting-raster-with-ggplot">Plotting raster with ggplot</h3>
+<pre class=" language-r"><code class="prism  language-r">ggplot<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_tile<span class="token punctuation">(</span>data <span class="token operator">=</span> apr_2025<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> x<span class="token punctuation">,</span> y <span class="token operator">=</span> y<span class="token punctuation">,</span> fill <span class="token operator">=</span> tavg_1564<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  scale_fill_viridis_c<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment"># geom_tile draws a colored rectangle at each (x, y) location</span>
+<span class="token comment"># Use geom_tile NOT geom_raster (geom_raster can warn about uneven spacing)</span>
+</code></pre>
+<h3 id="overlaying-state-borders-on-top-of-a-raster">Overlaying state borders on top of a raster</h3>
+<pre class=" language-r"><code class="prism  language-r">us_states <span class="token operator">&lt;-</span> ne_states<span class="token punctuation">(</span>country <span class="token operator">=</span> <span class="token string">"United States of America"</span><span class="token punctuation">,</span> returnclass <span class="token operator">=</span> <span class="token string">"sf"</span><span class="token punctuation">)</span>
+
+ggplot<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_tile<span class="token punctuation">(</span>data <span class="token operator">=</span> apr_2025<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> x<span class="token punctuation">,</span> y <span class="token operator">=</span> y<span class="token punctuation">,</span> fill <span class="token operator">=</span> tavg_1564<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>  <span class="token comment"># raster first</span>
+  scale_fill_viridis_b<span class="token punctuation">(</span>breaks <span class="token operator">=</span> seq<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_sf<span class="token punctuation">(</span>data <span class="token operator">=</span> us_states<span class="token punctuation">,</span> fill <span class="token operator">=</span> <span class="token string">"#FFFFFF00"</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>    <span class="token comment"># state borders on top</span>
+  <span class="token comment"># fill = "#FFFFFF00" means: white color but 00 alpha = fully transparent (see-through)</span>
+  coord_sf<span class="token punctuation">(</span>xlim <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">124.7</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">67</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ylim <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">24.5</span><span class="token punctuation">,</span> <span class="token number">49.4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># zoom to contiguous US</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-raster">Sample Quiz Questions — Raster</h3>
+<p><strong>Q1:</strong> A NetCDF file contains monthly average temperature data from January 1895 through today. Which layer contains data for July 2000?</p>
+<p><strong>A:</strong> layer = (2000 - 1895) * 12 + 7 = 105 * 12 + 7 = 1267. So <code>dat[[1267]]</code>.</p>
+<p><strong>Q2:</strong> Why should you use <code>geom_tile()</code> instead of <code>geom_raster()</code> to plot raster data in ggplot?</p>
+<p><strong>A:</strong> <code>geom_raster()</code> can produce a warning about “uneven horizontal intervals” in geographic data. <code>geom_tile()</code> handles this correctly.</p>
+<p><strong>Q3:</strong> What does <code>as.data.frame(dat[[1]], xy = TRUE)</code> return?</p>
+<p><strong>A:</strong> A regular data frame with one row per raster cell, with columns <code>x</code> (longitude), <code>y</code> (latitude), and a column for the cell value. This converts the raster format into something ggplot can use.</p>
+<h1 id="text-analysis">TEXT ANALYSIS</h1>
+<h2 id="the-big-picture">The Big Picture</h2>
+<p>Text analysis is about extracting meaning and statistics from text data. The typical workflow is:</p>
+<pre><code>raw text
+→ tibble (wrap in a data frame)
+→ tokenize (break into words)
+→ remove stop words (remove "the", "a", "and", etc.)
+→ count frequencies
+→ [optional] TF-IDF (find distinctive words)
+→ [optional] join with sentiment lexicon (attach emotion labels)
+→ summarize by chapter/section/episode
+→ visualize
+</code></pre>
+<h2 id="section-7-getting-text-into-r-and-tokenizing">Section 7: Getting Text Into R and Tokenizing</h2>
+<h3 id="what-is-tokenization">What is tokenization?</h3>
+<p><strong>Tokenization</strong> means breaking a long piece of text into individual units called <strong>tokens</strong>. Usually, a token is one word. The result is a table where each row contains one token.</p>
+<h3 id="loading-text">Loading text</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Option A: direct URL read</span>
+pp_raw <span class="token operator">&lt;-</span> readLines<span class="token punctuation">(</span><span class="token string">"https://www.gutenberg.org/cache/epub/1342/pg1342.txt"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Option B: from janeaustenr package (simplest for Pride and Prejudice)</span>
+library<span class="token punctuation">(</span>janeaustenr<span class="token punctuation">)</span>
+prideprejudice   <span class="token comment"># already a character vector, one element per line of the book</span>
+</code></pre>
+<h3 id="always-wrap-text-in-a-tibble-first">ALWAYS wrap text in a tibble first</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># unnest_tokens() REQUIRES a data frame — a raw character vector won't work</span>
+pride_tbl <span class="token operator">&lt;-</span> tibble<span class="token punctuation">(</span>text <span class="token operator">=</span> prideprejudice<span class="token punctuation">)</span>
+<span class="token comment"># Now it's a data frame with one column "text" and one row per line</span>
+</code></pre>
+<h3 id="tokenizing-with-unnest_tokens">Tokenizing with <code>unnest_tokens()</code></h3>
+<pre class=" language-r"><code class="prism  language-r">library<span class="token punctuation">(</span>tidytext<span class="token punctuation">)</span>
+
+pride_tokens <span class="token operator">&lt;-</span> unnest_tokens<span class="token punctuation">(</span>
+  tbl    <span class="token operator">=</span> pride_tbl<span class="token punctuation">,</span>  <span class="token comment"># the data frame containing text</span>
+  input  <span class="token operator">=</span> text<span class="token punctuation">,</span>       <span class="token comment"># the column name that has the raw text</span>
+  output <span class="token operator">=</span> word<span class="token punctuation">)</span>       <span class="token comment"># the name of the new column for individual tokens</span>
+
+<span class="token comment"># Output: a data frame with ONE ROW PER WORD</span>
+<span class="token comment"># Example:</span>
+<span class="token comment"># word</span>
+<span class="token comment"># pride</span>
+<span class="token comment"># and</span>
+<span class="token comment"># prejudice</span>
+<span class="token comment"># by</span>
+<span class="token comment"># ...</span>
+
+<span class="token comment"># unnest_tokens automatically:</span>
+<span class="token comment"># - splits on spaces and punctuation</span>
+<span class="token comment"># - lowercases everything ("The" → "the")</span>
+<span class="token comment"># - strips punctuation ("don't" → "dont" or splits into tokens)</span>
+</code></pre>
+<h3 id="bigrams-two-word-pairs">Bigrams (two-word pairs)</h3>
+<pre class=" language-r"><code class="prism  language-r">pride_bigrams <span class="token operator">&lt;-</span> unnest_tokens<span class="token punctuation">(</span>
+  tbl    <span class="token operator">=</span> pride_tbl<span class="token punctuation">,</span>
+  input  <span class="token operator">=</span> text<span class="token punctuation">,</span>
+  output <span class="token operator">=</span> bigram<span class="token punctuation">,</span>
+  token  <span class="token operator">=</span> <span class="token string">"ngrams"</span><span class="token punctuation">,</span>  <span class="token comment"># instead of the default "words"</span>
+  n <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>              <span class="token comment"># n = 2 means pairs of consecutive words</span>
+
+<span class="token comment"># Output rows look like:</span>
+<span class="token comment"># bigram</span>
+<span class="token comment"># it is</span>
+<span class="token comment"># is a</span>
+<span class="token comment"># a truth</span>
+
+<span class="token comment"># IMPORTANT: When a line of text ends, you can't form a bigram across lines</span>
+<span class="token comment"># This creates NA values — always filter them:</span>
+pride_bigrams <span class="token operator">&lt;-</span> pride_bigrams <span class="token operator">|</span><span class="token operator">&gt;</span> filter<span class="token punctuation">(</span><span class="token operator">!</span>is.na<span class="token punctuation">(</span>bigram<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-tokenization">Sample Quiz Questions — Tokenization</h3>
+<p><strong>Q1:</strong> You have a character vector <code>my_text</code>. What is the first step before you can use <code>unnest_tokens()</code> on it?</p>
+<p><strong>A:</strong> Wrap it in a tibble: <code>my_tbl &lt;- tibble(text = my_text)</code>. <code>unnest_tokens()</code> requires a data frame.</p>
+<p><strong>Q2:</strong> What does <code>unnest_tokens()</code> do to the case of text?</p>
+<p><strong>A:</strong> It automatically converts everything to lowercase. “Hello” and “hello” both become “hello”.</p>
+<p><strong>Q3:</strong> What does <code>token = "ngrams", n = 2</code> do in <code>unnest_tokens()</code>?</p>
+<p><strong>A:</strong> It tokenizes into bigrams — consecutive two-word pairs — instead of individual words.</p>
+<h2 id="section-8-stop-words-and-frequency-analysis">Section 8: Stop Words and Frequency Analysis</h2>
+<h3 id="what-are-stop-words">What are stop words?</h3>
+<p>Stop words are extremely common words that carry no meaningful information on their own — “the”, “a”, “and”, “is”, “of”, “to”, etc. When analyzing text for meaning or interesting patterns, you typically want to remove these first.</p>
+<pre class=" language-r"><code class="prism  language-r">stop_words
+<span class="token comment"># A built-in tibble with 1,149 rows and 2 columns: word, lexicon</span>
+<span class="token comment"># Includes three lists: "SMART", "snowball", "onix"</span>
+</code></pre>
+<h3 id="removing-stop-words-with-anti_join">Removing stop words with <code>anti_join</code></h3>
+<p><code>anti_join(A, B, by = "col")</code> keeps only rows in A that do NOT have a match in B.</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Before: pride_tokens has every word including "the", "a", "and"</span>
+<span class="token comment"># After: only meaningful content words remain</span>
+pride_tokens <span class="token operator">&lt;-</span> anti_join<span class="token punctuation">(</span>pride_tokens<span class="token punctuation">,</span> stop_words<span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token string">"word"</span><span class="token punctuation">)</span>
+</code></pre>
+<blockquote>
+<p>Your token column MUST be named <code>word</code> for this to work, because <code>stop_words</code> has a column called <code>word</code>. This is why <code>unnest_tokens()</code> uses <code>output = word</code> by convention.</p>
+</blockquote>
+<h3 id="removing-stop-words-from-bigrams-trickier">Removing stop words from bigrams (trickier!)</h3>
+<p>You can’t <code>anti_join</code> bigrams directly against stop_words, because stop_words contains single words, not two-word phrases. Instead:</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Split the bigram into two separate word columns, then filter each</span>
+pride_bigrams_clean <span class="token operator">&lt;-</span> pride_bigrams <span class="token operator">|</span><span class="token operator">&gt;</span>
+  mutate<span class="token punctuation">(</span>word1 <span class="token operator">=</span> str_extract<span class="token punctuation">(</span>bigram<span class="token punctuation">,</span> <span class="token string">"^\\w+"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>    <span class="token comment"># extract first word</span>
+         word2 <span class="token operator">=</span> str_extract<span class="token punctuation">(</span>bigram<span class="token punctuation">,</span> <span class="token string">"\\w+$"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>  <span class="token comment"># extract last word</span>
+  filter<span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>word1 <span class="token percent-operator operator">%in%</span> stop_words<span class="token operator">$</span>word<span class="token punctuation">)</span><span class="token punctuation">,</span>            <span class="token comment"># remove if first word is a stop word</span>
+         <span class="token operator">!</span><span class="token punctuation">(</span>word2 <span class="token percent-operator operator">%in%</span> stop_words<span class="token operator">$</span>word<span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># remove if second word is a stop word</span>
+</code></pre>
+<h3 id="counting-word-frequencies">Counting word frequencies</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Count every unique word and how many times it appears</span>
+word_counts <span class="token operator">&lt;-</span> pride_tokens <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>word<span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"count"</span><span class="token punctuation">,</span> sort <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>
+<span class="token comment"># sort = TRUE: most frequent words first</span>
+<span class="token comment"># name = "count": what to call the count column (default is "n")</span>
+
+<span class="token comment"># Output:</span>
+<span class="token comment"># word    count</span>
+<span class="token comment"># mr      785</span>
+<span class="token comment"># elizabeth 597</span>
+<span class="token comment"># ...</span>
+</code></pre>
+<h3 id="visualizing-top-words">Visualizing top words</h3>
+<pre class=" language-r"><code class="prism  language-r">pride_tokens <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>word<span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"count"</span><span class="token punctuation">,</span> sort <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  slice_head<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>             <span class="token comment"># keep only the top 20 rows</span>
+  ggplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>x <span class="token operator">=</span> count<span class="token punctuation">,</span> y <span class="token operator">=</span> reorder<span class="token punctuation">(</span>word<span class="token punctuation">,</span> count<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>  <span class="token comment"># reorder() sorts bars by count value</span>
+  geom_col<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment"># Produces a horizontal bar chart of the 20 most common words</span>
+</code></pre>
+<h3 id="tf-idf-—-finding-distinctive-words">TF-IDF — finding distinctive words</h3>
+<p><strong>TF-IDF</strong> = Term Frequency × Inverse Document Frequency. It’s a score that is HIGH when a word appears frequently in one particular document but rarely across all documents. Used to find words that characterize/distinguish one group from others.</p>
+<p>Example: if “dragons” appears a lot in Season 1 of Game of Thrones but rarely in other seasons, it gets a high TF-IDF for Season 1.</p>
+<pre class=" language-r"><code class="prism  language-r">tfidf_data <span class="token operator">&lt;-</span> got_tokens <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>Season<span class="token punctuation">,</span> word<span class="token punctuation">,</span> sort <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>   <span class="token comment"># count words per season</span>
+  bind_tf_idf<span class="token punctuation">(</span>
+    term     <span class="token operator">=</span> word<span class="token punctuation">,</span>    <span class="token comment"># which column has the tokens</span>
+    document <span class="token operator">=</span> Season<span class="token punctuation">,</span>  <span class="token comment"># which column defines the "document" (here: season = document)</span>
+    n        <span class="token operator">=</span> n<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>    <span class="token comment"># which column has the counts</span>
+  group_by<span class="token punctuation">(</span>Season<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  top_n<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> tf_idf<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>  <span class="token comment"># top 8 most distinctive words per season</span>
+  ungroup<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="sample-quiz-questions-—-stop-words-and-frequency">Sample Quiz Questions — Stop Words and Frequency</h3>
+<p><strong>Q1:</strong> What does <code>anti_join(tokens, stop_words, by = "word")</code> do?</p>
+<p><strong>A:</strong> It removes all rows from <code>tokens</code> where the <code>word</code> appears in <code>stop_words</code>. Only non-stop-word tokens remain.</p>
+<p><strong>Q2:</strong> Why can’t you do <code>anti_join(bigrams, stop_words, by = c("bigram" = "word"))</code> to remove stop words from bigrams?</p>
+<p><strong>A:</strong> Because stop_words contains single words, and <code>bigram</code> is a two-word string like “in the”. The full bigram string will never match any single word. You have to split the bigram into <code>word1</code> and <code>word2</code> and filter each separately.</p>
+<p><strong>Q3:</strong> A word has a high TF-IDF score for Season 3 of a show. What does this mean?</p>
+<p><strong>A:</strong> The word appears frequently in Season 3 but rarely across all other seasons. It is a distinctive word for Season 3.</p>
+<h2 id="section-9-sentiment-analysis">Section 9: Sentiment Analysis</h2>
+<h3 id="what-is-sentiment-analysis">What is sentiment analysis?</h3>
+<p>Sentiment analysis assigns emotional meaning to words. The idea: some words are inherently positive (“joy”, “love”, “excellent”), others are inherently negative (“misery”, “hate”, “terrible”). By counting how many positive vs. negative words appear in a text, you can estimate the overall emotional tone.</p>
+<p>A <strong>sentiment lexicon</strong> is just a table that maps words to their sentiment labels or scores.</p>
+<h3 id="the-four-lexicons">The four lexicons</h3>
+
+<table>
+<thead>
+<tr>
+<th>Lexicon</th>
+<th>What it provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"bing"</code></td>
+<td>Each word is labeled “positive” or “negative”</td>
+</tr>
+<tr>
+<td><code>"afinn"</code></td>
+<td>Each word gets an integer score from -5 (very negative) to +5 (very positive)</td>
+</tr>
+<tr>
+<td><code>"nrc"</code></td>
+<td>Each word is tagged with one or more emotions: positive, negative, anger, joy, fear, sadness, surprise, trust, anticipation, disgust</td>
+</tr>
+<tr>
+<td><code>"loughran"</code></td>
+<td>Financial sentiment (positive, negative, litigious, uncertain, etc.)</td>
+</tr>
+</tbody>
+</table><pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Load as CSV (required for rendering in .qmd files — the interactive version fails)</span>
+bing <span class="token operator">&lt;-</span> read_csv<span class="token punctuation">(</span><span class="token string">"bing.csv"</span><span class="token punctuation">)</span>
+nrc  <span class="token operator">&lt;-</span> read_csv<span class="token punctuation">(</span><span class="token string">"nrc.csv"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># The bing lexicon looks like:</span>
+<span class="token comment"># word       sentiment</span>
+<span class="token comment"># abandon    negative</span>
+<span class="token comment"># abundance  positive</span>
+<span class="token comment"># ...</span>
+
+<span class="token comment"># The nrc lexicon maps ONE WORD to MULTIPLE ROWS</span>
+nrc <span class="token operator">|</span><span class="token operator">&gt;</span> filter<span class="token punctuation">(</span>word <span class="token operator">==</span> <span class="token string">"abandon"</span><span class="token punctuation">)</span>
+<span class="token comment"># word     sentiment</span>
+<span class="token comment"># abandon  fear</span>
+<span class="token comment"># abandon  negative</span>
+<span class="token comment"># abandon  sadness</span>
+<span class="token comment"># One word can carry multiple emotion tags simultaneously</span>
+</code></pre>
+<h3 id="joining-tokens-with-a-sentiment-lexicon">Joining tokens with a sentiment lexicon</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Use inner_join because you ONLY want words that appear in the lexicon</span>
+<span class="token comment"># (left_join would keep all words and give NA for ones with no sentiment)</span>
+sentiment_words <span class="token operator">&lt;-</span> inner_join<span class="token punctuation">(</span>pride_tokens<span class="token punctuation">,</span> bing<span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token string">"word"</span><span class="token punctuation">)</span>
+<span class="token comment"># Result: only the tokens that have a known sentiment are kept</span>
+<span class="token comment"># Each row now has both the word and its sentiment label</span>
+</code></pre>
+<h3 id="why-inner_join-not-left_join">Why <code>inner_join</code> not <code>left_join</code>?</h3>
+<ul>
+<li><code>inner_join</code>: keeps only rows that have a match in both tables → only words with known sentiments</li>
+<li><code>left_join</code>: keeps all rows from the left table → words without sentiments get <code>NA</code></li>
+</ul>
+<p>For sentiment analysis you want <code>inner_join</code>. You’re not interested in neutral words.</p>
+<h3 id="counting-and-plotting-sentiment-words">Counting and plotting sentiment words</h3>
+<pre class=" language-r"><code class="prism  language-r">sentiment_words <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>word<span class="token punctuation">,</span> sentiment<span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"count"</span><span class="token punctuation">,</span> sort <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  filter<span class="token punctuation">(</span>word <span class="token operator">!=</span> <span class="token string">"miss"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>    <span class="token comment"># "miss" is coded negative but usually means "Miss Bennet"</span>
+  slice_head<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  ggplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>x <span class="token operator">=</span> count<span class="token punctuation">,</span>
+             y <span class="token operator">=</span> reorder<span class="token punctuation">(</span>word<span class="token punctuation">,</span> count<span class="token punctuation">)</span><span class="token punctuation">,</span>
+             fill <span class="token operator">=</span> sentiment<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>   <span class="token comment"># color bars by positive/negative</span>
+  geom_col<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="sentiment-score-by-chapter">Sentiment score by chapter</h3>
+<p>The goal: track how the emotional tone changes across chapters.</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Step 1: collapse the entire text into one string, then split by "Chapter N"</span>
+pride_collapsed <span class="token operator">&lt;-</span> paste<span class="token punctuation">(</span>prideprejudice<span class="token punctuation">,</span> collapse <span class="token operator">=</span> <span class="token string">" "</span><span class="token punctuation">)</span>
+<span class="token comment"># paste(..., collapse = " ") joins all lines into one long string</span>
+
+pride_split <span class="token operator">&lt;-</span> str_split<span class="token punctuation">(</span>pride_collapsed<span class="token punctuation">,</span> pattern <span class="token operator">=</span> <span class="token string">"Chapter\\s\\d+"</span><span class="token punctuation">)</span>
+<span class="token comment"># str_split splits the string wherever "Chapter" followed by whitespace and digits appears</span>
+<span class="token comment"># Returns a LIST (not a vector)</span>
+
+pride_chapters <span class="token operator">&lt;-</span> pride_split<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+<span class="token comment"># [[1]] extracts the vector from the list (str_split always returns a list)</span>
+<span class="token comment"># [-1] drops the first element (it's the title page, before Chapter 1)</span>
+
+<span class="token comment"># Step 2: make a data frame</span>
+pride_chaps <span class="token operator">&lt;-</span> tibble<span class="token punctuation">(</span>
+  text    <span class="token operator">=</span> pride_chapters<span class="token punctuation">,</span>    <span class="token comment"># one element per chapter</span>
+  chapter <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span>length<span class="token punctuation">(</span>pride_chapters<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Step 3: tokenize and join sentiment</span>
+pride_toks <span class="token operator">&lt;-</span> unnest_tokens<span class="token punctuation">(</span>pride_chaps<span class="token punctuation">,</span> input <span class="token operator">=</span> text<span class="token punctuation">,</span> output <span class="token operator">=</span> word<span class="token punctuation">)</span>
+pride_sent <span class="token operator">&lt;-</span> inner_join<span class="token punctuation">(</span>pride_toks<span class="token punctuation">,</span> bing<span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token string">"word"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  filter<span class="token punctuation">(</span>word <span class="token operator">!=</span> <span class="token string">"miss"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Step 4: compute score per chapter = (# positive words) - (# negative words)</span>
+chapter_scores <span class="token operator">&lt;-</span> pride_sent <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>chapter<span class="token punctuation">,</span> sentiment<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>          <span class="token comment"># count positive and negative per chapter</span>
+  pivot_wider<span class="token punctuation">(</span>
+    names_from  <span class="token operator">=</span> sentiment<span class="token punctuation">,</span>            <span class="token comment"># spread sentiment labels into columns</span>
+    values_from <span class="token operator">=</span> n<span class="token punctuation">,</span>
+    values_fill <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>                 <span class="token comment"># if a chapter has no negative words, use 0 not NA</span>
+  mutate<span class="token punctuation">(</span>score <span class="token operator">=</span> positive <span class="token operator">-</span> negative<span class="token punctuation">)</span>   <span class="token comment"># score = positives minus negatives</span>
+
+<span class="token comment"># Step 5: plot</span>
+chapter_scores <span class="token operator">|</span><span class="token operator">&gt;</span>
+  mutate<span class="token punctuation">(</span>pos_neg <span class="token operator">=</span> if_else<span class="token punctuation">(</span>score <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"positive"</span><span class="token punctuation">,</span> <span class="token string">"negative"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  ggplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>x <span class="token operator">=</span> chapter<span class="token punctuation">,</span> y <span class="token operator">=</span> score<span class="token punctuation">,</span> fill <span class="token operator">=</span> pos_neg<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_col<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="sentiment-by-fixed-size-sections-not-chapters">Sentiment by fixed-size sections (not chapters)</h3>
+<p>Instead of splitting by chapter headings, divide the whole book into blocks of 80 lines using integer division.</p>
+<pre class=" language-r"><code class="prism  language-r">section_scores <span class="token operator">&lt;-</span> tibble<span class="token punctuation">(</span>text <span class="token operator">=</span> prideprejudice<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  filter<span class="token punctuation">(</span><span class="token operator">!</span>str_detect<span class="token punctuation">(</span>text<span class="token punctuation">,</span> <span class="token string">"^Chapter\\s\\d+"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment"># remove chapter heading lines</span>
+         text <span class="token operator">!=</span> <span class="token string">""</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>                           <span class="token comment"># remove blank lines</span>
+  mutate<span class="token punctuation">(</span>
+    line_number <span class="token operator">=</span> row_number<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>           <span class="token comment"># assign a sequential line number</span>
+    section     <span class="token operator">=</span> line_number <span class="token percent-operator operator">%/%</span> <span class="token number">80</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>  <span class="token comment"># integer divide: lines 1-79 → section 0, 80-159 → section 1, etc.</span>
+  unnest_tokens<span class="token punctuation">(</span>input <span class="token operator">=</span> text<span class="token punctuation">,</span> output <span class="token operator">=</span> word<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  inner_join<span class="token punctuation">(</span>bing<span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token string">"word"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>section<span class="token punctuation">,</span> sentiment<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  pivot_wider<span class="token punctuation">(</span>names_from <span class="token operator">=</span> sentiment<span class="token punctuation">,</span> values_from <span class="token operator">=</span> n<span class="token punctuation">,</span> values_fill <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  mutate<span class="token punctuation">(</span>score <span class="token operator">=</span> positive <span class="token operator">-</span> negative<span class="token punctuation">)</span>
+</code></pre>
+<p><code>%/%</code> is integer division: <code>81 %/% 80 = 1</code>, <code>160 %/% 80 = 2</code>. All lines in the same 80-line block get the same section number. This is how you create uniform-size text windows.</p>
+<h3 id="sample-quiz-questions-—-sentiment-analysis">Sample Quiz Questions — Sentiment Analysis</h3>
+<p><strong>Q1:</strong> What is the difference between the bing and NRC lexicons?</p>
+<p><strong>A:</strong> Bing labels each word as either “positive” or “negative” (binary). NRC assigns one or more emotion categories (joy, fear, anger, sadness, etc.) to each word — one word can map to multiple rows.</p>
+<p><strong>Q2:</strong> You run <code>inner_join(my_tokens, bing, by = "word")</code>. Some words from your text are NOT in the bing lexicon. What happens to them?</p>
+<p><strong>A:</strong> They are dropped. <code>inner_join</code> only keeps rows that have a match in both tables. Words not in the lexicon simply don’t appear in the output.</p>
+<p><strong>Q3:</strong> After joining tokens with bing sentiment, you want to compute a sentiment score per chapter as (positives - negatives). You use <code>pivot_wider(names_from = sentiment, values_from = n)</code>. Why should you add <code>values_fill = 0</code>?</p>
+<p><strong>A:</strong> Some chapters might have no negative (or no positive) words, which would create <code>NA</code> in that cell. <code>values_fill = 0</code> ensures those become 0, so the subtraction <code>positive - negative</code> works correctly.</p>
+<p><strong>Q4:</strong> What does <code>%/%</code> do? Give an example.</p>
+<p><strong>A:</strong> <code>%/%</code> is integer division — it divides and drops the remainder. <code>81 %/% 80 = 1</code>, <code>160 %/% 80 = 2</code>. It’s used to assign all lines within a fixed-size window (e.g., every 80 lines) to the same section number.</p>
+<p><strong>Q5:</strong> Why do you need to filter out the word “miss” in Pride and Prejudice sentiment analysis?</p>
+<p><strong>A:</strong> The bing lexicon classifies “miss” as negative (as in “to miss something/someone”), but in Pride and Prejudice it almost always appears as a title (“Miss Bennet”, “Miss Darcy”). Keeping it would incorrectly add negative sentiment throughout the book.</p>
+<h1 id="shiny-dashboards-leaflet">SHINY DASHBOARDS (LEAFLET)</h1>
+<h2 id="section-10-shiny--leaflet-integration">Section 10: Shiny + Leaflet Integration</h2>
+<h3 id="yaml-setup-for-a-shiny-powered-dashboard-with-a-leaflet-map">YAML setup for a Shiny-powered dashboard with a leaflet map</h3>
+<pre class=" language-yaml"><code class="prism  language-yaml"><span class="token punctuation">---</span>
+<span class="token key atrule">format</span><span class="token punctuation">:</span>
+  <span class="token key atrule">html</span><span class="token punctuation">:</span>
+    <span class="token key atrule">page-layout</span><span class="token punctuation">:</span> full
+<span class="token key atrule">server</span><span class="token punctuation">:</span> shiny
+<span class="token punctuation">---</span>
+</code></pre>
+<p>Or for a multi-tab dashboard:</p>
+<pre class=" language-yaml"><code class="prism  language-yaml"><span class="token punctuation">---</span>
+<span class="token key atrule">format</span><span class="token punctuation">:</span> dashboard
+<span class="token key atrule">server</span><span class="token punctuation">:</span> shiny
+<span class="token punctuation">---</span>
+</code></pre>
+<h3 id="code-chunk-contexts-what-runs-where">Code chunk contexts (what runs where)</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment">#| context: setup    # Runs ONCE at startup. Load packages, read data, define palettes here.</span>
+<span class="token comment">#| context: server   # Reactive server code goes here. Runs when inputs change.</span>
+<span class="token comment">#| panel: sidebar    # UI elements (inputs) appear in the sidebar.</span>
+<span class="token comment">#| panel: fill       # Output fills its panel area.</span>
+</code></pre>
+<h3 id="typical-ui-inputs-for-a-map-dashboard">Typical UI inputs for a map dashboard</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Dropdown menu</span>
+selectInput<span class="token punctuation">(</span><span class="token string">"location_type"</span><span class="token punctuation">,</span> label <span class="token operator">=</span> <span class="token string">"Select Location Type:"</span><span class="token punctuation">,</span>
+            choices <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"All"</span><span class="token punctuation">,</span> unique<span class="token punctuation">(</span>data<span class="token operator">$</span>type<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            selected <span class="token operator">=</span> <span class="token string">"All"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Date range picker</span>
+dateRangeInput<span class="token punctuation">(</span><span class="token string">"date_range"</span><span class="token punctuation">,</span> label <span class="token operator">=</span> <span class="token string">"Select Date Range:"</span><span class="token punctuation">,</span>
+               start <span class="token operator">=</span> <span class="token string">"2019-01-01"</span><span class="token punctuation">,</span> end <span class="token operator">=</span> <span class="token string">"2019-12-31"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Checkboxes (select multiple options)</span>
+checkboxGroupInput<span class="token punctuation">(</span><span class="token string">"severity_select"</span><span class="token punctuation">,</span> label <span class="token operator">=</span> <span class="token string">"Severity:"</span><span class="token punctuation">,</span>
+                   choices <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"Fatal"</span><span class="token punctuation">,</span> <span class="token string">"Severe"</span><span class="token punctuation">,</span> <span class="token string">"Minor"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                   selected <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"Fatal"</span><span class="token punctuation">,</span> <span class="token string">"Severe"</span><span class="token punctuation">,</span> <span class="token string">"Minor"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="server-side-reactive-data-filtering--rendering-a-leaflet-map">Server-side: reactive data filtering + rendering a leaflet map</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment">#| context: server</span>
+
+<span class="token comment"># 1. Create a reactive expression: a filtered version of the data</span>
+<span class="token comment">#    This re-runs automatically whenever the user changes an input</span>
+filtered_data <span class="token operator">&lt;-</span> reactive<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  crashes <span class="token operator">|</span><span class="token operator">&gt;</span>
+    filter<span class="token punctuation">(</span>county <span class="token operator">==</span> input<span class="token operator">$</span>county_select<span class="token punctuation">,</span>           <span class="token comment"># input$county_select reads the dropdown</span>
+           date <span class="token operator">&gt;=</span> input<span class="token operator">$</span>date_range<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>             <span class="token comment"># date_range[1] = start date</span>
+           date <span class="token operator">&lt;=</span> input<span class="token operator">$</span>date_range<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>             <span class="token comment"># date_range[2] = end date</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 2. Render the leaflet map</span>
+output<span class="token operator">$</span>map <span class="token operator">&lt;-</span> renderLeaflet<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  data <span class="token operator">&lt;-</span> filtered_data<span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment"># call the reactive with () to get its current value</span>
+
+  leaflet<span class="token punctuation">(</span>data <span class="token operator">=</span> data<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    addProviderTiles<span class="token punctuation">(</span><span class="token string">"CartoDB.Positron"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    addCircleMarkers<span class="token punctuation">(</span>
+      lng <span class="token operator">=</span> <span class="token operator">~</span>longitude<span class="token punctuation">,</span> lat <span class="token operator">=</span> <span class="token operator">~</span>latitude<span class="token punctuation">,</span>
+      radius <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">,</span>
+      color <span class="token operator">=</span> <span class="token operator">~</span>pal<span class="token punctuation">(</span>COLLISION_SEVERITY<span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment"># color mapped via palette function</span>
+      stroke <span class="token operator">=</span> <span class="token boolean">FALSE</span><span class="token punctuation">,</span>
+      fillOpacity <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">,</span>
+      popup <span class="token operator">=</span> <span class="token operator">~</span>paste0<span class="token punctuation">(</span><span class="token string">"&lt;b&gt;"</span><span class="token punctuation">,</span> LOCATION<span class="token punctuation">,</span> <span class="token string">"&lt;/b&gt;&lt;br&gt;Severity: "</span><span class="token punctuation">,</span> COLLISION_SEVERITY<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    addLegend<span class="token punctuation">(</span>pal <span class="token operator">=</span> pal<span class="token punctuation">,</span> values <span class="token operator">=</span> <span class="token operator">~</span>COLLISION_SEVERITY<span class="token punctuation">,</span> position <span class="token operator">=</span> <span class="token string">"bottomright"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="ui-side-displaying-the-leaflet-map-output">UI side: displaying the leaflet map output</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># In the UI chunk (or sidebar/main panel), declare where the map goes</span>
+leafletOutput<span class="token punctuation">(</span><span class="token string">"map"</span><span class="token punctuation">)</span>     <span class="token comment"># "map" must match the name in output$map above</span>
+</code></pre>
+<h3 id="key-shiny-rules-to-remember">Key Shiny rules to remember</h3>
+<ul>
+<li>Access user input values with <code>input$widget_id</code> (where widget_id is what you gave in <code>selectInput()</code>, etc.)</li>
+<li>Access reactive expression values by calling them with <code>()</code>: <code>filtered_data()</code> not <code>filtered_data</code></li>
+<li><code>renderLeaflet({...})</code> and <code>leafletOutput("id")</code> always come in pairs</li>
+<li>A <code>reactive({})</code> expression re-runs whenever any <code>input$...</code> it uses changes</li>
+</ul>
+<h3 id="sample-quiz-questions-—-shiny--leaflet">Sample Quiz Questions — Shiny + Leaflet</h3>
+<p><strong>Q1:</strong> In a Shiny dashboard, you have a reactive expression <code>filtered_data &lt;- reactive({...})</code>. Inside <code>renderLeaflet({})</code>, how do you access its current value?</p>
+<p><strong>A:</strong> By calling it with parentheses: <code>filtered_data()</code>. Without the <code>()</code>, you’d get the reactive expression object itself, not the data.</p>
+<p><strong>Q2:</strong> What must be true about the string ID used in <code>renderLeaflet()</code> and <code>leafletOutput()</code>?</p>
+<p><strong>A:</strong> They must match exactly. If you write <code>output$my_map &lt;- renderLeaflet({...})</code>, then the UI must have <code>leafletOutput("my_map")</code>.</p>
+<p><strong>Q3:</strong> In what code chunk context does <code>reactive({})</code> belong?</p>
+<p><strong>A:</strong> In a chunk with <code>#| context: server</code>. Reactive code belongs in the server context.</p>
+<h1 id="quick-reference">QUICK REFERENCE</h1>
+
+<table>
+<thead>
+<tr>
+<th>What you did</th>
+<th>Problem</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Passed sf data to leaflet without transforming</td>
+<td>Map doesn’t display correctly</td>
+<td><code>st_transform(crs = 4326)</code> first</td>
+</tr>
+<tr>
+<td>Used <code>color = ~name</code> in leaflet</td>
+<td>Colors don’t work</td>
+<td>Create <code>pal &lt;- colorFactor(...)</code> and use <code>color = ~pal(name)</code></td>
+</tr>
+<tr>
+<td>Joined data frame and lost sf class</td>
+<td>Geometry disappeared</td>
+<td>Put sf object on LEFT side of join</td>
+</tr>
+<tr>
+<td><code>unnest_tokens()</code> on raw vector</td>
+<td>Error: not a data frame</td>
+<td>Wrap first: <code>tibble(text = your_vector)</code></td>
+</tr>
+<tr>
+<td><code>anti_join</code> stop words from bigrams</td>
+<td>Stop words not removed</td>
+<td>Split bigram into word1/word2, filter each</td>
+</tr>
+<tr>
+<td><code>pivot_wider</code> produces NA in sentiment</td>
+<td>Chapter had no positive/negative words</td>
+<td>Add <code>values_fill = 0</code></td>
+</tr>
+<tr>
+<td><code>geom_raster()</code> warning</td>
+<td>Uneven pixel spacing</td>
+<td>Use <code>geom_tile()</code> instead</td>
+</tr>
+<tr>
+<td><code>st_read("fires.shp")</code> fails</td>
+<td>Should pass folder, not file</td>
+<td>Pass the folder name containing all shapefile components</td>
+</tr>
+<tr>
+<td><code>girafe()</code> not working</td>
+<td>ggplot object not passed correctly</td>
+<td><code>girafe(ggobj = p)</code> where <code>p</code> is your ggplot</td>
+</tr>
+<tr>
+<td>Forgot <code>~</code> in leaflet</td>
+<td>Column reference treated as a constant</td>
+<td>Always <code>lng = ~long</code>, <code>label = ~name</code>, <code>color = ~pal(var)</code></td>
+</tr>
+</tbody>
+</table><h1 id="final-practice-quiz">FINAL PRACTICE QUIZ</h1>
+<p><strong>Q1:</strong> You have the following sf object:</p>
+<pre class=" language-r"><code class="prism  language-r">us_states <span class="token operator">&lt;-</span> us_map<span class="token punctuation">(</span>regions <span class="token operator">=</span> <span class="token string">"states"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>You want to display it in leaflet. What is missing from this code?</p>
+<pre class=" language-r"><code class="prism  language-r">leaflet<span class="token punctuation">(</span>us_states<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span> addTiles<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span> addPolygons<span class="token punctuation">(</span>label <span class="token operator">=</span> <span class="token operator">~</span>full<span class="token punctuation">)</span>
+</code></pre>
+<p><strong>A:</strong> <code>us_map()</code> returns data in NAD27 projection (not WGS84). You must add <code>|&gt; st_transform(crs = 4326)</code> before passing to leaflet.</p>
+<p><strong>Q2:</strong> Which of the following correctly creates an interactive map where hovering over a US state shows its name and average salary?</p>
+<p>a) <code>geom_sf(aes(fill = Average, tooltip = paste0(full, ": $", Average)))</code><br>
+b) <code>geom_sf_interactive(aes(fill = Average, tooltip = paste0(full, ": $", Average)))</code><br>
+c) <code>geom_sf_interactive(fill = Average, tooltip = paste0(full, ": $", Average))</code><br>
+d) <code>geom_sf(fill = Average)</code> + <code>girafe(ggobj = p)</code></p>
+<p><strong>A:</strong> (b). You need <code>geom_sf_interactive()</code> (not <code>geom_sf</code>) and the <code>tooltip</code> aesthetic must go inside <code>aes()</code>.</p>
+<p><strong>Q3:</strong> A NetCDF file has monthly temperature data starting January 1950. Which layer index is October 2010?</p>
+<p><strong>A:</strong> layer = (2010 - 1950) × 12 + 10 = 60 × 12 + 10 = 730. So <code>dat[[730]]</code>.</p>
+<p><strong>Q4:</strong> You tokenize a novel and want to find the top bigrams that don’t contain stop words. Put these steps in order:</p>
+<ul>
+<li>A) <code>filter(!is.na(bigram))</code></li>
+<li>B) <code>unnest_tokens(tbl, text, bigram, token = "ngrams", n = 2)</code></li>
+<li>C) <code>mutate(word1 = str_extract(bigram, "^\\w+"), word2 = str_extract(bigram, "\\w+$"))</code></li>
+<li>D) <code>filter(!(word1 %in% stop_words$word), !(word2 %in% stop_words$word))</code></li>
+<li>E) <code>count(bigram, sort = TRUE)</code></li>
+</ul>
+<p><strong>A:</strong> B → A → C → D → E</p>
+<p><strong>Q5:</strong> True or False: A word like “storm” that appears in the NRC lexicon will appear in exactly one row of the NRC table.</p>
+<p><strong>A:</strong> False. NRC maps words to multiple emotion categories. “Storm” might appear in rows for “fear”, “negative”, and “anger” simultaneously.</p>
+<p><strong>Q6:</strong> You want to color circles in leaflet by a categorical variable <code>category</code> in your data. What two steps are required?</p>
+<p><strong>A:</strong> (1) Create a palette function: <code>pal &lt;- colorFactor(palette = "viridis", domain = data$category)</code>. (2) Use it in <code>addCircles()</code> or <code>addCircleMarkers()</code> with <code>color = ~pal(category)</code>.</p>
+<p><strong>Q7:</strong> What does <code>st_drop_geometry()</code> do, and when would you use it?</p>
+<p><strong>A:</strong> It removes the geometry column from an sf object, returning a plain data frame. You’d use it when doing data analysis (EDA, counting, summarizing) where you don’t need the spatial component, because carrying the geometry column slows down dplyr operations unnecessarily.</p>
+<p><strong>Q8:</strong> Write the complete pipeline to compute the sentiment score (positive - negative) per season using the bing lexicon for a tokens tibble called <code>show_tokens</code> that already has a <code>Season</code> column.</p>
+<p><strong>A:</strong></p>
+<pre class=" language-r"><code class="prism  language-r">show_tokens <span class="token operator">|</span><span class="token operator">&gt;</span>
+  inner_join<span class="token punctuation">(</span>bing<span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token string">"word"</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  count<span class="token punctuation">(</span>Season<span class="token punctuation">,</span> sentiment<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  pivot_wider<span class="token punctuation">(</span>names_from <span class="token operator">=</span> sentiment<span class="token punctuation">,</span> values_from <span class="token operator">=</span> n<span class="token punctuation">,</span> values_fill <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+  mutate<span class="token punctuation">(</span>score <span class="token operator">=</span> positive <span class="token operator">-</span> negative<span class="token punctuation">)</span>
+</code></pre>
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,788 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>stat133</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#dates-and-times">1. Dates and Times</a>
+<ul>
+<li><a href="#a.-core-datetime-object-types">A. Core date/time object types</a></li>
+<li><a href="#b.-unix-time">B. Unix Time</a></li>
+<li><a href="#c.-creating-datetimes">C. Creating datetimes</a></li>
+<li><a href="#d.-creating-dates">D. Creating dates</a></li>
+<li><a href="#e.-creating-datestimes-with-lubridate">E. Creating dates/times with lubridate</a></li>
+<li><a href="#f.-getset-components">F. Get/Set Components</a></li>
+<li><a href="#g.-format">G. format()</a></li>
+</ul>
+</li>
+<li><a href="#time-spans--timezones">2) Time Spans & Timezones</a>
+<ul>
+<li><a href="#base-r-subtraction-→-difftime">Base R subtraction → difftime</a></li>
+<li><a href="#duration--fixed-number-of-seconds">duration = fixed number of seconds</a></li>
+<li><a href="#period--human-calendar-time-dst--leap-aware">period = human calendar time (DST / leap-aware)</a></li>
+<li><a href="#d.-interval--specific-start--end-points">D. interval = specific start + end points</a></li>
+<li><a href="#e.-key-differences-duration-vs-period">E. Key Differences (duration vs period)</a></li>
+<li><a href="#f.-timezones">F. Timezones</a></li>
+<li><a href="#g.-dashboard-example">G. Dashboard Example</a></li>
+</ul>
+</li>
+<li><a href="#shiny-dashboards">2. Shiny Dashboards</a>
+<ul>
+<li><a href="#a.-typical-quarto-dashboard-structure">A. Typical Quarto dashboard structure</a></li>
+<li><a href="#b.-minimal-dashboard-skeleton-you-should-memorize">B. Minimal dashboard skeleton you should memorize</a></li>
+<li><a href="#c.-shiny-inputs">C. Shiny Inputs</a></li>
+<li><a href="#d.-shiny-outputs">D. Shiny Outputs</a></li>
+<li><a href="#e.-server-logic">E. Server Logic</a></li>
+<li><a href="#f.-reactivity">F. Reactivity</a></li>
+<li><a href="#g.-examples">G. Examples</a></li>
+<li><a href="#h.-avoid-redundant-code-with-reactive">H. Avoid Redundant Code with reactive()</a></li>
+<li><a href="#i.-conditional-graphics">I. Conditional Graphics</a></li>
+<li><a href="#j.-.data-">J. .data[[ ]]</a></li>
+</ul>
+</li>
+<li><a href="#common-traps">Common Traps</a>
+<ul>
+<li></li>
+</ul>
+</li>
+<li><a href="#one-pager">One Pager</a>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="dates-and-times">1. Dates and Times</h1>
+<h2 id="a.-core-datetime-object-types">A. Core date/time object types</h2>
+<h3 id="posixct--date-time-stores-both-date-and-time">1. <code>POSIXct</code> = date-time (stores both date and time)</h3>
+<ul>
+<li>Internally built on top of a <strong>double</strong></li>
+<li>Represents <strong>Unix time</strong> (seconds since Jan 1, 1970 UTC)</li>
+</ul>
+<pre class=" language-r"><code class="prism  language-r">now <span class="token operator">&lt;-</span> Sys.time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+now
+class<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+typeof<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+unclass<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+</code></pre>
+<p>Expected:</p>
+<ul>
+<li><code>class(now)</code> → <code>"POSIXct" "POSIXt"</code></li>
+<li><code>typeof(now)</code> → <code>"double"</code></li>
+</ul>
+<h3 id="date--date-only">2. <code>Date</code> = date only</h3>
+<pre class=" language-r"><code class="prism  language-r">halloween <span class="token operator">&lt;-</span> as.Date<span class="token punctuation">(</span><span class="token string">"2000-10-31"</span><span class="token punctuation">)</span>
+class<span class="token punctuation">(</span>halloween<span class="token punctuation">)</span>
+typeof<span class="token punctuation">(</span>halloween<span class="token punctuation">)</span>
+</code></pre>
+<p>Expected:</p>
+<ul>
+<li><code>class(halloween)</code> → <code>"Date"</code></li>
+<li><code>typeof(halloween)</code> → <code>"double"</code></li>
+</ul>
+<h2 id="b.-unix-time">B. Unix Time</h2>
+<p><strong>Definition:</strong> number of seconds elapsed since <strong>midnight UTC on Jan 1, 1970</strong>.</p>
+<ul>
+<li><code>0</code> = <code>"1970-01-01 00:00:00 UTC"</code></li>
+<li><code>60</code> = <code>"1970-01-01 00:01:00 UTC"</code></li>
+</ul>
+<ol>
+<li>Unix timestamp → datetime: <code>as.POSIXct(x = 60, tz = "UTC")</code></li>
+<li>Datetime → unix timestamp: <code>unclass(Sys.time())</code></li>
+</ol>
+<h2 id="c.-creating-datetimes">C. Creating datetimes</h2>
+<ol>
+<li>From numeric Unix time: <code>as.POSIXct(x = 60, tz = "UTC")</code></li>
+<li>From standard string: <code>as.POSIXct(x = "1970-01-01 00:01:00", tz = "UTC")</code></li>
+<li>From custom formatted string: <code>as.POSIXct(x = "Jan 1, 1970 12:01 am", format = "%b %d, %Y %I:%M %p", tz = "UTC")</code></li>
+</ol>
+<h2 id="d.-creating-dates">D. Creating dates</h2>
+<ol>
+<li>Simple ISO format: <code>as.Date("2000-10-31")</code></li>
+<li>Custom formats</li>
+</ol>
+<pre class=" language-r"><code class="prism  language-r">as.Date<span class="token punctuation">(</span><span class="token string">"03-16-2026"</span><span class="token punctuation">,</span> format <span class="token operator">=</span> <span class="token string">"%m-%d-%Y"</span><span class="token punctuation">)</span>
+as.Date<span class="token punctuation">(</span><span class="token string">"2026-March-16"</span><span class="token punctuation">,</span> format <span class="token operator">=</span> <span class="token string">"%Y-%B-%d"</span><span class="token punctuation">)</span>
+as.Date<span class="token punctuation">(</span><span class="token string">"2026-Mar-16"</span><span class="token punctuation">,</span> format <span class="token operator">=</span> <span class="token string">"%Y-%b-%d"</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="e.-creating-datestimes-with-lubridate">E. Creating dates/times with <code>lubridate</code></h2>
+<h3 id="common-parser-functions">Common parser functions</h3>
+<p>Pattern names tell you the order:</p>
+<ul>
+<li><code>ymd()</code> = year-month-day</li>
+<li><code>mdy()</code> = month-day-year</li>
+<li><code>dmy()</code> = day-month-year</li>
+<li>Add time parts:
+<ul>
+<li><code>ymd_hms()</code></li>
+<li><code>mdy_hm()</code></li>
+<li><code>dmy_hm()</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<pre class=" language-r"><code class="prism  language-r">library<span class="token punctuation">(</span>tidyverse<span class="token punctuation">)</span>  <span class="token comment"># contains lubridate</span>
+
+mdy_hm<span class="token punctuation">(</span><span class="token string">"Jan 1, 1970 12:01 am"</span><span class="token punctuation">)</span>
+dmy_hm<span class="token punctuation">(</span><span class="token string">"1-1-1970 12:01"</span><span class="token punctuation">)</span>
+ymd<span class="token punctuation">(</span><span class="token string">"2026-04-09"</span><span class="token punctuation">)</span>
+ymd_hms<span class="token punctuation">(</span><span class="token string">"2026-03-08 01:00:00"</span><span class="token punctuation">,</span> tz <span class="token operator">=</span> <span class="token string">"America/Los_Angeles"</span><span class="token punctuation">)</span>
+today<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># returns a `Date` object</span>
+</code></pre>
+<h2 id="f.-getset-components">F. Get/Set Components</h2>
+<p>Given: <code>x &lt;- ymd_hms("2026-04-08 10:15:34")</code></p>
+<h3 id="syntax-list">Syntax list</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># Get</span>
+date<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+year<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+month<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+day<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+wday<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+week<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+quarter<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+semester<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+qday<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+hour<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+minute<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+second<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+
+<span class="token comment"># Set</span>
+year<span class="token punctuation">(</span>now<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token number">2025</span>
+month<span class="token punctuation">(</span>now<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token number">12</span>
+day<span class="token punctuation">(</span>now<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token number">31</span>
+hour<span class="token punctuation">(</span>now<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token number">23</span>
+minute<span class="token punctuation">(</span>now<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token number">59</span>
+second<span class="token punctuation">(</span>now<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token number">0</span>
+</code></pre>
+<h3 id="examples-1">Examples</h3>
+<pre class=" language-r"><code class="prism  language-r">year<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+day<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+wday<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+wday<span class="token punctuation">(</span>now<span class="token punctuation">,</span> label <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>
+wday<span class="token punctuation">(</span>now<span class="token punctuation">,</span> label <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> abbr <span class="token operator">=</span> <span class="token boolean">FALSE</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li><code>wday(now)</code> → numeric day of week</li>
+<li><code>wday(now, label = TRUE)</code> → abbreviated factor like <code>Wed</code></li>
+<li><code>wday(now, label = TRUE, abbr = FALSE)</code> → full label like <code>Wednesday</code> (<a href="https://stat133.berkeley.edu/spring-2026/lectures/23-date-time1/slides.html" title="STAT 133 – Dates and Times I">Stat 133</a>)</li>
+</ul>
+<h2 id="g.-format">G. <code>format()</code></h2>
+<p>Use <code>format()</code> to display dates differently.</p>
+<pre class=" language-r"><code class="prism  language-r">format<span class="token punctuation">(</span>now<span class="token punctuation">,</span> <span class="token string">"%m/%d/%y"</span><span class="token punctuation">)</span> <span class="token comment"># "04/08/26"</span>
+</code></pre>
+<h1 id="time-spans--timezones">2) Time Spans &amp; Timezones</h1>
+<h2 id="base-r-subtraction-→-difftime">Base R subtraction → <code>difftime</code></h2>
+<pre class=" language-r"><code class="prism  language-r">a <span class="token operator">&lt;-</span> today<span class="token punctuation">(</span><span class="token punctuation">)</span>
+b <span class="token operator">&lt;-</span> ymd<span class="token punctuation">(</span><span class="token string">"1941-09-27"</span><span class="token punctuation">)</span>
+a <span class="token operator">-</span> b
+class<span class="token punctuation">(</span>a <span class="token operator">-</span> b<span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Subtracting two <code>Date</code>s gives a <strong><code>difftime</code></strong></li>
+<li><code>difftime</code> can have inconsistent units</li>
+</ul>
+<h2 id="duration--fixed-number-of-seconds"><code>duration</code> = fixed number of seconds</h2>
+<h3 id="convert-difftime-→-duration">Convert difftime → duration</h3>
+<pre class=" language-r"><code class="prism  language-r">oski_age_sec <span class="token operator">&lt;-</span> as.duration<span class="token punctuation">(</span>a <span class="token operator">-</span> b<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="constructors">Constructors</h3>
+<pre class=" language-r"><code class="prism  language-r">dseconds<span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span>
+dminutes<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+dhours<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+ddays<span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span>
+dweeks<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+dyears<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Key idea:</p>
+<ul>
+<li><code>duration</code> = <strong>fixed</strong> seconds</li>
+<li>A “day” here = 86400 seconds</li>
+<li>A “year” is an average number of seconds (not always calendar-exact)</li>
+</ul>
+<h2 id="period--human-calendar-time-dst--leap-aware"><code>period</code> = human calendar time (DST / leap-aware)</h2>
+<h3 id="constructors-1">Constructors</h3>
+<pre class=" language-r"><code class="prism  language-r">seconds<span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span>
+minutes<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+hours<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+days<span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span>
+weeks<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+years<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Key idea:</p>
+<ul>
+<li><code>period</code> tracks <strong>human units</strong></li>
+<li>It adapts to irregularities like:
+<ul>
+<li>daylight savings</li>
+<li>leap years</li>
+</ul>
+</li>
+</ul>
+<h2 id="d.-interval--specific-start--end-points">D. <code>interval</code> = specific start + end points</h2>
+<pre class=" language-r"><code class="prism  language-r">date1 <span class="token operator">&lt;-</span> ymd<span class="token punctuation">(</span><span class="token string">"1941-09-27"</span><span class="token punctuation">)</span>
+date2 <span class="token operator">&lt;-</span> ymd<span class="token punctuation">(</span><span class="token string">"2026-03-18"</span><span class="token punctuation">)</span>
+
+interval<span class="token punctuation">(</span>date1<span class="token punctuation">,</span> date2<span class="token punctuation">)</span>
+int_length<span class="token punctuation">(</span>interval<span class="token punctuation">(</span>date1<span class="token punctuation">,</span> date2<span class="token punctuation">)</span><span class="token punctuation">)</span>
+interval<span class="token punctuation">(</span>date1<span class="token punctuation">,</span> date2<span class="token punctuation">)</span> <span class="token operator">/</span> years<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+interval<span class="token punctuation">(</span>date1<span class="token punctuation">,</span> date2<span class="token punctuation">)</span> <span class="token operator">/</span> months<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+interval<span class="token punctuation">(</span>date1<span class="token punctuation">,</span> date2<span class="token punctuation">)</span> <span class="token operator">/</span> weeks<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Key idea:</p>
+<ul>
+<li>interval is tied to <strong>real points on the timeline</strong></li>
+<li>Useful for “how many years/months/weeks between two dates?”</li>
+</ul>
+<h2 id="e.-key-differences-duration-vs-period">E. Key Differences (<code>duration</code> vs <code>period</code>)</h2>
+<h3 id="daylight-savings-time">Daylight Savings Time</h3>
+<pre class=" language-r"><code class="prism  language-r">one_am <span class="token operator">&lt;-</span> ymd_hms<span class="token punctuation">(</span><span class="token string">"2026-03-08 01:00:00"</span><span class="token punctuation">,</span> tz <span class="token operator">=</span> <span class="token string">"America/Los_Angeles"</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Add fixed 1 day duration</li>
+</ul>
+<pre class=" language-r"><code class="prism  language-r">one_am <span class="token operator">+</span> ddays<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment"># "2026-03-09 02:00:00 PDT"</span>
+</code></pre>
+<ul>
+<li>Add calendar 1 day period</li>
+</ul>
+<pre class=" language-r"><code class="prism  language-r">one_am <span class="token operator">+</span> days<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment"># "2026-03-09 01:00:00 PDT"</span>
+</code></pre>
+<p><strong>Why?</strong></p>
+<ul>
+<li>DST spring-forward makes that calendar day only 23 hours long</li>
+<li><code>ddays(1)</code> = exact 86400 seconds</li>
+<li><code>days(1)</code> = “same clock time tomorrow”</li>
+</ul>
+<h3 id="leap-year">Leap year</h3>
+<pre class=" language-r"><code class="prism  language-r">ymd<span class="token punctuation">(</span><span class="token string">"2024-01-01"</span><span class="token punctuation">)</span> <span class="token operator">+</span> dyears<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment"># "2024-12-31 06:00:00 UTC"</span>
+
+ymd<span class="token punctuation">(</span><span class="token string">"2024-01-01"</span><span class="token punctuation">)</span> <span class="token operator">+</span> years<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment"># "2025-01-01"</span>
+</code></pre>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><code>dyears(1)</code> = average fixed seconds</li>
+<li><code>years(1)</code> = true calendar year</li>
+</ul>
+<h2 id="f.-timezones">F. Timezones</h2>
+<ol>
+<li>Current system timezone: <code>Sys.timezone()</code></li>
+<li>Use a timezone when parsing</li>
+</ol>
+<pre class=" language-r"><code class="prism  language-r">ymd_hms<span class="token punctuation">(</span><span class="token string">"2026-03-08 01:00:00"</span><span class="token punctuation">,</span> tz <span class="token operator">=</span> <span class="token string">"America/Los_Angeles"</span><span class="token punctuation">)</span>
+as.POSIXct<span class="token punctuation">(</span><span class="token string">"1970-01-01 00:01:00"</span><span class="token punctuation">,</span> tz <span class="token operator">=</span> <span class="token string">"UTC"</span><span class="token punctuation">)</span>
+</code></pre>
+<ol start="3">
+<li><code>OlsonNames()</code> like “America/Los_Angeles”, “America/New_York”, “UTC”.</li>
+</ol>
+<h2 id="g.-dashboard-example">G. Dashboard Example</h2>
+<p>Convert a character datetime column to datetime. The slide’s <code>CreateDatetime</code> starts as character:</p>
+<pre class=" language-r"><code class="prism  language-r">cfs <span class="token operator">|</span><span class="token operator">&gt;</span> select<span class="token punctuation">(</span>CreateDatetime<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span> slice_head<span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Then convert:</p>
+<pre class=" language-r"><code class="prism  language-r">cfs <span class="token operator">&lt;-</span> mutate<span class="token punctuation">(</span>cfs<span class="token punctuation">,</span> CreateDatetime <span class="token operator">=</span> as_datetime<span class="token punctuation">(</span>CreateDatetime<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>If they ask: “Convert a string timestamp column into datetime type” → this is the syntax.</p>
+<h1 id="shiny-dashboards">2. Shiny Dashboards</h1>
+<h2 id="a.-typical-quarto-dashboard-structure">A. Typical Quarto dashboard structure</h2>
+<p>From the slides:</p>
+<ul>
+<li>YAML header:
+<ul>
+<li><code>format: dashboard</code></li>
+<li><code>server: shiny</code></li>
+</ul>
+</li>
+<li>Setup chunk:
+<ul>
+<li><code>#| context: setup</code></li>
+</ul>
+</li>
+<li>Sidebar / Menubar:
+<ul>
+<li><code>## {.sidebar}</code></li>
+<li><code>## {.menubar}</code></li>
+</ul>
+</li>
+<li>Optional tabs:
+<ul>
+<li><code># Tab</code></li>
+</ul>
+</li>
+<li>Server chunk:
+<ul>
+<li><code>#| context: server</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="b.-minimal-dashboard-skeleton-you-should-memorize">B. Minimal dashboard skeleton you should memorize</h2>
+<pre class=" language-r"><code class="prism  language-r"><span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+title<span class="token operator">:</span> <span class="token string">"My Dashboard"</span>
+format<span class="token operator">:</span> dashboard
+server<span class="token operator">:</span> shiny
+<span class="token operator">-</span><span class="token operator">-</span><span class="token operator">-</span>
+
+```<span class="token punctuation">{</span>r<span class="token punctuation">}</span>
+<span class="token comment">#| context: setup</span>
+library<span class="token punctuation">(</span>tidyverse<span class="token punctuation">)</span>
+
+
+<span class="token comment">## {.sidebar}</span>
+
+```<span class="token punctuation">{</span>r<span class="token punctuation">}</span>
+sliderInput<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"bins"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Number of bins"</span><span class="token punctuation">,</span>
+  min <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  max <span class="token operator">=</span> <span class="token number">50</span><span class="token punctuation">,</span>
+  value <span class="token operator">=</span> <span class="token number">30</span>
+<span class="token punctuation">)</span>
+`` `
+
+<span class="token comment">## Main</span>
+
+```<span class="token punctuation">{</span>r<span class="token punctuation">}</span>
+plotOutput<span class="token punctuation">(</span>outputId <span class="token operator">=</span> <span class="token string">"plot"</span><span class="token punctuation">)</span>
+`` `
+
+```<span class="token punctuation">{</span>r<span class="token punctuation">}</span>
+<span class="token comment">#| context: server</span>
+output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> faithful<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> waiting<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    geom_histogram<span class="token punctuation">(</span>bins <span class="token operator">=</span> input<span class="token operator">$</span>bins<span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+`` `
+</code></pre>
+<h2 id="c.-shiny-inputs">C. Shiny Inputs</h2>
+<h3 id="sliderinput"><code>sliderInput()</code></h3>
+<pre class=" language-r"><code class="prism  language-r">sliderInput<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"bins"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Number of bins"</span><span class="token punctuation">,</span>
+  min <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  max <span class="token operator">=</span> <span class="token number">50</span><span class="token punctuation">,</span>
+  value <span class="token operator">=</span> <span class="token number">30</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<p>For ranges:</p>
+<pre class=" language-r"><code class="prism  language-r">sliderInput<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"mass"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Body mass (grams)"</span><span class="token punctuation">,</span>
+  min <span class="token operator">=</span> min<span class="token punctuation">(</span>penguins<span class="token operator">$</span>body_mass_g<span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  max <span class="token operator">=</span> max<span class="token punctuation">(</span>penguins<span class="token operator">$</span>body_mass_g<span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  value <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token number">4500</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<p>Notice:</p>
+<ul>
+<li>single value → scalar</li>
+<li>range slider → vector of length 2, accessed with <code>[1]</code>, <code>[2]</code></li>
+</ul>
+<h3 id="radiobuttons"><code>radioButtons()</code></h3>
+<pre class=" language-r"><code class="prism  language-r">radioButtons<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"graphic"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Type of graphic:"</span><span class="token punctuation">,</span>
+  choices <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"histogram"</span><span class="token punctuation">,</span> <span class="token string">"density"</span><span class="token punctuation">,</span> <span class="token string">"boxplot"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  selected <span class="token operator">=</span> <span class="token string">"histogram"</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<p>Another example:</p>
+<pre class=" language-r"><code class="prism  language-r">radioButtons<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"graphic"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Type of graphic:"</span><span class="token punctuation">,</span>
+  choices <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"density"</span><span class="token punctuation">,</span> <span class="token string">"boxplot"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  selected <span class="token operator">=</span> <span class="token string">"density"</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="selectinput"><code>selectInput()</code></h3>
+<pre class=" language-r"><code class="prism  language-r">selectInput<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"variable"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Select variable:"</span><span class="token punctuation">,</span>
+  choices <span class="token operator">=</span> colnames<span class="token punctuation">(</span>penguins<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  selected <span class="token operator">=</span> <span class="token string">"bill_length_m"</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="d.-shiny-outputs">D. Shiny Outputs</h2>
+<p>Common UI output functions</p>
+<ul>
+<li><code>plotOutput()</code> → plot</li>
+<li><code>girafeOutput()</code> → ggiraph plot</li>
+<li><code>plotlyOutput()</code> → plotly</li>
+<li><code>leafletOutput()</code> → leaflet map</li>
+<li><code>tableOutput()</code> → non-interactive table</li>
+<li><code>DT::DTOutput()</code> → interactive table</li>
+<li><code>textOutput()</code> → text</li>
+<li><code>verbatimTextOutput()</code> → printed/code-style text</li>
+<li><code>imageOutput()</code> → image</li>
+<li><code>htmlOutput()</code> → raw HTML</li>
+</ul>
+<p>Common render functions</p>
+<ul>
+<li><code>renderPlot()</code></li>
+<li><code>renderGirafe()</code></li>
+<li><code>renderPlotly()</code></li>
+<li><code>renderLeaflet()</code></li>
+<li><code>renderTable()</code></li>
+<li><code>DT::renderDT()</code></li>
+<li><code>renderText()</code></li>
+<li><code>renderPrint()</code></li>
+<li><code>renderImage()</code></li>
+</ul>
+<h2 id="e.-server-logic">E. Server Logic</h2>
+<p>The 3 rules to write the server</p>
+<ol>
+<li><strong>Save displayed objects to <code>output$...</code></strong></li>
+<li><strong>Build displayed objects with <code>render*()</code></strong></li>
+<li><strong>Access input values with <code>input$...</code></strong></li>
+</ol>
+<p>Canonical example</p>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> faithful<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> waiting<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    geom_histogram<span class="token punctuation">(</span>
+      bins <span class="token operator">=</span> input<span class="token operator">$</span>bins<span class="token punctuation">,</span>
+      color <span class="token operator">=</span> <span class="token string">"white"</span>
+    <span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="f.-reactivity">F. Reactivity</h2>
+<p>If you use an input inside a <code>render*()</code> block:</p>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> faithful<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> waiting<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    geom_histogram<span class="token punctuation">(</span>bins <span class="token operator">=</span> input<span class="token operator">$</span>bins<span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Then:</p>
+<ul>
+<li><code>input$bins</code> changes</li>
+<li><code>output$plot</code> automatically re-renders</li>
+</ul>
+<p><strong>Reactive values can only be used in reactive contexts</strong>. For example, this is OK:</p>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> faithful<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> waiting<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    geom_histogram<span class="token punctuation">(</span>bins <span class="token operator">=</span> input<span class="token operator">$</span>bins<span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>But, this is NOT OK:</p>
+<pre class=" language-r"><code class="prism  language-r">num_bins <span class="token operator">&lt;-</span> input<span class="token operator">$</span>bins
+
+output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> faithful<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> waiting<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    geom_histogram<span class="token punctuation">(</span>bins <span class="token operator">=</span> num_bins<span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Why wrong?</p>
+<ul>
+<li><code>input$bins</code> is reactive</li>
+<li>You cannot grab it outside a reactive context like that</li>
+</ul>
+<p>We can also <strong>define your own reactive variable</strong></p>
+<pre class=" language-r"><code class="prism  language-r">num_bins <span class="token operator">&lt;-</span> reactive<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  input<span class="token operator">$</span>bins
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> faithful<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> waiting<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    geom_histogram<span class="token punctuation">(</span>bins <span class="token operator">=</span> num_bins<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"white"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><strong>VERY IMPORTANT:</strong></p>
+<ul>
+<li>Reactive objects are functions</li>
+<li>So you must call them with <code>()</code>:
+<ul>
+<li><code>num_bins()</code> not <code>num_bins</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="g.-examples">G. Examples</h2>
+<h3 id="a.-one-input-two-outputs-shiny-i">A. One input, two outputs (Shiny I)</h3>
+<pre class=" language-r"><code class="prism  language-r">radioButtons<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"graphic"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Type of graphic:"</span><span class="token punctuation">,</span>
+  choices <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"histogram"</span><span class="token punctuation">,</span> <span class="token string">"density"</span><span class="token punctuation">,</span> <span class="token string">"boxplot"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  selected <span class="token operator">=</span> <span class="token string">"histogram"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment">#| title: "Waiting time"</span>
+plotOutput<span class="token punctuation">(</span>outputId <span class="token operator">=</span> <span class="token string">"plot1"</span><span class="token punctuation">)</span>
+
+<span class="token comment">#| title: "Eruptions time"</span>
+plotOutput<span class="token punctuation">(</span>outputId <span class="token operator">=</span> <span class="token string">"plot2"</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="b.-penguins-app-shiny-ii">B. Penguins app (Shiny II)</h3>
+<p>Inputs</p>
+<pre class=" language-r"><code class="prism  language-r">sliderInput<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">'mass'</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">'Body mass (grams)'</span><span class="token punctuation">,</span>
+  min <span class="token operator">=</span> min<span class="token punctuation">(</span>penguins<span class="token operator">$</span>body_mass_g<span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  max <span class="token operator">=</span> max<span class="token punctuation">(</span>penguins<span class="token operator">$</span>body_mass_g<span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  value <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token number">4500</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+
+radioButtons<span class="token punctuation">(</span>
+  inputId <span class="token operator">=</span> <span class="token string">"graphic"</span><span class="token punctuation">,</span>
+  label <span class="token operator">=</span> <span class="token string">"Type of graphic:"</span><span class="token punctuation">,</span>
+  choices <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"density"</span><span class="token punctuation">,</span> <span class="token string">"boxplot"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  selected <span class="token operator">=</span> <span class="token string">"density"</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<p>Outputs</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment">#| title: "Bill Depth"</span>
+plotOutput<span class="token punctuation">(</span>outputId <span class="token operator">=</span> <span class="token string">'plot'</span><span class="token punctuation">)</span>
+
+<span class="token comment">#| title: "Stats"</span>
+tableOutput<span class="token punctuation">(</span>outputId <span class="token operator">=</span> <span class="token string">'table'</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Server</p>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  gg <span class="token operator">&lt;-</span> penguins <span class="token operator">|</span><span class="token operator">&gt;</span>
+    filter<span class="token punctuation">(</span>body_mass_g <span class="token operator">&gt;=</span> input<span class="token operator">$</span>mass<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+           body_mass_g <span class="token operator">&lt;=</span> input<span class="token operator">$</span>mass<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    ggplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>x <span class="token operator">=</span> bill_depth_mm<span class="token punctuation">,</span> fill <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>input<span class="token operator">$</span>graphic <span class="token operator">==</span> <span class="token string">"density"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    gg <span class="token operator">+</span> geom_density<span class="token punctuation">(</span>alpha <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    gg <span class="token operator">+</span> geom_boxplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>y <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+output<span class="token operator">$</span>table <span class="token operator">&lt;-</span> renderTable<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  penguins <span class="token operator">|</span><span class="token operator">&gt;</span>
+    filter<span class="token punctuation">(</span>body_mass_g <span class="token operator">&gt;=</span> input<span class="token operator">$</span>mass<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+           body_mass_g <span class="token operator">&lt;=</span> input<span class="token operator">$</span>mass<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    group_by<span class="token punctuation">(</span>species<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    summarize<span class="token punctuation">(</span>
+      median <span class="token operator">=</span> median<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      IQR <span class="token operator">=</span> IQR<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      mean <span class="token operator">=</span> mean<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      sd <span class="token operator">=</span> sd<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="h.-avoid-redundant-code-with-reactive">H. Avoid Redundant Code with <code>reactive()</code></h2>
+<ul>
+<li><strong>Bad / repetitive version:</strong> You filter <code>penguins</code> separately in both outputs.</li>
+<li><strong>Better version with reactive object</strong></li>
+</ul>
+<pre class=" language-r"><code class="prism  language-r">penguins_filtered <span class="token operator">&lt;-</span> reactive<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  penguins <span class="token operator">|</span><span class="token operator">&gt;</span>
+    filter<span class="token punctuation">(</span>body_mass_g <span class="token operator">&gt;=</span> input<span class="token operator">$</span>mass<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+           body_mass_g <span class="token operator">&lt;=</span> input<span class="token operator">$</span>mass<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+</code></pre>
+<ul>
+<li>Then use it:</li>
+</ul>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  gg <span class="token operator">&lt;-</span> ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> penguins_filtered<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+               aes<span class="token punctuation">(</span>x <span class="token operator">=</span> bill_depth_mm<span class="token punctuation">,</span> fill <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>input<span class="token operator">$</span>graphic <span class="token operator">==</span> <span class="token string">"density"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    gg <span class="token operator">+</span> geom_density<span class="token punctuation">(</span>alpha <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    gg <span class="token operator">+</span> geom_boxplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>y <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+output<span class="token operator">$</span>table <span class="token operator">&lt;-</span> renderTable<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  penguins_filtered<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    group_by<span class="token punctuation">(</span>species<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    summarize<span class="token punctuation">(</span>
+      median <span class="token operator">=</span> median<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      IQR <span class="token operator">=</span> IQR<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      mean <span class="token operator">=</span> mean<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span><span class="token punctuation">,</span>
+      sd <span class="token operator">=</span> sd<span class="token punctuation">(</span>bill_depth_mm<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Exam takeaway:</strong> if the same transformed data is used in multiple outputs, wrap it in <code>reactive({...})</code>.</p>
+<h2 id="i.-conditional-graphics">I. Conditional Graphics</h2>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  gg <span class="token operator">&lt;-</span> ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> penguins_filtered<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+               aes<span class="token punctuation">(</span>x <span class="token operator">=</span> bill_depth_mm<span class="token punctuation">,</span> fill <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    theme_minimal<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>input<span class="token operator">$</span>graphic <span class="token operator">==</span> <span class="token string">"density"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    gg <span class="token operator">+</span> geom_density<span class="token punctuation">(</span>alpha <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    gg <span class="token operator">+</span> geom_boxplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>y <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Key pattern:</p>
+<ul>
+<li>build shared base plot into <code>gg</code></li>
+<li>branch on <code>input$graphic</code></li>
+</ul>
+<h2 id="j.-.data-">J. <code>.data[[ ]]</code></h2>
+<p><strong>Problem:</strong> passing a column name as a string fails</p>
+<pre class=" language-r"><code class="prism  language-r">my_summary <span class="token operator">&lt;-</span> <span class="token keyword">function</span><span class="token punctuation">(</span>df<span class="token punctuation">,</span> col_name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  df <span class="token operator">|</span><span class="token operator">&gt;</span> summarize<span class="token punctuation">(</span>avg <span class="token operator">=</span> mean<span class="token punctuation">(</span>col_name<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+my_summary<span class="token punctuation">(</span>mtcars<span class="token punctuation">,</span> <span class="token string">"mpg"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>This gives bad output (<code>NA</code>) because <code>"mpg"</code> is just a string, not the column itself.</p>
+<p><strong>Solution</strong>: use <code>.data[[ ]]</code></p>
+<pre class=" language-r"><code class="prism  language-r">my_summary <span class="token operator">&lt;-</span> <span class="token keyword">function</span><span class="token punctuation">(</span>df<span class="token punctuation">,</span> col_name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  df <span class="token operator">|</span><span class="token operator">&gt;</span> summarize<span class="token punctuation">(</span>avg <span class="token operator">=</span> mean<span class="token punctuation">(</span>.data<span class="token punctuation">[</span><span class="token punctuation">[</span>col_name<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+my_summary<span class="token punctuation">(</span>mtcars<span class="token punctuation">,</span> <span class="token string">"mpg"</span><span class="token punctuation">)</span>
+</code></pre>
+<p><strong>Rule to memorize:</strong></p>
+<ul>
+<li>If the column name is stored as a string or comes from <code>input$...</code>, use:<pre class=" language-r"><code class="prism  language-r">.data<span class="token punctuation">[</span><span class="token punctuation">[</span>col_name<span class="token punctuation">]</span><span class="token punctuation">]</span>
+</code></pre>
+or<pre class=" language-r"><code class="prism  language-r">.data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span>
+</code></pre>
+</li>
+</ul>
+<h3 id="wrong">Wrong</h3>
+<pre class=" language-r"><code class="prism  language-r">variable <span class="token operator">&lt;-</span> <span class="token string">"bill_length_mm"</span>
+
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> penguins<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> variable<span class="token punctuation">,</span> fill <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_density<span class="token punctuation">(</span>alpha <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+</code></pre>
+<p>This treats <code>variable</code> as the literal string, not the column.</p>
+<h3 id="correct">Correct</h3>
+<pre class=" language-r"><code class="prism  language-r">variable <span class="token operator">&lt;-</span> <span class="token string">"bill_length_mm"</span>
+
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> penguins<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x <span class="token operator">=</span> .data<span class="token punctuation">[</span><span class="token punctuation">[</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> fill <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_density<span class="token punctuation">(</span>alpha <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Or inside Shiny:</p>
+<pre class=" language-r"><code class="prism  language-r">ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> penguins<span class="token punctuation">,</span>
+       aes<span class="token punctuation">(</span>x <span class="token operator">=</span> .data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> fill <span class="token operator">=</span> species<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_density<span class="token punctuation">(</span>alpha <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span>
+</code></pre>
+<p>This is the table version of the same idea.</p>
+<pre class=" language-r"><code class="prism  language-r">output<span class="token operator">$</span>table <span class="token operator">&lt;-</span> renderTable<span class="token punctuation">(</span><span class="token punctuation">{</span>
+  penguins <span class="token operator">|</span><span class="token operator">&gt;</span>
+    group_by<span class="token punctuation">(</span>species<span class="token punctuation">)</span> <span class="token operator">|</span><span class="token operator">&gt;</span>
+    summarize<span class="token punctuation">(</span>
+      median <span class="token operator">=</span> median<span class="token punctuation">(</span>.data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      IQR <span class="token operator">=</span> IQR<span class="token punctuation">(</span>.data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      mean <span class="token operator">=</span> mean<span class="token punctuation">(</span>.data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      sd <span class="token operator">=</span> sd<span class="token punctuation">(</span>.data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h1 id="common-traps">Common Traps</h1>
+<h3 id="dates--times">Dates &amp; times</h3>
+<ul>
+<li><code>Date</code> ≠ <code>POSIXct</code></li>
+<li><code>dyears(1)</code> ≠ <code>years(1)</code></li>
+<li><code>ddays(1)</code> ≠ <code>days(1)</code></li>
+<li><code>wday(x)</code> numeric vs <code>wday(x, label = TRUE)</code> labeled factor</li>
+<li><code>as.Date()</code> for date only</li>
+<li><code>as.POSIXct()</code> / <code>ymd_hms()</code> for date-time</li>
+</ul>
+<h3 id="shiny">Shiny</h3>
+<ul>
+<li><code>input$...</code> is <strong>reactive</strong></li>
+<li>Don’t use <code>input$...</code> outside reactive contexts unless wrapped in <code>reactive({...})</code></li>
+<li>Reactive objects must be called with <code>()</code>
+<ul>
+<li><code>filtered_df()</code> not <code>filtered_df</code></li>
+</ul>
+</li>
+<li>UI output function must match render function</li>
+<li>Dynamic column names in tidyverse/ggplot:
+<ul>
+<li>use <code>.data[[input$variable]]</code></li>
+<li>NOT <code>aes(x = input$variable)</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="one-pager">One Pager</h1>
+<h3 id="dates--lubridate">Dates / lubridate</h3>
+<pre class=" language-r"><code class="prism  language-r">as.Date<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+as.POSIXct<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">,</span> tz <span class="token operator">=</span> <span class="token string">"UTC"</span><span class="token punctuation">)</span>
+ymd<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+mdy_hm<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+dmy_hm<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+today<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+year<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> month<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> day<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> wday<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+week<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> quarter<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> semester<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> qday<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+hour<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> minute<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> second<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+
+year<span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token ellipsis">...</span>
+month<span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token ellipsis">...</span>
+day<span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> <span class="token ellipsis">...</span>
+
+as.duration<span class="token punctuation">(</span>a <span class="token operator">-</span> b<span class="token punctuation">)</span>
+dseconds<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> dminutes<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> dhours<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> ddays<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> dweeks<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> dyears<span class="token punctuation">(</span><span class="token punctuation">)</span>
+seconds<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> minutes<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> hours<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> days<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> weeks<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> years<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+interval<span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+int_length<span class="token punctuation">(</span>interval<span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+interval<span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token operator">/</span> years<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+Sys.timezone<span class="token punctuation">(</span><span class="token punctuation">)</span>
+OlsonNames<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="shiny-1">Shiny</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># YAML</span>
+format<span class="token operator">:</span> dashboard
+server<span class="token operator">:</span> shiny
+
+<span class="token comment"># setup chunk</span>
+<span class="token comment">#| context: setup</span>
+
+<span class="token comment"># sidebar</span>
+<span class="token comment">## {.sidebar}</span>
+
+sliderInput<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+radioButtons<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+selectInput<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+
+plotOutput<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+tableOutput<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+plotlyOutput<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+DT<span class="token operator">::</span>DTOutput<span class="token punctuation">(</span><span class="token ellipsis">...</span><span class="token punctuation">)</span>
+
+<span class="token comment"># server chunk</span>
+<span class="token comment">#| context: server</span>
+
+output<span class="token operator">$</span>plot <span class="token operator">&lt;-</span> renderPlot<span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token ellipsis">...</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+output<span class="token operator">$</span>table <span class="token operator">&lt;-</span> renderTable<span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token ellipsis">...</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+reactive<span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token ellipsis">...</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+input<span class="token operator">$</span><span class="token ellipsis">...</span>
+filtered_df<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+.data<span class="token punctuation">[</span><span class="token punctuation">[</span>input<span class="token operator">$</span>variable<span class="token punctuation">]</span><span class="token punctuation">]</span>
+</code></pre>
+
+    </div>
+  </div>
+</body>
+
+</html>
