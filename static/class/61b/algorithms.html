@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graph Algorithm Visualizer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--surface:#f8f8f6;--border:#e0dfd9;--border2:#c8c6be;
+  --text:#1a1a18;--text2:#5a5a55;--text3:#9a9a94;
+  --blue-fill:#e6f1fb;--blue-stroke:#185fa5;--blue-text:#0c447c;
+  --green-fill:#eaf3de;--green-stroke:#3b6d11;--green-text:#27500a;
+  --amber-fill:#faeeda;--amber-stroke:#ba7517;--amber-text:#633806;
+  --gray-fill:#f1efe8;--gray-stroke:#888780;--gray-text:#5f5e5a;
+  --edge-default:#c8c6be;--edge-hi:#3b6d11;--edge-cand:#ba7517;
+  --wt-bg:#ffffff;--wt-default:#b4b2a9;
+  --mono:'Courier New',monospace;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1a1a19;--surface:#222220;--border:#3a3a38;--border2:#555553;
+  --text:#e8e8e4;--text2:#9a9a94;--text3:#5f5e5a;
+  --blue-fill:#0c447c;--blue-stroke:#85b7eb;--blue-text:#b5d4f4;
+  --green-fill:#173404;--green-stroke:#97c459;--green-text:#c0dd97;
+  --amber-fill:#412402;--amber-stroke:#ef9f27;--amber-text:#fac775;
+  --gray-fill:#2c2c2a;--gray-stroke:#5f5e5a;--gray-text:#d3d1c7;
+  --edge-default:#444441;--edge-hi:#97c459;--edge-cand:#ef9f27;
+  --wt-bg:#1a1a19;--wt-default:#5f5e5a;
+}}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.wrap{width:100%;max-width:700px}
+.header{margin-bottom:1rem}
+.header h1{font-size:15px;font-weight:600;color:var(--text);letter-spacing:.01em}
+.header p{font-size:12px;color:var(--text3);margin-top:2px}
+.tabs{display:flex;gap:0;border-bottom:.5px solid var(--border);margin-bottom:0}
+.tab{padding:9px 18px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--text)}
+.main{display:flex;gap:20px;align-items:flex-start;padding:18px 0 12px}
+.graph-area{flex-shrink:0;width:390px}
+.graph-area svg{width:100%;height:auto;display:block}
+.panel{flex:1;min-width:0}
+.step-meta{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:5px}
+.step-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px}
+.step-desc{font-size:12.5px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.dist-table{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--mono);margin-bottom:10px}
+.dist-table th{font-size:10px;font-weight:600;color:var(--text3);padding:4px 8px;text-align:left;border-bottom:.5px solid var(--border)}
+.dist-table td{padding:4px 8px;border-bottom:.5px solid var(--border);color:var(--text)}
+.dist-table tr:last-child td{border-bottom:none}
+.dist-table .rc td{color:var(--blue-text);font-weight:600}
+.dist-table .rv td{color:var(--green-text)}
+.dist-table .inf{color:var(--text3)}
+.edge-list{display:flex;flex-direction:column;gap:2px;font-size:12px;font-family:var(--mono)}
+.ei{display:flex;justify-content:space-between;align-items:center;padding:4px 8px;border-radius:4px;border-left:2px solid transparent;color:var(--text2)}
+.ei.sel{color:var(--green-text);border-left-color:var(--green-stroke);background:var(--green-fill)}
+.ei.cur{color:var(--blue-text);border-left-color:var(--blue-stroke);background:var(--blue-fill)}
+.ei.rej{opacity:.35;text-decoration:line-through}
+.weight-badge{font-size:10px;padding:1px 6px;border-radius:3px;background:var(--border);color:var(--text2)}
+.ei.sel .weight-badge{background:var(--green-fill);color:var(--green-text)}
+.ei.cur .weight-badge{background:var(--blue-fill);color:var(--blue-text)}
+.mst-weight{font-size:12px;color:var(--text2);margin-bottom:8px;font-family:var(--mono)}
+.mst-weight strong{color:var(--green-text)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:.5px solid var(--border)}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+.ld{width:10px;height:10px;border-radius:50%;border:1.5px solid}
+.controls{display:flex;align-items:center;gap:12px;padding-top:14px;border-top:.5px solid var(--border)}
+.ctrl-btn{padding:6px 16px;font-size:12px;font-weight:500;cursor:pointer;background:none;border:.5px solid var(--border2);border-radius:6px;color:var(--text);transition:background .15s,border-color .15s}
+.ctrl-btn:hover:not(:disabled){border-color:var(--text2);background:var(--surface)}
+.ctrl-btn:disabled{opacity:.4;cursor:default}
+.progress{flex:1;text-align:center;font-size:12px;color:var(--text3);font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Graph Algorithm Visualizer</h1>
+    <p>Step through Dijkstra's, Prim's, and Kruskal's on the same 6-node graph</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchAlgo('dijkstra',this)">Dijkstra's</button>
+    <button class="tab" onclick="switchAlgo('prim',this)">Prim's MST</button>
+    <button class="tab" onclick="switchAlgo('kruskal',this)">Kruskal's MST</button>
+  </div>
+
+  <div class="main">
+    <div class="graph-area">
+      <svg id="svg" viewBox="0 0 390 300" aria-label="Graph visualization"></svg>
+    </div>
+    <div class="panel">
+      <div class="step-meta" id="step-meta">Step 1 of 7</div>
+      <div class="step-title" id="step-title">—</div>
+      <div class="step-desc" id="step-desc">—</div>
+      <div id="panel-content"></div>
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:var(--gray-fill);border-color:var(--gray-stroke)"></div>Unvisited</div>
+        <div class="li"><div class="ld" style="background:var(--blue-fill);border-color:var(--blue-stroke)"></div>Current</div>
+        <div class="li"><div class="ld" style="background:var(--green-fill);border-color:var(--green-stroke)"></div>Finalized</div>
+        <div class="li"><div class="ld" style="background:var(--amber-fill);border-color:var(--amber-stroke)"></div>Candidate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="btn-prev" onclick="prev()" disabled>← Prev</button>
+    <div class="progress" id="progress">1 / 7</div>
+    <button class="ctrl-btn" id="btn-next" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const NODES = {
+  A:{x:182,y:50}, B:{x:348,y:100}, C:{x:55,y:178},
+  D:{x:155,y:265}, E:{x:328,y:265}, F:{x:252,y:168}
+};
+
+const EDGES = [
+  {u:'A',v:'B',w:4},{u:'A',v:'C',w:2},{u:'A',v:'F',w:6},
+  {u:'B',v:'E',w:3},{u:'B',v:'F',w:5},{u:'C',v:'D',w:3},
+  {u:'C',v:'F',w:8},{u:'D',v:'E',w:7},{u:'D',v:'F',w:4},{u:'E',v:'F',w:1}
+];
+
+const PALETTE = {
+  default:{fill:'var(--gray-fill)',stroke:'var(--gray-stroke)',text:'var(--gray-text)'},
+  current:{fill:'var(--blue-fill)',stroke:'var(--blue-stroke)',text:'var(--blue-text)'},
+  visited:{fill:'var(--green-fill)',stroke:'var(--green-stroke)',text:'var(--green-text)'},
+  candidate:{fill:'var(--amber-fill)',stroke:'var(--amber-stroke)',text:'var(--amber-text)'}
+};
+
+const EDGE_COLOR = {
+  default:{stroke:'var(--edge-default)',w:1.5},
+  highlighted:{stroke:'var(--edge-hi)',w:2.5},
+  candidate:{stroke:'var(--edge-cand)',w:2}
+};
+
+function ekey(u,v){return [u,v].sort().join('-')}
+
+const ALGOS = {
+  dijkstra:{
+    steps:[
+      {title:"Initial state",
+       desc:"Set dist[A] = 0, all others = ∞. A is the source. We'll greedily pick the unvisited node with the smallest distance each round.",
+       visited:[],current:'A',hilite:[],cands:[],candNodes:[],
+       dist:{A:'0',B:'∞',C:'∞',D:'∞',E:'∞',F:'∞'}},
+      {title:"Visit A (dist = 0)",
+       desc:"Dequeue A. Relax its neighbors: B → 4, C → 2, F → 6. Distances updated in the priority queue.",
+       visited:['A'],current:null,hilite:[],cands:[['A','B'],['A','C'],['A','F']],candNodes:['B','C','F'],
+       dist:{A:'0',B:'4',C:'2',D:'∞',E:'∞',F:'6'}},
+      {title:"Visit C (dist = 2)",
+       desc:"C has the smallest tentative distance. Dequeue it. Relax: D → 5. F stays 6 since 2 + 8 = 10 > 6.",
+       visited:['A','C'],current:'C',hilite:[['A','C']],cands:[['C','D']],candNodes:['B','D','F'],
+       dist:{A:'0',B:'4',C:'2',D:'5',E:'∞',F:'6'}},
+      {title:"Visit B (dist = 4)",
+       desc:"B is next smallest. Dequeue it. Relax: E → 7. F stays 6 since 4 + 5 = 9 > 6.",
+       visited:['A','C','B'],current:'B',hilite:[['A','C'],['A','B']],cands:[['B','E']],candNodes:['D','E','F'],
+       dist:{A:'0',B:'4',C:'2',D:'5',E:'7',F:'6'}},
+      {title:"Visit D (dist = 5)",
+       desc:"Dequeue D. Relax: E stays 7 (5+7=12 > 7), F stays 6 (5+4=9 > 6). No improvements.",
+       visited:['A','C','B','D'],current:'D',hilite:[['A','C'],['A','B'],['C','D']],cands:[],candNodes:['E','F'],
+       dist:{A:'0',B:'4',C:'2',D:'5',E:'7',F:'6'}},
+      {title:"Visit F (dist = 6)",
+       desc:"Dequeue F. Relax: E stays 7 (6+1=7, ties don't improve). No updates.",
+       visited:['A','C','B','D','F'],current:'F',hilite:[['A','C'],['A','B'],['C','D'],['A','F']],cands:[],candNodes:['E'],
+       dist:{A:'0',B:'4',C:'2',D:'5',E:'7',F:'6'}},
+      {title:"Visit E (dist = 7) — done!",
+       desc:"All nodes finalized. Shortest paths from A: B=4, C=2, D=5, E=7, F=6. Highlighted edges form the shortest-path tree.",
+       visited:['A','C','B','D','F','E'],current:null,hilite:[['A','C'],['A','B'],['C','D'],['A','F'],['B','E']],cands:[],candNodes:[],
+       dist:{A:'0',B:'4',C:'2',D:'5',E:'7',F:'6'}}
+    ]
+  },
+  prim:{
+    steps:[
+      {title:"Start with A",
+       desc:"Initialize tree with just A. Scan all edges from A to find candidates: A-B(4), A-C(2), A-F(6).",
+       tree:['A'],current:'A',mst:[],cands:[['A','B'],['A','C'],['A','F']],candNodes:['B','C','F'],w:0},
+      {title:"Add A–C (weight 2)",
+       desc:"Cheapest candidate edge is A-C(2). Add C to the tree. New candidates from C: C-D(3), C-F(8).",
+       tree:['A','C'],current:'C',mst:[['A','C']],cands:[['A','B'],['A','F'],['C','D'],['C','F']],candNodes:['B','D','F'],w:2},
+      {title:"Add C–D (weight 3)",
+       desc:"Cheapest candidate is C-D(3). Add D. New candidates from D: D-E(7), D-F(4).",
+       tree:['A','C','D'],current:'D',mst:[['A','C'],['C','D']],cands:[['A','B'],['A','F'],['C','F'],['D','E'],['D','F']],candNodes:['B','E','F'],w:5},
+      {title:"Add A–B (weight 4)",
+       desc:"A-B(4) ties with D-F(4) — we pick A-B. Add B. New candidates from B: B-E(3), B-F(5).",
+       tree:['A','C','D','B'],current:'B',mst:[['A','C'],['C','D'],['A','B']],cands:[['B','E'],['B','F'],['A','F'],['C','F'],['D','E'],['D','F']],candNodes:['E','F'],w:9},
+      {title:"Add B–E (weight 3)",
+       desc:"Cheapest candidate is now B-E(3). Add E. New candidate from E: E-F(1).",
+       tree:['A','C','D','B','E'],current:'E',mst:[['A','C'],['C','D'],['A','B'],['B','E']],cands:[['E','F'],['D','F'],['B','F'],['A','F'],['C','F']],candNodes:['F'],w:12},
+      {title:"Add E–F (weight 1) — done!",
+       desc:"Cheapest candidate is E-F(1). Add F — all 6 nodes in the tree. MST complete! Total weight = 13.",
+       tree:['A','C','D','B','E','F'],current:'F',mst:[['A','C'],['C','D'],['A','B'],['B','E'],['E','F']],cands:[],candNodes:[],w:13}
+    ]
+  },
+  kruskal:{
+    steps:[
+      {title:"Sort all edges",
+       desc:"Sort all 10 edges by weight ascending. Process each one: if it connects two different components (no cycle), add it to the MST.",
+       mst:[],curEdge:null,w:0,
+       sorted:[{u:'E',v:'F',w:1,s:'p'},{u:'A',v:'C',w:2,s:'p'},{u:'B',v:'E',w:3,s:'p'},{u:'C',v:'D',w:3,s:'p'},{u:'A',v:'B',w:4,s:'p'},{u:'D',v:'F',w:4,s:'p'},{u:'B',v:'F',w:5,s:'p'},{u:'A',v:'F',w:6,s:'p'},{u:'D',v:'E',w:7,s:'p'},{u:'C',v:'F',w:8,s:'p'}]},
+      {title:"Add E–F (weight 1)",
+       desc:"E and F are in separate components {E} and {F}. No cycle → add E-F. Components: {A} {B} {C} {D} {E,F}.",
+       mst:[['E','F']],curEdge:['E','F'],w:1,
+       sorted:[{u:'E',v:'F',w:1,s:'c'},{u:'A',v:'C',w:2,s:'p'},{u:'B',v:'E',w:3,s:'p'},{u:'C',v:'D',w:3,s:'p'},{u:'A',v:'B',w:4,s:'p'},{u:'D',v:'F',w:4,s:'p'},{u:'B',v:'F',w:5,s:'p'},{u:'A',v:'F',w:6,s:'p'},{u:'D',v:'E',w:7,s:'p'},{u:'C',v:'F',w:8,s:'p'}]},
+      {title:"Add A–C (weight 2)",
+       desc:"A and C are in separate components. No cycle → add A-C. Components: {A,C} {B} {D} {E,F}.",
+       mst:[['E','F'],['A','C']],curEdge:['A','C'],w:3,
+       sorted:[{u:'E',v:'F',w:1,s:'s'},{u:'A',v:'C',w:2,s:'c'},{u:'B',v:'E',w:3,s:'p'},{u:'C',v:'D',w:3,s:'p'},{u:'A',v:'B',w:4,s:'p'},{u:'D',v:'F',w:4,s:'p'},{u:'B',v:'F',w:5,s:'p'},{u:'A',v:'F',w:6,s:'p'},{u:'D',v:'E',w:7,s:'p'},{u:'C',v:'F',w:8,s:'p'}]},
+      {title:"Add B–E (weight 3)",
+       desc:"B ∈ {B}, E ∈ {E,F}. Different components → add B-E. Components: {A,C} {B,E,F} {D}.",
+       mst:[['E','F'],['A','C'],['B','E']],curEdge:['B','E'],w:6,
+       sorted:[{u:'E',v:'F',w:1,s:'s'},{u:'A',v:'C',w:2,s:'s'},{u:'B',v:'E',w:3,s:'c'},{u:'C',v:'D',w:3,s:'p'},{u:'A',v:'B',w:4,s:'p'},{u:'D',v:'F',w:4,s:'p'},{u:'B',v:'F',w:5,s:'p'},{u:'A',v:'F',w:6,s:'p'},{u:'D',v:'E',w:7,s:'p'},{u:'C',v:'F',w:8,s:'p'}]},
+      {title:"Add C–D (weight 3)",
+       desc:"C ∈ {A,C}, D ∈ {D}. Different components → add C-D. Components: {A,C,D} {B,E,F}.",
+       mst:[['E','F'],['A','C'],['B','E'],['C','D']],curEdge:['C','D'],w:9,
+       sorted:[{u:'E',v:'F',w:1,s:'s'},{u:'A',v:'C',w:2,s:'s'},{u:'B',v:'E',w:3,s:'s'},{u:'C',v:'D',w:3,s:'c'},{u:'A',v:'B',w:4,s:'p'},{u:'D',v:'F',w:4,s:'p'},{u:'B',v:'F',w:5,s:'p'},{u:'A',v:'F',w:6,s:'p'},{u:'D',v:'E',w:7,s:'p'},{u:'C',v:'F',w:8,s:'p'}]},
+      {title:"Add A–B (weight 4) — done!",
+       desc:"A ∈ {A,C,D}, B ∈ {B,E,F}. Different components → add A-B. All 6 nodes connected! MST complete, weight = 13. (Remaining edges would all create cycles.)",
+       mst:[['E','F'],['A','C'],['B','E'],['C','D'],['A','B']],curEdge:['A','B'],w:13,
+       sorted:[{u:'E',v:'F',w:1,s:'s'},{u:'A',v:'C',w:2,s:'s'},{u:'B',v:'E',w:3,s:'s'},{u:'C',v:'D',w:3,s:'s'},{u:'A',v:'B',w:4,s:'c'},{u:'D',v:'F',w:4,s:'r'},{u:'B',v:'F',w:5,s:'r'},{u:'A',v:'F',w:6,s:'r'},{u:'D',v:'E',w:7,s:'r'},{u:'C',v:'F',w:8,s:'r'}]}
+    ]
+  }
+};
+
+let algo='dijkstra', step=0;
+
+function switchAlgo(a,btn){
+  algo=a; step=0;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+function prev(){if(step>0){step--;render();}}
+function next(){const s=ALGOS[algo].steps;if(step<s.length-1){step++;render();}}
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);
+  if(parent)parent.appendChild(e);
+  return e;
+}
+
+function getEdgeState(u,v,s){
+  const k=ekey(u,v);
+  if(algo==='dijkstra'){
+    if((s.hilite||[]).some(e=>ekey(e[0],e[1])===k))return'highlighted';
+    if((s.cands||[]).some(e=>ekey(e[0],e[1])===k))return'candidate';
+  }else if(algo==='prim'){
+    if((s.mst||[]).some(e=>ekey(e[0],e[1])===k))return'highlighted';
+    if((s.cands||[]).some(e=>ekey(e[0],e[1])===k))return'candidate';
+  }else if(algo==='kruskal'){
+    if((s.mst||[]).some(e=>ekey(e[0],e[1])===k))return'highlighted';
+  }
+  return'default';
+}
+
+function getNodeState(n,s){
+  if(algo==='dijkstra'){
+    if(s.current===n)return'current';
+    if((s.visited||[]).includes(n))return'visited';
+    if((s.candNodes||[]).includes(n))return'candidate';
+  }else if(algo==='prim'){
+    if(s.current===n)return'current';
+    if((s.tree||[]).includes(n))return'visited';
+    if((s.candNodes||[]).includes(n))return'candidate';
+  }else if(algo==='kruskal'){
+    const mNodes=new Set();
+    (s.mst||[]).forEach(e=>{mNodes.add(e[0]);mNodes.add(e[1]);});
+    const ce=s.curEdge;
+    if(ce&&(ce[0]===n||ce[1]===n))return'current';
+    if(mNodes.has(n))return'visited';
+  }
+  return'default';
+}
+
+function renderSVG(s){
+  const svg=document.getElementById('svg');
+  svg.innerHTML='';
+
+  // edges
+  EDGES.forEach(({u,v,w})=>{
+    const nu=NODES[u],nv=NODES[v];
+    const state=getEdgeState(u,v,s);
+    const ec=EDGE_COLOR[state]||EDGE_COLOR.default;
+    el('line',{x1:nu.x,y1:nu.y,x2:nv.x,y2:nv.y,
+      stroke:ec.stroke,'stroke-width':ec.w,'stroke-linecap':'round'},svg);
+
+    // weight label
+    const mx=(nu.x+nv.x)/2, my=(nu.y+nv.y)/2;
+    el('rect',{x:mx-8,y:my-8,width:16,height:14,rx:3,
+      fill:'var(--wt-bg)',opacity:.9},svg);
+    const wt=el('text',{x:mx+.5,y:my+1,'text-anchor':'middle',
+      'dominant-baseline':'central','font-size':10.5,
+      fill:state==='default'?'var(--wt-default)':ec.stroke},svg);
+    wt.textContent=w;
+  });
+
+  // nodes
+  Object.entries(NODES).forEach(([id,nd])=>{
+    const state=getNodeState(id,s);
+    const p=PALETTE[state];
+    el('circle',{cx:nd.x,cy:nd.y,r:18,fill:p.fill,stroke:p.stroke,'stroke-width':2},svg);
+    const t=el('text',{x:nd.x,y:nd.y,'text-anchor':'middle','dominant-baseline':'central',
+      'font-size':13,'font-weight':600,fill:p.text},svg);
+    t.textContent=id;
+  });
+}
+
+function renderPanel(s){
+  const div=document.getElementById('panel-content');
+  let html='';
+
+  if(algo==='dijkstra'){
+    html+='<table class="dist-table"><thead><tr><th>Node</th><th>dist[ ]</th><th>Status</th></tr></thead><tbody>';
+    for(const n of['A','B','C','D','E','F']){
+      const vis=(s.visited||[]).includes(n), cur=s.current===n;
+      const cls=cur?'rc':vis?'rv':'';
+      const status=cur?'● visiting':vis?'✓ done':'○';
+      const d=s.dist[n];
+      const dCell=d==='∞'?`<span class="inf">∞</span>`:d;
+      html+=`<tr class="${cls}"><td>${n}</td><td>${dCell}</td><td style="font-size:10.5px;color:inherit">${status}</td></tr>`;
+    }
+    html+='</tbody></table>';
+
+  }else if(algo==='prim'){
+    const w=s.w||0;
+    html+=`<div class="mst-weight">MST weight so far: <strong>${w}</strong></div>`;
+    html+='<div class="edge-list">';
+    if(!s.mst||!s.mst.length){
+      html+='<div class="ei" style="color:var(--text3);font-style:italic">No edges yet</div>';
+    }else{
+      s.mst.forEach(([u,v])=>{
+        const e=EDGES.find(e=>ekey(e.u,e.v)===ekey(u,v));
+        html+=`<div class="ei sel">✓ ${u}–${v}<span class="weight-badge">+${e?.w}</span></div>`;
+      });
+    }
+    if(s.cands&&s.cands.length){
+      s.cands.forEach(([u,v])=>{
+        const e=EDGES.find(e=>ekey(e.u,e.v)===ekey(u,v));
+        html+=`<div class="ei" style="color:var(--amber-text);border-left:2px solid var(--amber-stroke);background:var(--amber-fill)">○ ${u}–${v}<span class="weight-badge" style="background:var(--amber-fill);color:var(--amber-text)">${e?.w}</span></div>`;
+      });
+    }
+    html+='</div>';
+
+  }else{
+    const w=s.w||0;
+    html+=`<div class="mst-weight">MST weight so far: <strong>${w}</strong></div>`;
+    html+='<div class="edge-list">';
+    (s.sorted||[]).forEach(({u,v,w,s:state})=>{
+      const cls=state==='s'?'sel':state==='c'?'cur':state==='r'?'rej':'';
+      const icon=state==='s'?'✓':state==='c'?'→':state==='r'?'✗':'○';
+      html+=`<div class="ei ${cls}">${icon} ${u}–${v}<span class="weight-badge">${w}</span></div>`;
+    });
+    html+='</div>';
+  }
+  div.innerHTML=html;
+}
+
+function render(){
+  const steps=ALGOS[algo].steps;
+  const s=steps[step];
+  document.getElementById('step-meta').textContent=`Step ${step+1} of ${steps.length}`;
+  document.getElementById('step-title').textContent=s.title;
+  document.getElementById('step-desc').textContent=s.desc;
+  document.getElementById('progress').textContent=`${step+1} / ${steps.length}`;
+  document.getElementById('btn-prev').disabled=step===0;
+  document.getElementById('btn-next').disabled=step===steps.length-1;
+  renderSVG(s);
+  renderPanel(s);
+}
+
+render();
+</script>
+</body>
+</html>

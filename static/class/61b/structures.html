@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 61B Operations Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1e2433;
+    --accent: #4af0a8;
+    --accent2: #f06060;
+    --accent3: #60b8f0;
+    --accent4: #f0c060;
+    --accent5: #c060f0;
+    --text: #d0daf0;
+    --muted: #5a6380;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 32px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #0d1120 0%, var(--bg) 100%);
+  }
+
+  .header h1 {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--text); border-color: var(--muted); }
+  .tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+
+  .content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .ds-title {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .ds-subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .grid-wide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--card-color, var(--accent));
+  }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--card-color, var(--accent));
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .steps { list-style: none; }
+
+  .steps li {
+    padding: 5px 0 5px 20px;
+    position: relative;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .steps li:last-child { border-bottom: none; }
+
+  .steps li::before {
+    content: attr(data-n);
+    position: absolute;
+    left: 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--card-color, var(--accent));
+    font-weight: 700;
+    top: 7px;
+  }
+
+  .note {
+    background: rgba(74,240,168,0.05);
+    border: 1px solid rgba(74,240,168,0.15);
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  .warn {
+    background: rgba(240,96,96,0.07);
+    border: 1px solid rgba(240,96,96,0.2);
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent2);
+    font-family: var(--mono);
+  }
+
+  .info {
+    background: rgba(96,184,240,0.07);
+    border: 1px solid rgba(96,184,240,0.2);
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent3);
+    font-family: var(--mono);
+  }
+
+  code {
+    font-family: var(--mono);
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--accent4);
+  }
+
+  .complexity {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .chip-g { border-color: var(--accent); color: var(--accent); }
+  .chip-y { border-color: var(--accent4); color: var(--accent4); }
+  .chip-r { border-color: var(--accent2); color: var(--accent2); }
+  .chip-b { border-color: var(--accent3); color: var(--accent3); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  .big-note {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+
+  .big-note strong {
+    color: var(--accent4);
+    font-family: var(--mono);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .algo-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .grid, .grid-wide, .algo-compare { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>// CS 61B — Operations Reference</h1>
+  <p>step-by-step processes for every data structure · click a tab to navigate</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('uf')">Union-Find</button>
+  <button class="tab" onclick="show('bst')">BST</button>
+  <button class="tab" onclick="show('btree')">B-Tree</button>
+  <button class="tab" onclick="show('llrb')">LLRB</button>
+  <button class="tab" onclick="show('heap')">Heap</button>
+  <button class="tab" onclick="show('graphs')">DFS / BFS</button>
+  <button class="tab" onclick="show('dijkstra')">Dijkstra</button>
+  <button class="tab" onclick="show('mst')">Prim / Kruskal</button>
+  <button class="tab" onclick="show('dag')">DAG / Topo</button>
+</div>
+
+<div class="content">
+
+  <!-- UNION FIND -->
+  <div id="sec-uf" class="section active">
+    <div class="ds-title" style="color:var(--accent)">Union-Find (Disjoint Sets)</div>
+    <div class="ds-subtitle">// 4 versions: Quick Find → Quick Union → Weighted QU → + Path Compression</div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent3)">
+        <div class="card-title">Quick Find — find & union</div>
+        <ul class="steps">
+          <li data-n="find"><code>id[p]</code> — return the value at index p. O(1)</li>
+          <li data-n="union">Loop all elements. For every i where <code>id[i] == id[p]</code>, set <code>id[i] = id[q]</code>. O(N)</li>
+          <li data-n="⚠">Union is slow — must touch every element</li>
+        </ul>
+        <div class="warn">Array stores group label directly. Union rewrites entire group.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">Quick Union — find & union</div>
+        <ul class="steps">
+          <li data-n="find">Follow parent pointers until <code>id[i] == i</code> (self-loop = root). O(N) worst</li>
+          <li data-n="union">Find root of p, find root of q. Set <code>id[root(p)] = root(q)</code>. O(N) worst</li>
+          <li data-n="⚠">Tree can become a chain (height N)</li>
+        </ul>
+        <div class="warn">Array stores parent index. Root = index points to itself.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Weighted QU — union by size</div>
+        <ul class="steps">
+          <li data-n="find">Same as QU: follow parents to root. O(log N)</li>
+          <li data-n="union">Find both roots. Always attach <strong>smaller tree under larger</strong> tree's root.</li>
+          <li data-n="size">Keep a <code>size[]</code> array. Update size of new root: <code>size[bigRoot] += size[smallRoot]</code></li>
+          <li data-n="why">Guarantees tree height ≤ log N</li>
+        </ul>
+        <div class="note">Negative values in array = root (value = -size). Positive = parent index.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent5)">
+        <div class="card-title">Path Compression — during find()</div>
+        <ul class="steps">
+          <li data-n="1">Call <code>find(p)</code> as normal — walk up to root</li>
+          <li data-n="2">On the way back down (or in a second pass), <strong>re-point every visited node directly to root</strong></li>
+          <li data-n="3">Next <code>find()</code> on those nodes is now O(1)</li>
+          <li data-n="⚠">Does NOT change who the root is — only flattens paths</li>
+        </ul>
+        <div class="note">WQU + Path Compression ≈ O(α(N)) per op — nearly O(1) amortized</div>
+      </div>
+    </div>
+
+    <div class="big-note">
+      <strong>KEY MENTAL MODEL:</strong> The array stores a tree. Negative = you're the root (store -size). Positive = your parent's index. Union always connects roots. Find always returns the root.
+    </div>
+  </div>
+
+  <!-- BST -->
+  <div id="sec-bst" class="section">
+    <div class="ds-title" style="color:var(--accent4)">Binary Search Tree</div>
+    <div class="ds-subtitle">// left < root < right invariant must hold at every node</div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent3)">
+        <div class="card-title">Search / Contains</div>
+        <ul class="steps">
+          <li data-n="1">Start at root</li>
+          <li data-n="2">If key == node.key → found ✓</li>
+          <li data-n="3">If key < node.key → go LEFT</li>
+          <li data-n="4">If key > node.key → go RIGHT</li>
+          <li data-n="5">If null → not found ✗</li>
+        </ul>
+        <div class="complexity">
+          <span class="chip chip-g">Best O(log N)</span>
+          <span class="chip chip-r">Worst O(N)</span>
+        </div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Insert</div>
+        <ul class="steps">
+          <li data-n="1">Search for the key (same as above)</li>
+          <li data-n="2">When you reach null, <strong>insert new node here</strong></li>
+          <li data-n="3">New node is always a leaf</li>
+          <li data-n="⚠">Never rearranges existing nodes</li>
+        </ul>
+        <div class="note">Insertion order determines tree shape. Sorted input → O(N) height chain.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent2)">
+        <div class="card-title">Delete (Hibbard)</div>
+        <ul class="steps">
+          <li data-n="case1"><strong>0 children (leaf):</strong> Just remove it. Parent points to null.</li>
+          <li data-n="case2"><strong>1 child:</strong> Replace node with its only child. Bypass it.</li>
+          <li data-n="case3"><strong>2 children:</strong> Find the <em>successor</em> (smallest node in RIGHT subtree) OR <em>predecessor</em> (largest in LEFT subtree)</li>
+          <li data-n="→">Copy successor's key/value into current node</li>
+          <li data-n="→">Delete the successor (it has ≤ 1 child, so use case 1 or 2)</li>
+        </ul>
+        <div class="warn">Successor = go right once, then go left as far as possible</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent5)">
+        <div class="card-title">Min / Max / Floor / Ceiling</div>
+        <ul class="steps">
+          <li data-n="min">Go LEFT until null → that's your min</li>
+          <li data-n="max">Go RIGHT until null → that's your max</li>
+          <li data-n="floor">Largest key ≤ target: go left if key > target, else save node and go right</li>
+          <li data-n="ceil">Smallest key ≥ target: go right if key < target, else save node and go left</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- B-TREE -->
+  <div id="sec-btree" class="section">
+    <div class="ds-title" style="color:var(--accent3)">B-Tree (2-3 Tree)</div>
+    <div class="ds-subtitle">// all leaves at same depth · nodes hold 1 or 2 keys (for 2-3 tree) · never insert into empty node</div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Search</div>
+        <ul class="steps">
+          <li data-n="1">At each node, compare key against all keys in the node</li>
+          <li data-n="2">If match → found</li>
+          <li data-n="3">If key < left key → go to leftmost child</li>
+          <li data-n="4">If key between two node keys → go to middle child</li>
+          <li data-n="5">If key > all node keys → go to rightmost child</li>
+          <li data-n="6">If leaf with no match → not found</li>
+        </ul>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">Insert</div>
+        <ul class="steps">
+          <li data-n="1">Search to find the correct <strong>leaf</strong> node</li>
+          <li data-n="2">Add the key into that leaf (may now have 2 keys — that's fine)</li>
+          <li data-n="3">If node now has <strong>3 keys (overfull)</strong> → SPLIT:</li>
+          <li data-n="→">Push the <strong>middle key UP</strong> to the parent</li>
+          <li data-n="→">Left key stays as left child, right key stays as right child</li>
+          <li data-n="4">If parent is now overfull → repeat split upward</li>
+          <li data-n="5">If root splits → new root is created (tree grows UP, never down)</li>
+        </ul>
+        <div class="note">Height only increases when the ROOT splits. Tree grows from top.</div>
+      </div>
+    </div>
+
+    <div class="big-note">
+      <strong>CORE INVARIANT:</strong> Never place a new key into an empty node. Always add to an existing leaf, then split upward if needed. This guarantees all leaves stay at the same depth.
+    </div>
+  </div>
+
+  <!-- LLRB -->
+  <div id="sec-llrb" class="section">
+    <div class="ds-title" style="color:var(--accent2)">LLRB (Left-Leaning Red-Black Tree)</div>
+    <div class="ds-subtitle">// red links represent 3-nodes (glued pairs) · isomorphic to 2-3 tree · always insert as RED</div>
+
+    <div class="big-note">
+      <strong>MENTAL MODEL:</strong> Red link = the two nodes it connects are a single 3-node. Black height = number of black links. Every root-to-leaf has the same black height. Red links always lean LEFT.
+    </div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent2)">
+        <div class="card-title">rotateLeft(h)</div>
+        <ul class="steps">
+          <li data-n="when">h.left is black AND h.right is RED (right-leaning red — fix it)</li>
+          <li data-n="1">Let <code>x = h.right</code></li>
+          <li data-n="2"><code>h.right = x.left</code></li>
+          <li data-n="3"><code>x.left = h</code></li>
+          <li data-n="4"><code>x.color = h.color</code> (x inherits h's color)</li>
+          <li data-n="5"><code>h.color = RED</code></li>
+          <li data-n="ret">Return x (x is the new top)</li>
+        </ul>
+        <div class="info">Fixes: right-leaning red link → makes it left-leaning</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">rotateRight(h)</div>
+        <ul class="steps">
+          <li data-n="when">h.left is RED AND h.left.left is RED (two reds in a row on left)</li>
+          <li data-n="1">Let <code>x = h.left</code></li>
+          <li data-n="2"><code>h.left = x.right</code></li>
+          <li data-n="3"><code>x.right = h</code></li>
+          <li data-n="4"><code>x.color = h.color</code></li>
+          <li data-n="5"><code>h.color = RED</code></li>
+          <li data-n="ret">Return x</li>
+        </ul>
+        <div class="info">Fixes: two consecutive left-red links → temporarily makes a 4-node</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent5)">
+        <div class="card-title">colorFlip(h)</div>
+        <ul class="steps">
+          <li data-n="when">h.left is RED AND h.right is RED (both children red = 4-node, must split)</li>
+          <li data-n="1"><code>h.color</code> flips (BLACK → RED)</li>
+          <li data-n="2"><code>h.left.color</code> flips (RED → BLACK)</li>
+          <li data-n="3"><code>h.right.color</code> flips (RED → BLACK)</li>
+        </ul>
+        <div class="note">Equivalent to pushing middle key UP in a B-Tree split. h becomes red (passes the "problem" up)</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Insert — full process</div>
+        <ul class="steps">
+          <li data-n="1">Search for spot exactly like BST (left if smaller, right if bigger)</li>
+          <li data-n="2">Insert new node with a <strong>RED link</strong> (always)</li>
+          <li data-n="3">On the way back up (recursive return), apply fixes:</li>
+          <li data-n="→">if <code>right.RED && !left.RED</code> → <strong>rotateLeft</strong></li>
+          <li data-n="→">if <code>left.RED && left.left.RED</code> → <strong>rotateRight</strong></li>
+          <li data-n="→">if <code>left.RED && right.RED</code> → <strong>colorFlip</strong></li>
+          <li data-n="4">Root is always set to BLACK at the end</li>
+        </ul>
+        <div class="note">All 3 checks happen every time on every node during unwinding. Order matters.</div>
+      </div>
+    </div>
+
+    <div class="big-note">
+      <strong>INVARIANTS:</strong> (1) No right-leaning reds. (2) No two consecutive left reds. (3) Root is black. (4) No red-red on right. Rotations preserve black-height. ColorFlip passes the "split" upward.
+    </div>
+  </div>
+
+  <!-- HEAP -->
+  <div id="sec-heap" class="section">
+    <div class="ds-title" style="color:var(--accent5)">Heap (Min-Heap)</div>
+    <div class="ds-subtitle">// complete binary tree · parent ≤ both children · stored in array: parent(k)=k/2, left=2k, right=2k+1</div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Insert (swim up)</div>
+        <ul class="steps">
+          <li data-n="1">Add new element at the <strong>bottom-rightmost open spot</strong> (end of array, index = size+1)</li>
+          <li data-n="2"><strong>Swim up:</strong> compare with parent (<code>array[k/2]</code>)</li>
+          <li data-n="3">If new node < parent → <strong>swap</strong> with parent</li>
+          <li data-n="4">Repeat from new position until node ≥ parent OR reach root</li>
+        </ul>
+        <div class="complexity">
+          <span class="chip chip-g">O(log N)</span>
+        </div>
+        <div class="note">Swim = bubble UP. Always start from bottom.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent2)">
+        <div class="card-title">removeMin (sink down)</div>
+        <ul class="steps">
+          <li data-n="1">Save the root (index 1) — that's your min to return</li>
+          <li data-n="2">Move the <strong>last element</strong> (bottom-right) to the root position</li>
+          <li data-n="3">Remove the last element (shrink size)</li>
+          <li data-n="4"><strong>Sink down:</strong> compare root with both children</li>
+          <li data-n="5">Swap with the <strong>smaller child</strong> (if smaller than root)</li>
+          <li data-n="6">Repeat from new position until node ≤ both children OR reach leaf</li>
+        </ul>
+        <div class="complexity">
+          <span class="chip chip-g">O(log N)</span>
+        </div>
+        <div class="warn">Always swap with SMALLER child (not just any child smaller than you)</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">Heapify (bottom-up, in-place)</div>
+        <ul class="steps">
+          <li data-n="1">Start at the last non-leaf node: index <code>N/2</code></li>
+          <li data-n="2">Sink that node down</li>
+          <li data-n="3">Move to <code>N/2 - 1</code>, sink it down</li>
+          <li data-n="4">Continue leftward/upward until you sink the root</li>
+        </ul>
+        <div class="complexity">
+          <span class="chip chip-g">O(N)</span>
+          <span class="chip chip-b">not O(N log N)!</span>
+        </div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent3)">
+        <div class="card-title">Heap Sort</div>
+        <ul class="steps">
+          <li data-n="1"><strong>Phase 1:</strong> Heapify array into a MAX-heap (bottom-up, O(N))</li>
+          <li data-n="2"><strong>Phase 2:</strong> Repeatedly: swap root (max) with last unsorted element</li>
+          <li data-n="3">Shrink the heap boundary by 1</li>
+          <li data-n="4">Sink the new root down</li>
+          <li data-n="5">Repeat N-1 times → array is sorted ascending</li>
+        </ul>
+        <div class="complexity">
+          <span class="chip chip-g">O(N log N)</span>
+          <span class="chip chip-y">O(1) space</span>
+          <span class="chip chip-r">NOT stable</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAPHS -->
+  <div id="sec-graphs" class="section">
+    <div class="ds-title" style="color:var(--accent3)">Graph Traversals — DFS & BFS</div>
+    <div class="ds-subtitle">// DFS uses a stack (recursion) · BFS uses a queue · both mark visited to avoid cycles</div>
+
+    <div class="grid-wide">
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">DFS — Depth First Search</div>
+        <ul class="steps">
+          <li data-n="1">Mark source as visited</li>
+          <li data-n="2">For each neighbor of current node:</li>
+          <li data-n="→">If NOT visited → recursively DFS from neighbor</li>
+          <li data-n="3">When all neighbors done → backtrack (return)</li>
+        </ul>
+        <div class="two-col">
+          <div>
+            <div style="color:var(--accent4);font-family:var(--mono);font-size:11px;margin-bottom:4px">PRE-ORDER</div>
+            <div style="font-size:12px">Visit node <strong>before</strong> recursing into children</div>
+          </div>
+          <div>
+            <div style="color:var(--accent5);font-family:var(--mono);font-size:11px;margin-bottom:4px">POST-ORDER</div>
+            <div style="font-size:12px">Visit node <strong>after</strong> all children return</div>
+          </div>
+        </div>
+        <div class="note">Uses implicit call stack. Explores as DEEP as possible before backtracking.</div>
+        <div class="complexity">
+          <span class="chip chip-g">O(V+E)</span>
+        </div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent3)">
+        <div class="card-title">BFS — Breadth First Search</div>
+        <ul class="steps">
+          <li data-n="1">Create a Queue. Add source. Mark source visited.</li>
+          <li data-n="2">While queue is not empty:</li>
+          <li data-n="→">Dequeue node v</li>
+          <li data-n="→">For each neighbor of v: if NOT visited → mark visited, enqueue neighbor</li>
+        </ul>
+        <div class="note">Explores all nodes at distance 1, then distance 2, etc. Finds SHORTEST PATH (unweighted).</div>
+        <div class="warn">Mark visited when ENQUEUING, not when dequeuing, to avoid duplicates in queue</div>
+        <div class="complexity">
+          <span class="chip chip-g">O(V+E)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">DFS — Tree Traversal Orders</div>
+        <ul class="steps">
+          <li data-n="pre">Pre-order: <strong>Root → Left → Right</strong></li>
+          <li data-n="in">In-order: Left → <strong>Root</strong> → Right (gives BST sorted order)</li>
+          <li data-n="post">Post-order: Left → Right → <strong>Root</strong></li>
+          <li data-n="lvl">Level-order: BFS — left to right, level by level</li>
+        </ul>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent2)">
+        <div class="card-title">Multi-Source BFS</div>
+        <ul class="steps">
+          <li data-n="1">Add ALL source nodes to queue at the start</li>
+          <li data-n="2">Mark ALL of them as visited immediately</li>
+          <li data-n="3">Run BFS normally</li>
+          <li data-n="why">Finds shortest distance from ANY source to each node simultaneously</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIJKSTRA -->
+  <div id="sec-dijkstra" class="section">
+    <div class="ds-title" style="color:var(--accent4)">Dijkstra's Algorithm</div>
+    <div class="ds-subtitle">// single-source shortest path · weighted graphs · NO negative edges</div>
+
+    <div class="grid-wide">
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">Algorithm — Step by Step</div>
+        <ul class="steps">
+          <li data-n="init">Set <code>distTo[source] = 0</code>, all others = ∞</li>
+          <li data-n="init">Add ALL vertices to a min-heap PQ keyed by distTo</li>
+          <li data-n="loop">While PQ is not empty:</li>
+          <li data-n="1">Pop vertex v with MINIMUM distTo (it's now finalized)</li>
+          <li data-n="2">For each edge (v → w) with weight e:</li>
+          <li data-n="→">If <code>distTo[v] + e < distTo[w]</code> → <strong>RELAX:</strong></li>
+          <li data-n="→">Update <code>distTo[w] = distTo[v] + e</code></li>
+          <li data-n="→">Update <code>edgeTo[w] = v</code> (for path reconstruction)</li>
+          <li data-n="→">Update w's priority in PQ</li>
+        </ul>
+        <div class="warn">Once a vertex is popped from PQ, its distance is FINAL. Never re-visit.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent3)">
+        <div class="card-title">Key Concepts</div>
+        <ul class="steps">
+          <li data-n="relax"><strong>Relax</strong> = check if going through v gives w a shorter path</li>
+          <li data-n="greedy">Greedy: always process the closest unvisited vertex next</li>
+          <li data-n="neg">Fails with negative edges — a later shorter path could contradict a finalized node</li>
+          <li data-n="pq">PQ stores (vertex, distance). changeKey when you find shorter path.</li>
+        </ul>
+        <div class="complexity">
+          <span class="chip chip-g">O((V+E) log V)</span>
+        </div>
+        <div class="divider" style="margin:10px 0"></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--accent4);margin-bottom:6px">vs. BFS</div>
+        <div style="font-size:12px">BFS = shortest by hops (unweighted). Dijkstra = shortest by total weight.</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--accent4);margin:8px 0 6px">vs. Prim</div>
+        <div style="font-size:12px">Dijkstra tracks <strong>total path cost</strong>. Prim tracks <strong>single edge cost</strong> to MST.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MST -->
+  <div id="sec-mst" class="section">
+    <div class="ds-title" style="color:var(--accent)">Minimum Spanning Tree — Prim & Kruskal</div>
+    <div class="ds-subtitle">// MST connects all V vertices with V-1 edges at minimum total weight · no cycles</div>
+
+    <div class="big-note">
+      <strong>CUT PROPERTY (theoretical basis for both algorithms):</strong> For any cut of the graph (partition into two sets), the minimum-weight crossing edge must be in the MST.
+    </div>
+
+    <div class="grid-wide">
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Prim's Algorithm</div>
+        <ul class="steps">
+          <li data-n="start">Start with any vertex. Add it to MST.</li>
+          <li data-n="init">Add all its edges to a min-heap PQ (keyed by edge weight)</li>
+          <li data-n="loop">While PQ not empty AND MST has fewer than V vertices:</li>
+          <li data-n="1">Pop the minimum-weight edge (u → w)</li>
+          <li data-n="2">If w is already in MST → <strong>skip</strong> (would create cycle)</li>
+          <li data-n="3">If w is NOT in MST → add w to MST, add edge to result</li>
+          <li data-n="4">Add all edges from w to non-MST vertices into PQ</li>
+        </ul>
+        <div class="note">Grows the MST one vertex at a time. Always picks cheapest edge INTO the current MST.</div>
+        <div class="complexity">
+          <span class="chip chip-g">O(E log V)</span>
+        </div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent5)">
+        <div class="card-title">Kruskal's Algorithm</div>
+        <ul class="steps">
+          <li data-n="1"><strong>Sort ALL edges</strong> by weight (ascending)</li>
+          <li data-n="2">Initialize Union-Find with all V vertices</li>
+          <li data-n="loop">For each edge (u, v) in sorted order:</li>
+          <li data-n="3">If <code>find(u) != find(v)</code> (different components, no cycle):</li>
+          <li data-n="→">Add edge to MST</li>
+          <li data-n="→"><code>union(u, v)</code></li>
+          <li data-n="4">Stop when MST has V-1 edges</li>
+        </ul>
+        <div class="note">Greedily picks cheapest edge globally that doesn't create a cycle. Uses Union-Find to detect cycles.</div>
+        <div class="complexity">
+          <span class="chip chip-g">O(E log E)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">Prim vs Kruskal — When to use</div>
+        <ul class="steps">
+          <li data-n="prim">Prim = better for <strong>dense graphs</strong> (many edges)</li>
+          <li data-n="krus">Kruskal = better for <strong>sparse graphs</strong> (few edges)</li>
+          <li data-n="both">Both always find the MST</li>
+          <li data-n="uniq">If all edge weights are unique → Prim and Kruskal find the <strong>same unique MST</strong></li>
+        </ul>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent2)">
+        <div class="card-title">Prim vs Dijkstra — Key Difference</div>
+        <ul class="steps">
+          <li data-n="dijk">Dijkstra: PQ key = <strong>total distance from source</strong></li>
+          <li data-n="prim">Prim: PQ key = <strong>weight of single edge connecting to MST</strong></li>
+          <li data-n="code">Code is nearly identical — only what you store in PQ differs</li>
+          <li data-n="goal">Dijkstra → shortest path tree. Prim → minimum spanning tree.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAG -->
+  <div id="sec-dag" class="section">
+    <div class="ds-title" style="color:var(--accent2)">DAGs & Topological Sort</div>
+    <div class="ds-subtitle">// Directed Acyclic Graph · topological order = linear ordering where u comes before v for every edge u→v</div>
+
+    <div class="grid-wide">
+      <div class="card" style="--card-color: var(--accent2)">
+        <div class="card-title">Topological Sort — Reverse DFS Post-order</div>
+        <ul class="steps">
+          <li data-n="1">Run DFS on the entire graph (visit all vertices)</li>
+          <li data-n="2">Use POST-order: when DFS fully finishes a vertex (all descendants done), add it to a <strong>stack</strong></li>
+          <li data-n="3">After DFS completes, pop the stack → that's your topological order</li>
+        </ul>
+        <div class="note">Post-order DFS naturally finishes "later" nodes first. Reversing gives correct topo order.</div>
+        <div class="complexity"><span class="chip chip-g">O(V+E)</span></div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent4)">
+        <div class="card-title">Shortest Path in DAG</div>
+        <ul class="steps">
+          <li data-n="1">Run topological sort</li>
+          <li data-n="2">Process vertices in topological order</li>
+          <li data-n="3">For each vertex v (in topo order), relax all outgoing edges</li>
+          <li data-n="why">Works because in topo order, when we process v, all predecessors are already finalized</li>
+        </ul>
+        <div class="complexity"><span class="chip chip-g">O(V+E)</span><span class="chip chip-b">works with neg edges!</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="--card-color: var(--accent5)">
+        <div class="card-title">Longest Path in DAG</div>
+        <ul class="steps">
+          <li data-n="trick">Negate all edge weights</li>
+          <li data-n="run">Run shortest path algorithm</li>
+          <li data-n="negate">Negate results</li>
+          <li data-n="why">Works ONLY in DAGs — no negative cycles possible</li>
+        </ul>
+        <div class="warn">Longest path on general graphs is NP-Hard. Only solvable on DAGs.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent3)">
+        <div class="card-title">Detecting a Cycle</div>
+        <ul class="steps">
+          <li data-n="dfs">DFS with 3 states: UNVISITED, IN_PROGRESS, DONE</li>
+          <li data-n="cycle">If you reach an IN_PROGRESS node → cycle detected!</li>
+          <li data-n="dag">If DFS completes with no IN_PROGRESS hits → graph is a DAG</li>
+        </ul>
+        <div class="note">Topological sort only works on DAGs. If cycle exists, no valid topo order exists.</div>
+      </div>
+
+      <div class="card" style="--card-color: var(--accent)">
+        <div class="card-title">Algorithm Choice Summary</div>
+        <ul class="steps">
+          <li data-n="bfs">Unweighted shortest path → <strong>BFS</strong> O(V+E)</li>
+          <li data-n="dijk">Weighted, no negatives → <strong>Dijkstra</strong> O(E log V)</li>
+          <li data-n="dag">DAG (any weights) → <strong>Topo + Relax</strong> O(V+E)</li>
+          <li data-n="neg">Negative edges, general → <strong>Bellman-Ford</strong> O(VE)</li>
+          <li data-n="mst">Minimum spanning tree → <strong>Prim or Kruskal</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>

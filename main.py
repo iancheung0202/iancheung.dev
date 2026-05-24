@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, send_from_directory, render_template, request, abort, session, redirect, jsonify, url_for
+from flask import Flask, send_from_directory, render_template, render_template_string, request, abort, session, redirect, jsonify, url_for
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -36,19 +36,36 @@ def home():
 
 @app.route("/pricing/")
 def pricing_page():
-    return send_from_directory("static/pricing", "index.html")
+    return app.send_static_file("pricing.html")
 
 @app.route("/class/")
 def grade_page():
-    return send_from_directory("static/class", "index.html")
+        class_root = os.path.join(app.static_folder, "class")
+        files = []
+
+        for root, _, filenames in os.walk(class_root):
+            for filename in filenames:
+                rel_path = os.path.relpath(os.path.join(root, filename), app.static_folder)
+                files.append(rel_path.replace(os.sep, "/"))
+
+        files.sort()
+
+        return render_template_string(
+            """<!doctype html><html><body><ul>{% for file in files %}<li><a href="{{ url_for('static', filename=file) }}">{{ file }}</a></li>{% endfor %}</ul></body></html>""",
+            files=files,
+        )
 
 @app.route("/proposal/")
 def proposal_page():
-    return send_from_directory("static/proposal", "index.html")
+        return app.send_static_file("proposal.html")
 
-@app.route("/game/")
-def game_page():
-    return app.send_static_file("game.html")
+@app.route("/home/")
+def home_page():
+        return app.send_static_file("home.html")
+
+@app.route("/caltrain/")
+def caltrain_page():
+        return app.send_static_file("caltrain.html")
 
 TODO_FILE = 'templates/todos.json'
 

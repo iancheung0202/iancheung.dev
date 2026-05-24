@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caltrain</title>
+<link rel="icon" href="https://name.servercv.com/static/caltrain.png" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://name.servercv.com/static/caltrain.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;500;600;700&family=Chivo:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Root vars (Swiss Transit Style) ─── */
+:root {
+  --red:          #D31145; /* Authentic Caltrain Red */
+  --red-dim:      rgba(211, 17, 69, 0.1);
+  --bg:           #EAECEF; /* Cool light gray for outer background */
+  --surf:         #FFFFFF; /* Pure white for functional areas */
+  --surf-2:       #F1F3F5; /* Table headers */
+  --surf-3:       #F8F9FA; /* Hover states */
+  --border:       #DEE2E6; /* Standard grid lines */
+  --border-md:    #ADB5BD; /* Stronger dividers */
+  --border-strong:#212529; /* High contrast structural lines */
+  --text:         #121417; /* Near black */
+  --muted:        #495057; /* Secondary text */
+  --dim:          #868E96; /* Tertiary text */
+  --pm:           #1864AB; /* Deep blue for PM */
+  --pm-bg:        #E7F5FF;
+  --early:        #087F5B; /* Strong green */
+  --late:         #C92A2A; /* Alert red */
+  --next-bg:      #FFF3BF; /* High visibility yellow */
+  --next-accent:  #E67700; /* Dark orange/amber for contrast */
+  --font-display: 'Oswald', sans-serif;
+  --font-mono:    'Chivo Mono', monospace;
+  --font-ui:      'Chivo', sans-serif;
+}
+
+/* ─── Base ─── */
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Header ─── */
+.site-header {
+  background: var(--surf);
+  border-bottom: 2px solid var(--border-strong);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-stripe {
+  height: 6px;
+  background: var(--red);
+}
+
+.header-body {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-emblem {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.brand-text h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.brand-text .route {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.live-clock {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.live-clock .ap {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-left: 2px;
+  letter-spacing: 0;
+}
+
+.clock-day {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+/* ─── Toolbar ─── */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surf);
+  margin: 0 auto;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 2px solid var(--border-strong);
+  border-radius: 2px;
+  background: var(--surf);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  transition: all 0.1s;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  height: 32px;
+}
+
+.btn:hover { background: var(--text); color: var(--surf); }
+.btn:disabled { opacity: 0.5; cursor: wait; pointer-events: none; border-color: var(--border-md); color: var(--muted); background: var(--surf-2); }
+
+.ico-spin {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.spinning .ico-spin {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.last-updated {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--early);
+  flex-shrink: 0;
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+
+.status-dot.err { background: var(--late); animation: none; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ─── Legend ─── */
+.legend {
+  display: flex;
+  gap: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--surf);
+  color: var(--text);
+  margin: 0 auto;
+}
+
+.li { display: flex; align-items: center; gap: 6px; }
+
+.badge {
+  font-size: 9.5px;
+  border-radius: 2px;
+  padding: 2px 6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  line-height: 1.6;
+  border: 1px solid currentColor;
+}
+
+.b1 { background: var(--surf-2); color: var(--muted); border-color: var(--border-md); }
+.b4 { background: #E6FCF5; color: #099268; border-color: #20C997; }
+
+.swatch-pm    { color: var(--pm); font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; }
+.swatch-early { color: var(--early); font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; }
+.swatch-late  { color: var(--late); font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; }
+
+.swatch-next {
+  display: inline-block;
+  width: 24px;
+  height: 12px;
+  background: var(--next-bg);
+  border: 1px solid var(--next-accent);
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+/* ─── Main content ─── */
+.content { 
+  padding: 24px; 
+  margin: 0 auto;
+}
+
+/* ─── Section ─── */
+.section-wrap {
+  margin-bottom: 12px;
+  animation: fadeUp 0.4s ease both;
+}
+
+.section-wrap:nth-child(1) { animation-delay: 0.05s; }
+.section-wrap:nth-child(2) { animation-delay: 0.10s; }
+.section-wrap:nth-child(3) { animation-delay: 0.15s; }
+.section-wrap:nth-child(4) { animation-delay: 0.20s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dir-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 12px;
+}
+
+.dir-header:first-child { margin-top: 4px; }
+
+.dir-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--text);
+  color: var(--surf);
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  text-transform: uppercase;
+}
+
+.dir-cont {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dir-line {
+  height: 2px;
+  flex: 1;
+  min-width: 20px;
+}
+
+.section-divider {
+  border: none;
+  margin: 20px 0 0;
+}
+
+/* ─── Table wrapper ─── */
+.tbl-wrap {
+  overflow-x: auto;
+  border: 2px solid var(--border-strong);
+  background: var(--surf);
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 8px;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.08); /* Brutalist hard shadow */
+}
+
+.tbl-wrap::-webkit-scrollbar { height: 6px; }
+.tbl-wrap::-webkit-scrollbar-track { background: var(--surf-2); border-top: 1px solid var(--border); }
+.tbl-wrap::-webkit-scrollbar-thumb { background: var(--border-strong); }
+
+/* ─── Table ─── */
+table {
+  border-collapse: collapse;
+  font-size: 12px;
+  width: max-content;
+  min-width: 100%;
+}
+
+th, td {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* Header row */
+thead th {
+  background: var(--surf-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 10px 8px 8px;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--border-strong);
+}
+
+thead th .badge { display: block; margin-top: 4px; }
+
+/* Station name cells */
+.stn {
+  text-align: left;
+  font-weight: 700;
+  padding: 10px 16px !important;
+  min-width: 130px;
+  position: sticky;
+  left: 0;
+  background: var(--surf);
+  z-index: 2;
+  font-size: 12px;
+  color: var(--text);
+  border-right: 2px solid var(--border-strong) !important;
+  font-family: var(--font-ui);
+  letter-spacing: 0.2px;
+}
+
+thead .stn {
+  background: var(--surf-2);
+  z-index: 3;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ─── Schedule cells ─── */
+.sc {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  vertical-align: top;
+  min-width: 60px;
+  padding: 0;
+  position: relative;
+  transition: background 0.1s;
+}
+
+.sc:hover { background: var(--surf-3); cursor: default; }
+
+.sc.pm { color: var(--pm); font-weight: 700; }
+
+.sc-inner {
+  padding: 8px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+}
+
+.sched-t { display: block; line-height: 1.3; font-size: 12px; }
+.actual-t { display: block; font-size: 10px; line-height: 1.2; font-weight: 700; min-height: 12px; letter-spacing: -0.5px; }
+.actual-t.empty, .actual-t.same { color: transparent; }
+.actual-t.early { color: var(--early); }
+.actual-t.late  { color: var(--late); }
+
+/* ─── Next train column highlight ─── */
+.next-col .sc,
+.next-col.sc {
+  background: var(--next-bg) !important;
+  border-left: 1px solid var(--next-accent);
+  border-right: 1px solid var(--next-accent);
+}
+
+.next-col.sc:hover { background: #FEF08A !important; }
+
+thead .next-col {
+  background: var(--next-bg) !important;
+  color: var(--next-accent) !important;
+  border-left: 1px solid var(--next-accent);
+  border-right: 1px solid var(--next-accent);
+  border-bottom: 2px solid var(--next-accent);
+  position: relative;
+}
+
+.stn.next-col { background: var(--surf) !important; border-left: none; border-right: 2px solid var(--border-strong) !important; }
+thead .stn.next-col { background: var(--surf-2) !important; color: var(--muted) !important; border-bottom: 2px solid var(--border-strong); }
+thead .stn.next-col::after { display: none; }
+
+/* ─── Divider between sections ─── */
+.section-gap { margin-top: 24px; }
+
+/* ─── Print ─── */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; color: #000; font-size: 11px; }
+  .site-header { position: static; background: #fff; border-bottom: 2px solid #000; }
+  .header-stripe { background: #000; }
+  .brand-text h1 { color: #000; }
+  .brand-text .route { color: #333; }
+  .header-emblem { background: #000; }
+  .live-clock, .clock-day { display: none; }
+  .content { padding: 12px 0; }
+  .tbl-wrap { border: 2px solid #000; box-shadow: none; overflow: visible; }
+  table { min-width: unset; width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #ccc; }
+  .stn { background: #fff !important; color: #000; border-right: 2px solid #000 !important; }
+  thead th { background: #f5f5f5 !important; color: #000; border-bottom: 2px solid #000; }
+  .sc { color: #000; }
+  .sc.pm { color: #000 !important; font-weight: bold; }
+  .next-col .sc, .next-col.sc { background: transparent !important; border: 1px solid #ccc; }
+  thead .next-col { background: #f5f5f5 !important; color: #000 !important; border: 1px solid #ccc; border-bottom: 2px solid #000; }
+  thead .next-col::after { display: none; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 620px) {
+  .site-header { position: relative; }
+  .header-body { padding: 12px 16px; gap: 12px; }
+  .header-emblem { width: 36px; height: 36px; }
+  .brand-text h1 { font-size: 20px; letter-spacing: 0; }
+  .brand-text .route { font-size: 10px; margin-top: 2px; }
+  .live-clock { font-size: 20px; }
+  .live-clock .ap { font-size: 10px; }
+  .clock-day { font-size: 10px; }
+  .content { padding: 16px 12px 32px; }
+  .toolbar { padding: 10px 16px; gap: 8px; }
+  .legend { padding: 10px 16px; gap: 12px; }
+  .btn { height: 28px; font-size: 11px; padding: 4px 10px; }
+  .stn { min-width: 100px; padding: 8px 12px !important; font-size: 11px; }
+  .sc { min-width: 52px; font-size: 11.5px; }
+  .sc-inner { padding: 6px 4px 4px; min-height: 40px; }
+  .sched-t { font-size: 11.5px; }
+  .actual-t { font-size: 9px; }
+  .dir-pill { font-size: 13px; }
+}
+
+@media (max-width: 380px) {
+  .legend { gap: 8px; font-size: 10.5px; }
+  .li:last-child { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="header-stripe"></div>
+  <div class="header-body">
+    <div class="header-brand">
+      <div class="header-emblem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Caltrain_logo.svg/1280px-Caltrain_logo.svg.png" alt="Caltrain Logo" style="height: 24px;">
+      </div>
+      <div class="brand-text">
+        <h1>Weekday Schedule</h1>
+        <p class="route">California Ave ↔️ San Francisco</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="live-clock" id="live-clock">--:-- <span class="ap">--</span></div>
+      <div class="clock-day" id="clock-day">---</div>
+    </div>
+  </div>
+
+<div class="legend no-print">
+  <div class="li"><span class="badge b1">1XX</span> Local</div>
+  <div class="li"><span class="badge b4">4XX</span> Limited</div>
+  <div class="li"><span class="swatch-pm">PM</span></div>
+  <div class="li"><span class="swatch-early">Early</span></div>
+  <div class="li"><span class="swatch-late">Late</span></div>
+  <div class="li"><span class="swatch-next"></span> Next Train</div>
+  <span class="last-updated" id="last-updated"></span>
+</div>
+</header>
+
+<div class="content">
+  <div id="schedule-root"></div>
+</div>
+
+<script>
+/* ─── Schedule Data (preserved exactly) ─── */
+const scheduleSections = [
+  {
+    direction: '↑ Northbound to San Francisco',
+    topMargin: false,
+    columns: [
+      { train: '101', kind: '1xx' },{ train: '103', kind: '1xx' },{ train: '401', kind: '4xx' },
+      { train: '105', kind: '1xx' },{ train: '107', kind: '1xx' },{ train: '405', kind: '4xx' },
+      { train: '109', kind: '1xx' },{ train: '111', kind: '1xx' },{ train: '409', kind: '4xx' },
+      { train: '113', kind: '1xx' },{ train: '115', kind: '1xx' },{ train: '413', kind: '4xx' },
+      { train: '117', kind: '1xx' },{ train: '119', kind: '1xx' },{ train: '121', kind: '1xx' },
+      { train: '123', kind: '1xx' },{ train: '125', kind: '1xx' },{ train: '127', kind: '1xx' },
+      { train: '129', kind: '1xx' },{ train: '131', kind: '1xx' },{ train: '133', kind: '1xx' },
+      { train: '135', kind: '1xx' },
+    ],
+    rows: [
+      { station: 'California Ave', times: ['5:07a','5:32a','6:07a','6:22a','6:52a','7:07a','7:22a','7:52a','8:07a','8:22a','8:52a','9:07a','9:22a','9:52a','10:22a','10:52a','11:22a','11:52a','12:22p','12:52p','1:22p','1:52p'] },
+      { station: 'San Francisco', times: ['6:01a','6:26a','6:53a','7:16a','7:46a','7:53a','8:16a','8:46a','8:53a','9:16a','9:46a','9:53a','10:16a','10:46a','11:16a','11:46a','12:16p','12:46p','1:16p','1:46p','2:16p','2:46p'] }
+    ]
+  },
+  {
+    direction: '',
+    topMargin: true,
+    columns: [
+      { train: '137', kind: '1xx' },{ train: '139', kind: '1xx' },{ train: '141', kind: '1xx' },
+      { train: '143', kind: '1xx' },{ train: '417', kind: '4xx' },{ train: '145', kind: '1xx' },
+      { train: '147', kind: '1xx' },{ train: '421', kind: '4xx' },{ train: '149', kind: '1xx' },
+      { train: '151', kind: '1xx' },{ train: '425', kind: '4xx' },{ train: '153', kind: '1xx' },
+      { train: '155', kind: '1xx' },{ train: '429', kind: '4xx' },{ train: '157', kind: '1xx' },
+      { train: '159', kind: '1xx' },{ train: '161', kind: '1xx' },{ train: '163', kind: '1xx' },
+      { train: '165', kind: '1xx' },{ train: '167', kind: '1xx' },{ train: '169', kind: '1xx' },
+      { train: '171', kind: '1xx' },{ train: '173', kind: '1xx' }
+    ],
+    rows: [
+      { station: 'California Ave', times: ['2:22p','2:52p','3:22p','3:52p','4:07p','4:22p','4:52p','5:07p','5:22p','5:52p','6:07p','6:22p','6:52p','7:07p','7:22p','7:52p','8:22p','8:52p','9:22p','9:52p','10:22p','10:54p','11:54p'] },
+      { station: 'San Francisco', times: ['3:16p','3:46p','4:16p','4:46p','4:53p','5:16p','5:46p','5:53p','6:16p','6:46p','6:53p','7:16p','7:46p','7:53p','8:16p','8:46p','9:16p','9:46p','10:16p','10:46p','11:16p','11:48p','12:48a'] }
+    ]
+  },
+  {
+    direction: '↓ Southbound to San Jose',
+    topMargin: false,
+    dividerBefore: true,
+    columns: [
+      { train: '102', kind: '1xx' },{ train: '104', kind: '1xx' },{ train: '106', kind: '1xx' },
+      { train: '404', kind: '4xx' },{ train: '108', kind: '1xx' },{ train: '110', kind: '1xx' },
+      { train: '408', kind: '4xx' },{ train: '112', kind: '1xx' },{ train: '114', kind: '1xx' },
+      { train: '412', kind: '4xx' },{ train: '116', kind: '1xx' },{ train: '118', kind: '1xx' },
+      { train: '120', kind: '1xx' },{ train: '122', kind: '1xx' },{ train: '124', kind: '1xx' },
+      { train: '126', kind: '1xx' },{ train: '128', kind: '1xx' },{ train: '130', kind: '1xx' },
+      { train: '132', kind: '1xx' },{ train: '134', kind: '1xx' },{ train: '136', kind: '1xx' },
+      { train: '138', kind: '1xx' },{ train: '140', kind: '1xx' }
+    ],
+    rows: [
+      { station: 'San Francisco', times: ['4:55a','5:30a','6:25a','6:48a','6:55a','7:25a','7:48a','7:55a','8:25a','8:48a','8:55a','9:25a','9:55a','10:25a','10:55a','11:25a','11:55a','12:25p','12:55p','1:25p','1:55p','2:25p','2:55p'] },
+      { station: 'California Ave', times: ['5:47a','6:27a','7:17a','7:32a','7:47a','8:17a','8:32a','8:47a','9:17a','9:32a','9:47a','10:17a','10:47a','11:17a','11:47a','12:17p','12:47p','1:17p','1:47p','2:17p','2:47p','3:17p','3:47p'] }
+    ]
+  },
+  {
+    direction: '',
+    topMargin: true,
+    columns: [
+      { train: '142', kind: '1xx' },{ train: '416', kind: '4xx' },{ train: '144', kind: '1xx' },
+      { train: '146', kind: '1xx' },{ train: '420', kind: '4xx' },{ train: '148', kind: '1xx' },
+      { train: '150', kind: '1xx' },{ train: '424', kind: '4xx' },{ train: '152', kind: '1xx' },
+      { train: '154', kind: '1xx' },{ train: '428', kind: '4xx' },{ train: '156', kind: '1xx' },
+      { train: '158', kind: '1xx' },{ train: '160', kind: '1xx' },{ train: '162', kind: '1xx' },
+      { train: '164', kind: '1xx' },{ train: '166', kind: '1xx' },{ train: '168', kind: '1xx' },
+      { train: '170', kind: '1xx' },{ train: '172', kind: '1xx' },{ train: '174', kind: '1xx' },
+      { train: '176', kind: '1xx' }
+    ],
+    rows: [
+      { station: 'San Francisco', times: ['3:25p','3:48p','3:55p','4:25p','4:48p','4:55p','5:25p','5:48p','5:55p','6:25p','6:48p','6:55p','7:25p','7:55p','8:25p','8:55p','9:25p','9:55p','10:25p','10:55p','11:25p','12:05a'] },
+      { station: 'California Ave', times: ['4:17p','4:32p','4:47p','5:17p','5:32p','5:47p','6:17p','6:32p','6:47p','7:17p','7:32p','7:47p','8:17p','8:47p','9:17p','9:47p','10:17p','10:47p','11:17p','11:47p','12:17a','12:57a'] }
+    ]
+  }
+];
+
+const STOP_POINT_REFS = {
+  northbound: { 'California Ave': '70191', 'San Francisco': '70011' },
+  southbound: { 'California Ave': '70192', 'San Francisco': '70012' }
+};
+
+/* ─── Time utilities ─── */
+const laFmt = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Los_Angeles',
+  hour: 'numeric', minute: '2-digit', hour12: true
+});
+
+const laDayFmt = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Los_Angeles',
+  weekday: 'short', month: 'short', day: 'numeric'
+});
+
+function parseScheduledMinutes(t) {
+  const m = t.match(/^(\d{1,2}):(\d{2})([ap])$/i);
+  if (!m) return null;
+  let h = Number(m[1]) % 12;
+  if (m[3].toLowerCase() === 'p') h += 12;
+  return h * 60 + Number(m[2]);
+}
+
+function normalizeMinutes(m) { return ((m % 1440) + 1440) % 1440; }
+
+function formatMinutesToTime(m) {
+  const n = normalizeMinutes(m);
+  let h = Math.floor(n / 60);
+  const min = String(n % 60).padStart(2, '0');
+  const sfx = h >= 12 ? 'p' : 'a';
+  h = h % 12 || 12;
+  return `${h}:${min}${sfx}`;
+}
+
+function parseLosAngelesMinutes(iso) {
+  const parts = laFmt.formatToParts(new Date(iso));
+  const h = parts.find(p => p.type === 'hour');
+  const min = parts.find(p => p.type === 'minute');
+  const ap = parts.find(p => p.type === 'dayPeriod');
+  if (!h || !min || !ap) return null;
+  let hrs = Number(h.value) % 12;
+  if (ap.value === 'PM') hrs += 12;
+  return hrs * 60 + Number(min.value);
+}
+
+function getLAMinutesNow() {
+  return parseLosAngelesMinutes(new Date().toISOString());
+}
+
+function signedMinuteDelta(actual, scheduled) {
+  let d = actual - scheduled;
+  if (d > 720) d -= 1440;
+  else if (d < -720) d += 1440;
+  return d;
+}
+
+/* ─── Scheduled lookup ─── */
+const scheduledLookup = (() => {
+  const lk = {};
+  scheduleSections.forEach((sec, si) => {
+    const dk = si < 2 ? 'northbound' : 'southbound';
+    lk[dk] = lk[dk] || {};
+    sec.rows.forEach(row => {
+      lk[dk][row.station] = lk[dk][row.station] || {};
+      row.times.forEach((t, i) => {
+        lk[dk][row.station][sec.columns[i].train] = parseScheduledMinutes(t);
+      });
+    });
+  });
+  return lk;
+})();
+
+/* ─── Render ─── */
+function renderCell(time, column, stopRef, directionKey, station, colIdx) {
+  if (!time) return `<td class="sc" data-col="${colIdx}"><div class="sc-inner"><span class="sched-t">—</span></div></td>`;
+  const isPm = time.includes('p');
+  return `<td class="sc${isPm ? ' pm' : ''}" data-col="${colIdx}" data-scheduled="${time}" data-train="${column.train}" data-stop-ref="${stopRef}" data-direction-key="${directionKey}" data-station="${station}"><div class="sc-inner"><span class="sched-t">${time}m</span><span class="actual-t empty"> </span></div></td>`;
+}
+
+function renderTable(section, sectionIndex) {
+  const dk = sectionIndex < 2 ? 'northbound' : 'southbound';
+  const headerCells = section.columns.map((col, ci) =>
+    `<th data-col="${ci}">${col.train}<span class="badge b${col.kind[0]}">${col.kind}</span></th>`
+  ).join('');
+  const bodyRows = section.rows.map(row => {
+    const stopRef = STOP_POINT_REFS[dk]?.[row.station];
+    const cells = row.times.map((t, ci) => renderCell(t, section.columns[ci], stopRef, dk, row.station, ci)).join('');
+    return `<tr><td class="stn">${row.station}</td>${cells}</tr>`;
+  }).join('');
+  return `
+    <div class="tbl-wrap">
+      <table class="sched-tbl" data-direction="${dk}">
+        <thead><tr><th class="stn">STATION</th>${headerCells}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>`;
+}
+
+function buildScheduleHTML() {
+  let html = '';
+  scheduleSections.forEach((sec, si) => {
+    if (sec.dividerBefore) html += '<hr class="section-divider">';
+    const topMargin = sec.topMargin ? ' section-gap' : '';
+    const dirHTML = sec.direction
+      ? `<div class="dir-header${topMargin}"><div class="dir-pill">${sec.direction}</div><div class="dir-line"></div></div>`
+      : `<div style="height:${sec.topMargin ? '12px' : '0'}"></div>`;
+    html += `<div class="section-wrap">${dirHTML}${renderTable(sec, si)}</div>`;
+  });
+  return html;
+}
+
+document.getElementById('schedule-root').innerHTML = buildScheduleHTML();
+
+/* ─── Live clock ─── */
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function updateClock() {
+  const now = new Date();
+  const parts = laFmt.formatToParts(now);
+  const h = parts.find(p => p.type === 'hour')?.value || '--';
+  const m = parts.find(p => p.type === 'minute')?.value || '--';
+  const ap = parts.find(p => p.type === 'dayPeriod')?.value || '';
+  document.getElementById('live-clock').innerHTML = `${h}:${m}<span class="ap">${ap}</span>`;
+
+  const dayStr = laDayFmt.format(now);
+  document.getElementById('clock-day').textContent = dayStr;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ─── Next-train highlighting ─── */
+function highlightNextTrains() {
+  // Clear existing highlights
+  document.querySelectorAll('.next-col').forEach(el => el.classList.remove('next-col'));
+
+  const nowMins = getLAMinutesNow();
+  if (nowMins == null) return;
+
+  document.querySelectorAll('.sched-tbl').forEach(table => {
+    const dk = table.dataset.direction;
+    // Departure station: Cal Ave for NB, SF for SB
+    const departStn = dk === 'northbound' ? 'California Ave' : 'San Francisco';
+
+    // Find departure row cells
+    const departCells = Array.from(table.querySelectorAll(`.sc[data-station="${departStn}"]`));
+    if (!departCells.length) return;
+
+    // Find index of next upcoming train (allowing 3-min buffer to show "just departed")
+    let nextIdx = departCells.findIndex(cell => {
+      const mins = parseScheduledMinutes(cell.dataset.scheduled || '');
+      return mins != null && mins >= nowMins - 3;
+    });
+
+    if (nextIdx === -1) return;
+
+    const colIdx = departCells[nextIdx].dataset.col;
+
+    // Highlight all cells + header in this column
+    table.querySelectorAll(`[data-col="${colIdx}"]`).forEach(el => {
+      if (!el.classList.contains('stn')) el.classList.add('next-col');
+    });
+    const headerCell = table.querySelector(`thead th[data-col="${colIdx}"]`);
+    if (headerCell) headerCell.classList.add('next-col');
+  });
+}
+
+highlightNextTrains();
+setInterval(highlightNextTrains, 30000);
+
+/* ─── Live arrivals ─── */
+function getSectionDelta(liveTripMap, tripId, dk, station) {
+  const pair = dk === 'northbound'
+    ? ['California Ave', 'San Francisco']
+    : ['San Francisco', 'California Ave'];
+  for (const ps of pair) {
+    if (ps === station) continue;
+    const pRef = STOP_POINT_REFS[dk]?.[ps];
+    const pActual = liveTripMap[tripId]?.[pRef];
+    const pSched = scheduledLookup[dk]?.[ps]?.[tripId];
+    if (pActual == null || pSched == null) continue;
+    return signedMinuteDelta(pActual, pSched);
+  }
+  return null;
+}
+
+function updateArrivalCells(liveTripMap) {
+  document.querySelectorAll('.sc[data-scheduled]').forEach(cell => {
+    const { train, stopRef, directionKey, station, scheduled } = cell.dataset;
+    const actualSpan = cell.querySelector('.actual-t');
+    if (!actualSpan) return;
+
+    const schedMins = parseScheduledMinutes(scheduled || '');
+    const directActual = liveTripMap[train]?.[stopRef];
+    const delta = directActual == null || schedMins == null
+      ? getSectionDelta(liveTripMap, train, directionKey, station)
+      : signedMinuteDelta(directActual, schedMins);
+
+    if (delta == null) {
+      actualSpan.textContent = ' '; actualSpan.className = 'actual-t empty'; return;
+    }
+    if (delta === 0) {
+      actualSpan.textContent = ' '; actualSpan.className = 'actual-t same'; return;
+    }
+    const actualMins = normalizeMinutes((schedMins ?? 0) + delta);
+    actualSpan.textContent = formatMinutesToTime(actualMins);
+    actualSpan.className = `actual-t ${delta < 0 ? 'early' : 'late'}`;
+  });
+}
+
+function setRefreshing(busy) {
+  const btn = document.getElementById('refresh-btn');
+  if (!btn) return;
+  btn.disabled = busy;
+  if (busy) btn.classList.add('spinning');
+  else btn.classList.remove('spinning');
+}
+
+function setLastUpdated(date) {
+  const el = document.getElementById('last-updated');
+  if (!el) return;
+  if (!date) {
+    el.innerHTML = '<span class="status-dot err"></span>Update failed';
+    return;
+  }
+  const t = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  el.innerHTML = `<span class="status-dot"></span>Last updated ${t}`;
+}
+
+async function refreshLiveArrivals() {
+  setRefreshing(true);
+  try {
+    const res = await fetch('https://api.511.org/transit/TripUpdates?api_key=6f0e48a8-88c8-4f51-ad6c-2da2ff99148f&agency=CT&format=json');
+    const raw = await res.text();
+    const data = JSON.parse(raw.trim().replace(/^\uFEFF/, ''));
+    const updates = data?.Entities || [];
+    const live = {};
+
+    for (const entity of updates) {
+      const tripId = entity?.TripUpdate?.Trip?.TripId;
+      if (!tripId) continue;
+      live[tripId] = live[tripId] || {};
+      for (const upd of (entity?.TripUpdate?.StopTimeUpdates || [])) {
+        const ref = upd?.StopId;
+        const arrTime = upd?.Arrival?.Time || upd?.Departure?.Time;
+        if (!ref || !arrTime) continue;
+        const mins = parseLosAngelesMinutes(new Date(arrTime * 1000).toISOString());
+        if (mins == null) continue;
+        const ex = live[tripId][ref];
+        if (ex == null || mins < ex) live[tripId][ref] = mins;
+      }
+    }
+
+    updateArrivalCells(live);
+    setLastUpdated(new Date());
+  } catch (e) {
+    console.error('Caltrain live fetch error', e);
+    updateArrivalCells({});
+    setLastUpdated(null);
+  } finally {
+    setRefreshing(false);
+    highlightNextTrains();
+  }
+}
+
+refreshLiveArrivals();
+setInterval(refreshLiveArrivals, 60000);
+</script>
+</body>
+</html>

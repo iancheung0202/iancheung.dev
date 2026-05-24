@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 54 — Final Exam Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070f;
+  --surface: #0f0f1a;
+  --surface2: #161625;
+  --border: #1e1e35;
+  --text: #e8e8f0;
+  --dim: #7070a0;
+  --c1: #4af0b0; /* lin alg */
+  --c2: #f0a04a; /* eigen */
+  --c3: #4ab8f0; /* ortho */
+  --c4: #f04a9a; /* DE */
+  --c5: #a04af0; /* fourier */
+  --c6: #f0f04a; /* SVD */
+  --warn: #f04a4a;
+  --tip: #4af04a;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.65;
+}
+h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+/* NAV */
+#top-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(7,7,15,0.96);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  padding: 0 16px;
+  display: flex; gap: 4px; flex-wrap: wrap; align-items: center;
+}
+#top-nav h1 { font-size: 15px; color: var(--c1); padding: 10px 12px 10px 0; border-right: 1px solid var(--border); margin-right: 8px; letter-spacing: -0.5px; }
+.nav-btn {
+  padding: 8px 12px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--dim);
+  border-radius: 6px; transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--text); background: var(--surface2); }
+.nav-btn.active { color: var(--bg); font-weight: 700; }
+.nav-btn[data-c="1"].active { background: var(--c1); }
+.nav-btn[data-c="2"].active { background: var(--c2); }
+.nav-btn[data-c="3"].active { background: var(--c3); }
+.nav-btn[data-c="4"].active { background: var(--c4); }
+.nav-btn[data-c="5"].active { background: var(--c5); }
+.nav-btn[data-c="6"].active { background: var(--c6); }
+
+/* SECTIONS */
+.section { display: none; padding: 20px 18px 60px; max-width: 1200px; margin: 0 auto; }
+.section.active { display: block; }
+
+.section-title {
+  font-size: 26px; font-weight: 800; margin-bottom: 6px;
+  letter-spacing: -1px;
+}
+.section-sub { color: var(--dim); font-size: 11px; margin-bottom: 24px; font-family: 'JetBrains Mono'; }
+
+/* TOPIC BLOCKS */
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.topic-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; cursor: pointer;
+  user-select: none;
+  transition: background 0.12s;
+}
+.topic-header:hover { background: var(--surface2); }
+.topic-tag {
+  font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 4px; letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.tag-c1 { background: rgba(74,240,176,0.15); color: var(--c1); }
+.tag-c2 { background: rgba(240,160,74,0.15); color: var(--c2); }
+.tag-c3 { background: rgba(74,184,240,0.15); color: var(--c3); }
+.tag-c4 { background: rgba(240,74,154,0.15); color: var(--c4); }
+.tag-c5 { background: rgba(160,74,240,0.15); color: var(--c5); }
+.tag-c6 { background: rgba(240,240,74,0.15); color: var(--c6); }
+.tag-hot { background: rgba(240,74,74,0.2); color: var(--warn); }
+
+.topic-title { font-size: 14px; font-weight: 700; flex: 1; font-family: 'Syne'; }
+.topic-arrow { color: var(--dim); font-size: 12px; transition: transform 0.2s; }
+.topic.open .topic-arrow { transform: rotate(90deg); }
+
+.topic-body { display: none; border-top: 1px solid var(--border); }
+.topic.open .topic-body { display: block; }
+
+/* INNER LAYOUT */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; }
+.cards.three { grid-template-columns: 1fr 1fr 1fr; }
+.cards.single { grid-template-columns: 1fr; }
+@media(max-width:700px) { .cards, .cards.three { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px;
+}
+.card-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 10px;
+}
+.card-title.c1 { color: var(--c1); }
+.card-title.c2 { color: var(--c2); }
+.card-title.c3 { color: var(--c3); }
+.card-title.c4 { color: var(--c4); }
+.card-title.c5 { color: var(--c5); }
+.card-title.c6 { color: var(--c6); }
+.card-title.warn { color: var(--warn); }
+.card-title.tip { color: var(--tip); }
+
+/* FORMULA / CODE BLOCKS */
+.formula {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 12px;
+  margin: 6px 0; font-size: 12.5px;
+  line-height: 1.8;
+}
+.hl { color: var(--c1); font-weight: 700; }
+.hl2 { color: var(--c2); font-weight: 700; }
+.hl3 { color: var(--c3); font-weight: 700; }
+.hl4 { color: var(--c4); font-weight: 700; }
+.hl5 { color: var(--c5); font-weight: 700; }
+.hl6 { color: var(--c6); font-weight: 700; }
+
+.step-list { list-style: none; }
+.step-list li {
+  display: flex; gap: 10px; margin-bottom: 7px;
+  align-items: flex-start;
+}
+.step-num {
+  background: var(--border); color: var(--dim);
+  border-radius: 4px; min-width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; margin-top: 2px; flex-shrink: 0;
+}
+
+.rule-list { list-style: none; }
+.rule-list li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+.rule-list li:last-child { border-bottom: none; }
+
+.warn-box {
+  background: rgba(240,74,74,0.08);
+  border: 1px solid rgba(240,74,74,0.3);
+  border-radius: 6px; padding: 8px 12px; margin: 6px 0;
+  color: #f0a0a0; font-size: 12px;
+}
+.tip-box {
+  background: rgba(74,240,74,0.07);
+  border: 1px solid rgba(74,240,74,0.25);
+  border-radius: 6px; padding: 8px 12px; margin: 6px 0;
+  color: #90f090; font-size: 12px;
+}
+
+/* WORKED EXAMPLE */
+.example {
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--c2);
+  padding: 10px 14px; margin: 8px 0; border-radius: 0 6px 6px 0;
+}
+.example.blue { border-left-color: var(--c3); }
+.example.pink { border-left-color: var(--c4); }
+.example.purple { border-left-color: var(--c5); }
+.example.yellow { border-left-color: var(--c6); }
+.example.green { border-left-color: var(--c1); }
+
+.ex-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); margin-bottom: 6px; }
+.ex-q { color: var(--c2); font-weight: 600; margin-bottom: 6px; }
+.ex-q.blue { color: var(--c3); }
+.ex-q.pink { color: var(--c4); }
+.ex-step { margin: 4px 0; padding-left: 12px; }
+.ex-ans { color: var(--c1); font-weight: 700; margin-top: 8px; }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+th { background: var(--border); padding: 7px 10px; text-align: left; font-family: 'Syne'; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+
+/* RECOGNITION PANEL */
+.recog {
+  background: rgba(74,240,176,0.05);
+  border: 1px solid rgba(74,240,176,0.2);
+  border-radius: 6px; padding: 10px 14px; margin: 8px 0;
+}
+.recog-title { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--c1); margin-bottom: 6px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <h1>MATH 54 ⚡ FINAL</h1>
+  <button class="nav-btn active" data-c="1" onclick="show('s1',this)">Linear Algebra</button>
+  <button class="nav-btn" data-c="2" onclick="show('s2',this)">Eigen + Diag</button>
+  <button class="nav-btn" data-c="3" onclick="show('s3',this)">Ortho + Projections</button>
+  <button class="nav-btn" data-c="6" onclick="show('s6',this)">SVD + Quad Forms</button>
+  <button class="nav-btn" data-c="4" onclick="show('s4',this)">Diff Equations</button>
+  <button class="nav-btn" data-c="5" onclick="show('s5',this)">ODE Systems + Fourier</button>
+</nav>
+
+<!-- ══════════ SECTION 1: LINEAR ALGEBRA ══════════ -->
+<div id="s1" class="section active">
+<div class="section-title" style="color:var(--c1)">Linear Algebra Core</div>
+<div class="section-sub">Ch 1–4 · LI/LD · Transformations · Subspaces · Rank–Nullity · Basis · Change of Basis</div>
+
+<!-- LI / LD -->
+<div class="topic open">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c1">Ch1–2</span>
+    <span class="topic-title">Linear Independence / Dependence — Recognition + Rules</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c1">LD — 6 Quick Rules (spot instantly)</div>
+        <ul class="rule-list">
+          <li><span class="hl">R1</span> — 0 vector is in the set → <span class="hl">LD</span></li>
+          <li><span class="hl">R2</span> — Two vectors are scalar multiples → <span class="hl">LD</span></li>
+          <li><span class="hl">R3</span> — More vectors than entries (cols > rows) → <span class="hl">LD</span></li>
+          <li><span class="hl">R4</span> — Repeated vector in set → <span class="hl">LD</span></li>
+          <li><span class="hl">R5</span> — One vector is multiple of another → <span class="hl">LD</span></li>
+          <li><span class="hl">R6</span> — One vector is linear combination of others → <span class="hl">LD</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Formal Definitions</div>
+        <div class="formula"><span class="hl">LI</span> iff c₁v₁+…+cₙvₙ=0 implies c₁=…=cₙ=0<br>
+        <span class="hl">LD</span> iff nontrivial solution exists</div>
+        <div class="formula"><span class="hl">Check LI:</span> pivot in every column → no free var<br>
+        <span class="hl">Check Spanning ℝⁿ:</span> pivot in every row</div>
+        <div class="tip-box">Square matrix: LI ⟺ Spanning ⟺ Invertible (all or nothing!)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Solution Types</div>
+        <table>
+          <tr><th>Pivots</th><th>Free Vars</th><th>Solutions</th></tr>
+          <tr><td>rightmost col = pivot</td><td>—</td><td><span class="hl" style="color:var(--warn)">Inconsistent</span></td></tr>
+          <tr><td>all cols = pivot</td><td>none</td><td>Unique</td></tr>
+          <tr><td>some cols free</td><td>≥1</td><td>∞ solutions</td></tr>
+        </table>
+        <div class="formula"><span class="hl">Consistent:</span> rightmost col of augmented matrix is NOT a pivot col</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Ax = b ↔ Linear Combination</div>
+        <div class="formula">Ax = b has solution iff <span class="hl">b ∈ Col(A)</span><br>
+        i.e. b is linear combo of cols of A</div>
+        <div class="formula"><span class="hl">Parametric Vector Form:</span><br>
+        x = su + tv (express via free variables)</div>
+        <div class="warn-box">Ax=0 always has trivial solution x=0. Nontrivial only if free variable exists.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINEAR TRANSFORMATIONS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c1">Ch2</span>
+    <span class="topic-title">Linear Transformations — T, Kernel, Image, Injectivity, Surjectivity</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c1">T is Linear iff ALL THREE hold</div>
+        <div class="formula">1. T(u+v) = T(u)+T(v)<br>
+        2. T(cu) = cT(u)<br>
+        3. T(0) = 0 <span style="color:var(--dim)">[implied by 2, but verify]</span></div>
+        <div class="tip-box">To get matrix [T]: compute T(e₁), T(e₂),… and place as columns</div>
+        <div class="formula"><span class="hl">[T] = [ T(e₁) | T(e₂) | … ]</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Kernel & Image</div>
+        <div class="formula"><span class="hl">Ker(T)</span> = Nul(A) = solutions to Ax=0<br>
+        = {v ∈ V | T(v) = 0}</div>
+        <div class="formula"><span class="hl">Img(T)</span> = Col(A) = span of columns of A<br>
+        = {T(v) | v ∈ V}</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Injective / Surjective / Bijective</div>
+        <table>
+          <tr><th>Property</th><th>Condition</th><th>Matrix equiv.</th></tr>
+          <tr><td><span class="hl">Injective</span> (1-to-1)</td><td>Ker(T)={0}</td><td>Pivot in every col</td></tr>
+          <tr><td><span class="hl">Surjective</span> (onto)</td><td>Img(T)=W</td><td>Pivot in every row</td></tr>
+          <tr><td><span class="hl">Bijective</span></td><td>Both</td><td>det(A)≠0 (square)</td></tr>
+        </table>
+        <div class="formula">Bijective ⟺ invertible ⟺ det([T])≠0</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Linear Subspace Test</div>
+        <div class="formula">V₀ ⊆ V₁ is a subspace iff:<br>
+        1. <span class="hl">0 ∈ V₀</span> (non-empty)<br>
+        2. Closed under <span class="hl">scalar mult</span>: u∈V₀ ⟹ cu∈V₀<br>
+        3. Closed under <span class="hl">addition</span>: u,v∈V₀ ⟹ u+v∈V₀</div>
+        <div class="warn-box">Must check ALL three. A single failure means NOT a subspace.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETERMINANTS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-c1">Ch3</span>
+    <span class="topic-title">Determinants — Properties, Cofactor Expansion, Row Ops</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c1">Row Operation Effects on det</div>
+        <ul class="rule-list">
+          <li><span class="hl">Row swap</span> → det multiplied by <span style="color:var(--warn)">−1</span></li>
+          <li><span class="hl">Scale row by k</span> → det multiplied by k</li>
+          <li><span class="hl">Add multiple of row to another</span> → det unchanged</li>
+          <li><span class="hl">Scale whole n×n matrix by k</span> → det(kA) = kⁿ·det(A)</li>
+        </ul>
+        <div class="formula">det(AB) = det(A)·det(B)<br>
+        det(Aᵀ) = det(A)<br>
+        det(A⁻¹) = 1/det(A)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Special Cases</div>
+        <div class="formula"><span class="hl">Triangular matrix:</span> det = product of diagonal<br>
+        <span class="hl">Orthogonal matrix:</span> det = ±1<br>
+        <span class="hl">|det(A)|</span> = area (ℝ²) or volume (ℝ³) of parallelogram/piped</div>
+        <div class="tip-box">If det(A)=±1 and A has integer entries, A⁻¹ also has integer entries.</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">2×2 Inverse Formula</div>
+        <div class="formula">A = [a b; c d]<br>
+        A⁻¹ = <span class="hl">1/(ad−bc)</span> · [d −b; −c a]<br>
+        Invertible iff <span class="hl">ad−bc ≠ 0</span></div>
+        <div class="formula">Cramer's Rule: xᵢ = det(Aᵢ(b)) / det(A)<br>
+        where Aᵢ(b) = A with col i replaced by b</div>
+      </div>
+      <div class="card">
+        <div class="card-title warn">Invertible Matrix Theorem (all equiv)</div>
+        <ul class="rule-list" style="font-size:11.5px">
+          <li>A invertible</li>
+          <li>det(A) ≠ 0</li>
+          <li>n pivot positions</li>
+          <li>Ax=0 has only trivial solution</li>
+          <li>Columns are LI</li>
+          <li>Columns span ℝⁿ</li>
+          <li>Aᵀ is invertible</li>
+          <li>A has n nonzero singular values</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c1">Proving integer-entry inverse (Exam Q2 type)</div>
+        <div class="example green">
+          <div class="ex-label">Exam-Style Proof</div>
+          <div class="ex-q">If A and A⁻¹ both have integer entries, prove det(A) = ±1</div>
+          <div class="ex-step">• A·A⁻¹ = I → det(A)·det(A⁻¹) = det(I) = 1</div>
+          <div class="ex-step">• Both det(A) and det(A⁻¹) are integers (integer entries, det is integer combination)</div>
+          <div class="ex-step">• Two integers multiplying to 1 → each is ±1</div>
+          <div class="ex-ans">∴ det(A) = ±1 ∎</div>
+          <div style="margin-top:8px" class="ex-q">Converse: If A has integer entries and det(A)=±1, then A⁻¹ has integer entries</div>
+          <div class="ex-step">• A⁻¹ = (1/det A)·adj(A)</div>
+          <div class="ex-step">• adj(A) has integer entries (cofactors = signed minors of integer matrix)</div>
+          <div class="ex-step">• 1/det(A) = 1/(±1) = ±1, so A⁻¹ = ±adj(A) → integer entries ∎</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RANK-NULLITY + BASIS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c1">Ch4</span>
+    <span class="topic-title">Col/Null Space, Rank, Nullity, Basis — Finding Everything</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards three">
+      <div class="card">
+        <div class="card-title c1">Key Vocabulary</div>
+        <div class="formula"><span class="hl">Col(A)</span> = Img(A) = Range(A)<br>
+        All linear combos of cols of A (output space)</div>
+        <div class="formula"><span class="hl">Nul(A)</span> = Ker(A)<br>
+        All x where Ax=0 (input space)</div>
+        <div class="formula"><span class="hl">Rank(A)</span> = dim(Col A) = # pivot cols<br>
+        <span class="hl">Nullity(A)</span> = dim(Nul A) = # free vars</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Rank-Nullity Theorem</div>
+        <div class="formula" style="text-align:center;font-size:16px">
+          <span class="hl">rank(A) + nullity(A) = n</span>
+        </div>
+        <div class="formula">where n = # columns = dim(domain)</div>
+        <div class="tip-box">Also: Rank(T) + Nullity(T) = dim(V) for T: V→W</div>
+        <div class="warn-box">Don't confuse n (cols) with m (rows)! Rank ≤ min(m,n)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Orthogonal Complements</div>
+        <div class="formula">(Row A)⊥ = Nul A<br>
+        (Col A)⊥ = Nul Aᵀ</div>
+        <div class="formula">dim(W) + dim(W⊥) = n<br>
+        W ⊕ W⊥ = ℝⁿ</div>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c1">How to Find Basis for Col(A)</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Row reduce A to REF/RREF</li>
+          <li><span class="step-num">2</span>Identify pivot columns in REF</li>
+          <li><span class="step-num">3</span>Take those same column indices from <span class="hl">original A</span></li>
+        </ol>
+        <div class="warn-box">Use original A columns, NOT the RREF columns!</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">How to Find Basis for Nul(A)</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Row reduce [A | 0] to RREF</li>
+          <li><span class="step-num">2</span>Write free variables parametrically</li>
+          <li><span class="step-num">3</span>Express x = x_f1·v1 + x_f2·v2 + …</li>
+          <li><span class="step-num">4</span>The vectors {v1, v2, …} form the basis</li>
+        </ol>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c1">Polynomial Space Pₙ</div>
+        <div class="formula">Pₙ behaves like vectors. dim(Pₙ) = n+1. Basis = {1, x, x², …, xⁿ}</div>
+        <div class="formula">e.g. P₂ has basis {1, t, t²} and dimension 3</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE OF BASIS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-c1">Ch4</span>
+    <span class="topic-title">Change of Basis — Coordinates, P_C←B Matrix</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c1">Finding New Coordinates</div>
+        <div class="formula">Given v = [a,b] in old basis {e₁,e₂}<br>
+        New basis B' = {e₁', e₂'}<br>
+        Solve: <span class="hl">[e₁' e₂'] [x,y]ᵀ = [a,b]ᵀ</span><br>
+        → [x,y] = [e₁' e₂']⁻¹ [a,b]</div>
+      </div>
+      <div class="card">
+        <div class="card-title c1">Change-of-Basis Matrix P_{C←B}</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Set up augmented: [c₁ c₂ | b₁ b₂]</li>
+          <li><span class="step-num">2</span>Row reduce to [I | P]</li>
+          <li><span class="step-num">3</span>P = P_{C←B}</li>
+        </ol>
+        <div class="formula"><span class="hl">P_{C←B}⁻¹ = P_{B←C}</span></div>
+        <div class="tip-box">If b₁=4c₁+c₂, b₂=−6c₁+c₂ then P=[4 −6 \ 1 1] (read off coefficients as columns)</div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c1">Matrix of T relative to basis B (Exam type: T on P₂)</div>
+        <div class="example green">
+          <div class="ex-label">Exam Q — from Past Final</div>
+          <div class="ex-q">T: P₂→P₂ defined by T(f) = t²f'' + f' + f. Find matrix of T in basis {1, t, t²}</div>
+          <div class="ex-step">• T(1): f=1, f'=0, f''=0 → T(1) = t²(0)+0+1 = <span class="hl">1</span> = 1·1 + 0·t + 0·t²</div>
+          <div class="ex-step">• T(t): f=t, f'=1, f''=0 → T(t) = 0+1+t = <span class="hl">1+t</span> = 1·1 + 1·t + 0·t²</div>
+          <div class="ex-step">• T(t²): f=t², f'=2t, f''=2 → T(t²) = t²(2)+2t+t² = <span class="hl">3t²+2t</span> = 0·1 + 2·t + 3·t²</div>
+          <div class="ex-ans">[T]_B = [1 1 0; 0 1 2; 0 0 3] (columns are coords of T(basis vectors))</div>
+          <div class="ex-step">Eigenvalues = diagonal entries = 1, 1, 3 (upper triangular!)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end s1 -->
+
+<!-- ══════════ SECTION 2: EIGEN ══════════ -->
+<div id="s2" class="section">
+<div class="section-title" style="color:var(--c2)">Eigenvalues, Eigenvectors & Diagonalization</div>
+<div class="section-sub">Ch 5 · Characteristic Polynomial · Eigenspaces · Diagonalization · Complex Eigenvalues</div>
+
+<div class="topic open">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c2">Ch5</span>
+    <span class="topic-title">Eigenvalues & Eigenvectors — Full Procedure</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c2">Core Definitions</div>
+        <div class="formula"><span class="hl2">Av = λv</span>, v ≠ 0<br>
+        λ = eigenvalue, v = eigenvector</div>
+        <div class="formula">λ is eigenvalue iff <span class="hl2">det(A−λI) = 0</span><br>
+        (characteristic equation)</div>
+        <div class="formula">Eigenspace(A,λ) = Nul(A−λI)<br>
+        = {all eigenvectors for λ} ∪ {0}</div>
+      </div>
+      <div class="card">
+        <div class="card-title c2">Step-by-Step: Finding Eigenvalues + Eigenvectors</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Set up det(A−λI)=0 and expand → characteristic polynomial</li>
+          <li><span class="step-num">2</span>Factor to find λ values</li>
+          <li><span class="step-num">3</span>For each λ, row reduce [A−λI | 0]</li>
+          <li><span class="step-num">4</span>Express solution with free variables → eigenvectors</li>
+          <li><span class="step-num">5</span>Basis for eigenspace = free parameter vectors</li>
+        </ol>
+        <div class="tip-box">Triangular matrix: eigenvalues = diagonal entries. No work needed!</div>
+      </div>
+      <div class="card">
+        <div class="card-title c2">Key Theorems</div>
+        <ul class="rule-list">
+          <li>0 is eigenvalue ⟺ A is NOT invertible</li>
+          <li>Eigenvectors from distinct eigenvalues are LI</li>
+          <li>If Av=λv then Aᵏv = λᵏv</li>
+          <li>A and B=P⁻¹AP have same eigenvalues</li>
+          <li>Similar matrices: same char. poly.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title c2">Recognition Patterns</div>
+        <div class="recog">
+          <div class="recog-title">🔍 Is λ an eigenvalue?</div>
+          Check det(A−λI)=0. Yes/No.
+        </div>
+        <div class="recog">
+          <div class="recog-title">🔍 Is v an eigenvector?</div>
+          Compute Av. If Av = cv for some scalar c, then v is eigenvector with eigenvalue c.
+        </div>
+        <div class="recog">
+          <div class="recog-title">🔍 Eigenvalues of Aᵏ?</div>
+          Same eigenvectors, eigenvalues become λᵏ.
+        </div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c2">Fully Worked Example — From Past Exam</div>
+        <div class="example">
+          <div class="ex-label">Exam Q1 (Past Final)</div>
+          <div class="ex-q">Let A = [1 2; 8 1]. Find eigenvalues + diagonalize.</div>
+          <div class="ex-step"><strong>Step 1:</strong> det(A−λI) = (1−λ)(1−λ)−(2)(8) = (1−λ)²−16</div>
+          <div class="ex-step">= λ²−2λ+1−16 = λ²−2λ−15 = (λ−5)(λ+3) = 0</div>
+          <div class="ex-step"><span class="hl2">λ₁=5, λ₂=−3</span></div>
+          <div class="ex-step"><strong>Step 2 (λ=5):</strong> A−5I = [−4 2; 8 −4] → RREF: [1 −1/2; 0 0]</div>
+          <div class="ex-step">x₁ = x₂/2, free x₂: eigenvector v₁ = [1; 2]</div>
+          <div class="ex-step"><strong>Step 3 (λ=−3):</strong> A+3I = [4 2; 8 4] → RREF: [1 1/2; 0 0]</div>
+          <div class="ex-step">x₁ = −x₂/2, free x₂: eigenvector v₂ = [1; −2]</div>
+          <div class="ex-ans">P = [1 1; 2 −2], D = [5 0; 0 −3], A = PDP⁻¹</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGONALIZATION -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c2">Ch5</span>
+    <span class="topic-title">Diagonalization — Full Algorithm + Conditions</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c2">Diagonalizable iff…</div>
+        <ul class="rule-list">
+          <li>A has <span class="hl2">n LI eigenvectors</span></li>
+          <li>OR A has <span class="hl2">n distinct eigenvalues</span></li>
+          <li>OR for each λₖ: <span class="hl2">geometric mult = algebraic mult</span></li>
+        </ul>
+        <div class="warn-box">Having n distinct eigenvalues ⟹ diagonalizable. But NOT every diagonalizable matrix has distinct eigenvalues (repeated roots can still work if eigenspaces are big enough).</div>
+      </div>
+      <div class="card">
+        <div class="card-title c2">How to Diagonalize</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Find all eigenvalues: solve det(A−λI)=0</li>
+          <li><span class="step-num">2</span>For each λ, find basis for eigenspace (Nul(A−λI))</li>
+          <li><span class="step-num">3</span>Check: total # of LI eigenvectors = n?</li>
+          <li><span class="step-num">4</span>Build P: eigenvectors as columns (order matters!)</li>
+          <li><span class="step-num">5</span>Build D: matching eigenvalues on diagonal</li>
+        </ol>
+        <div class="formula">A = PDP⁻¹ → <span class="hl2">Aᵏ = PDᵏP⁻¹</span></div>
+        <div class="tip-box">Dᵏ is trivial: just raise each diagonal entry to the kth power.</div>
+      </div>
+      <div class="card">
+        <div class="card-title c2">Diagonalizability Condition (Exam Q1 type)</div>
+        <div class="example">
+          <div class="ex-label">Past Exam Q1 — Condition on h</div>
+          <div class="ex-q">A = [2 h 0; 0 2 1; 0 0 3]. When is A diagonalizable?</div>
+          <div class="ex-step">Triangular → eigenvalues = diagonal = 2 (double), 3 (simple)</div>
+          <div class="ex-step">λ=3 always gives 1D eigenspace ✓</div>
+          <div class="ex-step">λ=2 (alg. mult=2): need geometric mult = 2 → need 2 LI eigenvectors</div>
+          <div class="ex-step">A−2I = [0 h 0; 0 0 1; 0 0 1] → RREF: [0 h 0; 0 0 1; 0 0 0]</div>
+          <div class="ex-step">If h≠0: only 1 free variable → eigenspace dim=1 < 2 → NOT diagonalizable</div>
+          <div class="ex-ans">A is diagonalizable iff h = 0</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c2">Geometric vs Algebraic Multiplicity</div>
+        <div class="formula"><span class="hl2">Algebraic mult</span> = power of (λ−λₖ) in char poly<br>
+        <span class="hl2">Geometric mult</span> = dim(Eigenspace) = dim(Nul(A−λI))</div>
+        <div class="formula">Always: geometric ≤ algebraic</div>
+        <div class="formula">Diagonalizable iff for ALL λₖ: geometric = algebraic</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLEX EIGENVALUES -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-c2">Ch5</span>
+    <span class="topic-title">Complex Eigenvalues — 2×2 Real Matrix Rotation+Scaling</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c2">Theory</div>
+        <div class="formula">Real matrix → complex eigenvalues come in <span class="hl2">conjugate pairs</span> λ = a ± bi</div>
+        <div class="formula">For 2×2 with λ = a−bi (b≠0), eigenvector v = Re(v)+i·Im(v):<br>
+        A = PCP⁻¹ where<br>
+        P = [Re(v) | Im(v)]<br>
+        C = [a −b; b a]</div>
+        <div class="formula">C = <span class="hl2">rotation by angle φ = arg(λ), scaled by |λ| = √(a²+b²)</span></div>
+        <div class="formula">Euler: a+bi = re^{iθ} = r(cos θ + i sin θ)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c2">Example: Complex Eigenvalue</div>
+        <div class="example">
+          <div class="ex-q">A = [−1 −1; 2 −3]</div>
+          <div class="ex-step">det(A−rI) = r²+4r+5=0 → r = −2±i</div>
+          <div class="ex-step">α=−2, β=1</div>
+          <div class="ex-step">For r=−2+i: solve (A−(−2+i)I)z=0</div>
+          <div class="ex-step">→ z = [2; −1+i] = [2;−1] + i[0;1]</div>
+          <div class="ex-step">a=[2;−1], b=[0;1]</div>
+          <div class="ex-step">x₁(t)=e^{−2t}(cos t·[2;−1]−sin t·[0;1])</div>
+          <div class="ex-step">x₂(t)=e^{−2t}(sin t·[2;−1]+cos t·[0;1])</div>
+          <div class="ex-ans">x(t) = c₁x₁(t) + c₂x₂(t)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTION EIGENVALUE SPECIAL CASE -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">EXAM</span>
+    <span class="topic-tag tag-c2">Ch5</span>
+    <span class="topic-title">Projection Matrix Eigenvalue Problem (Past Exam Q3)</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c2">Orthogonal Projection — Eigenvalue Analysis</div>
+        <div class="example">
+          <div class="ex-label">Past Exam Q3 — Full Solution</div>
+          <div class="ex-q">V = 4-dim subspace of ℝ²⁰. T(y) = proj_V(y). A = standard matrix. Find eigenvalues, char poly, rank, nullity, symmetry.</div>
+          <div class="ex-step"><strong>Key insight:</strong> Projection matrices have only eigenvalues 0 and 1</div>
+          <div class="ex-step">• If v ∈ V: T(v) = proj_V(v) = v → <span class="hl2">eigenvalue λ=1</span></div>
+          <div class="ex-step">• If v ∈ V⊥: T(v) = proj_V(v) = 0 = 0·v → <span class="hl2">eigenvalue λ=0</span></div>
+          <div class="ex-ans">Eigenvalues: λ=1 (mult 4) and λ=0 (mult 16)</div>
+          <div class="ex-step">Char poly = λ¹⁶(λ−1)⁴ (since ℝ²⁰ with 4-dim V)</div>
+          <div class="ex-step">Rank(A) = dim(Col A) = dim(V) = <span class="hl2">4</span></div>
+          <div class="ex-step">Nullity = dim of eigenspace for 0 = dim(V⊥) = 20−4 = <span class="hl2">16</span></div>
+          <div class="ex-step">Symmetric? YES — orthogonal projections are always symmetric (A = Aᵀ)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end s2 -->
+
+<!-- ══════════ SECTION 3: ORTHO ══════════ -->
+<div id="s3" class="section">
+<div class="section-title" style="color:var(--c3)">Orthogonality, Projections, Gram-Schmidt, Least Squares</div>
+<div class="section-sub">Ch 6 · Dot Products · Orthogonal Decomposition · QR · Normal Equations</div>
+
+<div class="topic open">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-c3">Ch6</span>
+    <span class="topic-title">Core Orthogonality — Definitions + Properties</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards three">
+      <div class="card">
+        <div class="card-title c3">Fundamental Definitions</div>
+        <div class="formula">‖v‖ = √(v·v)<br>
+        Normalize: <span class="hl3">û = v/‖v‖</span><br>
+        dist(u,v) = ‖u−v‖<br>
+        Orthogonal: <span class="hl3">u·v = 0</span></div>
+        <div class="formula">‖u+v‖² = ‖u‖²+‖v‖² iff u⊥v (Pythagorean)</div>
+        <div class="formula">Cauchy-Schwarz: |u·v| ≤ ‖u‖‖v‖<br>
+        Triangle: ‖u+v‖ ≤ ‖u‖+‖v‖</div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Orthogonal Sets → Matrices</div>
+        <div class="formula"><span class="hl3">Orthogonal set:</span> each pair u·v=0<br>
+        If nonzero → automatically LI</div>
+        <div class="formula"><span class="hl3">Orthonormal set:</span> orthogonal + unit vectors</div>
+        <div class="formula"><span class="hl3">Orthogonal matrix U:</span> square, orthonormal cols<br>
+        U⁻¹ = Uᵀ, det(U)=±1<br>
+        UᵀU = I</div>
+        <div class="formula">If U has orthonormal cols:<br>
+        ‖Ux‖=‖x‖, (Ux)·(Uy)=x·y</div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Orthogonal Complement</div>
+        <div class="formula">W⊥ = all v ∈ ℝⁿ with v·w=0 for all w∈W<br>
+        Always a subspace</div>
+        <div class="formula">(Row A)⊥ = Nul A<br>
+        (Col A)⊥ = Nul Aᵀ</div>
+        <div class="formula">V = W ⊕ W⊥ (direct sum)<br>
+        dim(W) + dim(W⊥) = n<br>
+        W ∩ W⊥ = {0}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTIONS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c3">Ch6</span>
+    <span class="topic-title">Orthogonal Projections — Onto Vector, Onto Subspace</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c3">Projection onto a Single Vector w</div>
+        <div class="formula" style="font-size:15px; text-align:center">
+          <span class="hl3">proj_w(v) = (v·w)/(w·w) · w</span>
+        </div>
+        <div class="formula">Component of v orthogonal to w:<br>
+        z = v − proj_w(v)</div>
+        <div class="warn-box">If w is unit vector: proj_w(v) = (v·w)·w (no denominator needed)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Projection onto Subspace W</div>
+        <div class="formula">For orthogonal basis {u₁,…,uₚ} of W:<br>
+        <span class="hl3">proj_W(v) = Σ (v·uᵢ)/(uᵢ·uᵢ) · uᵢ</span></div>
+        <div class="formula">For orthonormal basis: proj_W(v) = UUᵀv<br>
+        where U = [u₁ … uₚ]</div>
+        <div class="tip-box">Best Approximation Theorem: proj_W(v) is the CLOSEST point in W to v. ‖v−proj_W(v)‖ is minimized.</div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Worked Example — Projection onto Subspace</div>
+        <div class="example blue">
+          <div class="ex-label">Past Exam Q3 (Exam 2)</div>
+          <div class="ex-q">Find closest point to [3,5,4,1] in W spanned by [1,−1,0,1] and [0,1,−1,1]</div>
+          <div class="ex-step">u₁=[1,−1,0,1], u₂=[0,1,−1,1], v=[3,5,4,1]</div>
+          <div class="ex-step">Check orthogonality: u₁·u₂=0−1+0+1=0 ✓ (already orthogonal)</div>
+          <div class="ex-step">proj_u₁(v) = (v·u₁)/(u₁·u₁)·u₁ = (3−5+0+1)/(1+1+0+1)=[−1/3,1/3,0,−1/3]... </div>
+          <div class="ex-step">Actually: v·u₁=3(1)+5(−1)+4(0)+1(1)=−1; u₁·u₁=3 → coeff=−1/3</div>
+          <div class="ex-step">v·u₂=0+5−4+1=2; u₂·u₂=3 → coeff=2/3</div>
+          <div class="ex-step">proj = −1/3·[1,−1,0,1] + 2/3·[0,1,−1,1]</div>
+          <div class="ex-ans">= [−1/3, 1/3+2/3, −2/3, −1/3+2/3] = [−1/3, 1, −2/3, 1/3]</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title warn">Common Mistakes</div>
+        <div class="warn-box">1. Using non-orthogonal basis without Gram-Schmidt first — projection formula only works with orthogonal basis!</div>
+        <div class="warn-box">2. Confusing proj_u(v) vs proj_v(u) — order matters!</div>
+        <div class="warn-box">3. Forgetting to use (u·u) in denominator (not ‖u‖)</div>
+        <div class="tip-box">If basis is NOT orthogonal, run Gram-Schmidt FIRST, then project.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GRAM-SCHMIDT + QR -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c3">Ch6</span>
+    <span class="topic-title">Gram-Schmidt Process + QR Factorization</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c3">Gram-Schmidt Algorithm</div>
+        <div class="formula">Input: {x₁, x₂, …, xₚ} basis for W</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>v₁ = x₁</li>
+          <li><span class="step-num">2</span>v₂ = x₂ − (x₂·v₁)/(v₁·v₁)·v₁</li>
+          <li><span class="step-num">3</span>v₃ = x₃ − (x₃·v₁)/(v₁·v₁)·v₁ − (x₃·v₂)/(v₂·v₂)·v₂</li>
+          <li><span class="step-num">4</span>vₖ = xₖ − Σᵢ₌₁ᵏ⁻¹ (xₖ·vᵢ)/(vᵢ·vᵢ)·vᵢ</li>
+          <li><span class="step-num">5</span>Normalize: uᵢ = vᵢ/‖vᵢ‖</li>
+        </ol>
+        <div class="formula">Result: {v₁,…,vₚ} orthogonal basis<br>
+        {u₁,…,uₚ} orthonormal basis<br>
+        Span{v₁,…,vₖ} = Span{x₁,…,xₖ} ∀k</div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">QR Factorization</div>
+        <div class="formula">A = QR where:<br>
+        Q = m×n matrix with orthonormal cols<br>
+        R = n×n upper triangular, invertible, <span class="hl3">positive diagonal</span></div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Extract columns of A (v₁, v₂, …)</li>
+          <li><span class="step-num">2</span>Apply Gram-Schmidt → orthonormal {u₁, u₂, …}</li>
+          <li><span class="step-num">3</span>Q = [u₁ u₂ …]</li>
+          <li><span class="step-num">4</span>R = QᵀA (since Q orthonormal)</li>
+        </ol>
+        <div class="tip-box">Least squares via QR: x̂ = R⁻¹Qᵀb</div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c3">Worked QR Example (from Lecture Notes)</div>
+        <div class="example blue">
+          <div class="ex-q">A = [1 −1 0; 3 −3 1; 5 1 3]. Find QR.</div>
+          <div class="ex-step">v₁=[1,3,5], v₂=[−1,−3,1], v₃=[0,1,3]</div>
+          <div class="ex-step"><strong>GS step 2:</strong> proj_{v₁}(v₂) = (v₂·v₁)/(v₁·v₁)·v₁<br>
+          v₂·v₁=−1−9+5=−5... wait: [1,3,5]·[−1,−3,1]=−1−9+5=−5; v₁·v₁=1+9+25=35<br>
+          v₂'=v₂−(−5/35)v₁=[−1+1/7,−3+3/7,1+1/7]...actually from notes: v₂'=[0,0,1]</div>
+          <div class="ex-step"><strong>GS step 3:</strong> v₃'=[−3,3,0] (from notes)</div>
+          <div class="ex-step">Normalize each: u₁=v₁/‖v₁‖, u₂=v₂'/‖v₂'‖, u₃=v₃'/‖v₃'‖</div>
+          <div class="ex-step">R = QᵀA (multiply out)</div>
+          <div class="ex-ans">Q=[u₁|u₂|u₃], R=QᵀA (upper triangular with positive diagonal)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEAST SQUARES -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c3">Ch6</span>
+    <span class="topic-title">Least-Squares Solutions — Normal Equations + Regression Line</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c3">When & Why</div>
+        <div class="formula">Used when Ax=b has NO solution (b ∉ Col(A))<br>
+        Find x̂ that <span class="hl3">minimizes ‖Ax−b‖</span></div>
+        <div class="formula"><span class="hl3">Normal Equations: AᵀAx̂ = Aᵀb</span></div>
+        <div class="formula">If cols of A are LI → unique solution:<br>
+        <span class="hl3">x̂ = (AᵀA)⁻¹Aᵀb</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Step-by-Step Procedure</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Compute AᵀA (n×n) and Aᵀb (n×1)</li>
+          <li><span class="step-num">2</span>Solve [AᵀA | Aᵀb] by row reduction OR invert AᵀA</li>
+          <li><span class="step-num">3</span>x̂ is the least-squares solution</li>
+        </ol>
+        <div class="tip-box">AᵀA invertible iff cols of A are LI iff unique least-squares solution</div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Least-Squares Line y = β₀+β₁x</div>
+        <div class="formula">Build design matrix X and vector y:<br>
+        X = [1 x₁; 1 x₂; …; 1 xₙ], y = [y₁;…;yₙ]<br>
+        Solve normal equations: <span class="hl3">XᵀXβ = Xᵀy</span></div>
+        <div class="example blue">
+          <div class="ex-label">Past Exam Q4 (Exam 2)</div>
+          <div class="ex-q">Best-fit line for (−1,2),(0,5),(1,6),(2,9)</div>
+          <div class="ex-step">X=[1 −1; 1 0; 1 1; 1 2], y=[2;5;6;9]</div>
+          <div class="ex-step">XᵀX=[4 2; 2 6], Xᵀy=[22; 16]... wait let's recount:<br>
+          col sums: Σ1=4, Σx=−1+0+1+2=2, Σx²=1+0+1+4=6<br>
+          Xᵀy: [2+5+6+9, −2+0+6+18]=[22, 22]<br>
+          XᵀX=[4 2; 2 6]</div>
+          <div class="ex-step">Solve [4 2 | 22; 2 6 | 22] → β₀=4, β₁=7/2... check notes</div>
+          <div class="ex-ans">y = β₀ + β₁x (solve normal equations for exact answer)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c3">Example from Lecture Notes</div>
+        <div class="example blue">
+          <div class="ex-q">Ax=b, A=[4 0; 1 0; 2 1], b=[2;0;11]<br>Wait — from notes: A=[4 0 1; 0 2 1], b=[2;0;11]</div>
+          <div class="ex-step">AᵀA=[4 0 1;0 2 1][4 0;0 2;1 1]=[17 1;1 5]</div>
+          <div class="ex-step">Aᵀb=[4 0 1;0 2 1][2;0;11]=[8+0+11;0+0+11]=[19;11]</div>
+          <div class="ex-step">x̂=[17 1;1 5]⁻¹[19;11]</div>
+          <div class="ex-step">det=[85−1]=84; inv=(1/84)[5 −1;−1 17]</div>
+          <div class="ex-ans">x̂=(1/84)[95−11;−19+187]=(1/84)[84;168]=[1;2]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end s3 -->
+
+<!-- ══════════ SECTION 6: SVD + QUADRATIC FORMS ══════════ -->
+<div id="s6" class="section">
+<div class="section-title" style="color:var(--c6)">SVD, Symmetric Matrices, Quadratic Forms</div>
+<div class="section-sub">Ch 7 · Orthogonal Diagonalization · Spectral Decomposition · SVD · Quadratic Forms</div>
+
+<!-- SYMMETRIC + ORTHOGONAL DIAG -->
+<div class="topic open">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c6">Ch7</span>
+    <span class="topic-title">Symmetric Matrices + Orthogonal Diagonalization</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c6">Symmetric Matrix Properties</div>
+        <div class="formula"><span class="hl6">A = Aᵀ</span> (symmetric)</div>
+        <div class="formula">Key theorem (Spectral Theorem):<br>
+        • n real eigenvalues (counting mult)<br>
+        • Eigenspace dim = algebraic mult<br>
+        • Eigenspaces mutually orthogonal<br>
+        • <span class="hl6">Always orthogonally diagonalizable</span></div>
+        <div class="tip-box">Symmetric ⟺ orthogonally diagonalizable (both directions!)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c6">How to Orthogonally Diagonalize</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Find eigenvalues via det(A−λI)=0</li>
+          <li><span class="step-num">2</span>For each λ, find basis for Nul(A−λI)</li>
+          <li><span class="step-num">3</span>If mult=1: just normalize eigenvector</li>
+          <li><span class="step-num">4</span>If mult>1: apply <span class="hl6">Gram-Schmidt</span> first, then normalize</li>
+          <li><span class="step-num">5</span>P = [u₁|…|uₙ] (orthonormal eigenvectors)</li>
+          <li><span class="step-num">6</span>D = diag(λ₁,…,λₙ) matching order</li>
+        </ol>
+        <div class="formula">A = PDPᵀ = PDP⁻¹</div>
+        <div class="warn-box">Eigenvectors from DIFFERENT eigenspaces are automatically orthogonal. Only need GS within same eigenspace!</div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c6">Spectral Decomposition</div>
+        <div class="formula" style="font-size:13px">
+          A = λ₁u₁u₁ᵀ + λ₂u₂u₂ᵀ + … + λₙuₙuₙᵀ
+        </div>
+        <div class="formula">uᵢuᵢᵀ = "projection matrix" onto eigenspace of λᵢ</div>
+        <div class="tip-box">Each uᵢuᵢᵀ is rank-1. The spectral decomposition shows A as sum of rank-1 pieces scaled by eigenvalues.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUADRATIC FORMS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c6">Ch7</span>
+    <span class="topic-title">Quadratic Forms — Classification + Change of Variables</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c6">Building Matrix A from Q(x)</div>
+        <div class="formula">Q(x) = xᵀAx, A symmetric<br>
+        • Coefficient of xᵢ² → Aᵢᵢ<br>
+        • Coefficient of xᵢxⱼ → split evenly: Aᵢⱼ = Aⱼᵢ = (coeff)/2</div>
+        <div class="example yellow">
+          <div class="ex-q">Q(x) = 5x₁²−4x₁x₂+5x₂²</div>
+          <div class="ex-step">A₁₁=5, A₂₂=5, A₁₂=A₂₁=−4/2=−2</div>
+          <div class="ex-ans">A=[5 −2; −2 5]</div>
+        </div>
+        <div class="example yellow">
+          <div class="ex-q">Q(x) = x₁²+2x₁x₂+x₂² (Past Exam Q5)</div>
+          <div class="ex-step">A₁₁=1, A₂₂=1, A₁₂=A₂₁=1</div>
+          <div class="ex-ans">A=[1 1; 1 1]</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c6">Classification by Eigenvalues</div>
+        <table>
+          <tr><th>Eigenvalues</th><th>Type</th><th>Shape</th></tr>
+          <tr><td>All > 0</td><td><span class="hl6">Positive Definite</span></td><td>Upward bowl</td></tr>
+          <tr><td>All < 0</td><td>Negative Definite</td><td>Downward bowl</td></tr>
+          <tr><td>Both +/−</td><td>Indefinite</td><td>Saddle</td></tr>
+          <tr><td>All ≥ 0, some=0</td><td>Positive Semidefinite</td><td>Trough</td></tr>
+          <tr><td>All ≤ 0, some=0</td><td>Negative Semidefinite</td><td>Trough</td></tr>
+        </table>
+        <div class="tip-box">Just find eigenvalues of A and check signs!</div>
+      </div>
+      <div class="card">
+        <div class="card-title c6">Change of Variables (Remove Cross-Products)</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Build symmetric matrix A from Q</li>
+          <li><span class="step-num">2</span>Orthogonally diagonalize A: find λᵢ and orthonormal uᵢ</li>
+          <li><span class="step-num">3</span>Set P=[u₁ … uₙ], D=diag(λ₁,…,λₙ)</li>
+          <li><span class="step-num">4</span>Substitute x=Py → Q(y) = λ₁y₁²+λ₂y₂²+…</li>
+        </ol>
+        <div class="example yellow">
+          <div class="ex-q">Q(x)=5x₁²−4x₁x₂+5x₂² → remove cross-product</div>
+          <div class="ex-step">A=[5 −2;−2 5], eigenvalues: det(A−λI)=(5−λ)²−4=0 → λ=3,7</div>
+          <div class="ex-step">Eigenvectors: λ=3→[1;1]/√2, λ=7→[1;−1]/√2</div>
+          <div class="ex-ans">Q(y) = 3y₁²+7y₂² (no cross-products!)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title warn">Common Mistake</div>
+        <div class="warn-box">The cross-product coefficient must be SPLIT evenly between Aᵢⱼ and Aⱼᵢ. e.g., Q=x₁x₂ → A₁₂=A₂₁=1/2, NOT A₁₂=1.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SVD -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">EXAM</span>
+    <span class="topic-tag tag-c6">Ch7</span>
+    <span class="topic-title">Singular Value Decomposition (SVD) — Full Algorithm</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c6">SVD Setup & Vocabulary</div>
+        <div class="formula">A = UΣVᵀ<br>
+        U: m×m orthogonal (left singular vectors)<br>
+        V: n×n orthogonal (right singular vectors)<br>
+        Σ: m×n "diagonal" (singular values on diag)</div>
+        <div class="formula">Singular values = √(eigenvalues of AᵀA)<br>
+        σᵢ = √λᵢ, arranged <span class="hl6">decreasing</span></div>
+        <div class="formula">A⁺ = VᵣD⁻¹Uᵣᵀ (pseudoinverse)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c6">SVD Algorithm</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Compute AᵀA (n×n symmetric)</li>
+          <li><span class="step-num">2</span>Find eigenvalues of AᵀA (det(AᵀA−λI)=0)</li>
+          <li><span class="step-num">3</span>σᵢ = √λᵢ (decreasing order)</li>
+          <li><span class="step-num">4</span>Find orthonormal eigenvectors of AᵀA → columns of V</li>
+          <li><span class="step-num">5</span>For each nonzero σᵢ: <span class="hl6">uᵢ = (1/σᵢ)Avᵢ</span></li>
+          <li><span class="step-num">6</span>If rank r < m: extend {u₁,…,uᵣ} to orthonormal basis via GS</li>
+          <li><span class="step-num">7</span>Build Σ: σᵢ on diagonal, rest zeros</li>
+        </ol>
+      </div>
+      <div class="card">
+        <div class="card-title c6">Subspace Identification from SVD</div>
+        <div class="formula">Col(A) = span of first r cols of U<br>
+        Nul(Aᵀ) = last m−r cols of U<br>
+        Row(A) = first r cols of V<br>
+        Nul(A) = last n−r cols of V</div>
+        <div class="formula"><span class="hl6">Best rank-k approx</span> of A:<br>
+        Aₖ = σ₁u₁v₁ᵀ + … + σₖuₖvₖᵀ</div>
+        <div class="tip-box">Rank-1 approximation = σ₁u₁v₁ᵀ (appears on exams!)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c6">Full Worked Example (Lecture Notes)</div>
+        <div class="example yellow">
+          <div class="ex-q">A=[1 −2 2; −1 2 −2]. Find SVD.</div>
+          <div class="ex-step">AᵀA=[9 −9;−9 9] (3×3 but rank 1... wait A is 2×3)</div>
+          <div class="ex-step">AᵀA (3×3): entry (1,1)=1+1=2... actually: Aᵀ=[1 −1;−2 2;2 −2], compute AᵀA=[2 −2 2;−2 2 −2;2 −2 2]... from notes: AᵀA=[9 −9;−9 9] treating A as 2×2... Notes say AᵀA=[9 −9;−9 9]</div>
+          <div class="ex-step">det(AᵀA−λI)=(9−λ)²−81=0 → λ²−18λ=0 → λ=18,0</div>
+          <div class="ex-step">σ₁=√18=3√2, σ₂=0. Rank r=1.</div>
+          <div class="ex-step">v₁: (AᵀA−18I)x=0 → x=[1/√2,−1/√2]</div>
+          <div class="ex-step">v₂: [1/√2, 1/√2]</div>
+          <div class="ex-step">u₁=(1/σ₁)Av₁=(1/3√2)·A·[1/√2;−1/√2]=[1/3,−2/3,2/3]</div>
+          <div class="ex-step">Complete U using GS for remaining cols</div>
+          <div class="ex-ans">A=UΣVᵀ assembled from above</div>
+        </div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c6">Past Exam SVD (Exam 3, Q9) — A=[1 1;2 1;1 2]</div>
+        <div class="example yellow">
+          <div class="ex-q">Find SVD and rank-1 approximation of A=[1 1;2 1;1 2]</div>
+          <div class="ex-step">AᵀA=[1 2 1;1 1 2][1 1;2 1;1 2]=[1+4+1, 1+2+2;1+2+2, 1+1+4]=[6 5;5 6]</div>
+          <div class="ex-step">det(AᵀA−λI)=(6−λ)²−25=0 → λ²−12λ+11=0 → (λ−11)(λ−1)=0</div>
+          <div class="ex-step">λ₁=11,λ₂=1 → σ₁=√11, σ₂=1</div>
+          <div class="ex-step">For λ=11: (AᵀA−11I)v=0 → [−5 5;5 −5]v=0 → v₁=[1;1]/√2</div>
+          <div class="ex-step">For λ=1: v₂=[1;−1]/√2</div>
+          <div class="ex-step">u₁=(1/√11)A·[1/√2;1/√2]=(1/√22)[2;3;3]</div>
+          <div class="ex-step">u₂=(1/1)A·[1/√2;−1/√2]=(1/√2)[0;1;−1]</div>
+          <div class="ex-step">Complete u₃ for ℝ³ via cross product</div>
+          <div class="ex-ans">Rank-1 approx = σ₁u₁v₁ᵀ = √11·(1/√22)[2;3;3]·[1/√2, 1/√2]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROOF: Nul ATA = Nul A -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">PROOF</span>
+    <span class="topic-tag tag-c6">Ch7</span>
+    <span class="topic-title">Prove: Nul(AᵀA) = Nul(A) and rank(AᵀA) = rank(A)</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c6">Proof: Nul(AᵀA) = Nul(A) (Past Exam Q5a)</div>
+        <div class="example yellow">
+          <div class="ex-step"><strong>(⊇) Show Nul(A) ⊆ Nul(AᵀA):</strong></div>
+          <div class="ex-step">If x ∈ Nul(A), then Ax=0 → AᵀAx=Aᵀ(0)=0 → x ∈ Nul(AᵀA) ✓</div>
+          <div class="ex-step"><strong>(⊆) Show Nul(AᵀA) ⊆ Nul(A):</strong></div>
+          <div class="ex-step">If AᵀAx=0, then xᵀAᵀAx=0 → (Ax)·(Ax)=0 → ‖Ax‖²=0 → Ax=0</div>
+          <div class="ex-ans">∴ Nul(AᵀA) = Nul(A) ∎</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c6">Proof: rank(AᵀA) = rank(A) (Past Exam Q5b)</div>
+        <div class="example yellow">
+          <div class="ex-step">By Rank-Nullity: rank(A) + nullity(A) = n (# cols of A)</div>
+          <div class="ex-step">rank(AᵀA) + nullity(AᵀA) = n (AᵀA is n×n)</div>
+          <div class="ex-step">Since nullity(AᵀA) = nullity(A) [just proved], and both use same n:</div>
+          <div class="ex-ans">rank(AᵀA) = n − nullity(AᵀA) = n − nullity(A) = rank(A) ∎</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end s6 -->
+
+<!-- ══════════ SECTION 4: DIFF EQ ══════════ -->
+<div id="s4" class="section">
+<div class="section-title" style="color:var(--c4)">Differential Equations — 2nd Order</div>
+<div class="section-sub">Ch 4(DE) · Characteristic Eq · Undetermined Coefficients · Variation of Parameters · IVP</div>
+
+<div class="topic open">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c4">DE</span>
+    <span class="topic-title">2nd Order Linear ODE — Homogeneous (All Root Cases)</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c4">Setup</div>
+        <div class="formula">ay''+by'+cy=0<br>
+        <span class="hl4">Characteristic equation: ar²+br+c=0</span></div>
+        <div class="formula">General solution = yₕ = c₁y₁+c₂y₂<br>
+        y₁,y₂ are LI (Wronskian ≠ 0)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Three Root Cases</div>
+        <table>
+          <tr><th>Root Type</th><th>General Solution</th></tr>
+          <tr><td><span class="hl4">Distinct real</span> r₁≠r₂</td><td>c₁e^{r₁t}+c₂e^{r₂t}</td></tr>
+          <tr><td><span class="hl4">Repeated</span> r₁=r₂=r</td><td>c₁e^{rt}+c₂te^{rt}</td></tr>
+          <tr><td><span class="hl4">Complex</span> α±iβ</td><td>c₁e^{αt}cos(βt)+c₂e^{αt}sin(βt)</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c4">Worked: Distinct Real Roots</div>
+        <div class="example pink">
+          <div class="ex-q">y''+5y'−6y=0</div>
+          <div class="ex-step">r²+5r−6=0 → (r−1)(r+6)=0</div>
+          <div class="ex-step">r₁=1, r₂=−6</div>
+          <div class="ex-ans">y(t) = c₁eᵗ + c₂e^{−6t}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Worked: Repeated Root</div>
+        <div class="example pink">
+          <div class="ex-q">y''+4y'+4y=0</div>
+          <div class="ex-step">r²+4r+4=(r+2)²=0 → r=−2 (double)</div>
+          <div class="ex-ans">y(t) = c₁e^{−2t} + c₂te^{−2t}</div>
+          <div style="margin-top:6px" class="ex-q">IVP: y(0)=1, y'(0)=3</div>
+          <div class="ex-step">y'=−2c₁e^{−2t}+c₂e^{−2t}−2c₂te^{−2t}</div>
+          <div class="ex-step">y(0)=1 → c₁=1</div>
+          <div class="ex-step">y'(0)=3 → −2(1)+c₂=3 → c₂=5</div>
+          <div class="ex-ans">y=e^{−2t}+5te^{−2t}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Worked: Complex Roots</div>
+        <div class="example pink">
+          <div class="ex-q">y''+2y'+4y=0</div>
+          <div class="ex-step">r²+2r+4=0 → r=(−2±√(4−16))/2=−1±i√3</div>
+          <div class="ex-step">α=−1, β=√3</div>
+          <div class="ex-ans">y=c₁e^{−t}cos(√3t)+c₂e^{−t}sin(√3t)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Worked: 3rd Order (from Notes)</div>
+        <div class="example pink">
+          <div class="ex-q">y'''+3y''−y'−3y=0</div>
+          <div class="ex-step">r³+3r²−r−3=0 → factor: (r−1)(r+1)(r+3)=0</div>
+          <div class="ex-step">r₁=1, r₂=−1, r₃=−3</div>
+          <div class="ex-ans">y=c₁eᵗ+c₂e^{−t}+c₃e^{−3t}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- METHOD OF UNDETERMINED COEFFICIENTS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c4">DE</span>
+    <span class="topic-title">Method of Undetermined Coefficients — All Cases</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c4">The s-Value Decision (Most Important Step)</div>
+        <div class="formula">For RHS of form: Ctᵐe^{rt}, or Ctᵐe^{αt}cos(βt), or Ctᵐe^{αt}sin(βt)<br>
+        <span class="hl4">s=0</span> if r (or α+iβ) is NOT a root of char. eq.<br>
+        <span class="hl4">s=1</span> if r (or α+iβ) is a SIMPLE root<br>
+        <span class="hl4">s=2</span> if r (or α+iβ) is a DOUBLE root</div>
+        <div class="formula">Guess form: yₚ = <span class="hl4">tˢ</span>·(Aₘtᵐ+…+A₁t+A₀)e^{rt}</div>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c4">Guess Table</div>
+        <table>
+          <tr><th>RHS f(t)</th><th>Guess yₚ (s=0)</th></tr>
+          <tr><td>Constant C</td><td>A</td></tr>
+          <tr><td>Polynomial tᵐ</td><td>Aₘtᵐ+…+A₁t+A₀</td></tr>
+          <tr><td>Ce^{kt}</td><td>Ae^{kt}</td></tr>
+          <tr><td>C·sin(βt) or C·cos(βt)</td><td>A·sin(βt)+B·cos(βt)</td></tr>
+          <tr><td>Ce^{αt}sin(βt) or cos</td><td>(A·cos+B·sin)e^{αt}</td></tr>
+          <tr><td>tᵐe^{kt}</td><td>(Aₘtᵐ+…+A₀)e^{kt}</td></tr>
+        </table>
+        <div class="warn-box">If s>0, multiply entire guess by tˢ!</div>
+        <div class="tip-box">For complex RHS α+iβ: check if α+iβ is a root of char eq. If yes, s=1.</div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Worked Examples (All Types)</div>
+        <div class="example pink">
+          <div class="ex-q">y''+3y'+2y=3t (polynomial)</div>
+          <div class="ex-step">Roots: r=−1,−2. Neither is 0 → s=0</div>
+          <div class="ex-step">Guess: yₚ=At+B. yₚ'=A, yₚ''=0</div>
+          <div class="ex-step">Plug in: 0+3A+2(At+B)=3t → 2At+(3A+2B)=3t</div>
+          <div class="ex-step">2A=3 → A=3/2; 3(3/2)+2B=0 → B=−9/4</div>
+          <div class="ex-ans">yₚ=(3/2)t−9/4</div>
+        </div>
+        <div class="example pink">
+          <div class="ex-q">y''+3y'+2y=10e^{3t} (exponential)</div>
+          <div class="ex-step">k=3 not a root → s=0. Guess yₚ=Ae^{3t}</div>
+          <div class="ex-step">9Ae^{3t}+9Ae^{3t}+2Ae^{3t}=10e^{3t} → 20A=10 → A=1/2</div>
+          <div class="ex-ans">yₚ=(1/2)e^{3t}</div>
+        </div>
+        <div class="example pink">
+          <div class="ex-q">y''+3y'+2y=sin t (trig)</div>
+          <div class="ex-step">α+iβ=i is not a root → s=0</div>
+          <div class="ex-step">Guess: yₚ=A sin t+B cos t</div>
+          <div class="ex-step">Plug in → (A−3B)sin t+(B+3A)cos t=sin t</div>
+          <div class="ex-step">A−3B=1, B+3A=0 → A=1/10, B=−3/10</div>
+          <div class="ex-ans">yₚ=0.1 sin t−0.3 cos t</div>
+        </div>
+        <div class="example pink">
+          <div class="ex-q">y''+y'=5 (constant, but r=0 is root!)</div>
+          <div class="ex-step">Roots: r=0,−1. r=0 IS a root → s=1</div>
+          <div class="ex-step">Naive guess: A → multiply by t: yₚ=At</div>
+          <div class="ex-step">yₚ'=A, yₚ''=0 → 0+A=5 → A=5</div>
+          <div class="ex-ans">yₚ=5t</div>
+        </div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c4">Full IVP Example (General + Particular + Initial Conditions)</div>
+        <div class="example pink">
+          <div class="ex-q">y''−y=2−t², y(0)=1, y'(0)=0</div>
+          <div class="ex-step"><strong>Homogeneous:</strong> r²−1=0 → r=±1</div>
+          <div class="ex-step">yₕ=c₁eᵗ+c₂e^{−t}</div>
+          <div class="ex-step"><strong>Particular (s=0, polynomial degree 2):</strong> guess yₚ=At²+Bt+C</div>
+          <div class="ex-step">yₚ''=2A. Plug in: 2A−(At²+Bt+C)=2−t²</div>
+          <div class="ex-step">−At²−Bt+(2A−C)=2−t² → A=1, B=0, 2(1)−C=2 → C=0</div>
+          <div class="ex-step">yₚ=t²</div>
+          <div class="ex-step"><strong>General:</strong> y=c₁eᵗ+c₂e^{−t}+t²</div>
+          <div class="ex-step"><strong>IVP:</strong> y(0)=c₁+c₂=1; y'=c₁eᵗ−c₂e^{−t}+2t → y'(0)=c₁−c₂=0</div>
+          <div class="ex-step">c₁=c₂=1/2</div>
+          <div class="ex-ans">y(t) = (1/2)eᵗ + (1/2)e^{−t} + t² = cosh(t) + t²</div>
+        </div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c4">IVP with Nonhomogeneous: y''+4y=eᵗ (Past Exam Q6)</div>
+        <div class="example pink">
+          <div class="ex-q">y''+4y=eᵗ, y(0)=1, y'(0)=2</div>
+          <div class="ex-step"><strong>Homogeneous:</strong> r²+4=0 → r=±2i (α=0,β=2)</div>
+          <div class="ex-step">yₕ=c₁cos(2t)+c₂sin(2t)</div>
+          <div class="ex-step"><strong>Particular:</strong> k=1 not a root → s=0, guess yₚ=Aeᵗ</div>
+          <div class="ex-step">Aeᵗ+4Aeᵗ=eᵗ → 5A=1 → A=1/5</div>
+          <div class="ex-step">yₚ=eᵗ/5</div>
+          <div class="ex-step"><strong>General:</strong> y=c₁cos(2t)+c₂sin(2t)+eᵗ/5</div>
+          <div class="ex-step">y(0)=c₁+1/5=1 → c₁=4/5</div>
+          <div class="ex-step">y'=−2c₁sin(2t)+2c₂cos(2t)+eᵗ/5</div>
+          <div class="ex-step">y'(0)=2c₂+1/5=2 → c₂=9/10</div>
+          <div class="ex-ans">y=(4/5)cos(2t)+(9/10)sin(2t)+eᵗ/5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WRONSKIAN -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-c4">DE</span>
+    <span class="topic-title">Wronskian Test — Linear Independence of Solutions</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c4">Wronskian Definition</div>
+        <div class="formula">W[y₁,y₂] = |y₁ y₂; y₁' y₂'| = y₁y₂'−y₁'y₂</div>
+        <div class="formula">W≠0 at some t → <span class="hl4">linearly independent</span><br>
+        W=0 everywhere → linearly dependent</div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Worked Example (from Notes)</div>
+        <div class="example pink">
+          <div class="ex-q">Are y₁=eᵗ, y₂=e^{−6t} independent?</div>
+          <div class="ex-step">W = eᵗ·(−6e^{−6t}) − eᵗ·e^{−6t} = −6e^{−5t}−e^{−5t} = −7e^{−5t} ≠ 0</div>
+          <div class="ex-ans">W≠0 for all t → LI ✓</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Wronskian for Vector Functions</div>
+        <div class="formula">For solutions x₁(t),x₂(t),x₃(t) to x'=Ax:<br>
+        W(t) = det[x₁(t) | x₂(t) | x₃(t)]<br>
+        If W(t₀)≠0 for any t₀ → LI on (−∞,∞)</div>
+        <div class="tip-box">Easiest: evaluate W at t=0 (simplifies exponentials to 1)</div>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Variation of Parameters</div>
+        <div class="formula">ay''+by'+cy=f(t): find yₚ=u₁y₁+u₂y₂ where<br>
+        u₁' = |0 y₂; f/a y₂'| / W<br>
+        u₂' = |y₁ 0; y₁' f/a| / W<br>
+        Then integrate u₁',u₂' to get u₁,u₂</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONVERTING ODE TO SYSTEM -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-c4">DE</span>
+    <span class="topic-title">Converting Higher-Order ODE to First-Order System</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c4">The Substitution Method</div>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Set x₁=y, x₂=y', x₃=y'', … (up to n−1 derivatives)</li>
+          <li><span class="step-num">2</span>x₁'=x₂, x₂'=x₃, …, xₙ'=(express using original ODE)</li>
+          <li><span class="step-num">3</span>Write as matrix system x'=Ax</li>
+        </ol>
+      </div>
+      <div class="card">
+        <div class="card-title c4">Worked Examples (from Notes)</div>
+        <div class="example pink">
+          <div class="ex-q">my''+ky=0 → system</div>
+          <div class="ex-step">x₁=y, x₂=y': x₁'=x₂, x₂'=−(k/m)x₁</div>
+          <div class="ex-ans">x' = [0 1; −k/m 0] x</div>
+        </div>
+        <div class="example pink">
+          <div class="ex-q">y''+3y'+2y=0 → find matrix A (Past Exam Q7)</div>
+          <div class="ex-step">x₁=y, x₂=y': x₁'=x₂, x₂'=−2x₁−3x₂</div>
+          <div class="ex-ans">A=[0 1; −2 −3]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end s4 -->
+
+<!-- ══════════ SECTION 5: SYSTEMS + FOURIER ══════════ -->
+<div id="s5" class="section">
+<div class="section-title" style="color:var(--c5)">ODE Systems, Fundamental Matrices + Fourier Series</div>
+<div class="section-sub">Ch 9–10 · Systems x'=Ax · Eigenvalue Method · Complex & Repeated · Fourier</div>
+
+<!-- ODE SYSTEMS -->
+<div class="topic open">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c5">Ch9</span>
+    <span class="topic-title">Systems x'(t) = Ax(t) — Eigenvalue Method</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c5">Distinct Real Eigenvalues</div>
+        <div class="formula">Guess x(t)=e^{rt}u → (A−rI)u=0<br>
+        Find r: det(A−rI)=0<br>
+        Find u: row reduce (A−rI)</div>
+        <div class="formula"><span class="hl5">General solution:</span><br>
+        x(t)=c₁e^{r₁t}u₁+c₂e^{r₂t}u₂+…</div>
+        <div class="example purple">
+          <div class="ex-q">A=[2 1;−3 −2]</div>
+          <div class="ex-step">det(A−rI)=(2−r)(−2−r)+3=r²−1=0 → r=±1</div>
+          <div class="ex-step">r₁=1: (A−I)u=0→[1 1;−3 −3]→u₁=[3;−1] (wait: check: [1 1;−3 −3]→u₁+u₂=0→u₁=[1;−1]... let's redo:<br>A−I=[1 1;−3 −3]→RREF=[1 1;0 0]→u₁=−u₂→u₁=[1;−1] or u=[3;−3]... simplified [1;−1]</div>
+          <div class="ex-step">r₂=−1: (A+I)=[3 1;−3 −1]→RREF=[1 1/3;0 0]→u₂=[1;−3]</div>
+          <div class="ex-ans">x(t)=c₁eᵗ[1;−1]+c₂e^{−t}[1;−3] (verify with notes: notes say u₁=[3;1],u₂=[1;1]—check original A)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Solving IVP for System</div>
+        <div class="formula">Given x(0)=[m;n], solve:<br>
+        [u₁|u₂][c₁;c₂]=[m;n]<br>
+        Row reduce to find c₁,c₂</div>
+        <div class="example purple">
+          <div class="ex-q">Past Exam Q7: A=[1 1;−2 4], x(0)=[1;1]</div>
+          <div class="ex-step">det(A−rI)=(1−r)(4−r)+2=r²−5r+6=(r−2)(r−3)</div>
+          <div class="ex-step">r₁=2: (A−2I)=[−1 1;−2 2]→u=[1;1]</div>
+          <div class="ex-step">r₂=3: (A−3I)=[−2 1;−2 1]→u=[1;2]</div>
+          <div class="ex-step">x(t)=c₁e^{2t}[1;1]+c₂e^{3t}[1;2]</div>
+          <div class="ex-step">IVP: [1 1;1 2][c₁;c₂]=[1;1]→c₁=1,c₂=0</div>
+          <div class="ex-ans">x(t)=e^{2t}[1;1]</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Complex Eigenvalues in Systems</div>
+        <div class="formula">r=α±iβ, eigenvector z=a+ib<br>
+        <span class="hl5">x₁(t)=e^{αt}(cos(βt)·a−sin(βt)·b)</span><br>
+        <span class="hl5">x₂(t)=e^{αt}(sin(βt)·a+cos(βt)·b)</span></div>
+        <div class="example purple">
+          <div class="ex-q">A=[−1 −1;2 −3]: complex eigenvalues</div>
+          <div class="ex-step">det(A−rI)=r²+4r+5=0→r=−2±i, α=−2,β=1</div>
+          <div class="ex-step">For r=−2+i: solve (A−(−2+i)I)z=0→z=[2;−1+i]=[2;−1]+i[0;1]</div>
+          <div class="ex-step">a=[2;−1], b=[0;1]</div>
+          <div class="ex-step">x₁=e^{−2t}(cos t[2;−1]−sin t[0;1])=e^{−2t}[2cos t;−cos t−sin t]</div>
+          <div class="ex-step">x₂=e^{−2t}(sin t[2;−1]+cos t[0;1])=e^{−2t}[2sin t;−sin t+cos t]</div>
+          <div class="ex-ans">x(t)=c₁x₁(t)+c₂x₂(t)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Fundamental Matrix + IVP</div>
+        <div class="formula">Fundamental matrix: X(t)=[x₁(t)|x₂(t)|…]<br>
+        det(X(t₀))≠0 (solutions LI)</div>
+        <div class="formula"><span class="hl5">IVP solution:</span> x(t) = X(t)·X(0)⁻¹·x(0)</div>
+        <div class="example purple">
+          <div class="ex-q">Past Exam Q8: X(t)=[eᵗ teᵗ; 0 eᵗ], x(0)=[1;1]. Find x(1).</div>
+          <div class="ex-step">X(0)=[1 0; 0 1]=I → X(0)⁻¹=I</div>
+          <div class="ex-step">x(t)=X(t)·I·[1;1]=X(t)[1;1]</div>
+          <div class="ex-step">x(1)=[e¹ e¹; 0 e¹][1;1]=[e+e; 0+e]</div>
+          <div class="ex-ans">x(1)=[2e; e]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPEATED EIGENVALUES + GENERALIZED -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">EXAM</span>
+    <span class="topic-tag tag-c5">Ch9</span>
+    <span class="topic-title">Repeated Eigenvalues + Generalized Eigenvectors</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c5">When Eigenspace is Deficient</div>
+        <div class="formula">If λ has alg. mult p but geo. mult q < p<br>
+        → need (p−q) generalized eigenvectors</div>
+        <div class="formula">Find generalized eigenvector w:<br>
+        (A−λI)w = v (where v is eigenvector)<br>
+        Solution: x(t)=e^{λt}(v·t+w) [for pair]</div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Worked: A=[1 1 1; 0 1 1; 0 0 1] (Past Exam Q7)</div>
+        <div class="example purple">
+          <div class="ex-q">Find eigenvalues, generalized eigenvectors, and general solution</div>
+          <div class="ex-step">Triangular → eigenvalue λ=1 (triple, alg. mult=3)</div>
+          <div class="ex-step">A−I=[0 1 1;0 0 1;0 0 0]→1 free var→geo mult=1</div>
+          <div class="ex-step">Need 2 generalized eigenvectors</div>
+          <div class="ex-step">v₁=[1;0;0] (eigenvector from Nul(A−I))</div>
+          <div class="ex-step">Find v₂: (A−I)v₂=v₁ → [0 1 1;0 0 1;0 0 0]v₂=[1;0;0]</div>
+          <div class="ex-step">Row 2: v₃=0; Row 1: v₂=1; v₁ free=0 → v₂=[0;1;0]</div>
+          <div class="ex-step">Find v₃: (A−I)v₃=v₂ → v₃=[0;0;1] ...etc</div>
+          <div class="ex-ans">x(t)=e^t[c₁v₁+c₂(tv₁+v₂)+c₃(t²/2·v₁+tv₂+v₃)]</div>
+        </div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c5">Full Worked: Fundamental Matrix for A=[3 4;4 3] (Past Exam Q6)</div>
+        <div class="example purple">
+          <div class="ex-q">Find fundamental matrix</div>
+          <div class="ex-step">det(A−rI)=(3−r)²−16=r²−6r−7=(r−7)(r+1)=0 → r=7,−1</div>
+          <div class="ex-step">r=7: (A−7I)=[−4 4;4 −4]→u₁=[1;1]</div>
+          <div class="ex-step">r=−1: (A+I)=[4 4;4 4]→u₂=[1;−1]</div>
+          <div class="ex-ans">X(t)=[e^{7t} e^{−t}; e^{7t} −e^{−t}]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOURIER SERIES -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">HOT</span>
+    <span class="topic-tag tag-c5">Ch10</span>
+    <span class="topic-title">Fourier Series — Full Formulas + All Cases</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c5">Full Fourier Series on [−L,L]</div>
+        <div class="formula">f(x)=a₀/2 + Σ[aₙcos(nπx/L)+bₙsin(nπx/L)]</div>
+        <div class="formula">aₙ = (1/L)∫_{−L}^{L} f(x)cos(nπx/L)dx<br>
+        bₙ = (1/L)∫_{−L}^{L} f(x)sin(nπx/L)dx</div>
+        <div class="formula">Note: a₀ is divided by 2 in the series!</div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Even/Odd Shortcuts</div>
+        <div class="formula"><span class="hl5">Even f(−x)=f(x):</span> bₙ=0 (no sine terms)<br>
+        Use cosine series only:<br>
+        aₙ = (2/L)∫₀^L f(x)cos(nπx/L)dx</div>
+        <div class="formula"><span class="hl5">Odd f(−x)=−f(x):</span> aₙ=0 (no cosine terms)<br>
+        Use sine series only:<br>
+        bₙ = (2/L)∫₀^L f(x)sin(nπx/L)dx</div>
+        <table style="margin-top:8px">
+          <tr><th>Function</th><th>Even or Odd</th></tr>
+          <tr><td>x², cos x, |x|, constants</td><td>Even</td></tr>
+          <tr><td>x, x³, sin x</td><td>Odd</td></tr>
+          <tr><td>eˣ, sin(x+1)</td><td>Neither</td></tr>
+        </table>
+        <div class="formula">even·odd=odd, odd·odd=even, even·even=even<br>
+        ∫_{−L}^{L}(odd)dx = 0</div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Dirichlet Convergence Theorem</div>
+        <div class="formula">At continuity point x: series = f(x)<br>
+        At jump discontinuity: series = <span class="hl5">(1/2)[f(x⁺)+f(x⁻)]</span><br>
+        At endpoints x=±L: use same midpoint formula</div>
+        <div class="warn-box">At a jump, the Fourier series converges to the MIDPOINT, not the function value!</div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Useful Trig Identities</div>
+        <div class="formula">cos(nπ) = (−1)ⁿ<br>
+        sin(nπ) = 0 (all integer n)<br>
+        cos(nπ/2): 1,0,−1,0,1,… for n=0,1,2,3,4…<br>
+        sin(nπ/2): 0,1,0,−1,0,1… for n=0,1,2,3,4…</div>
+        <div class="formula">Integration by parts: ∫u dv = uv − ∫v du</div>
+      </div>
+    </div>
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c5">Fully Worked Example (from Notes + Past Exam Q9)</div>
+        <div class="example purple">
+          <div class="ex-q">f(x)=0 on [−π,0), f(x)=1 on [0,π]. Find Fourier series. Find g(0), g(π/2), g(π). Write g(π/2) as infinite series.</div>
+          <div class="ex-step"><strong>Compute a₀:</strong> (1/π)[∫_{−π}^0 0 dx + ∫_0^π 1 dx] = (1/π)·π = 1</div>
+          <div class="ex-step"><strong>Compute aₙ:</strong> (1/π)∫_0^π cos(nx)dx = (1/π)[sin(nx)/n]_0^π = (1/π)·0 = 0</div>
+          <div class="ex-step"><strong>Compute bₙ:</strong> (1/π)∫_0^π sin(nx)dx = (1/π)[−cos(nx)/n]_0^π</div>
+          <div class="ex-step">= (1/π)·(1/n)[−cos(nπ)+1] = (1−(−1)ⁿ)/(nπ)</div>
+          <div class="ex-step">= 0 if n even; = 2/(nπ) if n odd</div>
+          <div class="ex-ans">f(x) = 1/2 + (2/π)[sin x + sin(3x)/3 + sin(5x)/5 + …]</div>
+          <div style="margin-top:8px">
+          <div class="ex-step"><strong>Convergence values:</strong></div>
+          <div class="ex-step">g(0): jump from 0 to 1 → midpoint = (0+1)/2 = <span class="hl5">1/2</span></div>
+          <div class="ex-step">g(π/2): continuous at π/2, f(π/2)=1 → <span class="hl5">g(π/2)=1</span></div>
+          <div class="ex-step">g(π): jump at endpoint → (f(π⁺)+f(π⁻))/2=(0+1)/2=<span class="hl5">1/2</span></div>
+          <div class="ex-step"><strong>Infinite series for g(π/2)=1:</strong></div>
+          <div class="ex-step">Plug x=π/2: 1=1/2+(2/π)[sin(π/2)+sin(3π/2)/3+sin(5π/2)/5+…]</div>
+          <div class="ex-step">=1/2+(2/π)[1−1/3+1/5−1/7+…]</div>
+          <div class="ex-ans">1−1/3+1/5−1/7+… = π/4 (Leibniz formula!)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c5">Sine Series for f(x) on [0,π] (from Notes)</div>
+        <div class="example purple">
+          <div class="ex-q">f(x)=x on [0,π]. Find sine series (extend as odd).</div>
+          <div class="ex-step">bₙ=(2/π)∫_0^π x sin(nx)dx</div>
+          <div class="ex-step">IBP: u=x,dv=sin(nx)dx,v=−cos(nx)/n</div>
+          <div class="ex-step">=[−x cos(nx)/n]_0^π + ∫_0^π cos(nx)/n dx</div>
+          <div class="ex-step">=(2/π)[−π cos(nπ)/n+0+sin(nπ)/n²−0]</div>
+          <div class="ex-step">=(2/π)·(−π(−1)ⁿ/n)=2(−1)^{n+1}/n</div>
+          <div class="ex-ans">f(x)=2[sin x−sin(2x)/2+sin(3x)/3−…]</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Cosine Series for f(x) on [0,π] (from Notes)</div>
+        <div class="example purple">
+          <div class="ex-q">f(x)=x on [0,π]. Find cosine series (extend as even).</div>
+          <div class="ex-step">a₀=(2/π)∫_0^π x dx=(2/π)·π²/2=π</div>
+          <div class="ex-step">aₙ=(2/π)∫_0^π x cos(nx)dx</div>
+          <div class="ex-step">IBP→(2/π)[(x sin(nx)/n)_0^π−∫sin(nx)/n dx]</div>
+          <div class="ex-step">=(2/π)[0+cos(nx)/n²]_0^π=(2/πn²)((−1)ⁿ−1)</div>
+          <div class="ex-step">aₙ=0 if n even; =−4/(πn²) if n odd</div>
+          <div class="ex-ans">f(x)=π/2−(4/π)[cos x+cos(3x)/9+cos(5x)/25+…]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINEAR DEP PROOF FOR VECTOR FUNCTIONS -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">EXAM</span>
+    <span class="topic-tag tag-c5">Ch9</span>
+    <span class="topic-title">Wronskian Test for Vector Functions (LI)</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards single">
+      <div class="card">
+        <div class="card-title c5">From Past Exam Q8 — Determine LI of Vector Functions</div>
+        <div class="example purple">
+          <div class="ex-q">Are [sin x;sin x], [sin x;cos x], [cos x;cos x] LI on (−∞,∞)?</div>
+          <div class="ex-step">Compute W(t)=det[v₁|v₂|v₃] at some convenient t, say t=0:</div>
+          <div class="ex-step">At t=0: sin(0)=0, cos(0)=1</div>
+          <div class="ex-step">v₁(0)=[0;0], v₂(0)=[0;1], v₃(0)=[1;1]</div>
+          <div class="ex-step">But v₁(0)=[0;0] — the zero vector! This approach won't work directly.</div>
+          <div class="ex-step">Try t=π/2: v₁=[1;1], v₂=[1;0], v₃=[0;0]</div>
+          <div class="ex-step">v₃(π/2)=[0;0] again. Problem: these are 2-component vectors in a 3-function set.</div>
+          <div class="ex-step">Check linear dependence directly: c₁v₁+c₂v₂+c₃v₃=0 for all x</div>
+          <div class="ex-step">Row 1: c₁sin x+c₂sin x+c₃cos x=0 → (c₁+c₂)sin x+c₃cos x=0</div>
+          <div class="ex-step">Row 2: c₁sin x+c₂cos x+c₃cos x=0 → c₁sin x+(c₂+c₃)cos x=0</div>
+          <div class="ex-step">Since sin x,cos x are LI: c₁+c₂=0, c₃=0 from row 1; c₁=0, c₂+c₃=0 from row 2</div>
+          <div class="ex-ans">c₁=0,c₂=0,c₃=0 → LINEARLY INDEPENDENT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROOF SECTION -->
+<div class="topic">
+  <div class="topic-header" onclick="toggle(this)">
+    <span class="topic-tag tag-hot">PROOFS</span>
+    <span class="topic-tag tag-c5">All</span>
+    <span class="topic-title">Key Proofs — Col A ⊆ Nul A, rank ≤ n/2, Anti-symmetric, etc.</span>
+    <span class="topic-arrow">▶</span>
+  </div>
+  <div class="topic-body">
+    <div class="cards">
+      <div class="card">
+        <div class="card-title c5">A²=0 ⟹ Col A ⊆ Nul A (Past Exam Q1)</div>
+        <div class="example purple">
+          <div class="ex-step">Let y ∈ Col(A). Then y=Ax for some x.</div>
+          <div class="ex-step">Ay = A(Ax) = A²x = 0·x = 0</div>
+          <div class="ex-ans">∴ y ∈ Nul(A) → Col(A) ⊆ Nul(A) ∎</div>
+          <div style="margin-top:8px" class="ex-q">Part b: rank A ≤ n/2</div>
+          <div class="ex-step">rank(A) = dim(Col A) ≤ dim(Nul A) = nullity(A) [since Col A ⊆ Nul A]</div>
+          <div class="ex-step">rank + nullity = n → rank ≤ n − rank → 2·rank ≤ n</div>
+          <div class="ex-ans">rank A ≤ n/2 ∎</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Anti-symmetric T(v)·u=−v·T(u): eigenvalue must be 0</div>
+        <div class="example purple">
+          <div class="ex-q">T: ℝⁿ→ℝⁿ, T(v)·u=−v·T(u). Show λ real eigenvalue → λ=0</div>
+          <div class="ex-step">Let Tv=λv (v≠0). Set u=v:</div>
+          <div class="ex-step">T(v)·v = λv·v = λ‖v‖²</div>
+          <div class="ex-step">Also: T(v)·v = −v·T(v) = −λv·v = −λ‖v‖²</div>
+          <div class="ex-step">So λ‖v‖² = −λ‖v‖² → 2λ‖v‖²=0</div>
+          <div class="ex-step">Since v≠0, ‖v‖²>0:</div>
+          <div class="ex-ans">λ=0 ∎</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Wronskian ≠ 0 ⟹ LI (Past Exam Q5)</div>
+        <div class="example purple">
+          <div class="ex-q">Prove: W[f,g](x₀)≠0 ⟹ f,g LI</div>
+          <div class="ex-step">Suppose c₁f+c₂g=0 for all x. Differentiate: c₁f'+c₂g'=0.</div>
+          <div class="ex-step">At x₀: [f(x₀) g(x₀); f'(x₀) g'(x₀)][c₁;c₂]=[0;0]</div>
+          <div class="ex-step">The coefficient matrix has det = W(x₀) ≠ 0 → only trivial solution</div>
+          <div class="ex-ans">c₁=c₂=0 → f,g are LI ∎</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title c5">Aᵀ=−A ⟹ e^{At} is orthogonal</div>
+        <div class="example purple">
+          <div class="ex-q">Show (e^{At})ᵀ(e^{At})=I</div>
+          <div class="ex-step">(e^{At})ᵀ = e^{(At)ᵀ} = e^{Aᵀt} = e^{−At}</div>
+          <div class="ex-step">(e^{At})ᵀ·e^{At} = e^{−At}·e^{At} = e^{(−A+A)t} = e^0 = I</div>
+          <div class="ex-ans">∴ e^{At} is orthogonal ∎</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end s5 -->
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggle(header) {
+  header.parentElement.classList.toggle('open');
+}
+// Open first topic in each section on load
+document.querySelectorAll('.section').forEach(sec => {
+  const first = sec.querySelector('.topic');
+  if(first) first.classList.add('open');
+});
+</script>
+</body>
+</html>

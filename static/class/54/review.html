@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 54 — Complete Final Review</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" async></script>
+<style>
+:root{--bg:#0f0e17;--surface:#1a1928;--surface2:#222135;--border:#33314d;--text:#e4dfd8;--muted:#8a8699;--gold:#e8b84b;--gold-dim:#b8902a;--blue:#7eb8f7;--teal:#5fd4c8;--green:#7fcba0;--red:#f07878;--purple:#b888f0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'EB Garamond',Georgia,serif;background:var(--bg);color:var(--text);font-size:17px;line-height:1.75;min-height:100vh;}
+.site-header{background:linear-gradient(135deg,#1a1928,#0f0e17);border-bottom:2px solid var(--gold-dim);padding:16px 28px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:200;}
+.site-header h1{font-family:'Cinzel',serif;font-size:1.25rem;color:var(--gold);letter-spacing:.06em;}
+.site-header p{font-size:.83rem;color:var(--muted);font-style:italic;}
+.tab-nav{display:flex;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--border);padding:0 12px;gap:2px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;position:sticky;top:62px;z-index:100;}
+.tab-nav::-webkit-scrollbar{height:3px;}
+.tab-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.tab-btn{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;padding:13px 16px;border:none;background:none;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;}
+.tab-btn:hover{color:var(--gold-dim);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab-content{display:none;padding:32px;max-width:980px;margin:0 auto;}
+.tab-content.active{display:block;}
+.section{margin-bottom:42px;}
+.section-title{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:20px;margin-top:30px;}
+.box{border-radius:6px;padding:16px 20px;margin-bottom:14px;border-left:3px solid;}
+.box-theorem{background:rgba(232,184,75,.07);border-color:var(--gold);}
+.box-formula{background:rgba(95,212,200,.07);border-color:var(--teal);}
+.box-example{background:rgba(126,184,247,.07);border-color:var(--blue);}
+.box-warning{background:rgba(240,120,120,.08);border-color:var(--red);}
+.box-exam{background:rgba(184,136,240,.07);border-color:var(--purple);}
+.box-label{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px;display:block;}
+.box-theorem .box-label{color:var(--gold);}
+.box-formula .box-label{color:var(--teal);}
+.box-example .box-label{color:var(--blue);}
+.box-warning .box-label{color:var(--red);}
+.box-exam .box-label{color:var(--purple);}
+.step{display:flex;gap:14px;margin-bottom:10px;align-items:flex-start;}
+.step-num{min-width:26px;height:26px;border-radius:50%;background:var(--gold);color:var(--bg);font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;}
+.step-body{flex:1;}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.rule-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:11px 14px;font-size:.9rem;}
+.rule-num{color:var(--gold);font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;margin-bottom:3px;display:block;letter-spacing:.1em;}
+.math-block{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px 20px;margin:12px 0;overflow-x:auto;text-align:center;}
+.case{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:8px;}
+.case-title{color:var(--blue);font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem;}
+th{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:9px 12px;background:var(--surface2);border:1px solid var(--border);}
+td{padding:8px 12px;border:1px solid var(--border);vertical-align:top;}
+tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.highlight{color:var(--gold);font-weight:600;}
+.hl-blue{color:var(--blue);}
+.hl-teal{color:var(--teal);}
+.hl-red{color:var(--red);}
+.hl-green{color:var(--green);}
+.hl-purple{color:var(--purple);}
+@media(max-width:720px){.rules-grid,.two-col{grid-template-columns:1fr;}.tab-btn{padding:11px 11px;}.tab-content{padding:20px 14px;}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <h1>Math 54 — Complete Final Review</h1>
+    <p>Linear Algebra &amp; Differential Equations · Every theorem, procedure &amp; worked example</p>
+  </div>
+</header>
+
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn active" onclick="showTab('t1',this)">Linear Systems</button>
+  <button class="tab-btn" onclick="showTab('t2',this)">Lin. Transforms</button>
+  <button class="tab-btn" onclick="showTab('t3',this)">Determinants</button>
+  <button class="tab-btn" onclick="showTab('t4',this)">Vector Spaces</button>
+  <button class="tab-btn" onclick="showTab('t5',this)">Eigenvalues</button>
+  <button class="tab-btn" onclick="showTab('t6',this)">Orthogonality</button>
+  <button class="tab-btn" onclick="showTab('t7',this)">Symmetric &amp; SVD</button>
+  <button class="tab-btn" onclick="showTab('t8',this)">Scalar ODEs</button>
+  <button class="tab-btn" onclick="showTab('t9',this)">Systems of ODEs</button>
+  <button class="tab-btn" onclick="showTab('t10',this)">Fourier Series</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 1 — LINEAR SYSTEMS
+════════════════════════════════════════════════════ -->
+<div id="t1" class="tab-content active">
+
+<div class="section">
+<div class="section-title">Rules for Linear Dependence (LD)</div>
+<p>A set of vectors is <strong>Linearly Dependent (LD)</strong> if one vector can be written as a linear combination of the others (equivalently, if \(c_1\mathbf{v}_1+\cdots+c_n\mathbf{v}_n=\mathbf{0}\) has a nontrivial solution).</p>
+<div class="rules-grid" style="margin-top:14px;">
+  <div class="rule-card"><span class="rule-num">Rule 1</span>If <strong>0</strong> is in the collection → LD (the zero vector is always a linear combination of anything).</div>
+  <div class="rule-card"><span class="rule-num">Rule 2</span>If two vectors are <strong>scalar multiples</strong> of each other → LD.</div>
+  <div class="rule-card"><span class="rule-num">Rule 3</span><strong>More columns than rows</strong> (more vectors than dimension) → LD.</div>
+  <div class="rule-card"><span class="rule-num">Rule 4</span><strong>Repeated vectors</strong> in the collection → LD.</div>
+  <div class="rule-card"><span class="rule-num">Rule 5</span>Any vector is a <strong>multiple</strong> of another in the collection → LD.</div>
+  <div class="rule-card"><span class="rule-num">Rule 6</span>One vector is a <strong>linear combination</strong> of the others → LD.</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Linear Independence &amp; Spanning</div>
+<div class="box box-theorem">
+  <span class="box-label">Theorem — Linear Independence (LI)</span>
+  A set \(\{\mathbf{v}_1,\ldots,\mathbf{v}_n\}\) is <strong>Linearly Independent</strong> if and only if the only solution to
+  \[c_1\mathbf{v}_1+c_2\mathbf{v}_2+\cdots+c_n\mathbf{v}_n=\mathbf{0}\quad\text{is}\quad c_1=c_2=\cdots=c_n=0.\]
+  <strong>How to check:</strong> Form a matrix with the vectors as columns and row-reduce. The set is LI if and only if <em>every column has a pivot</em> (no free variables).
+</div>
+<div class="box box-theorem">
+  <span class="box-label">Theorem — Spanning \(\mathbb{R}^n\)</span>
+  A set of vectors spans \(\mathbb{R}^n\) if and only if every vector in \(\mathbb{R}^n\) can be written as a linear combination of them. <strong>Check:</strong> the matrix formed by the vectors has a pivot in <em>every row</em>.
+</div>
+<div class="box box-theorem">
+  <span class="box-label">Square Matrix Theorem (All or Nothing)</span>
+  For an \(n\times n\) square matrix: \[\text{LI} \iff \text{Spanning } \mathbb{R}^n \iff \text{Invertible} \iff \det(A)\neq 0.\]
+  All four properties hold simultaneously or all fail.
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Solutions to \(A\mathbf{x}=\mathbf{b}\)</div>
+<div class="box box-formula">
+  <span class="box-label">Existence (Consistency)</span>
+  The system \(A\mathbf{x}=\mathbf{b}\) is <strong>consistent</strong> (has at least one solution) if and only if <strong>the rightmost column of the augmented matrix \([A|\mathbf{b}]\) is NOT a pivot column</strong>, i.e., no row of the form \([0\ 0\ \cdots\ 0\ |\ c]\) with \(c\neq 0\) appears.
+</div>
+<div class="box box-formula">
+  <span class="box-label">Uniqueness</span>
+  If the system is consistent, the solution is <strong>unique</strong> if and only if there are <strong>no free variables</strong> (every variable corresponds to a pivot column). If there is at least one free variable (non-pivot column), there are <strong>infinitely many solutions</strong>.
+</div>
+<table>
+  <tr><th>Case</th><th>Description</th><th>Geometric picture in \(\mathbb{R}^2\)</th></tr>
+  <tr><td><strong>No solution</strong></td><td>Inconsistent: pivot appears in rightmost column of \([A|\mathbf{b}]\)</td><td>Parallel lines</td></tr>
+  <tr><td><strong>Unique solution</strong></td><td>Consistent + no free variables</td><td>Lines meet at one point</td></tr>
+  <tr><td><strong>Infinitely many</strong></td><td>Consistent + at least one free variable</td><td>Lines coincide</td></tr>
+</table>
+<div class="box box-formula">
+  <span class="box-label">Parametric Vector Form</span>
+  Free variables become parameters. Express solution as \(\mathbf{x}=s\mathbf{u}+t\mathbf{v}+\mathbf{p}\) where \(\mathbf{p}\) is a particular solution and \(\mathbf{u},\mathbf{v}\) come from the null space.
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Echelon Forms</div>
+<div class="two-col">
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Row Echelon Form (REF)</span>
+    Staircase pattern: each leading entry (pivot) is to the right of the pivot in the row above. All zeros below each pivot. Rows of all zeros at the bottom.
+  </div>
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Reduced Row Echelon Form (RREF)</span>
+    REF plus: each pivot is <strong>1</strong>, and all entries <strong>above and below</strong> each pivot are <strong>0</strong>. RREF is unique.
+  </div>
+</div>
+<div class="box box-warning" style="margin-top:12px;">
+  <span class="box-label">Important Notes</span>
+  • \(A\mathbf{x}=\mathbf{b}\) has the same solution set as \(x_1\mathbf{a}_1+\cdots+x_n\mathbf{a}_n=\mathbf{b}\) where \(\mathbf{a}_i\) are columns of \(A\).<br>
+  • \(A\mathbf{x}=\mathbf{b}\) has a solution iff \(\mathbf{b}\) is a linear combination of the columns of \(A\).<br>
+  • \(A\mathbf{x}=\mathbf{0}\) <em>always</em> has the trivial solution \(\mathbf{x}=\mathbf{0}\); a nontrivial solution exists iff there is a free variable.
+</div>
+</div>
+
+</div><!-- end t1 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 2 — LINEAR TRANSFORMATIONS
+════════════════════════════════════════════════════ -->
+<div id="t2" class="tab-content">
+
+<div class="section">
+<div class="section-title">Linear Transformations</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition</span>
+  A function \(T:V\to W\) is a <strong>linear transformation</strong> if and only if all three hold:
+  <ol style="margin-left:20px;margin-top:8px;">
+    <li>\(T(\mathbf{u}+\mathbf{v})=T(\mathbf{u})+T(\mathbf{v})\) for all \(\mathbf{u},\mathbf{v}\in V\)</li>
+    <li>\(T(c\mathbf{u})=cT(\mathbf{u})\) for all scalars \(c\) and \(\mathbf{u}\in V\)</li>
+    <li>\(T(\mathbf{0})=\mathbf{0}\) (follows from 2 with \(c=0\), but good to verify)</li>
+  </ol>
+</div>
+<div class="box box-formula">
+  <span class="box-label">Finding the Standard Matrix \([T]\)</span>
+  If \(T:\mathbb{R}^n\to\mathbb{R}^m\), the standard matrix has <strong>columns \(T(\mathbf{e}_1), T(\mathbf{e}_2),\ldots,T(\mathbf{e}_n)\)</strong> where \(\mathbf{e}_i\) are the standard basis vectors:
+  \[[T]=\begin{bmatrix}|&|&&|\\ T(\mathbf{e}_1)&T(\mathbf{e}_2)&\cdots&T(\mathbf{e}_n)\\ |&|&&|\end{bmatrix}\]
+  Then \(T(\mathbf{x})=[T]\mathbf{x}\) for all \(\mathbf{x}\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Kernel and Image</div>
+<div class="two-col">
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Image / Column Space</span>
+    \[\text{Img}(T)=\{T(\mathbf{v})\mid \mathbf{v}\in V\}\]
+    If \(T\) is represented by matrix \(A\): Img\((T)=\text{Col}(A)\) = span of columns of \(A\).
+  </div>
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Kernel / Null Space</span>
+    \[\text{Ker}(T)=\{\mathbf{v}\in V\mid T(\mathbf{v})=\mathbf{0}\}\]
+    If \(T\) is matrix \(A\): Ker\((T)=\text{Nul}(A)=\{\mathbf{x}\mid A\mathbf{x}=\mathbf{0}\}\).
+  </div>
+</div>
+<div style="margin-top:14px;">
+<table>
+  <tr><th>Property</th><th>Condition</th><th>Matrix Equivalent</th></tr>
+  <tr><td><strong>Injective / One-to-One</strong></td><td>Ker\((T)=\{\mathbf{0}\}\) only</td><td>Pivot in every column; \(T(\mathbf{x})=\mathbf{0}\Rightarrow \mathbf{x}=\mathbf{0}\)</td></tr>
+  <tr><td><strong>Surjective / Onto</strong></td><td>Img\((T)=W\)</td><td>Pivot in every row; every \(\mathbf{b}\) is achievable</td></tr>
+  <tr><td><strong>Bijective / Invertible</strong></td><td>Both injective and surjective</td><td>\(\det([T])\neq 0\) (square matrices only)</td></tr>
+</table>
+</div>
+<div class="box box-warning">
+  <span class="box-label">Key Fact</span>
+  For square matrices: injective \(\Leftrightarrow\) surjective \(\Leftrightarrow\) invertible. If \(\det(A)=\pm1\) and \(A\) has integer entries, then \(A^{-1}\) also has integer entries (pure rotation/inversion).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Linear Subspaces</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition</span>
+  A subset \(V_0\subseteq V_1\) is a <strong>linear subspace</strong> of \(V_1\) if and only if:
+  <ol style="margin-left:20px;margin-top:8px;">
+    <li>\(V_0\) is non-empty (equivalently, \(\mathbf{0}\in V_0\))</li>
+    <li>\(V_0\) is <strong>closed under scalar multiplication</strong>: if \(\mathbf{u}\in V_0\) then \(c\mathbf{u}\in V_0\)</li>
+    <li>\(V_0\) is <strong>closed under addition</strong>: if \(\mathbf{u},\mathbf{v}\in V_0\) then \(\mathbf{u}+\mathbf{v}\in V_0\)</li>
+  </ol>
+  Both Ker\((T)\) and Img\((T)\) are always subspaces.
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Basis and Dimension</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition</span>
+  A <strong>basis</strong> of a vector space \(V\) is a collection of vectors that is simultaneously:
+  <ul style="margin-left:20px;margin-top:6px;">
+    <li><strong>Linearly Independent</strong>, and</li>
+    <li><strong>Spanning</strong> (every vector in \(V\) is a unique linear combination of basis vectors).</li>
+  </ul>
+  The <strong>dimension</strong> of \(V\) = number of vectors in any basis. Every basis has the same size.
+</div>
+<div class="box box-formula">
+  <span class="box-label">Key Facts</span>
+  • If \(V\) has a basis of \(n\) vectors, any set of &gt;\(n\) vectors in \(V\) must be LD.<br>
+  • Every basis of \(V\) has exactly \(n\) vectors.<br>
+  • Polynomial space \(\mathcal{P}_n\) (degree \(\leq n\)): dimension \(= n+1\), basis \(= \{1, x, x^2, \ldots, x^n\}\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Change of Basis</div>
+<div class="box box-formula">
+  <span class="box-label">Four Key Formulas</span>
+  <div class="step"><div class="step-num">1</div><div class="step-body">To find coordinates of \(\mathbf{v}=[a,b]^T\) (in old basis \(\{\mathbf{e}_1,\mathbf{e}_2\}\)) in new basis \(\mathcal{B}'=\{\mathbf{e}_1',\mathbf{e}_2'\}\): solve \([\mathbf{e}_1'\ \mathbf{e}_2'][x,y]^T=[a,b]^T\), i.e., multiply both sides by the inverse of the change-of-basis matrix.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body">To compute \(P_{\mathcal{B}\to\mathcal{C}}\) (change-of-basis from \(\mathcal{B}\) to \(\mathcal{C}\)): row-reduce \([\mathbf{c}_1\ \mathbf{c}_2\ |\ \mathbf{b}_1\ \mathbf{b}_2]\sim[I\ |\ P]\). Then \(P=P_{\mathcal{B}\to\mathcal{C}}\).</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body">\(P_{\mathcal{B}\to\mathcal{C}}^{-1}=P_{\mathcal{C}\to\mathcal{B}}\).</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body">If you know the relationship directly, e.g., \(\mathbf{b}_1=4\mathbf{c}_1+\mathbf{c}_2\) and \(\mathbf{b}_2=-6\mathbf{c}_1+\mathbf{c}_2\), just read off columns: \(P_{\mathcal{B}\to\mathcal{C}}=\begin{bmatrix}4&-6\\1&1\end{bmatrix}\).</div></div>
+</div>
+
+<div class="box box-exam">
+  <span class="box-label">Past Exam Example — \(T:\mathcal{P}_2\to\mathcal{P}_2\)</span>
+  Let \(T(f)=t^2f''+f'+f\). Find the matrix of \(T\) relative to basis \(\mathcal{B}=\{1,t,t^2\}\).
+  <div class="math-block">
+  Apply \(T\) to each basis vector:<br><br>
+  \(T(1):\; f=1,\; f'=0,\; f''=0 \;\Rightarrow\; T(1)=t^2(0)+0+1=1=1\cdot1+0\cdot t+0\cdot t^2\)  →  column \([1,0,0]^T\)<br><br>
+  \(T(t):\; f=t,\; f'=1,\; f''=0 \;\Rightarrow\; T(t)=0+1+t=1+t=1\cdot1+1\cdot t+0\cdot t^2\)  →  column \([1,1,0]^T\)<br><br>
+  \(T(t^2):\; f=t^2,\; f'=2t,\; f''=2 \;\Rightarrow\; T(t^2)=t^2(2)+2t+t^2=2t^2+2t+t^2=2t+3t^2\)  →  column \([0,2,3]^T\)<br><br>
+  \[[T]_{\mathcal{B}}=\begin{bmatrix}1&1&0\\0&1&2\\0&0&3\end{bmatrix}\]
+  Eigenvalues: since \([T]_\mathcal{B}\) is <strong>upper triangular</strong>, eigenvalues are the diagonal entries: \(\lambda=1,1,3\).
+  </div>
+</div>
+</div>
+
+</div><!-- end t2 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 3 — DETERMINANTS
+════════════════════════════════════════════════════ -->
+<div id="t3" class="tab-content">
+
+<div class="section">
+<div class="section-title">Effect of Row Operations on \(\det(A)\)</div>
+<table>
+  <tr><th>Row Operation</th><th>Effect on \(\det\)</th></tr>
+  <tr><td>Swap two rows</td><td>Multiply \(\det\) by \(-1\) (flip sign)</td></tr>
+  <tr><td>Multiply a row by scalar \(k\)</td><td>Multiply \(\det\) by \(k\)</td></tr>
+  <tr><td>Add a multiple of one row to another</td><td>\(\det\) stays the <strong>same</strong></td></tr>
+</table>
+</div>
+
+<div class="section">
+<div class="section-title">Key Determinant Properties</div>
+<div class="box box-formula">
+  <span class="box-label">Essential Properties</span>
+  <ul style="margin-left:20px;line-height:2.2;">
+    <li><strong>Triangular matrix:</strong> \(\det(A)=\) product of diagonal entries.</li>
+    <li><strong>Scaling whole matrix:</strong> \(\det(kA)=k^n\det(A)\) for an \(n\times n\) matrix.</li>
+    <li><strong>Product rule:</strong> \(\det(AB)=\det(A)\det(B)\).</li>
+    <li><strong>Transpose:</strong> \(\det(A^T)=\det(A)\).</li>
+    <li><strong>Inverse:</strong> \(\det(A^{-1})=1/\det(A)\).</li>
+    <li><strong>Area/Volume:</strong> \(|\det(A)|\) = area of parallelogram (in \(\mathbb{R}^2\)) or volume of parallelepiped (in \(\mathbb{R}^3\)) formed by the columns of \(A\).</li>
+    <li><strong>Singular:</strong> \(\det(A)=0 \Leftrightarrow A\) is not invertible.</li>
+    <li><strong>Integer matrix:</strong> If \(A\) has integer entries and \(\det(A)=\pm1\), then \(A^{-1}\) also has integer entries (\(\pm1\) det means pure rotation/inversion).</li>
+  </ul>
+</div>
+<div class="box box-formula">
+  <span class="box-label">2×2 Inverse Formula</span>
+  \[\begin{bmatrix}a&b\\c&d\end{bmatrix}^{-1}=\frac{1}{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\qquad(\text{swap diagonal, negate off-diagonal, divide by det})\]
+</div>
+<div class="box box-formula">
+  <span class="box-label">Orthogonal Matrix</span>
+  If \(A\) is orthogonal (\(A^{-1}=A^T\)): \(\det(A)=\pm1\).
+</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam — Integer Matrix Proof</span>
+  <strong>Claim:</strong> If all entries of \(A\) and \(A^{-1}\) are integers, then \(\det A=\pm1\).<br><br>
+  <strong>Proof:</strong> Since all entries of \(A\) are integers, \(\det A\in\mathbb{Z}\). Since all entries of \(A^{-1}\) are integers, \(\det(A^{-1})\in\mathbb{Z}\). But \(\det(A)\cdot\det(A^{-1})=\det(AA^{-1})=\det(I)=1\). So two integers multiply to 1, which forces both to be \(\pm1\).<br><br>
+  <strong>Converse:</strong> If entries of \(A\) are integers and \(\det A=\pm1\), use the adjugate formula: \(A^{-1}=\frac{1}{\det A}\text{adj}(A)\). Since \(\text{adj}(A)\) has integer entries (it's made of \((n-1)\times(n-1)\) minors of \(A\)) and \(\det A=\pm1\), all entries of \(A^{-1}\) are integers.
+</div>
+</div>
+
+</div><!-- end t3 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 4 — VECTOR SPACES & BASES (Ch. 4)
+════════════════════════════════════════════════════ -->
+<div id="t4" class="tab-content">
+
+<div class="section">
+<div class="section-title">Column Space, Null Space, Rank, Nullity</div>
+<div class="two-col">
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Column Space / Col(A)</span>
+    Also called Range, Img\((A)\). The set of all possible outputs: \(\text{Col}(A)=\{A\mathbf{x}\mid\mathbf{x}\in\mathbb{R}^n\}\). It is the <strong>span of the columns</strong> of \(A\). Lives in the output space \(\mathbb{R}^m\).
+  </div>
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Null Space / Nul(A)</span>
+    Also called Kernel. All inputs mapped to zero: \(\text{Nul}(A)=\{\mathbf{x}\mid A\mathbf{x}=\mathbf{0}\}\). Lives in the input space \(\mathbb{R}^n\).
+  </div>
+</div>
+<div class="two-col" style="margin-top:12px;">
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Rank</span>
+    \(\text{rank}(A)=\dim(\text{Col}(A))=\) <strong>number of pivot columns</strong> in row echelon form.
+  </div>
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Nullity</span>
+    \(\text{nullity}(A)=\dim(\text{Nul}(A))=\) <strong>number of free variables</strong> = number of non-pivot columns.
+  </div>
+</div>
+<div class="box box-theorem" style="margin-top:12px;">
+  <span class="box-label">Rank-Nullity Theorem</span>
+  For any linear map \(T:V\to W\) (or \(m\times n\) matrix \(A\)):
+  \[\text{rank}(T)+\text{nullity}(T)=\dim(V)=\text{number of columns of } A.\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Finding Bases</div>
+<div class="box box-formula">
+  <span class="box-label">Basis for Col(A)</span>
+  Row-reduce \(A\) to echelon form. Identify the pivot columns. <strong>Take the corresponding columns from the original matrix \(A\)</strong> (not from the reduced form) as the basis.
+</div>
+<div class="box box-formula">
+  <span class="box-label">Basis for Nul(A)</span>
+  Solve \(A\mathbf{x}=\mathbf{0}\) (row-reduce \([A|0]\)). Express each free variable parametrically. Each free variable contributes one basis vector.
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Finding Nul Basis</span>
+  If row reduction gives \([\tilde{A}|\mathbf{0}]\sim\begin{bmatrix}1&0&-\frac{1}{2}&0\\0&0&1&0\end{bmatrix}\), then \(x_2\) is free (call it \(s\)), \(x_4\) is free (call it \(t\)):
+  From row 2: \(x_3=0\). From row 1: \(x_1=\frac{1}{2}x_2=\frac{s}{2}\). So:
+  \[\mathbf{x}=s\begin{bmatrix}\frac{1}{2}\\1\\0\\0\end{bmatrix}+t\begin{bmatrix}0\\0\\0\\1\end{bmatrix}\]
+  Basis for Nul\((A)\): \(\left\{\begin{bmatrix}1/2\\1\\0\\0\end{bmatrix},\begin{bmatrix}0\\0\\0\\1\end{bmatrix}\right\}\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Change of Basis — Detailed Procedure</div>
+<div class="box box-formula">
+  <span class="box-label">Change-of-Basis Matrix \(P_{\mathcal{B}\to\mathcal{C}}\)</span>
+  To express vectors in basis \(\mathcal{B}\) using basis \(\mathcal{C}\):
+  \[\text{Row-reduce}\quad[\mathbf{c}_1\ \mathbf{c}_2\ \cdots\ |\ \mathbf{b}_1\ \mathbf{b}_2\ \cdots]\sim[I\ |\ P_{\mathcal{B}\to\mathcal{C}}]\]
+  Then: \([\mathbf{v}]_\mathcal{C}=P_{\mathcal{B}\to\mathcal{C}}[\mathbf{v}]_\mathcal{B}\).
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Direct Reading</span>
+  If \(\mathbf{b}_1=4\mathbf{c}_1+\mathbf{c}_2\) and \(\mathbf{b}_2=-6\mathbf{c}_1+\mathbf{c}_2\):
+  \[P_{\mathcal{B}\to\mathcal{C}}=\begin{bmatrix}4&-6\\1&1\end{bmatrix}\]
+  The columns record the \(\mathcal{C}\)-coordinates of each \(\mathcal{B}\)-vector. Note: \(P_{\mathcal{C}\to\mathcal{B}}=P_{\mathcal{B}\to\mathcal{C}}^{-1}\).
+</div>
+</div>
+
+</div><!-- end t4 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 5 — EIGENVALUES & DIAGONALIZATION
+════════════════════════════════════════════════════ -->
+<div id="t5" class="tab-content">
+
+<div class="section">
+<div class="section-title">Eigenvalues — Definition &amp; Finding</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition</span>
+  A scalar \(\lambda\) is an <strong>eigenvalue</strong> of \(A\) if there exists a <strong>nonzero vector</strong> \(\mathbf{v}\) such that \(A\mathbf{v}=\lambda\mathbf{v}\). Such a \(\mathbf{v}\) is an <strong>eigenvector</strong>.
+</div>
+<div class="box box-formula">
+  <span class="box-label">Procedure — Find All Eigenvalues</span>
+  <div class="step"><div class="step-num">1</div><div class="step-body">Set up the <strong>characteristic equation</strong>: \(\det(A-\lambda I)=0\).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body">Expand and solve this polynomial equation for \(\lambda\). The polynomial \(\det(A-\lambda I)\) is the <strong>characteristic polynomial</strong> of degree \(n\) for an \(n\times n\) matrix.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Shortcut for triangular matrices</strong> (all entries above or below diagonal = 0): eigenvalues are exactly the diagonal entries.</div></div>
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Find Eigenvalues of \(A=\begin{bmatrix}1&2\\8&1\end{bmatrix}\)</span>
+  \[\det(A-\lambda I)=\det\begin{bmatrix}1-\lambda&2\\8&1-\lambda\end{bmatrix}=(1-\lambda)^2-16=\lambda^2-2\lambda-15=(\lambda-5)(\lambda+3)\]
+  Eigenvalues: \(\lambda_1=5,\quad\lambda_2=-3\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Eigenspaces — Finding Eigenvectors</div>
+<div class="box box-formula">
+  <span class="box-label">Eigenspace Definition</span>
+  The <strong>eigenspace</strong> for eigenvalue \(\lambda\) is \(E_\lambda=\text{Nul}(A-\lambda I)\), i.e., all solutions to \((A-\lambda I)\mathbf{v}=\mathbf{0}\). It includes \(\mathbf{0}\) plus all eigenvectors for \(\lambda\).
+  \[{\mathbf{v}\in E_\lambda}\iff A\mathbf{v}=\lambda\mathbf{v}\iff(A-\lambda I)\mathbf{v}=\mathbf{0}\iff\mathbf{v}\in\text{Nul}(A-\lambda I).\]
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Find Eigenvectors of \(A=\begin{bmatrix}1&2\\8&1\end{bmatrix}\)</span>
+  <strong>For \(\lambda_1=5\):</strong> Row-reduce \([A-5I\,|\,\mathbf{0}]=\begin{bmatrix}-4&2&0\\8&-4&0\end{bmatrix}\sim\begin{bmatrix}1&-\frac{1}{2}&0\\0&0&0\end{bmatrix}\).
+  Free variable \(x_2=s\), so \(x_1=\frac{s}{2}\). Eigenvector: \(\begin{bmatrix}1\\2\end{bmatrix}\).<br><br>
+  <strong>For \(\lambda_2=-3\):</strong> Row-reduce \([A+3I\,|\,\mathbf{0}]=\begin{bmatrix}4&2&0\\8&4&0\end{bmatrix}\sim\begin{bmatrix}1&\frac{1}{2}&0\\0&0&0\end{bmatrix}\).
+  Eigenvector: \(\begin{bmatrix}1\\-2\end{bmatrix}\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Key Theorems</div>
+<div class="box box-theorem">
+  <span class="box-label">Important Theorems</span>
+  <ul style="margin-left:20px;line-height:2.3;">
+    <li>\(0\) is an eigenvalue of \(A\) \(\Leftrightarrow\) \(A\) is <strong>not invertible</strong> (det = 0).</li>
+    <li>Eigenvectors from <strong>distinct eigenvalues</strong> are always <strong>linearly independent</strong>.</li>
+    <li>If \(B=P^{-1}AP\), then \(A\) and \(B\) have the <strong>same eigenvalues</strong> (same characteristic polynomial). They are called <strong>similar</strong>.</li>
+    <li>If \(A\mathbf{v}=\lambda\mathbf{v}\), then \(A^k\mathbf{v}=\lambda^k\mathbf{v}\).</li>
+    <li>\(\det(AB)=\det(A)\det(B)\) and \(\det(A^T)=\det(A)\).</li>
+  </ul>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Diagonalization</div>
+<div class="box box-theorem">
+  <span class="box-label">Condition</span>
+  An \(n\times n\) matrix \(A\) is <strong>diagonalizable</strong> if and only if it has <strong>\(n\) linearly independent eigenvectors</strong>. This is guaranteed if \(A\) has \(n\) distinct eigenvalues (but not necessary — repeated eigenvalues may still work if eigenspaces are large enough).
+</div>
+<div class="box box-formula">
+  <span class="box-label">4-Step Diagonalization Procedure</span>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Find all eigenvalues</strong> by solving \(\det(A-\lambda I)=0\).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>For each eigenvalue</strong>, find a basis for its eigenspace by row-reducing \([A-\lambda I\,|\,\mathbf{0}]\). You need \(n\) total LI eigenvectors across all eigenspaces.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Build \(P\)</strong>: place the eigenvectors as columns (in any consistent order).</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Build \(D\)</strong>: diagonal matrix with eigenvalues in the same order as the corresponding eigenvectors in \(P\).</div></div>
+</div>
+<div class="box box-formula">
+  <span class="box-label">Key Identity &amp; Power Formula</span>
+  \[A=PDP^{-1}\qquad\Rightarrow\qquad A^k=PD^kP^{-1}\]
+  Since \(D\) is diagonal, \(D^k=\text{diag}(\lambda_1^k,\lambda_2^k,\ldots)\). Meaning: <strong>changing to the eigenvector basis makes the transformation just scaling along each axis</strong>.
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Diagonalizing \(A=\begin{bmatrix}1&2\\8&1\end{bmatrix}\)</span>
+  From above: \(\lambda_1=5\) with eigenvector \([1,2]^T\); \(\lambda_2=-3\) with eigenvector \([1,-2]^T\).
+  \[P=\begin{bmatrix}1&1\\2&-2\end{bmatrix},\quad D=\begin{bmatrix}5&0\\0&-3\end{bmatrix},\quad A=PDP^{-1}.\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Complex Eigenvalues (for Real Matrices)</div>
+<div class="box box-theorem">
+  <span class="box-label">Theorem</span>
+  When a <strong>real matrix</strong> has complex eigenvalues, they always come in conjugate pairs \(\lambda=a\pm bi\). The corresponding eigenvectors are also conjugates.
+</div>
+<div class="box box-formula">
+  <span class="box-label">Rotation-Scaling Decomposition</span>
+  Any real \(2\times2\) matrix with complex eigenvalue \(\lambda=a+bi\) (\(b\neq0\)) can be written as \(A=PCP^{-1}\) where:
+  \[C=\begin{bmatrix}a&-b\\b&a\end{bmatrix},\quad P=[\text{Re}\,\mathbf{v}\quad\text{Im}\,\mathbf{v}]\]
+  (\(\mathbf{v}\) is an eigenvector for \(\lambda=a+bi\)). The matrix \(C\) encodes a <strong>rotation by angle \(\varphi=\arg(\lambda)\)</strong> combined with <strong>scaling by \(|\lambda|=\sqrt{a^2+b^2}\)</strong>.<br><br>
+  Euler: \(a+bi=re^{i\theta}\) where \(r=\sqrt{a^2+b^2}\) and \(\theta=\arctan(b/a)\). Complex multiplication: \((a+bi)(c+di)=(ac-bd)+(ad+bc)i\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Past Exam Topics — Eigenvalue Proofs</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam — \(A^2=0\) Implies Col\(A\subseteq\) Nul\(A\)</span>
+  <strong>(a)</strong> If \(A^2=0\), then for any \(\mathbf{y}=A\mathbf{x}\in\text{Col}(A)\): \(A\mathbf{y}=A(A\mathbf{x})=A^2\mathbf{x}=\mathbf{0}\), so \(\mathbf{y}\in\text{Nul}(A)\). ∴ Col\(A\subseteq\) Nul\(A\). ✓<br><br>
+  <strong>(b)</strong> Since Col\(A\subseteq\) Nul\(A\): rank\((A)=\dim(\text{Col}A)\leq\dim(\text{Nul}A)=n-\text{rank}(A)\), so \(2\cdot\text{rank}(A)\leq n\), i.e., rank\(A\leq n/2\).
+</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam — Projection Operator Eigenvalues</span>
+  Let \(V\) be a \(k\)-dimensional subspace of \(\mathbb{R}^n\). Let \(T(\mathbf{y})=\text{proj}_V\mathbf{y}\) with standard matrix \(A\).<br><br>
+  <strong>Eigenvalues:</strong> If \(\mathbf{v}\in V\), then \(A\mathbf{v}=\mathbf{v}\), so \(\lambda=1\) is an eigenvalue with eigenspace \(V\) (dim \(k\)). If \(\mathbf{w}\perp V\), then \(A\mathbf{w}=\mathbf{0}\), so \(\lambda=0\) is an eigenvalue with eigenspace \(V^\perp\) (dim \(n-k\)).<br><br>
+  Eigenvalues: \(\lambda=1\) (multiplicity \(k\)) and \(\lambda=0\) (multiplicity \(n-k\)).<br>
+  Characteristic polynomial: \((-1)^n\lambda^{n-k}(\lambda-1)^k\).<br>
+  Rank = \(k\); Nullity = \(n-k\). \(A\) is symmetric (projections onto subspaces always produce symmetric matrices).
+</div>
+</div>
+
+</div><!-- end t5 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 6 — ORTHOGONALITY & LEAST SQUARES
+════════════════════════════════════════════════════ -->
+<div id="t6" class="tab-content">
+
+<div class="section">
+<div class="section-title">Inner Products, Norms, Orthogonality</div>
+<div class="box box-formula">
+  <span class="box-label">Key Definitions</span>
+  <ul style="margin-left:20px;line-height:2.3;">
+    <li><strong>Inner product:</strong> \(\mathbf{u}\cdot\mathbf{v}=u_1v_1+u_2v_2+\cdots+u_nv_n\)</li>
+    <li><strong>Norm (length):</strong> \(\|\mathbf{v}\|=\sqrt{\mathbf{v}\cdot\mathbf{v}}\)</li>
+    <li><strong>Normalizing:</strong> \(\hat{\mathbf{u}}=\dfrac{\mathbf{v}}{\|\mathbf{v}\|}\) gives a unit vector in the same direction.</li>
+    <li><strong>Distance:</strong> \(\text{dist}(\mathbf{u},\mathbf{v})=\|\mathbf{u}-\mathbf{v}\|\)</li>
+    <li><strong>Orthogonality:</strong> \(\mathbf{u}\cdot\mathbf{v}=0\iff\mathbf{u}\perp\mathbf{v}\iff\|\mathbf{u}+\mathbf{v}\|^2=\|\mathbf{u}\|^2+\|\mathbf{v}\|^2\) (Pythagorean theorem)</li>
+    <li><strong>Cauchy-Schwarz:</strong> \(|\mathbf{u}\cdot\mathbf{v}|\leq\|\mathbf{u}\|\|\mathbf{v}\|\)</li>
+    <li><strong>Triangle inequality:</strong> \(\|\mathbf{u}+\mathbf{v}\|\leq\|\mathbf{u}\|+\|\mathbf{v}\|\)</li>
+  </ul>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Orthogonal Sets &amp; Matrices</div>
+<div class="box box-formula">
+  <span class="box-label">Definitions</span>
+  <ul style="margin-left:20px;line-height:2.3;">
+    <li><strong>Orthogonal set:</strong> every pair of distinct vectors is orthogonal. If all nonzero → LI.</li>
+    <li><strong>Orthonormal set:</strong> orthogonal set of <em>unit</em> vectors.</li>
+    <li><strong>Orthogonal complement \(W^\perp\):</strong> set of all vectors orthogonal to every vector in \(W\).</li>
+    <li><strong>Orthogonal matrix:</strong> square matrix with orthonormal columns → \(U^{-1}=U^T\) and \(\det U=\pm1\).</li>
+    <li><strong>Orthonormal basis:</strong> a basis that is also orthonormal.</li>
+  </ul>
+</div>
+<div class="box box-theorem">
+  <span class="box-label">Properties of Orthogonal Matrices \(U\)</span>
+  If \(U\) has orthonormal columns, then \(U^TU=I\) and for any \(\mathbf{x},\mathbf{y}\):
+  \[\|U\mathbf{x}\|=\|\mathbf{x}\|\quad(\text{preserves lengths}),\quad(U\mathbf{x})\cdot(U\mathbf{y})=\mathbf{x}\cdot\mathbf{y}\quad(\text{preserves dot products}),\quad U\mathbf{x}\perp U\mathbf{y}\iff\mathbf{x}\perp\mathbf{y}.\]
+</div>
+<div class="box box-theorem">
+  <span class="box-label">Fundamental Subspace Relationship</span>
+  For \(m\times n\) matrix \(A\):
+  \[(\text{Row }A)^\perp=\text{Nul }A\qquad\text{and}\qquad(\text{Col }A)^\perp=\text{Nul }A^T.\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Projections</div>
+<div class="box box-formula">
+  <span class="box-label">Projection onto a Single Vector \(\mathbf{w}\)</span>
+  \[\text{proj}_{\mathbf{w}}\mathbf{v}=\frac{\mathbf{v}\cdot\mathbf{w}}{\mathbf{w}\cdot\mathbf{w}}\,\mathbf{w}=\frac{\langle\mathbf{v},\mathbf{w}\rangle}{\|\mathbf{w}\|^2}\,\mathbf{w}\]
+</div>
+<div class="box box-formula">
+  <span class="box-label">Projection onto a Subspace \(W\) with Orthogonal Basis \(\{\mathbf{u}_1,\ldots,\mathbf{u}_k\}\)</span>
+  \[\text{proj}_W\mathbf{v}=\frac{\mathbf{v}\cdot\mathbf{u}_1}{\mathbf{u}_1\cdot\mathbf{u}_1}\mathbf{u}_1+\frac{\mathbf{v}\cdot\mathbf{u}_2}{\mathbf{u}_2\cdot\mathbf{u}_2}\mathbf{u}_2+\cdots+\frac{\mathbf{v}\cdot\mathbf{u}_k}{\mathbf{u}_k\cdot\mathbf{u}_k}\mathbf{u}_k\]
+  If the basis is orthonormal: \(\text{proj}_W\mathbf{v}=(\mathbf{v}\cdot\mathbf{u}_1)\mathbf{u}_1+\cdots+(\mathbf{v}\cdot\mathbf{u}_k)\mathbf{u}_k=UU^T\mathbf{v}\) where columns of \(U\) are \(\mathbf{u}_i\).
+</div>
+<div class="box box-theorem">
+  <span class="box-label">Orthogonal Decomposition</span>
+  Every \(\mathbf{v}\in V\) can be written <strong>uniquely</strong> as \(\mathbf{v}=\mathbf{w}+\mathbf{w}^\perp\) where \(\mathbf{w}=\text{proj}_W\mathbf{v}\in W\) and \(\mathbf{w}^\perp\in W^\perp\). This gives the direct sum \(V=W\oplus W^\perp\). The projection \(\text{proj}_W\mathbf{v}\) is the <strong>closest vector in \(W\) to \(\mathbf{v}\)</strong>.
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">QR Factorization (Gram-Schmidt)</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition</span>
+  If \(A\) is \(m\times n\) with LI columns, then \(A=QR\) where \(Q\) is \(m\times n\) with orthonormal columns and \(R\) is \(n\times n\) upper triangular with positive diagonal entries. Since \(Q\) is orthogonal: \(R=Q^TA\).
+</div>
+<div class="box box-formula">
+  <span class="box-label">Gram-Schmidt Procedure</span>
+  Given columns \(\mathbf{v}_1,\mathbf{v}_2,\mathbf{v}_3\) of \(A\):
+  <div class="step"><div class="step-num">1</div><div class="step-body">Let \(\mathbf{u}_1=\mathbf{v}_1\).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body">\(\mathbf{u}_2=\mathbf{v}_2-\text{proj}_{\mathbf{u}_1}\mathbf{v}_2=\mathbf{v}_2-\dfrac{\mathbf{v}_2\cdot\mathbf{u}_1}{\mathbf{u}_1\cdot\mathbf{u}_1}\mathbf{u}_1\)</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body">\(\mathbf{u}_3=\mathbf{v}_3-\text{proj}_{\mathbf{u}_1}\mathbf{v}_3-\text{proj}_{\mathbf{u}_2}\mathbf{v}_3\)</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body">Normalize: \(\mathbf{q}_i=\mathbf{u}_i/\|\mathbf{u}_i\|\). Then \(Q=[\mathbf{q}_1\ \mathbf{q}_2\ \mathbf{q}_3]\).</div></div>
+  <div class="step"><div class="step-num">5</div><div class="step-body">Compute \(R=Q^TA\).</div></div>
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — QR of \(A\) with columns \(\mathbf{v}_1=[1,-1,0]^T,\;\mathbf{v}_2=[3,-3,1]^T,\;\mathbf{v}_3=[5,1,3]^T\)</span>
+  <strong>Step 1:</strong> \(\mathbf{u}_1=\mathbf{v}_1=[1,-1,0]^T\),\ \(\|\mathbf{u}_1\|^2=2\).<br><br>
+  <strong>Step 2:</strong> \(\mathbf{v}_2\cdot\mathbf{u}_1=(3)(1)+(-3)(-1)+(1)(0)=6\).<br>
+  \(\mathbf{u}_2=\mathbf{v}_2-\frac{6}{2}\mathbf{u}_1=[3,-3,1]-3[1,-1,0]=[0,0,1]^T\),\ \(\|\mathbf{u}_2\|^2=1\).<br><br>
+  <strong>Step 3:</strong> \(\mathbf{v}_3\cdot\mathbf{u}_1=(5)(-1)+(1)(-1)=-6\ (\text{wait: }(5)(1)+(1)(-1)+(3)(0)=4)\). Actually: \(\mathbf{v}_3=[5,1,3]\), \(\mathbf{u}_1=[1,-1,0]\): \(\mathbf{v}_3\cdot\mathbf{u}_1=5-1+0=4\). And \(\mathbf{v}_3\cdot\mathbf{u}_2=(5)(0)+(1)(0)+(3)(1)=3\).<br>
+  \(\mathbf{u}_3=\mathbf{v}_3-\frac{4}{2}\mathbf{u}_1-\frac{3}{1}\mathbf{u}_2=[5,1,3]-2[1,-1,0]-3[0,0,1]=[3,3,0]^T\).<br><br>
+  <strong>Step 4:</strong> \(\mathbf{q}_1=\frac{1}{\sqrt{2}}[1,-1,0]^T\),\ \(\mathbf{q}_2=[0,0,1]^T\),\ \(\mathbf{q}_3=\frac{1}{\sqrt{18}}[3,3,0]^T=\frac{1}{\sqrt{2}}[1,1,0]^T\).<br><br>
+  <strong>Step 5:</strong> \(R=Q^TA\) — multiply out (upper triangular with positive diagonal).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Least Squares</div>
+<div class="box box-theorem">
+  <span class="box-label">When \(Ax=b\) Has No Exact Solution</span>
+  A <strong>least-squares solution</strong> \(\hat{\mathbf{x}}\) minimizes \(\|A\hat{\mathbf{x}}-\mathbf{b}\|\). It satisfies the <strong>normal equations</strong>:
+  \[A^TA\hat{\mathbf{x}}=A^T\mathbf{b}\]
+  Geometrically: \(A\hat{\mathbf{x}}=\text{proj}_{\text{Col}(A)}\mathbf{b}\), the closest point in Col\((A)\) to \(\mathbf{b}\).
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Least Squares Solution</span>
+  Find \(\hat{\mathbf{x}}\) for \(A\mathbf{x}=\mathbf{b}\) where \(A=\begin{bmatrix}4&0\\1&0\\0&2\\1&1\end{bmatrix}\), \(\mathbf{b}=\begin{bmatrix}2\\0\\11\end{bmatrix}\)... (From your notes: \(A=\begin{bmatrix}4&0&1\\0&2&1\end{bmatrix}\), \(\mathbf{b}=[2,0,11]^T\)).<br><br>
+  Compute \(A^TA=\begin{bmatrix}17&1\\1&5\end{bmatrix}\), \(A^T\mathbf{b}=\begin{bmatrix}19\\11\end{bmatrix}\).<br><br>
+  Solve \(\begin{bmatrix}17&1\\1&5\end{bmatrix}\hat{\mathbf{x}}=\begin{bmatrix}19\\11\end{bmatrix}\) → \(\hat{\mathbf{x}}=\begin{bmatrix}17&1\\1&5\end{bmatrix}^{-1}\begin{bmatrix}19\\11\end{bmatrix}\).
+</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam — Linear Regression \(y=\beta_0+\beta_1 x\)</span>
+  Data: \((-1,2),(0,5),(1,6),(2,9)\). Build design matrix \(X\) and observation vector \(\mathbf{y}\):
+  \[X=\begin{bmatrix}1&-1\\1&0\\1&1\\1&2\end{bmatrix},\quad\mathbf{y}=\begin{bmatrix}2\\5\\6\\9\end{bmatrix}\]
+  Solve normal equations \(X^TX\boldsymbol{\beta}=X^T\mathbf{y}\):
+  \[X^TX=\begin{bmatrix}4&2\\2&6\end{bmatrix},\quad X^T\mathbf{y}=\begin{bmatrix}22\\18\end{bmatrix}\]
+  \[\boldsymbol{\beta}=\begin{bmatrix}4&2\\2&6\end{bmatrix}^{-1}\begin{bmatrix}22\\18\end{bmatrix}=\frac{1}{20}\begin{bmatrix}6&-2\\-2&4\end{bmatrix}\begin{bmatrix}22\\18\end{bmatrix}=\begin{bmatrix}(132-36)/20\\(-44+72)/20\end{bmatrix}=\begin{bmatrix}4.8\\1.4\end{bmatrix}\]
+  Best-fit line: \(y\approx4.8+1.4x\).
+</div>
+</div>
+
+</div><!-- end t6 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 7 — SYMMETRIC MATRICES, QUADRATIC FORMS & SVD
+════════════════════════════════════════════════════ -->
+<div id="t7" class="tab-content">
+
+<div class="section">
+<div class="section-title">Symmetric Matrices</div>
+<div class="box box-theorem">
+  <span class="box-label">Spectral Theorem for Symmetric Matrices</span>
+  An \(n\times n\) symmetric matrix \(A\) (i.e., \(A^T=A\)) must have:
+  <ol style="margin-left:20px;margin-top:8px;line-height:2.2;">
+    <li>Exactly <strong>\(n\) real eigenvalues</strong> (counting multiplicities).</li>
+    <li>Eigenspace dimension = algebraic multiplicity for each eigenvalue.</li>
+    <li><strong>Mutually orthogonal eigenspaces</strong> (eigenvectors from different eigenspaces are orthogonal).</li>
+    <li>Must be <strong>orthogonally diagonalizable</strong>: \(A=PDP^T=PDP^{-1}\) with \(P\) orthogonal.</li>
+  </ol>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Orthogonal Diagonalization Procedure</div>
+<div class="box box-formula">
+  <span class="box-label">4-Step Procedure</span>
+  <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Find eigenvalues</strong> by solving \(\det(A-\lambda I)=0\).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Find eigenvector bases</strong>: for each \(\lambda\), find a basis for Nul\((A-\lambda I)\) by row-reducing \([A-\lambda I\,|\,\mathbf{0}]\).</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Orthonormalize each eigenspace basis</strong>:
+    <ul style="margin-left:16px;margin-top:4px;">
+      <li>If multiplicity = 1: just normalize \(\mathbf{u}=\mathbf{v}/\|\mathbf{v}\|\).</li>
+      <li>If multiplicity &gt; 1: apply Gram-Schmidt first, then normalize.</li>
+    </ul>
+  </div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Construct \(P\)</strong> (orthonormal eigenvectors as columns) and <strong>\(D\)</strong> (eigenvalues in same order).</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Spectral Decomposition</div>
+<div class="box box-formula">
+  <span class="box-label">Formula</span>
+  A symmetric matrix \(A\) with eigenvalues \(\lambda_1,\ldots,\lambda_n\) and orthonormal eigenvectors \(\mathbf{u}_1,\ldots,\mathbf{u}_n\):
+  \[A=\lambda_1\mathbf{u}_1\mathbf{u}_1^T+\lambda_2\mathbf{u}_2\mathbf{u}_2^T+\cdots+\lambda_n\mathbf{u}_n\mathbf{u}_n^T\]
+  Each \(\mathbf{u}_j\mathbf{u}_j^T\) is a <strong>projection matrix</strong> (projects onto the direction of \(\mathbf{u}_j\)).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Quadratic Forms</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition &amp; Building Matrix A</span>
+  A <strong>quadratic form</strong> is \(Q(\mathbf{x})=\mathbf{x}^TA\mathbf{x}\) where \(A\) is symmetric. To build \(A\):
+  <ul style="margin-left:20px;margin-top:6px;">
+    <li>Place the coefficient of \(x_i^2\) in position \(A_{ii}\).</li>
+    <li>For cross-terms \(x_ix_j\): split the coefficient equally between \(A_{ij}\) and \(A_{ji}\).</li>
+  </ul>
+  <strong>Example:</strong> \(Q(\mathbf{x})=5x_1^2-4x_1x_2+5x_2^2\) → \(A=\begin{bmatrix}5&-2\\-2&5\end{bmatrix}\).
+</div>
+<div class="box box-theorem">
+  <span class="box-label">Principal Axes Theorem — Removing Cross-Products</span>
+  For any symmetric \(A\), there exists an orthogonal change of variable \(\mathbf{x}=P\mathbf{y}\) that transforms \(\mathbf{x}^TA\mathbf{x}\) into \(\mathbf{y}^TD\mathbf{y}=\lambda_1y_1^2+\lambda_2y_2^2+\cdots+\lambda_ny_n^2\) (no cross-products). The columns of \(P\) are the <strong>principal axes</strong>.
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Remove Cross-Products from \(Q(\mathbf{x})=5x_1^2-4x_1x_2+5x_2^2\)</span>
+  <div class="step"><div class="step-num">1</div><div class="step-body">Build \(A=\begin{bmatrix}5&-2\\-2&5\end{bmatrix}\).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body">Orthogonally diagonalize \(A\): \(\det(A-\lambda I)=(\lambda-3)(\lambda-7)=0\), so \(\lambda_1=3,\;\lambda_2=7\).</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body">Find eigenvectors: \(\lambda_1=3\to\mathbf{u}_1=\frac{1}{\sqrt{2}}[1,1]^T\); \(\lambda_2=7\to\mathbf{u}_2=\frac{1}{\sqrt{2}}[1,-1]^T\).<br>
+  \(P=\frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\), \(D=\begin{bmatrix}3&0\\0&7\end{bmatrix}\).</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body">New form: \(Q(\mathbf{y})=3y_1^2+7y_2^2\) (no cross-product!).</div></div>
+</div>
+<div class="box box-formula">
+  <span class="box-label">Classification by Eigenvalues</span>
+  <table>
+    <tr><th>Quadratic Form</th><th>Condition</th><th>Geometric picture</th></tr>
+    <tr><td>Positive Definite</td><td>All \(\lambda_i>0\)</td><td>Upward bowl (ellipsoid)</td></tr>
+    <tr><td>Negative Definite</td><td>All \(\lambda_i<0\)</td><td>Downward bowl</td></tr>
+    <tr><td>Positive Semidefinite</td><td>All \(\lambda_i\geq0\) (at least one = 0)</td><td>Upward trough</td></tr>
+    <tr><td>Negative Semidefinite</td><td>All \(\lambda_i\leq0\) (at least one = 0)</td><td>Downward trough</td></tr>
+    <tr><td>Indefinite</td><td>Mixed positive and negative \(\lambda\)</td><td>Saddle</td></tr>
+  </table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Singular Value Decomposition (SVD)</div>
+<div class="box box-theorem">
+  <span class="box-label">Definition</span>
+  For any \(m\times n\) matrix \(A\) with rank \(r\):
+  \[A=U\Sigma V^T\]
+  where \(U\) is \(m\times m\) orthogonal (columns = <strong>left singular vectors</strong>), \(V\) is \(n\times n\) orthogonal (columns = <strong>right singular vectors</strong>), and \(\Sigma\) is \(m\times n\) with diagonal \([\sigma_1,\ldots,\sigma_r,0,\ldots,0]\).
+</div>
+<div class="box box-formula">
+  <span class="box-label">Singular Values</span>
+  The <strong>singular values</strong> \(\sigma_1\geq\sigma_2\geq\cdots\geq\sigma_r>0\) are the <strong>square roots of the nonzero eigenvalues</strong> of \(A^TA\) (= of \(AA^T\)), arranged in decreasing order.
+</div>
+<div class="box box-formula">
+  <span class="box-label">SVD Procedure (Full)</span>
+  <div class="step"><div class="step-num">1</div><div class="step-body">Compute \(A^TA\) (an \(n\times n\) symmetric matrix).</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body">Find eigenvalues \(\lambda_1\geq\lambda_2\geq\cdots\geq\lambda_n\geq0\) of \(A^TA\). Set \(\sigma_i=\sqrt{\lambda_i}\) for nonzero \(\lambda_i\).</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body">Find orthonormal eigenvectors of \(A^TA\): \(\mathbf{v}_1,\ldots,\mathbf{v}_n\). These form the columns of \(V\).</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body">For the first \(r\) columns of \(U\): \(\mathbf{u}_i=\dfrac{1}{\sigma_i}A\mathbf{v}_i\).</div></div>
+  <div class="step"><div class="step-num">5</div><div class="step-body">Extend \(\{\mathbf{u}_1,\ldots,\mathbf{u}_r\}\) to an orthonormal basis of \(\mathbb{R}^m\) using Gram-Schmidt (for the remaining \(m-r\) columns of \(U\)).</div></div>
+  <div class="step"><div class="step-num">6</div><div class="step-body">Assemble \(\Sigma\): \(m\times n\) zero matrix, then place \(\sigma_1,\ldots,\sigma_r\) on the diagonal.</div></div>
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — SVD of \(A=\begin{bmatrix}1&-1\\-2&2\\2&-2\end{bmatrix}\) (3×2)</span>
+  <strong>Step 1:</strong> \(A^TA=\begin{bmatrix}1&-2&2\\-1&2&-2\end{bmatrix}\begin{bmatrix}1&-1\\-2&2\\2&-2\end{bmatrix}=\begin{bmatrix}9&-9\\-9&9\end{bmatrix}\).<br><br>
+  <strong>Step 2:</strong> \(\det(A^TA-\lambda I)=0\Rightarrow\lambda_1=18,\;\lambda_2=0\). So \(\sigma_1=\sqrt{18}=3\sqrt{2},\;\sigma_2=0\). Rank \(r=1\).<br><br>
+  <strong>Step 3:</strong> For \(\lambda_1=18\): solve \((A^TA-18I)\mathbf{v}=0\Rightarrow\mathbf{v}_1=\frac{1}{\sqrt{2}}[1,-1]^T\).<br>
+  For \(\lambda_2=0\): solve \(A^TA\mathbf{v}=0\Rightarrow\mathbf{v}_2=\frac{1}{\sqrt{2}}[1,1]^T\).<br>
+  \(V=\frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\-1&1\end{bmatrix}\).<br><br>
+  <strong>Step 4:</strong> \(\mathbf{u}_1=\frac{1}{3\sqrt{2}}A\mathbf{v}_1=\frac{1}{3\sqrt{2}}\begin{bmatrix}1&-1\\-2&2\\2&-2\end{bmatrix}\frac{1}{\sqrt{2}}\begin{bmatrix}1\\-1\end{bmatrix}=\frac{1}{3\sqrt{2}}\cdot\frac{1}{\sqrt{2}}\begin{bmatrix}2\\-4\\4\end{bmatrix}=\begin{bmatrix}1/3\\-2/3\\2/3\end{bmatrix}\).<br><br>
+  <strong>Step 5:</strong> Need 2 more columns for \(U\) (since \(m=3,\;r=1\)). Use Gram-Schmidt starting from a vector not parallel to \(\mathbf{u}_1\), e.g., \(\mathbf{e}_1=[1,0,0]^T\):<br>
+  Orthogonalize against \(\mathbf{u}_1\): \(\mathbf{w}_2=[1,0,0]-\frac{1}{3}[1/3,-2/3,2/3]^T\cdot\ldots\) (proceed similarly). After normalization obtain \(\mathbf{u}_2\) and \(\mathbf{u}_3=\mathbf{u}_1\times\mathbf{u}_2\).<br><br>
+  <strong>Step 6:</strong> \(\Sigma=\begin{bmatrix}3\sqrt{2}&0\\0&0\\0&0\end{bmatrix}\).<br><br>
+  <strong>Spaces from SVD:</strong> Col\((A)\) = span of first \(r\) columns of \(U=\{\mathbf{u}_1\}\). Nul\((A^T)\) = last \(m-r\) columns of \(U\). Row\((A)\) = first \(r\) columns of \(V=\{\mathbf{v}_1\}\). Nul\((A)\) = last \(n-r\) columns of \(V=\{\mathbf{v}_2\}\).
+</div>
+<div class="box box-formula">
+  <span class="box-label">Pseudoinverse &amp; Best Rank-\(k\) Approximation</span>
+  <strong>Pseudoinverse:</strong> \(A^+=V_rD^{-1}U_r^T\) where \(V_r,U_r\) = first \(r\) columns of \(V,U\) and \(D=\text{diag}(\sigma_1,\ldots,\sigma_r)\).<br>
+  <strong>Best rank-1 approximation:</strong> \(A_1=\sigma_1\mathbf{u}_1\mathbf{v}_1^T\) (minimizes \(\|A-B\|_F\) over all rank-1 matrices \(B\)).<br>
+  <strong>Condition number (invertible \(n\times n\)):</strong> \(\kappa=\sigma_1/\sigma_n\). Large \(\kappa\) → ill-conditioned.
+</div>
+</div>
+
+</div><!-- end t7 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 8 — SCALAR ODEs
+════════════════════════════════════════════════════ -->
+<div id="t8" class="tab-content">
+
+<div class="section">
+<div class="section-title">Converting Higher-Order ODEs to First-Order Systems</div>
+<div class="box box-formula">
+  <span class="box-label">General Method</span>
+  For an \(n\)-th order ODE \(y^{(n)}=f(y,y',\ldots,y^{(n-1)})\): let \(x_1=y,\;x_2=y',\ldots,x_n=y^{(n-1)}\). Then \(\mathbf{x}'=A\mathbf{x}\).
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — \(my''+ky=0\)</span>
+  Let \(x_1=y,\;x_2=y'\). Then \(x_1'=x_2\) and \(x_2'=y''=-\frac{k}{m}y=-\frac{k}{m}x_1\):
+  \[\begin{bmatrix}x_1\\x_2\end{bmatrix}'=\begin{bmatrix}0&1\\-k/m&0\end{bmatrix}\begin{bmatrix}x_1\\x_2\end{bmatrix}\]
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Third-Order: \(y'''+3y''-y'-3y=0\)</span>
+  Let \(x_1=y,\;x_2=y',\;x_3=y''\). Then \(x_3'=y'''=-3y''+y'+3y=3x_1+x_2-3x_3\):
+  \[\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}'=\begin{bmatrix}0&1&0\\0&0&1\\3&1&-3\end{bmatrix}\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Homogeneous Solutions — Characteristic Equation</div>
+<p>For \(a_ny^{(n)}+\cdots+a_1y'+a_0y=0\), substitute \(y=e^{rt}\) to get the <strong>characteristic equation</strong>: \(a_nr^n+\cdots+a_1r+a_0=0\). General solution = homogeneous solution \(y_h\) + particular solution \(y_p\).</p>
+
+<div class="case">
+<div class="case-title">Case 1 — Distinct Real Roots</div>
+If \(r_1,r_2,\ldots,r_n\) are all distinct and real: \[y(t)=c_1e^{r_1t}+c_2e^{r_2t}+\cdots+c_ne^{r_nt}\]
+<div class="box box-example" style="margin-top:12px;margin-bottom:0;">
+  <span class="box-label">Example — \(y''+5y'-6y=0\)</span>
+  Characteristic eq: \(r^2+5r-6=0\). Factor (or quadratic formula \(r=\frac{-b\pm\sqrt{b^2-4ac}}{2a}\)):<br>
+  \((r-1)(r+6)=0\Rightarrow r_1=1,\;r_2=-6\).<br>
+  General solution: \(y(t)=c_1e^{t}+c_2e^{-6t}\).
+</div>
+<div class="box box-example" style="margin-top:8px;margin-bottom:0;">
+  <span class="box-label">Example — \(y'''+3y''-y'-3y=0\)</span>
+  Characteristic eq: \(r^3+3r^2-r-3=0\). Factor: \((r-1)(r+1)(r+3)=0\Rightarrow r_1=1,r_2=-1,r_3=-3\).<br>
+  General solution: \(y(t)=c_1e^t+c_2e^{-t}+c_3e^{-3t}\).
+</div>
+</div>
+
+<div class="case" style="margin-top:10px;">
+<div class="case-title">Case 2 — Repeated Roots</div>
+If \(r\) is a root of multiplicity \(m\): contributes \(e^{rt},\;te^{rt},\;t^2e^{rt},\ldots,t^{m-1}e^{rt}\) to the general solution.
+<div class="box box-example" style="margin-top:12px;margin-bottom:0;">
+  <span class="box-label">Example — \(y''+4y'+4y=0\)</span>
+  Characteristic eq: \(r^2+4r+4=(r+2)^2=0\Rightarrow r=-2\) (double root).<br>
+  General solution: \(y(t)=c_1e^{-2t}+c_2te^{-2t}\).<br><br>
+  <strong>With initial values \(y(0)=1,\;y'(0)=3\):</strong><br>
+  \(y'(t)=-2c_1e^{-2t}+c_2e^{-2t}-2c_2te^{-2t}\).<br>
+  \(y(0)=1\Rightarrow c_1=1\).<br>
+  \(y'(0)=3\Rightarrow-2(1)+c_2=3\Rightarrow c_2=5\).<br>
+  Solution: \(y(t)=e^{-2t}+5te^{-2t}\).
+</div>
+</div>
+
+<div class="case" style="margin-top:10px;">
+<div class="case-title">Case 3 — Complex Roots \(r=\alpha\pm i\beta\)</div>
+Conjugate pair \(r=\alpha\pm i\beta\) contributes: \(e^{\alpha t}\cos(\beta t)\) and \(e^{\alpha t}\sin(\beta t)\).
+Using Euler: \(e^{(\alpha+i\beta)t}=e^{\alpha t}(\cos(\beta t)+i\sin(\beta t))\). Take real and imaginary parts.
+<div class="box box-example" style="margin-top:12px;margin-bottom:0;">
+  <span class="box-label">Example — \(y''+2y'+4y=0\)</span>
+  Characteristic eq: \(r^2+2r+4=0\Rightarrow r=\frac{-2\pm\sqrt{4-16}}{2}=-1\pm i\sqrt{3}\).<br>
+  So \(\alpha=-1,\;\beta=\sqrt{3}\).<br>
+  General solution: \(y(t)=c_1e^{-t}\cos(\sqrt{3}\,t)+c_2e^{-t}\sin(\sqrt{3}\,t)\).
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Particular Solutions — Undetermined Coefficients</div>
+<p>Used for \(ay''+by'+cy=g(t)\) when \(g(t)\) is polynomial, exponential, or trigonometric. The parameter \(s\) accounts for resonance (when the naive guess solves the homogeneous equation).</p>
+
+<div class="box box-formula">
+  <span class="box-label">Guess Table (\(s\) = multiplicity of resonance)</span>
+  <table>
+    <tr><th>Forcing \(g(t)\)</th><th>Naive guess (\(s=0\))</th><th>With resonance</th></tr>
+    <tr><td>Polynomial of degree \(n\)</td><td>\(A_nt^n+\cdots+A_0\)</td><td>Multiply by \(t^s\)</td></tr>
+    <tr><td>\(e^{kt}\)</td><td>\(Ae^{kt}\)</td><td>Multiply by \(t^s\) if \(k\) is root of multiplicity \(s\)</td></tr>
+    <tr><td>\(\sin(\beta t)\) or \(\cos(\beta t)\)</td><td>\(A\sin(\beta t)+B\cos(\beta t)\)</td><td>Multiply by \(t^s\) if \(\beta i\) (or \(\alpha+\beta i\)) is a root</td></tr>
+    <tr><td>\(e^{\alpha t}\cos(\beta t)\) or \(e^{\alpha t}\sin(\beta t)\)</td><td>\(e^{\alpha t}(A\cos(\beta t)+B\sin(\beta t))\)</td><td>Multiply by \(t^s\)</td></tr>
+  </table>
+  <strong>Rule for \(s\):</strong> \(s=\) multiplicity of \(k\) as a root of the characteristic equation (0 if not a root).
+</div>
+
+<div class="box box-example">
+  <span class="box-label">Example 1 — Polynomial Forcing: \(y''+3y'+2y=3t\)</span>
+  Characteristic eq: \((r+1)(r+2)=0\Rightarrow r_1=-1,r_2=-2\). Neither root is 0, so \(s=0\).<br>
+  <strong>Guess:</strong> \(y_p=At+B\), \(y_p'=A\), \(y_p''=0\).<br>
+  <strong>Substitute:</strong> \(0+3A+2(At+B)=3t\Rightarrow 2At+(3A+2B)=3t\).<br>
+  <strong>Match coefficients:</strong> \(2A=3\Rightarrow A=\frac{3}{2}\) and \(3A+2B=0\Rightarrow B=-\frac{9}{4}\).<br>
+  Particular solution: \(y_p(t)=\frac{3}{2}t-\frac{9}{4}\).
+</div>
+
+<div class="box box-example">
+  <span class="box-label">Example 2 — Exponential Forcing: \(y''+3y'+2y=10e^{3t}\)</span>
+  Roots \(r=-1,-2\). Exponent \(k=3\) is NOT a root, so \(s=0\).<br>
+  <strong>Guess:</strong> \(y_p=Ae^{3t}\), \(y_p'=3Ae^{3t}\), \(y_p''=9Ae^{3t}\).<br>
+  <strong>Substitute:</strong> \(9Ae^{3t}+9Ae^{3t}+2Ae^{3t}=10e^{3t}\Rightarrow 20A=10\Rightarrow A=\frac{1}{2}\).<br>
+  Particular solution: \(y_p(t)=\frac{1}{2}e^{3t}\).
+</div>
+
+<div class="box box-example">
+  <span class="box-label">Example 3 — Trig Forcing: \(y''+3y'+2y=\sin t\)</span>
+  Roots \(r=-1,-2\). The complex number \(i=0+1\cdot i\) is NOT a root, so \(s=0\).<br>
+  <strong>Guess:</strong> \(y_p=A\sin t+B\cos t\), \(y_p'=A\cos t-B\sin t\), \(y_p''=-A\sin t-B\cos t\).<br>
+  <strong>Substitute:</strong> \((-A\sin t-B\cos t)+3(A\cos t-B\sin t)+2(A\sin t+B\cos t)=\sin t\).<br>
+  Collect: \((A-3B)\sin t+(3A+B-B+3B-B)\ldots\) →
+  \((A-3B)\sin t+(3A+B)\cos t=\sin t\)... wait:<br>
+  \(\sin t:(-A-3B+2A)=(A-3B)=1\) and \(\cos t:(-B+3A+2B)=(3A+B)=0\).<br>
+  So \(A-3B=1\) and \(3A+B=0\Rightarrow B=-3A\Rightarrow A+9A=1\Rightarrow A=0.1,\;B=-0.3\).<br>
+  Particular solution: \(y_p(t)=0.1\sin t-0.3\cos t\).
+</div>
+
+<div class="box box-example">
+  <span class="box-label">Example 4 — Resonance (\(s=1\)): \(y''+y'=5\)</span>
+  Characteristic eq: \(r(r+1)=0\Rightarrow r_1=0,\;r_2=-1\). The constant 5 corresponds to \(k=0\), which IS a root (multiplicity 1), so \(s=1\).<br>
+  <strong>Naive guess:</strong> \(y_p=A\) (a constant), but this is killed by the ODE. Multiply by \(t^1\):<br>
+  <strong>Corrected guess:</strong> \(y_p=At\), \(y_p'=A\), \(y_p''=0\).<br>
+  <strong>Substitute:</strong> \(0+A=5\Rightarrow A=5\).<br>
+  Particular solution: \(y_p(t)=5t\).
+</div>
+
+<div class="box box-warning">
+  <span class="box-label">Splitting Complex Right-Hand Sides</span>
+  If \(g(t)=g_1(t)+g_2(t)\), solve for \(y_{p1}\) (due to \(g_1\)) and \(y_{p2}\) (due to \(g_2\)) separately, then \(y_p=y_{p1}+y_{p2}\). Also note: \(\text{general} = y_h + y_p\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Initial Value Problems (IVP)</div>
+<div class="box box-example">
+  <span class="box-label">Full Example — \(y''-y=2-t^2,\quad y(0)=1,\;y'(0)=0\)</span>
+  <strong>Homogeneous:</strong> \(r^2-1=0\Rightarrow r=\pm1\). \(y_h=c_1e^t+c_2e^{-t}\).<br><br>
+  <strong>Particular (\(s=0\), polynomial):</strong> Guess \(y_p=At^2+Bt+C\), \(y_p''=2A\).<br>
+  Substitute: \(2A-(At^2+Bt+C)=2-t^2\Rightarrow -At^2-Bt+(2A-C)=2-t^2\).<br>
+  Match: \(-A=-1\Rightarrow A=1\); \(-B=0\Rightarrow B=0\); \(2A-C=2\Rightarrow C=0\). So \(y_p=t^2\).<br><br>
+  <strong>General solution:</strong> \(y(t)=c_1e^t+c_2e^{-t}+t^2\).<br><br>
+  <strong>Apply ICs:</strong> \(y(0)=c_1+c_2=1\). Differentiate: \(y'=c_1e^t-c_2e^{-t}+2t\), so \(y'(0)=c_1-c_2=0\).<br>
+  Solving: \(c_1=c_2=\frac{1}{2}\).<br>
+  <strong>Solution:</strong> \(y(t)=\frac{1}{2}e^t+\frac{1}{2}e^{-t}+t^2\).
+</div>
+
+<div class="box box-exam">
+  <span class="box-label">Past Exam — \(y''+4y=e^t,\quad y(0)=1,\;y'(0)=2\)</span>
+  <strong>Homogeneous:</strong> \(r^2+4=0\Rightarrow r=\pm2i\). \(y_h=c_1\cos(2t)+c_2\sin(2t)\).<br><br>
+  <strong>Particular:</strong> \(k=1\) is NOT a root, so \(s=0\). Guess \(y_p=Ae^t\), \(y_p''=Ae^t\).<br>
+  Substitute: \(Ae^t+4Ae^t=e^t\Rightarrow 5A=1\Rightarrow A=\frac{1}{5}\). So \(y_p=\frac{1}{5}e^t\).<br><br>
+  <strong>General:</strong> \(y=c_1\cos(2t)+c_2\sin(2t)+\frac{1}{5}e^t\).<br>
+  \(y(0)=c_1+\frac{1}{5}=1\Rightarrow c_1=\frac{4}{5}\).<br>
+  \(y'(0)=2c_2+\frac{1}{5}=2\Rightarrow c_2=\frac{9}{10}\).<br>
+  <strong>Solution:</strong> \(y=\frac{4}{5}\cos(2t)+\frac{9}{10}\sin(2t)+\frac{1}{5}e^t\).
+</div>
+
+<div class="box box-exam">
+  <span class="box-label">Past Exam — \(y''+2y'+y=e^{-t}\) (Double Resonance)</span>
+  Characteristic eq: \((r+1)^2=0\Rightarrow r=-1\) (double root).<br>
+  \(y_h=c_1e^{-t}+c_2te^{-t}\).<br><br>
+  Forcing \(e^{-t}\): \(k=-1\) is a root of multiplicity 2, so \(s=2\).<br>
+  <strong>Guess:</strong> \(y_p=At^2e^{-t}\).<br>
+  Compute \(y_p'=Ae^{-t}(2t-t^2)\), \(y_p''=Ae^{-t}(2-4t+t^2)\).<br>
+  Substitute: \(Ae^{-t}(2-4t+t^2)+2Ae^{-t}(2t-t^2)+At^2e^{-t}=e^{-t}\).<br>
+  Simplify: \(Ae^{-t}(2-4t+t^2+4t-2t^2+t^2)=Ae^{-t}(2)=e^{-t}\Rightarrow A=\frac{1}{2}\).<br>
+  <strong>Particular:</strong> \(y_p=\frac{1}{2}t^2e^{-t}\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Wronskian — Testing Linear Independence of Solutions</div>
+<div class="box box-formula">
+  <span class="box-label">Definition &amp; Test</span>
+  For two solutions \(y_1,y_2\): the Wronskian is
+  \[W[y_1,y_2](t)=\det\begin{bmatrix}y_1&y_2\\y_1'&y_2'\end{bmatrix}=y_1y_2'-y_1'y_2.\]
+  If \(W(t)\neq0\) for any (equivalently, all) \(t\), then \(y_1\) and \(y_2\) are <strong>linearly independent</strong> (form a fundamental set).
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Are \(y_1=e^t\) and \(y_2=e^{-6t}\) independent?</span>
+  \[W=e^t(-6e^{-6t})-e^t\cdot e^{-6t}=-6e^{-5t}-e^{-5t}=-7e^{-5t}\neq0\text{ for all }t.\]
+  Conclusion: \(y_1\) and \(y_2\) are <strong>linearly independent</strong>.
+</div>
+</div>
+
+</div><!-- end t8 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 9 — SYSTEMS OF ODEs
+════════════════════════════════════════════════════ -->
+<div id="t9" class="tab-content">
+
+<div class="section">
+<div class="section-title">Setting Up First-Order Systems</div>
+<div class="box box-formula">
+  <span class="box-label">Method</span>
+  To convert a scalar ODE to \(\mathbf{x}'=A\mathbf{x}\): define one new variable per derivative order minus one. For each coupled pair of ODEs, define one variable per dependent variable and its derivatives.
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — Coupled System: \(2x''-6x+2y=0,\quad y''+2y-2x=0\)</span>
+  Let \(x_1=x,\;x_2=x',\;x_3=y,\;x_4=y'\). Then:
+  \[x_2'=x''=-3x_1+x_3,\quad x_4'=y''=2x_1-2x_3\]
+  \[\begin{bmatrix}x_1\\x_2\\x_3\\x_4\end{bmatrix}'=\begin{bmatrix}0&1&0&0\\-3&0&1&0\\0&0&0&1\\2&0&-2&0\end{bmatrix}\begin{bmatrix}x_1\\x_2\\x_3\\x_4\end{bmatrix}\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Eigenvalue Method — Real Distinct Eigenvalues</div>
+<div class="box box-formula">
+  <span class="box-label">Procedure</span>
+  For \(\mathbf{x}'=A\mathbf{x}\), guess \(\mathbf{x}(t)=e^{rt}\mathbf{u}\). Substituting gives \((A-rI)\mathbf{u}=\mathbf{0}\).
+  <ul style="margin-left:20px;margin-top:6px;line-height:2.1;">
+    <li><strong>Eigenvalues:</strong> solve \(\det(A-rI)=0\).</li>
+    <li><strong>Eigenvectors:</strong> for each \(r\), row-reduce \((A-rI)\mathbf{u}=\mathbf{0}\) and express in terms of free parameter.</li>
+    <li><strong>General solution:</strong> \(\mathbf{x}(t)=c_1e^{r_1t}\mathbf{u}_1+c_2e^{r_2t}\mathbf{u}_2+\cdots\)</li>
+    <li><strong>IVP:</strong> if \(\mathbf{x}(0)=\mathbf{x}_0\), solve \([\mathbf{u}_1\ \mathbf{u}_2\ \cdots][c_1,c_2,\ldots]^T=\mathbf{x}_0\).</li>
+  </ul>
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — \(\mathbf{x}'=A\mathbf{x}\) where \(A=\begin{bmatrix}2&1\\-3&-2\end{bmatrix}\)</span>
+  <strong>Eigenvalues:</strong> \(\det(A-rI)=(2-r)(-2-r)+3=r^2-4+3=r^2-1\Rightarrow r_1=1,\;r_2=-1\).<br><br>
+  <strong>For \(r_1=1\):</strong> \((A-I)\mathbf{u}=\begin{bmatrix}1&1\\-3&-3\end{bmatrix}\mathbf{u}=\mathbf{0}\Rightarrow u_1+u_2=0\Rightarrow\mathbf{u}_1=\begin{bmatrix}1\\-1\end{bmatrix}\).<br>
+  (From notes: \(\mathbf{u}_1=[3,1]^T\) — let \(u_2=s\), \(u_1=1\cdot s \cdot 3\)... checking: let \(u_2=1\Rightarrow u_1=-1\) or scale to \([3,1]\) — the notes have \(u_2=s\) with \(u_1-3u_2=0\Rightarrow u_1=3s\Rightarrow \mathbf{u}_1=[3,1]^T\) when \(s=1\). [Check the exact row reduction for your version of \(A\)].)<br><br>
+  <strong>For \(r_2=-1\):</strong> \((A+I)\mathbf{u}=\begin{bmatrix}3&1\\-3&-1\end{bmatrix}\mathbf{u}=\mathbf{0}\Rightarrow 3u_1+u_2=0\Rightarrow\mathbf{u}_2=\begin{bmatrix}1\\-3\end{bmatrix}\).<br><br>
+  <strong>General solution:</strong> \(\mathbf{x}(t)=c_1e^{t}\begin{bmatrix}3\\1\end{bmatrix}+c_2e^{-t}\begin{bmatrix}1\\-3\end{bmatrix}\). (Adjust according to your actual row reduction.)
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Complex Eigenvalues in Systems</div>
+<div class="box box-formula">
+  <span class="box-label">Procedure</span>
+  If \(r=\alpha\pm i\beta\) with eigenvector \(\mathbf{z}=\mathbf{a}+i\mathbf{b}\), two real solutions are:
+  \[\mathbf{x}_1(t)=e^{\alpha t}(\cos(\beta t)\,\mathbf{a}-\sin(\beta t)\,\mathbf{b})\]
+  \[\mathbf{x}_2(t)=e^{\alpha t}(\sin(\beta t)\,\mathbf{a}+\cos(\beta t)\,\mathbf{b})\]
+  General solution: \(\mathbf{x}(t)=c_1\mathbf{x}_1(t)+c_2\mathbf{x}_2(t)\).
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — \(A=\begin{bmatrix}-1&-1\\2&-3\end{bmatrix}\)</span>
+  <strong>Eigenvalues:</strong> \(\det(A-rI)=r^2+4r+5=0\Rightarrow r=-2\pm i\). So \(\alpha=-2,\;\beta=1\).<br><br>
+  <strong>Eigenvector for \(r=-2+i\):</strong> Solve \((A-(-2+i)I)\mathbf{z}=0\):
+  \[\begin{bmatrix}1-i&-1\\2&-1-i\end{bmatrix}\mathbf{z}=\mathbf{0}\]
+  From row 1: \((1-i)z_1=z_2\). Let \(z_1=1\): \(z_2=1-i\). So \(\mathbf{z}=\begin{bmatrix}1\\1-i\end{bmatrix}=\begin{bmatrix}1\\1\end{bmatrix}+i\begin{bmatrix}0\\-1\end{bmatrix}\).<br>
+  Thus \(\mathbf{a}=\begin{bmatrix}1\\1\end{bmatrix},\;\mathbf{b}=\begin{bmatrix}0\\-1\end{bmatrix}\).<br><br>
+  <strong>Real solutions:</strong><br>
+  \(\mathbf{x}_1(t)=e^{-2t}\left(\cos t\begin{bmatrix}1\\1\end{bmatrix}-\sin t\begin{bmatrix}0\\-1\end{bmatrix}\right)=e^{-2t}\begin{bmatrix}\cos t\\\cos t+\sin t\end{bmatrix}\)<br>
+  \(\mathbf{x}_2(t)=e^{-2t}\left(\sin t\begin{bmatrix}1\\1\end{bmatrix}+\cos t\begin{bmatrix}0\\-1\end{bmatrix}\right)=e^{-2t}\begin{bmatrix}\sin t\\\sin t-\cos t\end{bmatrix}\)<br><br>
+  <strong>General solution:</strong> \(\mathbf{x}(t)=c_1\mathbf{x}_1(t)+c_2\mathbf{x}_2(t)\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Repeated Eigenvalues — Generalized Eigenvectors</div>
+<div class="box box-formula">
+  <span class="box-label">When Eigenspace is Too Small</span>
+  If \(\lambda\) has algebraic multiplicity 2 but eigenspace dimension 1 (only one LI eigenvector \(\mathbf{v}\)):
+  <ul style="margin-left:20px;margin-top:8px;line-height:2.1;">
+    <li>Solution 1: \(\mathbf{x}_1(t)=e^{\lambda t}\mathbf{v}\).</li>
+    <li>Find generalized eigenvector \(\mathbf{w}\) by solving \((A-\lambda I)\mathbf{w}=\mathbf{v}\).</li>
+    <li>Solution 2: \(\mathbf{x}_2(t)=e^{\lambda t}(t\mathbf{v}+\mathbf{w})\).</li>
+  </ul>
+</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam — \(A=\begin{bmatrix}1&1&1\\0&1&1\\0&0&1\end{bmatrix}\), Find General Solution of \(\mathbf{x}'=A\mathbf{x}\)</span>
+  <strong>Eigenvalue:</strong> Triangular matrix, so \(\lambda=1\) (multiplicity 3).<br><br>
+  <strong>Eigenspace:</strong> \(A-I=\begin{bmatrix}0&1&1\\0&0&1\\0&0&0\end{bmatrix}\). Row reduce: \(x_3=0\), \(x_2=0\), \(x_1\) free. Eigenvector: \(\mathbf{v}_1=[1,0,0]^T\). Only 1 eigenvector → not diagonalizable.<br><br>
+  <strong>Generalized eigenvector (rank 2):</strong> Solve \((A-I)\mathbf{w}=\mathbf{v}_1=[1,0,0]^T\):
+  \[\begin{bmatrix}0&1&1\\0&0&1\\0&0&0\end{bmatrix}\mathbf{w}=\begin{bmatrix}1\\0\\0\end{bmatrix}\]
+  From row 2: \(w_3=0\); row 1: \(w_2+w_3=1\Rightarrow w_2=1\); \(w_1\) free (set 0). So \(\mathbf{w}_2=[0,1,0]^T\).<br><br>
+  <strong>Generalized eigenvector (rank 3):</strong> Solve \((A-I)\mathbf{p}=\mathbf{w}_2=[0,1,0]^T\):
+  \[\begin{bmatrix}0&1&1\\0&0&1\\0&0&0\end{bmatrix}\mathbf{p}=\begin{bmatrix}0\\1\\0\end{bmatrix}\]
+  Row 2: \(p_3=1\); row 1: \(p_2+1=0\Rightarrow p_2=-1\); \(p_1\) free (set 0). So \(\mathbf{w}_3=[0,-1,1]^T\).<br><br>
+  <strong>General solution (\(\lambda=1\), multiplicity 3):</strong>
+  \[\mathbf{x}(t)=e^{t}\left[c_1\mathbf{v}_1+c_2(t\mathbf{v}_1+\mathbf{w}_2)+c_3\!\left(\frac{t^2}{2}\mathbf{v}_1+t\mathbf{w}_2+\mathbf{w}_3\right)\right]\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Fundamental Matrix</div>
+<div class="box box-formula">
+  <span class="box-label">Definition &amp; IVP</span>
+  The <strong>fundamental matrix</strong> \(X(t)\) has linearly independent solutions as its columns. For IVP with \(\mathbf{x}(0)=\mathbf{x}_0\):
+  \[\mathbf{x}(t)=X(t)\,X(0)^{-1}\,\mathbf{x}_0\]
+</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam — Using a Given Fundamental Matrix</span>
+  Given \(X(t)=\begin{bmatrix}e^t&te^t\\0&e^t\end{bmatrix}\) and \(\mathbf{x}(0)=\begin{bmatrix}1\\1\end{bmatrix}\), find \(\mathbf{x}(1)\).<br><br>
+  \(X(0)=\begin{bmatrix}1&0\\0&1\end{bmatrix}=I\Rightarrow X(0)^{-1}=I\).<br>
+  \(\mathbf{x}(t)=X(t)\cdot I\cdot\begin{bmatrix}1\\1\end{bmatrix}=\begin{bmatrix}e^t+te^t\\e^t\end{bmatrix}\).<br>
+  \(\mathbf{x}(1)=\begin{bmatrix}e+e\\e\end{bmatrix}=\begin{bmatrix}2e\\e\end{bmatrix}\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Wronskian for Vector Functions</div>
+<div class="box box-formula">
+  <span class="box-label">Test for Linear Independence</span>
+  For vector functions \(\mathbf{x}_1(t),\ldots,\mathbf{x}_n(t)\): compute \(W(t)=\det[\mathbf{x}_1(t)\ \cdots\ \mathbf{x}_n(t)]\). If \(W(t_0)\neq0\) for some \(t_0\), they are <strong>linearly independent on \((-\infty,\infty)\)</strong>.
+</div>
+<div class="box box-example">
+  <span class="box-label">Example — LI of Three Vector Functions (Past Exam)</span>
+  \(\mathbf{x}_1=\begin{bmatrix}\sin x\\\sin x\end{bmatrix},\;\mathbf{x}_2=\begin{bmatrix}\sin x\\\cos x\end{bmatrix},\;\mathbf{x}_3=\begin{bmatrix}\cos x\\\cos x\end{bmatrix}\). At \(t=0\):
+  \[W(0)=\det\begin{bmatrix}0&0&1\\0&1&1\end{bmatrix}\]
+  For the \(3\times3\) case (with the three 2-vectors arranged as a \(2\times 3\) matrix — use the definition via assuming linear combination = 0 and testing at specific \(t\)):
+  Suppose \(c_1\mathbf{x}_1+c_2\mathbf{x}_2+c_3\mathbf{x}_3=\mathbf{0}\). At \(t=\pi/2\): \(c_1\begin{bmatrix}1\\1\end{bmatrix}+c_2\begin{bmatrix}1\\0\end{bmatrix}+c_3\begin{bmatrix}0\\0\end{bmatrix}=\mathbf{0}\Rightarrow c_1+c_2=0,\;c_1=0\Rightarrow c_1=c_2=0\). Then at \(t=0\): \(c_3\begin{bmatrix}1\\1\end{bmatrix}=\mathbf{0}\Rightarrow c_3=0\). Linearly independent.
+</div>
+</div>
+
+</div><!-- end t9 -->
+
+<!-- ═══════════════════════════════════════════════════
+     TAB 10 — FOURIER SERIES
+════════════════════════════════════════════════════ -->
+<div id="t10" class="tab-content">
+
+<div class="section">
+<div class="section-title">Even &amp; Odd Functions</div>
+<div class="two-col">
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Even Functions: \(f(-x)=f(x)\)</span>
+    Examples: \(x^2,\;\cos x,\;|x|\), any constant.<br>
+    \(\displaystyle\int_{-L}^{L}(\text{even})\,dx=2\int_0^L(\text{even})\,dx\)
+  </div>
+  <div class="box box-formula" style="margin-bottom:0">
+    <span class="box-label">Odd Functions: \(f(-x)=-f(x)\)</span>
+    Examples: \(x,\;x^3,\;\sin x\).<br>
+    \(\displaystyle\int_{-L}^{L}(\text{odd})\,dx=0\)
+  </div>
+</div>
+<div class="box box-formula" style="margin-top:12px;">
+  <span class="box-label">Product Rules</span>
+  <ul style="margin-left:20px;line-height:2.2;">
+    <li>even × even = even; odd × odd = even; even × odd = <strong>odd</strong></li>
+    <li>\(f(x)\cdot\cos(nx)\): if \(f\) is odd → odd → integral over symmetric interval = 0.</li>
+    <li>\(f(x)\cdot\sin(nx)\): if \(f\) is even → odd... wait: \(\sin(nx)\) is odd, so even×odd = odd → integral = 0.</li>
+    <li>\(f(x)\cdot\cos(nx)\): even×even = even → integral may be nonzero.</li>
+  </ul>
+  <strong>Practical rules:</strong> In the Fourier cosine series (f extended evenly), all \(b_n=0\). In the Fourier sine series (f extended oddly), all \(a_n=0\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">General Fourier Series</div>
+<div class="box box-formula">
+  <span class="box-label">Formula (Half-Period \(L\))</span>
+  \[f(x)=\frac{a_0}{2}+\sum_{n=1}^{\infty}\left[a_n\cos\!\left(\frac{n\pi x}{L}\right)+b_n\sin\!\left(\frac{n\pi x}{L}\right)\right]\]
+  where (for period \(2L\), i.e., \(f\) defined on \([-L,L]\)):
+  \[a_0=\frac{1}{L}\int_{-L}^{L}f(x)\,dx,\qquad a_n=\frac{1}{L}\int_{-L}^{L}f(x)\cos\!\left(\frac{n\pi x}{L}\right)dx,\qquad b_n=\frac{1}{L}\int_{-L}^{L}f(x)\sin\!\left(\frac{n\pi x}{L}\right)dx.\]
+  <strong>Note:</strong> When \(L=\pi\), \(\cos(n\pi x/L)=\cos(nx)\) and \(\sin(n\pi x/L)=\sin(nx)\).
+</div>
+<div class="box box-formula">
+  <span class="box-label">Sine &amp; Cosine Half-Range Series (function defined on \([0,L]\))</span>
+  To get a <strong>sine series</strong> (odd extension): \(b_n=\dfrac{2}{L}\int_0^L f(x)\sin\!\left(\dfrac{n\pi x}{L}\right)dx\), all \(a_n=0\).<br><br>
+  To get a <strong>cosine series</strong> (even extension): \(a_0=\dfrac{2}{L}\int_0^L f(x)\,dx\), \(a_n=\dfrac{2}{L}\int_0^L f(x)\cos\!\left(\dfrac{n\pi x}{L}\right)dx\), all \(b_n=0\).
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Convergence — Dirichlet's Theorem</div>
+<div class="box box-theorem">
+  <span class="box-label">Fourier Convergence Theorem</span>
+  At every point where \(f\) is piecewise smooth, the Fourier series converges to:
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>The series converges to</th></tr>
+    <tr><td>Continuous point</td><td>\(f(x)\) (the function value)</td></tr>
+    <tr><td>Jump discontinuity</td><td>\(\dfrac{1}{2}[f(x^+)+f(x^-)]\) (midpoint of left and right limits)</td></tr>
+    <tr><td>Endpoint of \([-L,L]\)</td><td>\(\dfrac{1}{2}[f(-L^+)+f(L^-)]\) (treated as a jump)</td></tr>
+  </table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Worked Example 1 — Full Fourier Series</div>
+<div class="box box-example">
+  <span class="box-label">Example: \(f(x)=\begin{cases}0 & -\pi<x<0\\ x & 0<x<\pi\end{cases}\), \(L=\pi\)</span>
+
+  <strong>Compute \(a_0\):</strong>
+  \[a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\,dx=\frac{1}{\pi}\left[\int_{-\pi}^0 0\,dx+\int_0^{\pi}x\,dx\right]=\frac{1}{\pi}\cdot\frac{\pi^2}{2}=\frac{\pi}{2}\]
+
+  <strong>Compute \(a_n\):</strong> (Integration by parts: \(u=x\), \(dv=\cos(nx)dx\), \(v=\frac{1}{n}\sin(nx)\))
+  \[a_n=\frac{1}{\pi}\int_0^{\pi}x\cos(nx)\,dx=\frac{1}{\pi}\left[\frac{x}{n}\sin(nx)\Big|_0^{\pi}-\int_0^{\pi}\frac{1}{n}\sin(nx)\,dx\right]\]
+  Since \(\sin(n\pi)=0\): \(=\frac{1}{\pi}\left[0+\frac{1}{n^2}\cos(nx)\Big|_0^{\pi}\right]=\frac{1}{\pi n^2}(\cos(n\pi)-1)=\frac{(-1)^n-1}{\pi n^2}\).<br>
+  When \(n\) is even: \(a_n=0\). When \(n\) is odd: \(a_n=\dfrac{-2}{\pi n^2}\).
+
+  <strong>Compute \(b_n\):</strong> (Integration by parts: \(u=x\), \(dv=\sin(nx)dx\), \(v=-\frac{1}{n}\cos(nx)\))
+  \[b_n=\frac{1}{\pi}\int_0^{\pi}x\sin(nx)\,dx=\frac{1}{\pi}\left[-\frac{x}{n}\cos(nx)\Big|_0^{\pi}+\int_0^{\pi}\frac{1}{n}\cos(nx)\,dx\right]\]
+  \(=\frac{1}{\pi}\left[-\frac{\pi}{n}(-1)^n+\frac{1}{n^2}\sin(nx)\Big|_0^{\pi}\right]=\frac{1}{\pi}\cdot\frac{(-1)^{n+1}\pi}{n}=\frac{(-1)^{n+1}}{n}\)
+
+  <strong>General Fourier Series:</strong>
+  \[f(x)=\frac{\pi}{4}+\sum_{n=1}^{\infty}\frac{(-1)^n-1}{\pi n^2}\cos(nx)+\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin(nx)\]
+  \[=\frac{\pi}{4}-\frac{2}{\pi}\left(\frac{\cos x}{1^2}+\frac{\cos 3x}{3^2}+\frac{\cos 5x}{5^2}+\cdots\right)+\left(\frac{\sin x}{1}-\frac{\sin 2x}{2}+\frac{\sin 3x}{3}-\cdots\right)\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Worked Example 2 — Sine &amp; Cosine Half-Range Series</div>
+<div class="box box-example">
+  <span class="box-label">Sine Series for \(f(x)=x\) on \([0,\pi]\) (Odd Extension)</span>
+  All \(a_n=0\). Compute \(b_n\) with factor 2:
+  \[b_n=\frac{2}{\pi}\int_0^{\pi}x\sin(nx)\,dx=\frac{2}{\pi}\left[-\frac{\pi\cos(n\pi)}{n}\right]=\frac{-2(-1)^n}{n}=\frac{2(-1)^{n+1}}{n}\]
+  <strong>Sine series:</strong> \(f(x)=2\left(\frac{\sin x}{1}-\frac{\sin 2x}{2}+\frac{\sin 3x}{3}-\cdots\right)\)
+</div>
+<div class="box box-example">
+  <span class="box-label">Cosine Series for \(f(x)=x\) on \([0,\pi]\) (Even Extension)</span>
+  All \(b_n=0\). Compute:
+  \[a_0=\frac{2}{\pi}\int_0^{\pi}x\,dx=\frac{2}{\pi}\cdot\frac{\pi^2}{2}=\pi\]
+  \[a_n=\frac{2}{\pi}\int_0^{\pi}x\cos(nx)\,dx=\frac{2}{\pi}\cdot\frac{(-1)^n-1}{n^2}=\frac{2((-1)^n-1)}{\pi n^2}\]
+  Nonzero only for odd \(n\): \(a_n=-\frac{4}{\pi n^2}\).<br><br>
+  <strong>Cosine series:</strong> \(f(x)=\frac{\pi}{2}-\frac{4}{\pi}\left(\frac{\cos x}{1^2}+\frac{\cos 3x}{3^2}+\frac{\cos 5x}{5^2}+\cdots\right)\)
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Past Exam Example — Deriving \(\pi/4\)</div>
+<div class="box box-exam">
+  <span class="box-label">Past Exam: \(f(x)=\begin{cases}0&-\pi\leq x\leq0\\1&0\leq x\leq\pi\end{cases}\)</span>
+
+  <strong>(a) Fourier Series:</strong><br>
+  \(a_0=\frac{1}{\pi}\int_0^{\pi}1\,dx=1\).<br>
+  \(a_n=\frac{1}{\pi}\int_0^{\pi}\cos(nx)\,dx=\frac{\sin(n\pi)}{n\pi}=0\) for all \(n\geq1\) (since \(\sin(n\pi)=0\)).<br>
+  \(b_n=\frac{1}{\pi}\int_0^{\pi}\sin(nx)\,dx=\frac{1-\cos(n\pi)}{n\pi}=\frac{1-(-1)^n}{n\pi}\).<br>
+  Nonzero only for odd \(n\): \(b_n=\frac{2}{n\pi}\).<br>
+  \[f(x)\sim\frac{1}{2}+\frac{2}{\pi}\left(\frac{\sin x}{1}+\frac{\sin 3x}{3}+\frac{\sin 5x}{5}+\cdots\right)\]
+
+  <strong>(b) Values of the periodic limit function \(g(x)\):</strong><br>
+  • \(g(0)\): jump discontinuity at \(x=0\) (from 0 to 1). By Dirichlet: \(g(0)=\frac{1}{2}(0+1)=\frac{1}{2}\).<br>
+  • \(g(\pi/2)\): \(f\) is continuous there with \(f(\pi/2)=1\). So \(g(\pi/2)=1\).<br>
+  • \(g(\pi)\): jump discontinuity (endpoint treated as average of left-limit \(f(\pi^-)=1\) and right-limit of next period \(f(-\pi^+)=0\)). So \(g(\pi)=\frac{1}{2}\).
+
+  <strong>(c) Express \(g(\pi/2)\) as an infinite series:</strong><br>
+  Plug \(x=\pi/2\) into the Fourier series:
+  \[1=\frac{1}{2}+\frac{2}{\pi}\left(\frac{\sin(\pi/2)}{1}+\frac{\sin(3\pi/2)}{3}+\frac{\sin(5\pi/2)}{5}+\cdots\right)=\frac{1}{2}+\frac{2}{\pi}\left(1-\frac{1}{3}+\frac{1}{5}-\frac{1}{7}+\cdots\right)\]
+  \[\Rightarrow\quad\frac{\pi}{4}=1-\frac{1}{3}+\frac{1}{5}-\frac{1}{7}+\cdots\quad\text{(Leibniz formula for }\pi/4\text{)}\]
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Integration by Parts — Quick Reference</div>
+<div class="box box-formula">
+  <span class="box-label">Formula</span>
+  \[\int u\,dv=uv-\int v\,du\]
+  <strong>Standard choices for Fourier computations:</strong>
+  <ul style="margin-left:20px;margin-top:6px;line-height:2;">
+    <li>For \(\int x\cos(nx)\,dx\): \(u=x\), \(dv=\cos(nx)dx\), \(v=\frac{1}{n}\sin(nx)\).</li>
+    <li>For \(\int x\sin(nx)\,dx\): \(u=x\), \(dv=\sin(nx)dx\), \(v=-\frac{1}{n}\cos(nx)\).</li>
+    <li>Useful values: \(\sin(n\pi)=0\), \(\cos(n\pi)=(-1)^n\), \(\sin(0)=0\), \(\cos(0)=1\).</li>
+  </ul>
+</div>
+</div>
+
+</div><!-- end t10 -->
+
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  // Re-typeset math in newly visible tab
+  if(window.MathJax&&MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById(id)]);
+  }
+}
+</script>
+</body>
+</html>

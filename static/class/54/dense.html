@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Math 54 Final Exam Cheat Sheet</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 10px;
+    line-height: 1.35;
+    background: #fff;
+    color: #111;
+    padding: 8px;
+  }
+  .page { max-width: 1100px; margin: 0 auto; }
+  h1 {
+    font-size: 13px; font-weight: bold; text-align: center;
+    letter-spacing: 1px; background: #1a1a2e; color: #fff;
+    padding: 4px 8px; margin-bottom: 6px; text-transform: uppercase;
+  }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 5px; margin-bottom: 5px; }
+  .box {
+    border: 1px solid #999; padding: 4px 5px; background: #fff;
+  }
+  .box.hi { border-color: #c00; border-width: 2px; background: #fff8f8; }
+  .box.mid { border-color: #0055b3; background: #f0f5ff; }
+  .box.proc { border-color: #006633; background: #f0fff5; }
+  .box.warn { border-color: #cc7700; background: #fffbf0; }
+  .box.gray { border-color: #888; background: #f8f8f8; }
+  .sec {
+    font-size: 9px; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #fff; padding: 2px 5px; margin: -4px -5px 3px -5px;
+  }
+  .sec.red { background: #c00; }
+  .sec.blue { background: #0055b3; }
+  .sec.green { background: #006633; }
+  .sec.orange { background: #cc7700; }
+  .sec.dark { background: #333; }
+  .badge {
+    font-size: 8px; font-weight: bold; color: #c00;
+    border: 1px solid #c00; padding: 0 3px; margin-left: 3px;
+    vertical-align: middle; display: inline-block;
+  }
+  .kv { display: flex; justify-content: space-between; border-bottom: 0.5px solid #ddd; padding: 1px 0; }
+  .kv:last-child { border-bottom: none; }
+  .kv .k { color: #444; font-style: italic; flex-shrink: 0; margin-right: 5px; }
+  .kv .v { font-family: 'Courier New', monospace; font-size: 9.5px; text-align: right; color: #111; }
+  code { font-family: 'Courier New', monospace; font-size: 9.5px; background: #eee; padding: 0 2px; }
+  .f { font-family: 'Courier New', monospace; font-size: 9.5px; }
+  b { font-weight: bold; }
+  .steps { counter-reset: step; }
+  .step { counter-increment: step; padding-left: 14px; position: relative; margin-bottom: 1px; }
+  .step::before { content: counter(step)"."; position: absolute; left: 0; color: #006633; font-weight: bold; }
+  .note { color: #c00; font-style: italic; font-size: 9px; }
+  .tag { display: inline-block; font-size: 8px; padding: 0 3px; border-radius: 2px; font-weight: bold; margin-right: 2px; }
+  .tag.hi { background: #c00; color: #fff; }
+  .tag.lo { background: #888; color: #fff; }
+  hr { border: 0; border-top: 1px solid #ddd; margin: 3px 0; }
+  .indent { padding-left: 10px; }
+  .row { display: flex; gap: 4px; align-items: baseline; flex-wrap: wrap; }
+  .tight { margin-bottom: 2px; }
+  ul { padding-left: 12px; }
+  ul li { margin-bottom: 1px; }
+  .eq { font-family: 'Courier New', monospace; font-size: 9.5px; display: block; margin: 1px 0; }
+  @media print {
+    body { font-size: 8.5px; padding: 4px; }
+    .box { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Math 54 · Final Exam Reference &nbsp;|&nbsp; <span style="font-size:10px;font-weight:normal;">★ = exam favorite &nbsp; ⚠ = common pitfall</span></h1>
+
+<!-- ROW 1: Eigen + Diagonalization + Complex -->
+<div class="grid-3">
+
+<div class="box hi">
+  <div class="sec red">Eigenvalues &amp; Eigenvectors <span class="badge">★★★</span></div>
+  <b>Finding eigenvalues:</b> solve <code>det(A − λI) = 0</code><br>
+  <b>Finding eigenvectors for λ:</b> row-reduce <code>[A − λI | 0]</code>, express free vars<br>
+  <b>Eigenspace(A, λ)</b> = Nul(A − λI) ⊇ all eigenvectors for λ<br>
+  <hr>
+  <b>Key facts:</b><br>
+  <div class="indent">
+  • λ = 0 is eigenvalue ⟺ A not invertible<br>
+  • Triangular matrix: eigenvalues = diagonal entries<br>
+  • Similar matrices: same char. poly., same eigenvalues<br>
+  • Eigenvectors from <i>distinct</i> eigenvalues → LI<br>
+  • If Av = λv, then A<sup>k</sup>v = λ<sup>k</sup>v<br>
+  • <span class="note">⚠ Eigenspace dim ≤ algebraic multiplicity</span>
+  </div>
+  <hr>
+  <b>Projection operator T(y) = proj<sub>V</sub>y</b> (dim V = k, space = ℝ<sup>n</sup>):<br>
+  <div class="indent">
+  Eigenvalues are <b>1</b> (mult = k) and <b>0</b> (mult = n−k)<br>
+  A is symmetric; rank A = k; nullity A = n−k<br>
+  Char. poly = λ<sup>k</sup>(λ−1)<sup>n−k</sup> ... wait: λ<sup>n−k</sup>(λ−1)<sup>k</sup>
+  </div>
+</div>
+
+<div class="box hi">
+  <div class="sec red">Diagonalization <span class="badge">★★★</span></div>
+  <b>A = PDP<sup>−1</sup></b>: P = [eigvecs as cols], D = diag(eigenvalues, same order)<br>
+  <b>A diagonalizable iff</b> A has n LI eigenvectors ⟺ dim(eigenspace for each λ) = algebraic multiplicity<br>
+  <span class="note">⚠ n distinct eigenvalues → always diagonalizable</span><br>
+  <hr>
+  <b>Algorithm:</b>
+  <div class="steps">
+    <div class="step">Solve <code>det(A − λI) = 0</code> → eigenvalues λ<sub>i</sub></div>
+    <div class="step">For each λ<sub>i</sub>, row-reduce [A − λ<sub>i</sub>I | 0] → basis for eigenspace</div>
+    <div class="step">Check: total # eigenvectors = n? (if not, not diagonalizable)</div>
+    <div class="step">P = [v<sub>1</sub> | v<sub>2</sub> | … | v<sub>n</sub>], D = diag(λ<sub>1</sub>,…,λ<sub>n</sub>)</div>
+  </div>
+  <hr>
+  <b>3×3 triangular matrix A = [[2,h,0],[0,2,1],[0,0,3]]:</b><br>
+  eigenvalues 2(×2), 3(×1). Diagonalizable ⟺ dim(eigenspace for λ=2) = 2 ⟺ A−2I has rank 1 ⟺ h = 0<br>
+  <hr>
+  <b>A<sup>k</sup> = PD<sup>k</sup>P<sup>−1</sup></b> (fast powers)
+</div>
+
+<div class="box hi">
+  <div class="sec red">Complex Eigenvalues &amp; Generalized Eigenvectors <span class="badge">★★</span></div>
+  <b>2×2 real matrix, λ = a ± bi:</b><br>
+  <span class="f">A = PCP<sup>−1</sup>, P = [Re(v) | Im(v)], C = [[a,−b],[b,a]]</span><br>
+  (rotation by arg(λ) + scaling by |λ| = √(a²+b²))<br>
+  <hr>
+  <b>Generalized eigenvectors (defective A):</b><br>
+  If (A−λI) has repeated root but not enough eigenvectors:<br>
+  <div class="indent">
+  Find v₁: (A−λI)v₁ = 0 (normal eigenvector)<br>
+  Find v₂: (A−λI)v₂ = v₁ (generalized eigenvector)<br>
+  </div>
+  <b>Solutions to x' = Ax:</b><br>
+  <span class="f">x₁ = e<sup>λt</sup>v₁, &nbsp; x₂ = e<sup>λt</sup>(tv₁ + v₂)</span><br>
+  <hr>
+  <b>Char poly of P₂ linear map example:</b><br>
+  T(f) = t²f'' + f' + f, basis {1, t, t²}<br>
+  T(1)=1, T(t)=t+1, T(t²)=2+t+t²<br>
+  Matrix: [[1,1,2],[0,1,1],[0,0,1]] → eigenvalue λ=1 (×3)
+</div>
+
+</div><!-- end row 1 -->
+
+<!-- ROW 2: Symmetric + Spectral + Quadratic + SVD -->
+<div class="grid-2">
+
+<div class="box hi">
+  <div class="sec red">Symmetric Matrices, Spectral Theorem &amp; Quadratic Forms <span class="badge">★★★</span></div>
+  <div class="grid-2" style="gap:4px;margin:0;">
+  <div>
+  <b>Symmetric A = A<sup>T</sup>:</b><br>
+  • All eigenvalues real<br>
+  • Eigenvectors from different eigenspaces are orthogonal<br>
+  • dim(eigenspace) = algebraic multiplicity<br>
+  • Always orthogonally diagonalizable: <code>A = PDP<sup>T</sup></code><br>
+  <hr>
+  <b>Orthogonal Diagonalization algorithm:</b>
+  <div class="steps">
+    <div class="step">Find eigenvalues (char. eq.)</div>
+    <div class="step">Find eigenspace basis for each λ</div>
+    <div class="step">If eigenspace dim &gt; 1: apply Gram-Schmidt within eigenspace</div>
+    <div class="step">Normalize all eigenvectors</div>
+    <div class="step">P = [normalized cols], D = diag(eigenvalues)</div>
+  </div>
+  <hr>
+  <b>Spectral decomposition:</b> <span class="f">A = λ₁u₁u₁<sup>T</sup> + … + λₙuₙuₙ<sup>T</sup></span>
+  </div>
+  <div>
+  <b>Quadratic form Q(x) = x<sup>T</sup>Ax:</b><br>
+  Build A: diagonal = coeff of xᵢ², off-diagonal = half coeff of xᵢxⱼ<br>
+  E.g., x₁²+2x₁x₂+x₂² → A = [[1,1],[1,1]]<br>
+  <hr>
+  <b>Classify by eigenvalues of A:</b><br>
+  <div class="kv"><span class="k">All λ &gt; 0</span><span class="v">Positive definite</span></div>
+  <div class="kv"><span class="k">All λ &lt; 0</span><span class="v">Negative definite</span></div>
+  <div class="kv"><span class="k">All λ ≥ 0</span><span class="v">Positive semidefinite</span></div>
+  <div class="kv"><span class="k">Mixed signs</span><span class="v">Indefinite</span></div>
+  <hr>
+  <b>Change of variable x = Py</b> transforms x<sup>T</sup>Ax → y<sup>T</sup>Dy (no cross-terms)<br>
+  New form: λ₁y₁² + λ₂y₂² + … + λₙyₙ²
+  </div>
+  </div>
+</div>
+
+<div class="box hi">
+  <div class="sec red">Singular Value Decomposition (SVD) <span class="badge">★★★</span></div>
+  <b>A = UΣV<sup>T</sup></b>: U (m×m orthogonal), Σ (m×n "diagonal"), V (n×n orthogonal)<br>
+  σᵢ = singular values = √(eigenvalues of A<sup>T</sup>A), decreasing order<br>
+  <hr>
+  <div class="steps">
+    <div class="step">Compute S = A<sup>T</sup>A (symmetric n×n)</div>
+    <div class="step">Find eigenvalues of S: λ₁ ≥ λ₂ ≥ … ≥ λₙ ≥ 0; σᵢ = √λᵢ</div>
+    <div class="step">Find orthonormal eigenvectors v₁,…,vₙ of S → columns of V</div>
+    <div class="step">For each σᵢ ≠ 0: <span class="f">uᵢ = (1/σᵢ)Avᵢ</span></div>
+    <div class="step">Extend u's to orthonormal basis of ℝ<sup>m</sup> (Gram-Schmidt if needed) → U</div>
+    <div class="step">Σ: diagonal entries = σ₁, σ₂,… (remaining = 0)</div>
+  </div>
+  <hr>
+  <b>Key facts from SVD:</b><br>
+  • rank A = # nonzero singular values<br>
+  • Col A: orthonormal basis = first r cols of U<br>
+  • Nul A: orthonormal basis = last n−r cols of V<br>
+  • Row A: orthonormal basis = first r cols of V<br>
+  • Nul A<sup>T</sup>: last m−r cols of U<br>
+  • Pseudoinverse: A⁺ = VᵣDᵣ⁻¹Uᵣ<sup>T</sup><br>
+  • Condition number: σ₁/σₙ<br>
+  <hr>
+  <b>Best rank-k approximation:</b> A ≈ σ₁u₁v₁<sup>T</sup> + … + σₖuₖvₖ<sup>T</sup> (truncate SVD)
+</div>
+
+</div><!-- end row 2 -->
+
+<!-- ROW 3: Orthogonality -->
+<div class="grid-3">
+
+<div class="box mid">
+  <div class="sec blue">Orthogonality &amp; Projections <span class="badge">★★★</span></div>
+  <b>Projection onto W</b> with orthogonal basis {u₁,…,uₚ}:<br>
+  <span class="f">ŷ = proj<sub>W</sub>y = Σ (y·uᵢ/uᵢ·uᵢ)uᵢ</span><br>
+  If {u₁,…,uₚ} orthonormal: <span class="f">ŷ = UU<sup>T</sup>y</span><br>
+  <b>Decomposition:</b> y = ŷ + z, ŷ ∈ W, z ∈ W<sup>⊥</sup> (unique)<br>
+  <b>Best Approx Theorem:</b> ŷ is closest point in W to y<br>
+  <hr>
+  <b>Orthogonal complement W<sup>⊥</sup>:</b><br>
+  (Row A)<sup>⊥</sup> = Nul A &nbsp;|&nbsp; (Col A)<sup>⊥</sup> = Nul A<sup>T</sup><br>
+  V = W ⊕ W<sup>⊥</sup> &nbsp;|&nbsp; dim W + dim W<sup>⊥</sup> = n<br>
+  <hr>
+  <b>Orthogonal matrix U:</b> U<sup>−1</sup> = U<sup>T</sup>, ||Ux|| = ||x||, det U = ±1
+</div>
+
+<div class="box mid">
+  <div class="sec blue">Gram-Schmidt &amp; QR <span class="badge">★★</span></div>
+  <b>Input:</b> basis {x₁,…,xₚ} for W<br>
+  <b>Output:</b> orthogonal basis {v₁,…,vₚ}<br>
+  <span class="f">v₁ = x₁</span><br>
+  <span class="f">v₂ = x₂ − (x₂·v₁/v₁·v₁)v₁</span><br>
+  <span class="f">v₃ = x₃ − (x₃·v₁/v₁·v₁)v₁ − (x₃·v₂/v₂·v₂)v₂</span><br>
+  Normalize: <span class="f">uᵢ = vᵢ/||vᵢ||</span><br>
+  <hr>
+  <b>QR Factorization</b> (A = m×n, LI cols):<br>
+  Q = m×n with orthonormal cols (from G-S on cols of A)<br>
+  R = n×n upper triangular, positive diag entries<br>
+  <span class="f">R = Q<sup>T</sup>A</span> (since Q<sup>T</sup>Q = I)<br>
+  <hr>
+  <b>Span preserved:</b> Span{v₁,…,vₖ} = Span{x₁,…,xₖ} at each step
+</div>
+
+<div class="box mid">
+  <div class="sec blue">Least Squares <span class="badge">★★★</span></div>
+  <b>Problem:</b> Ax = b has no solution; find x̂ minimizing ||b − Ax||<br>
+  <b>Normal equations:</b> <span class="f">A<sup>T</sup>Ax̂ = A<sup>T</sup>b</span><br>
+  <b>If cols of A are LI:</b> <span class="f">x̂ = (A<sup>T</sup>A)<sup>−1</sup>A<sup>T</sup>b</span><br>
+  <b>Via QR:</b> <span class="f">x̂ = R<sup>−1</sup>Q<sup>T</sup>b</span><br>
+  <hr>
+  <b>Least-squares line y = β₀ + β₁x</b> through data (xᵢ, yᵢ):<br>
+  Build X = [[1, x₁],[1, x₂],…,[1, xₙ]], y = [y₁,…,yₙ]<br>
+  Solve X<sup>T</sup>Xβ = X<sup>T</sup>y for β = [β₀, β₁]<br>
+  <hr>
+  <b>Nul(A<sup>T</sup>A) = Nul A</b> (key identity for proofs)<br>
+  rank(A<sup>T</sup>A) = rank(A)
+</div>
+
+</div><!-- end row 3 -->
+
+<!-- ROW 4: Linear Transformations + Subspaces -->
+<div class="grid-3">
+
+<div class="box gray">
+  <div class="sec dark">Linear Transformations &amp; Change of Basis <span class="badge">★★</span></div>
+  <b>Matrix of T: V→W relative to bases B, C:</b><br>
+  M = [[T(b₁)]<sub>C</sub> | [T(b₂)]<sub>C</sub> | … | [T(bₙ)]<sub>C</sub>]<br>
+  Then [T(x)]<sub>C</sub> = M[x]<sub>B</sub><br>
+  <hr>
+  <b>Change of basis P<sub>C←B</sub>:</b> col j = [bⱼ]<sub>C</sub><br>
+  <b>To find:</b> row reduce [C | B] → [I | P<sub>C←B</sub>]<br>
+  P<sub>B←C</sub> = (P<sub>C←B</sub>)<sup>−1</sup><br>
+  <hr>
+  <b>Standard matrix of T: ℝⁿ→ℝᵐ:</b> A = [T(e₁) | T(e₂) | … | T(eₙ)]<br>
+  <b>T one-to-one</b> ⟺ cols LI ⟺ Nul T = {0}<br>
+  <b>T onto</b> ⟺ cols span ℝᵐ<br>
+  <hr>
+  <b>P₂ basis {1, t, t²}:</b> represents polynomials as 3-vectors<br>
+  dim Pₙ = n+1, basis {1, t, t², …, tⁿ}
+</div>
+
+<div class="box gray">
+  <div class="sec dark">Subspaces, Rank-Nullity, Key Spaces</div>
+  <b>Rank-Nullity:</b> rank A + nullity A = n (# cols)<br>
+  rank A = dim Col A = # pivots; nullity A = # free vars<br>
+  <hr>
+  <div class="kv"><span class="k">Col A / Img / Range</span><span class="v">span of cols; subset of ℝᵐ</span></div>
+  <div class="kv"><span class="k">Nul A / Ker</span><span class="v">solns to Ax=0; subset of ℝⁿ</span></div>
+  <div class="kv"><span class="k">Row A</span><span class="v">span of rows; subset of ℝⁿ</span></div>
+  <hr>
+  <b>A² = 0:</b> Col A ⊆ Nul A → rank A ≤ n/2<br>
+  <b>A<sup>T</sup> = −A (skew-symmetric):</b> real eigenvalues = 0; e<sup>At</sup> orthogonal<br>
+  <hr>
+  <b>Invertible Matrix Theorem (key equivalences):</b><br>
+  A invertible ⟺ det A ≠ 0 ⟺ n pivots ⟺ Ax=0 trivial soln ⟺ cols LI ⟺ cols span ℝⁿ ⟺ A<sup>T</sup> invertible<br>
+  <hr>
+  <b>Integer matrix:</b> det A = ±1 ⟺ A<sup>−1</sup> has integer entries (use adj formula)
+</div>
+
+<div class="box gray">
+  <div class="sec dark">Determinants &amp; Invertibility</div>
+  <div class="kv"><span class="k">Row swap</span><span class="v">det → −det</span></div>
+  <div class="kv"><span class="k">Scale row by k</span><span class="v">det → k·det</span></div>
+  <div class="kv"><span class="k">Add multiple of row</span><span class="v">det unchanged</span></div>
+  <div class="kv"><span class="k">det(kA) n×n</span><span class="v">kⁿ·det(A)</span></div>
+  <div class="kv"><span class="k">det(AB)</span><span class="v">det(A)·det(B)</span></div>
+  <div class="kv"><span class="k">det(A<sup>T</sup>)</span><span class="v">det(A)</span></div>
+  <div class="kv"><span class="k">det(A<sup>−1</sup>)</span><span class="v">1/det(A)</span></div>
+  <div class="kv"><span class="k">Triangular A</span><span class="v">product of diagonal</span></div>
+  <hr>
+  <b>2×2 inverse:</b> A = [[a,b],[c,d]], A<sup>−1</sup> = (1/(ad−bc))[[d,−b],[−c,a]]<br>
+  <b>Adjugate:</b> A<sup>−1</sup> = (1/det A) adj A, (adj A)ᵢⱼ = Cⱼᵢ<br>
+  <b>Cramer's Rule:</b> xᵢ = det Aᵢ(b) / det A
+</div>
+
+</div><!-- end row 4 -->
+
+<!-- SEPARATOR -->
+<div style="background:#1a1a2e;color:#fff;font-size:10px;font-weight:bold;text-align:center;padding:3px;margin:4px 0;letter-spacing:1px;text-transform:uppercase;">
+  ── Differential Equations ──
+</div>
+
+<!-- ROW 5: 2nd order ODEs -->
+<div class="grid-3">
+
+<div class="box hi">
+  <div class="sec red">2nd Order Homogeneous ODE <span class="badge">★★★</span></div>
+  <b>ay'' + by' + cy = 0</b> → char. eq: <span class="f">ar² + br + c = 0</span><br>
+  <hr>
+  <table style="width:100%;font-size:9px;border-collapse:collapse;">
+  <tr style="background:#fee;"><td style="padding:2px;border:0.5px solid #ccc;"><b>2 distinct real r₁, r₂</b></td><td style="padding:2px;border:0.5px solid #ccc;font-family:monospace;">y = c₁e^{r₁t} + c₂e^{r₂t}</td></tr>
+  <tr><td style="padding:2px;border:0.5px solid #ccc;"><b>Repeated root r</b></td><td style="padding:2px;border:0.5px solid #ccc;font-family:monospace;">y = c₁e^{rt} + c₂te^{rt}</td></tr>
+  <tr style="background:#fee;"><td style="padding:2px;border:0.5px solid #ccc;"><b>Complex α ± βi</b></td><td style="padding:2px;border:0.5px solid #ccc;font-family:monospace;">y = e^{αt}(c₁cos(βt) + c₂sin(βt))</td></tr>
+  </table>
+  <hr>
+  <b>Apply IVP:</b> y(t₀)=Y₀, y'(t₀)=Y₁ → differentiate y(t), plug in t₀<br>
+  <b>Wronskian:</b> W(y₁,y₂) = y₁y₂'−y₁'y₂ ≠ 0 ⟹ LI<br>
+  <span class="note">⚠ W=0 at one point ⟹ LD (for solns of same ODE)</span>
+</div>
+
+<div class="box hi">
+  <div class="sec red">Method of Undetermined Coefficients <span class="badge">★★★</span></div>
+  <b>For ay''+by'+cy = f(t):</b><br>
+  Find yₚ then y = y<sub>h</sub> + yₚ<br>
+  <hr>
+  <b>f(t) = Ctᵐe^{rt}:</b> &nbsp; guess <span class="f">yₚ = tˢ(Aₘtᵐ+…+A₀)e^{rt}</span><br>
+  <table style="width:100%;font-size:9px;border-collapse:collapse;margin-top:2px;">
+  <tr style="background:#f0fff0;"><td style="padding:1px 3px;border:0.5px solid #ccc;">r not a root</td><td style="padding:1px 3px;border:0.5px solid #ccc;">s = 0</td></tr>
+  <tr><td style="padding:1px 3px;border:0.5px solid #ccc;">r is simple root</td><td style="padding:1px 3px;border:0.5px solid #ccc;">s = 1</td></tr>
+  <tr style="background:#f0fff0;"><td style="padding:1px 3px;border:0.5px solid #ccc;">r is double root</td><td style="padding:1px 3px;border:0.5px solid #ccc;">s = 2</td></tr>
+  </table>
+  <hr>
+  <b>f(t) = Ctᵐe^{αt}cos/sin(βt), β≠0:</b><br>
+  guess <span class="f">yₚ = tˢe^{αt}[(Aₘtᵐ+…+A₀)cos(βt) + (Bₘtᵐ+…+B₀)sin(βt)]</span><br>
+  s=0 if α+iβ not a root; s=1 if it is<br>
+  <hr>
+  <b>y''+2y'+y = e<sup>−t</sup>:</b> char eq (r+1)²=0, r=−1 double root. r=−1 matches, m=0 → yₚ = t²Ae<sup>−t</sup>
+</div>
+
+<div class="box mid">
+  <div class="sec blue">Variation of Parameters &amp; 3rd Order</div>
+  <b>ay''+by'+cy = f(t), known y₁,y₂:</b><br>
+  yₚ = u₁y₁ + u₂y₂ where:<br>
+  <span class="f">u₁' = −y₂(f/a)/W, &nbsp; u₂' = y₁(f/a)/W</span><br>
+  W = y₁y₂'−y₁'y₂ (Wronskian)<br>
+  <hr>
+  <b>Nonhom. general solution:</b><br>
+  y(t) = yₚ + c₁y₁ + c₂y₂<br>
+  (unique soln for any IVP by existence/uniqueness)<br>
+  <hr>
+  <b>Superposition:</b> if y₁ solves Ly=f₁, y₂ solves Ly=f₂,<br>
+  then k₁y₁+k₂y₂ solves Ly = k₁f₁+k₂f₂<br>
+  <hr>
+  <b>3rd order y'''+ay''+by'+cy = f:</b><br>
+  Same logic; char. eq cubic r³+ar²+br+c=0<br>
+  3 roots → 3 terms in y<sub>h</sub>
+</div>
+
+</div><!-- end row 5 -->
+
+<!-- ROW 6: Systems of ODEs -->
+<div class="grid-2">
+
+<div class="box hi">
+  <div class="sec red">Systems of ODEs: x'(t) = Ax(t) <span class="badge">★★★</span></div>
+  <div class="grid-2" style="gap:4px;margin:0;">
+  <div>
+  <b>Converting nth order ODE to system:</b><br>
+  y''+py'+qy = 0: let x₁=y, x₂=y'<br>
+  x₁' = x₂<br>
+  x₂' = −qx₁−px₂<br>
+  A = [[0, 1],[−q, −p]]<br>
+  (for y''+3y'+2y=0: A=[[0,1],[−2,−3]])<br>
+  <hr>
+  <b>n distinct real eigenvalues r₁,…,rₙ with eigenvectors u₁,…,uₙ:</b><br>
+  <span class="f">x(t) = c₁e^{r₁t}u₁ + … + cₙe^{rₙt}uₙ</span><br>
+  Fundamental matrix: X(t) = [e^{r₁t}u₁ | … | e^{rₙt}uₙ]<br>
+  <hr>
+  <b>Solving IVP x(0) = x₀:</b><br>
+  x₀ = c₁u₁ + … + cₙuₙ<br>
+  Row reduce [u₁|…|uₙ|x₀] to find c's<br>
+  OR: x(t) = X(t)X(0)⁻¹x₀
+  </div>
+  <div>
+  <b>Complex eigenvalues α±iβ, eigenvector a±ib:</b><br>
+  Two real solutions:<br>
+  <span class="f">x₁ = e^{αt}(cos(βt)a − sin(βt)b)</span><br>
+  <span class="f">x₂ = e^{αt}(sin(βt)a + cos(βt)b)</span><br>
+  <hr>
+  <b>Repeated eigenvalue r, defective:</b><br>
+  Find v₁ (eigenvec), v₂ s.t. (A−rI)v₂=v₁<br>
+  <span class="f">x₁ = e^{rt}v₁</span><br>
+  <span class="f">x₂ = e^{rt}(tv₁ + v₂)</span><br>
+  <hr>
+  <b>Given fundamental matrix X(t), IVP x(0)=x₀:</b><br>
+  x(t) = X(t)·X(0)⁻¹·x₀<br>
+  E.g. X(0) = [[e⁰, 0·e⁰],[0, e⁰]] = I → x(t) = X(t)x₀
+  </div>
+  </div>
+  <hr>
+  <b>Linear independence of vector solutions:</b> compute Wronskian W(t)=det[x₁(t)|x₂(t)|…] at convenient t (e.g. t=0). W≠0 ⟹ LI on (−∞,∞).<br>
+  <b>Check at t=0 for vectors like [sinx/sinx], [sinx/cosx], [cosx/cosx]:</b> form matrix, compute det; if ≠0 → LI.
+</div>
+
+<div class="box hi">
+  <div class="sec red">Fourier Series <span class="badge">★★★</span></div>
+  <div class="grid-2" style="gap:4px;margin:0;">
+  <div>
+  <b>Full Fourier on [−L, L]:</b><br>
+  <span class="f">f(x) = a₀/2 + Σ[aₙcos(nπx/L) + bₙsin(nπx/L)]</span><br>
+  <span class="f">aₙ = (1/L)∫₋ₗᴸ f(x)cos(nπx/L)dx</span><br>
+  <span class="f">bₙ = (1/L)∫₋ₗᴸ f(x)sin(nπx/L)dx</span><br>
+  <hr>
+  <b>Fourier Cosine Series on [0, L]:</b><br>
+  <span class="f">f(x) = a₀/2 + Σ aₙcos(nπx/L)</span><br>
+  <span class="f">aₙ = (2/L)∫₀ᴸ f(x)cos(nπx/L)dx</span><br>
+  (extend f as even to [−L,L])<br>
+  <hr>
+  <b>Fourier Sine Series on [0, L]:</b><br>
+  <span class="f">f(x) = Σ bₙsin(nπx/L)</span><br>
+  <span class="f">bₙ = (2/L)∫₀ᴸ f(x)sin(nπx/L)dx</span><br>
+  (extend f as odd to [−L,L])
+  </div>
+  <div>
+  <b>Convergence (Dirichlet):</b><br>
+  At continuity point: series → f(x)<br>
+  At jump discontinuity x₀: → ½[f(x₀⁺) + f(x₀⁻)]<br>
+  At endpoints (periodic extension): → ½[f(L⁻)+f(−L⁺)]<br>
+  <hr>
+  <b>Even/odd shortcuts:</b><br>
+  f even ⟹ bₙ = 0 (use cosine series)<br>
+  f odd ⟹ aₙ = 0 (use sine series)<br>
+  f(x)·cos(nx): even·even=even or odd·even=odd<br>
+  <span class="note">⚠ ∫odd on [−L,L] = 0</span><br>
+  <hr>
+  <b>Useful: f(x)=1 on [0,π], 0 on [−π,0], L=π:</b><br>
+  a₀=1, aₙ=0, bₙ=2/(nπ)(1−cos(nπ))=(2/nπ) for n odd<br>
+  At x=0: g(0)=½; at x=π/2: g(π/2)=1; at x=π: g(π)=½<br>
+  → series at π/2 gives: 1 = ½ + (2/π)(1 − 1/3 + 1/5−…) → Leibniz formula
+  </div>
+  </div>
+</div>
+
+</div><!-- end row 6 -->
+
+<!-- ROW 7: Quick Reference -->
+<div class="grid-3">
+
+<div class="box warn">
+  <div class="sec orange">Integration by Parts (Fourier Integrals)</div>
+  ∫u dv = uv − ∫v du<br>
+  <hr>
+  <b>∫x·sin(nx)dx:</b> u=x, dv=sin(nx)dx → v=−cos(nx)/n<br>
+  = −x·cos(nx)/n + ∫cos(nx)/n dx = −x·cos(nx)/n + sin(nx)/n²<br>
+  <b>∫x·cos(nx)dx:</b> u=x, dv=cos(nx)dx → v=sin(nx)/n<br>
+  = x·sin(nx)/n − ∫sin(nx)/n dx = x·sin(nx)/n + cos(nx)/n²<br>
+  <hr>
+  <b>Key values:</b> sin(nπ)=0, cos(nπ)=(−1)ⁿ<br>
+  sin(nπ/2): 0,1,0,−1,0,1,… for n=0,1,2,3,4,5,…<br>
+  <hr>
+  <b>Trig identities:</b><br>
+  sin²A+cos²A=1 &nbsp;|&nbsp; sin(2A)=2sinAcosA<br>
+  cos(2A)=2cos²A−1=1−2sin²A<br>
+  sin(A±B)=sinAcosB±cosAsinB<br>
+  cos(A±B)=cosAcosB∓sinAsinB
+</div>
+
+<div class="box warn">
+  <div class="sec orange">Common Pitfalls &amp; Exam Tricks</div>
+  <b>Undetermined coefficients:</b> always check if r matches a root before guessing yₚ — multiply by tˢ!<br>
+  <b>Projection eigenvalues:</b> T = proj<sub>V</sub> ⟹ λ=1 (on V) and λ=0 (on V⊥). A² = A (idempotent).<br>
+  <b>Wronskian for vector fns:</b> evaluate at t=0 for simplicity<br>
+  <b>SVD Σ dimensions:</b> if A is m×n, Σ is m×n (not square!)<br>
+  <b>Orthogonal diagonalization:</b> for sym matrices, eigenvectors from <i>same</i> eigenspace need G-S; from different eigenspaces are auto-orthogonal<br>
+  <b>LI of [sinx/sinx], [sinx/cosx], [cosx/cosx]:</b> at x=0 gives det([[0,0,1],[0,1,0],[1,1,1]])... actually evaluate det carefully<br>
+  <b>Least squares line:</b> always set up X = [1's col | x-values col], don't forget the 1's column<br>
+  <b>General soln = homogeneous + particular:</b> never forget c₁y₁+c₂y₂ term<br>
+  <b>det for 3×3:</b> cofactor along simplest row/col (most zeros)<br>
+  <span class="note">⚠ A<sup>T</sup>A ≠ AA<sup>T</sup> in general; SVD uses A<sup>T</sup>A for V, AA<sup>T</sup> for U directly</span>
+</div>
+
+<div class="box proc">
+  <div class="sec green">Proof Toolbox (Exam Proofs)</div>
+  <b>Nul(A<sup>T</sup>A) = Nul A:</b> x ∈ Nul(A<sup>T</sup>A) → A<sup>T</sup>Ax=0 → x<sup>T</sup>A<sup>T</sup>Ax=0 → ||Ax||²=0 → Ax=0 → x ∈ Nul A. Converse: Ax=0 → A<sup>T</sup>Ax=0.<br>
+  <hr>
+  <b>Col A ⊆ Nul A (given A²=0):</b> let b=Av ∈ Col A; then Ab=A(Av)=A²v=0 → b ∈ Nul A<br>
+  <hr>
+  <b>e<sup>At</sup> orthogonal (given A<sup>T</sup>=−A):</b> show (e<sup>At</sup>)<sup>T</sup>e<sup>At</sup>=I. Use that d/dt[(e<sup>At</sup>)<sup>T</sup>e<sup>At</sup>] = 0.<br>
+  <hr>
+  <b>λ real eigenvalue of T, T(v)·u = −v·T(u):</b> T(v)=λv → T(v)·v=λ(v·v) and −v·T(v)=−λ(v·v) → 2λ||v||²=0 → λ=0<br>
+  <hr>
+  <b>Wronskian ≠ 0 ⟹ LI:</b> if c₁f+c₂g=0 for all x, differentiate → system with Wronskian det ≠ 0 → only trivial soln<br>
+  <hr>
+  <b>Integer det ±1 ⟹ A<sup>−1</sup> integer:</b> A<sup>−1</sup> = (1/det A)adj A; adj A has integer entries (cofactors = integer combos of integer entries); det A = ±1 → no fractions
+</div>
+
+</div><!-- end row 7 -->
+
+<!-- ROW 8: Compact reference -->
+<div class="grid-3">
+
+<div class="box gray">
+  <div class="sec dark">Linear Independence Rules</div>
+  <div class="kv"><span class="k">Set contains 0</span><span class="v">→ LD</span></div>
+  <div class="kv"><span class="k">Two vectors, one scalar mult of other</span><span class="v">→ LD</span></div>
+  <div class="kv"><span class="k">More vectors than dimension</span><span class="v">→ LD</span></div>
+  <div class="kv"><span class="k">Pivot in every column</span><span class="v">→ LI</span></div>
+  <div class="kv"><span class="k">Square + LI</span><span class="v">⟺ spanning ⟺ invertible</span></div>
+  <hr>
+  <b>Check LI:</b> form matrix with vectors as cols, row reduce; LI ⟺ no free vars<br>
+  <b>Span ℝⁿ:</b> pivot in every row<br>
+  <b>Subspace check:</b> contains 0? closed under + and ·?<br>
+  <b>Basis:</b> LI + spanning; Unique Representation Thm
+</div>
+
+<div class="box gray">
+  <div class="sec dark">Key Theorems Summary</div>
+  <b>Existence-Uniqueness (ODE):</b> ay''+by'+cy=f with IVP has unique soln<br>
+  <b>Rank Theorem:</b> rank + nullity = # cols<br>
+  <b>Basis Theorem:</b> p-dim space: any p LI vectors = basis; any p spanning vectors = basis<br>
+  <b>Spectral (Sym.):</b> n real eigenvalues (w/ mult), eigenspaces mutually ⊥, orthogonally diagonalizable<br>
+  <b>Best Approx:</b> ŷ = proj<sub>W</sub>y is closest point in W to y<br>
+  <b>Orthog. Decomp:</b> y = ŷ + z uniquely, ŷ ∈ W, z ∈ W⊥<br>
+  <b>SVD existence:</b> every m×n matrix has SVD<br>
+  <b>Cauchy-Schwarz:</b> |⟨u,v⟩| ≤ ||u||·||v||
+</div>
+
+<div class="box gray">
+  <div class="sec dark">Quick Computation Reference</div>
+  <b>2×2 det:</b> ad−bc<br>
+  <b>3×3 char poly:</b> expand det(A−λI) by cofactors along col/row with most structure<br>
+  <b>Projection formula (single vector u):</b><br>
+  proj<sub>u</sub>v = (v·u/u·u)u<br>
+  <b>Distance:</b> ||u−v|| = √(Σ(uᵢ−vᵢ)²)<br>
+  <b>||v||²:</b> = v·v = v₁²+…+vₙ²<br>
+  <b>Unit vector:</b> u = v/||v||<br>
+  <hr>
+  <b>Fourier convergence at π/2 for f=0 on (−π,0), f=1 on (0,π):</b><br>
+  g(π/2) = 1, so 1 = ½ + (2/π)(1 − 1/3 + 1/5 − …)<br>
+  → π/4 = 1 − 1/3 + 1/5 − 1/7 + …
+</div>
+
+</div><!-- end final row -->
+
+<div style="text-align:center;font-size:8.5px;color:#666;margin-top:4px;border-top:1px solid #ddd;padding-top:3px;">
+  Math 54 · Linear Algebra &amp; Differential Equations &nbsp;|&nbsp; ★★★ = appears on nearly every past final &nbsp;|&nbsp; ★★ = frequently tested &nbsp;|&nbsp; Red boxes = highest exam priority
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,606 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>quiz1</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li>
+<ul>
+<li><a href="#yaml-header--markdown">0. YAML Header & Markdown</a></li>
+<li><a href="#r-objects">1. R Objects</a></li>
+<li><a href="#atomic-vectors">2. Atomic Vectors</a></li>
+<li><a href="#vector-operations--recycling">3. Vector Operations & Recycling</a></li>
+<li><a href="#type-coercion">4. Type Coercion</a></li>
+<li><a href="#special-values">5. Special Values</a></li>
+<li><a href="#vector-subsetting">6. Vector Subsetting</a></li>
+<li><a href="#lists-non-atomic-vectors">7. Lists (Non-atomic Vectors)</a></li>
+<li><a href="#matrices">8. Matrices</a></li>
+<li><a href="#control-statements--functions">9. Control Statements & Functions</a></li>
+<li><a href="#unix--shell-commands">10. Unix / Shell Commands</a></li>
+<li><a href="#common-traps">11. Common Traps</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h2 id="yaml-header--markdown">0. YAML Header &amp; Markdown</h2>
+<h3 id="quarto-yaml-header">Quarto YAML Header</h3>
+<p>The YAML (Yet Another Markup Language) header is located at the very top of a Quarto or RMarkdown document, between two sets of triple dashes (<code>---</code>). It contains the “metadata” or global settings for the file.</p>
+<ul>
+<li><strong><code>title</code></strong>: The name of the document displayed at the top.</li>
+<li><strong><code>author</code></strong>: The name of the person who created the document.</li>
+<li><strong><code>format</code></strong>: The output type (e.g., <code>html</code>, <code>pdf</code>, <code>revealjs</code>).</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class=" language-yaml"><code class="prism  language-yaml"><span class="token punctuation">---</span>
+<span class="token key atrule">title</span><span class="token punctuation">:</span> <span class="token string">"My Quiz 1"</span>
+<span class="token key atrule">author</span><span class="token punctuation">:</span> <span class="token string">"Alyssa P. Hacker"</span>
+<span class="token key atrule">format</span><span class="token punctuation">:</span> html
+<span class="token punctuation">---</span>
+</code></pre>
+<blockquote>
+<p>⚠️ The key for output type is <code>format:</code>, <strong>not</strong> <code>type:</code>. A common mistake is writing <code>type: "html"</code> — the correct key is <code>format: "html"</code>.</p>
+</blockquote>
+<h3 id="quarto-execution-options-code-cells">Quarto Execution Options (Code Cells)</h3>
+<p><strong>Definition</strong>: Special comments placed at the top of an R code cell (using <code>#|</code> syntax) that control how code and output appear in the rendered document.</p>
+<ul>
+<li><strong><code>#| echo: true</code></strong>: Shows both the code and its output.</li>
+<li><strong><code>#| echo: false</code></strong>: Hides the code but still shows output (useful for plots/tables).</li>
+<li><strong><code>#| code-fold: true</code></strong>: Hides code behind a clickable “Code” button.</li>
+<li><strong><code>#| eval: false</code></strong>: Shows the code but does <strong>not</strong> run it.</li>
+<li><strong><code>#| warning: false</code></strong>: Suppresses warning messages from output.</li>
+<li><strong><code>#| message: false</code></strong>: Suppresses informational messages from output.</li>
+</ul>
+<h3 id="markdown-formatting-concepts">Markdown Formatting Concepts</h3>
+<p><strong>Definition</strong>: Markdown provides simple syntax for adding structure to text without complex menus.</p>
+<ul>
+<li><strong>Headers</strong>: <code>#</code> = main title, <code>##</code> = section, <code>###</code> = subsection.</li>
+<li><strong>Lists</strong>:
+<ul>
+<li><strong>Unordered</strong>: Use <code>-</code> or <code>*</code> for bullet points.</li>
+<li><strong>Incremental</strong>: In Quarto slides, <code>{.incremental}</code> makes bullets appear one at a time.</li>
+</ul>
+</li>
+<li><strong>Images</strong>: <code>![](path/to/image.png)</code></li>
+<li><strong>Layout/Columns</strong>: <code>layout-ncol: 2</code> creates a two-column layout.</li>
+</ul>
+<h2 id="r-objects">1. R Objects</h2>
+<p><strong>Everything in R is an object</strong>, and <strong>everything that happens is a function call</strong>.</p>
+<pre class=" language-r"><code class="prism  language-r">x <span class="token operator">&lt;-</span> <span class="token number">5</span>          <span class="token comment"># assign value 5 to x using arrow assignment (preferred)</span>
+y <span class="token operator">=</span> <span class="token number">10</span>          <span class="token comment"># assign value 10 to y using = (less preferred)</span>
+
+x               <span class="token comment"># print x → 5</span>
+y               <span class="token comment"># print y → 10</span>
+
+sqrt<span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span>        <span class="token comment"># call sqrt function → 4</span>
+log<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>         <span class="token comment"># call log function → 2.302585</span>
+
+rm<span class="token punctuation">(</span>x<span class="token punctuation">)</span>           <span class="token comment"># remove object x from environment</span>
+ls<span class="token punctuation">(</span><span class="token punctuation">)</span>            <span class="token comment"># list all objects currently in environment</span>
+</code></pre>
+<h2 id="atomic-vectors">2. Atomic Vectors</h2>
+<p>A <strong>vector = ordered collection of values of the same type</strong>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Example</th>
+<th><code>typeof()</code> result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>logical</td>
+<td><code>TRUE</code>/<code>FALSE</code></td>
+<td><code>"logical"</code></td>
+</tr>
+<tr>
+<td>integer</td>
+<td><code>1L</code></td>
+<td><code>"integer"</code></td>
+</tr>
+<tr>
+<td>double</td>
+<td><code>1.5</code></td>
+<td><code>"double"</code></td>
+</tr>
+<tr>
+<td>character</td>
+<td><code>"text"</code></td>
+<td><code>"character"</code></td>
+</tr>
+</tbody>
+</table><h3 id="creation">Creation</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># combine values into a vector</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>              <span class="token comment"># numeric vector → 1 2 3</span>
+c<span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">)</span>        <span class="token comment"># character vector → "a" "b" "c"</span>
+c<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">FALSE</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>    <span class="token comment"># logical vector → TRUE FALSE TRUE</span>
+
+<span class="token comment"># integer sequence shorthand</span>
+<span class="token number">1</span><span class="token operator">:</span><span class="token number">5</span>                     <span class="token comment"># → 1 2 3 4 5</span>
+
+<span class="token comment"># sequence generation</span>
+seq<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>              <span class="token comment"># same as 1:10 → 1 2 3 4 5 6 7 8 9 10</span>
+seq<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>      <span class="token comment"># step of 2 → 1 3 5 7 9</span>
+seq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token number">0.25</span><span class="token punctuation">)</span>    <span class="token comment"># decimal step → 0.00 0.25 0.50 0.75 1.00</span>
+
+<span class="token comment"># sequence from 1 to n</span>
+seq_len<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>              <span class="token comment"># → 1 2 3 4 5</span>
+
+<span class="token comment"># sequence matching length of another vector</span>
+x <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">)</span>
+seq_along<span class="token punctuation">(</span>x<span class="token punctuation">)</span>            <span class="token comment"># → 1 2 3</span>
+
+<span class="token comment"># replicate values</span>
+rep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> times <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>       <span class="token comment"># repeat whole vector: → 1 1 1</span>
+rep<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> times <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token comment"># repeat whole vector 3x: → 1 2 1 2 1 2</span>
+rep<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> each <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>  <span class="token comment"># repeat each element 3x: → 1 1 1 2 2 2</span>
+
+<span class="token comment"># pre-allocated empty vectors of a given type and length</span>
+numeric<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>              <span class="token comment"># → 0 0 0</span>
+integer<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>              <span class="token comment"># → 0 0 0 (integer)</span>
+logical<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>              <span class="token comment"># → FALSE FALSE FALSE</span>
+character<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>            <span class="token comment"># → "" "" ""</span>
+</code></pre>
+<h3 id="type-checking">Type Checking</h3>
+<pre class=" language-r"><code class="prism  language-r">typeof<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>       <span class="token comment"># → "double"    (internal storage type)</span>
+typeof<span class="token punctuation">(</span><span class="token number">1L</span><span class="token punctuation">)</span>      <span class="token comment"># → "integer"</span>
+typeof<span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">)</span> <span class="token comment"># → "character"</span>
+typeof<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">)</span>    <span class="token comment"># → "logical"</span>
+
+mode<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>         <span class="token comment"># → "numeric"   (historical R classification)</span>
+class<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>        <span class="token comment"># → "numeric"   (object-oriented class)</span>
+
+is.logical<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">)</span>    <span class="token comment"># → TRUE</span>
+is.integer<span class="token punctuation">(</span><span class="token number">1L</span><span class="token punctuation">)</span>      <span class="token comment"># → TRUE</span>
+is.double<span class="token punctuation">(</span><span class="token number">1.5</span><span class="token punctuation">)</span>      <span class="token comment"># → TRUE</span>
+is.numeric<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>       <span class="token comment"># → TRUE  (both double and integer pass this)</span>
+is.character<span class="token punctuation">(</span><span class="token string">"hi"</span><span class="token punctuation">)</span>  <span class="token comment"># → TRUE</span>
+</code></pre>
+<h3 id="properties">Properties</h3>
+<pre class=" language-r"><code class="prism  language-r">x <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span>a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> c <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>  <span class="token comment"># named vector</span>
+
+length<span class="token punctuation">(</span>x<span class="token punctuation">)</span>           <span class="token comment"># number of elements → 3</span>
+names<span class="token punctuation">(</span>x<span class="token punctuation">)</span>            <span class="token comment"># get names → "a" "b" "c"</span>
+names<span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span><span class="token string">"x"</span><span class="token punctuation">,</span> <span class="token string">"y"</span><span class="token punctuation">,</span> <span class="token string">"z"</span><span class="token punctuation">)</span>  <span class="token comment"># reassign names</span>
+str<span class="token punctuation">(</span>x<span class="token punctuation">)</span>              <span class="token comment"># compact structure summary → Named num [1:3] 1 2 3</span>
+</code></pre>
+<h2 id="vector-operations--recycling">3. Vector Operations &amp; Recycling</h2>
+<p>Operations apply <strong>element-wise</strong> across vectors.</p>
+<pre class=" language-r"><code class="prism  language-r">c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">+</span> c<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>    <span class="token comment"># element-wise add → 5 7 9</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">*</span> c<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>    <span class="token comment"># element-wise multiply → 2 4 6</span>
+c<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">/</span> c<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>    <span class="token comment"># element-wise divide → 1 2 4</span>
+c<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token number">2</span>                 <span class="token comment"># element-wise exponent → 4 9</span>
+<span class="token number">10</span> <span class="token percent-operator operator">%%</span> <span class="token number">3</span>                     <span class="token comment"># modulo (remainder) → 1</span>
+<span class="token number">10</span> <span class="token percent-operator operator">%/%</span> <span class="token number">3</span>                    <span class="token comment"># integer division → 3</span>
+
+<span class="token comment"># math functions applied element-wise</span>
+sqrt<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">)</span>            <span class="token comment"># → 1 2 3</span>
+log<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">)</span>          <span class="token comment"># → 0.000000 2.302585 4.605170</span>
+exp<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># → 1.000000 2.718282 7.389056</span>
+abs<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>           <span class="token comment"># → 3 1 2</span>
+round<span class="token punctuation">(</span><span class="token number">3.567</span><span class="token punctuation">,</span> digits <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>    <span class="token comment"># → 3.57</span>
+floor<span class="token punctuation">(</span><span class="token number">3.9</span><span class="token punctuation">)</span>                  <span class="token comment"># → 3  (round down)</span>
+ceiling<span class="token punctuation">(</span><span class="token number">3.1</span><span class="token punctuation">)</span>                <span class="token comment"># → 4  (round up)</span>
+
+<span class="token comment"># summary functions</span>
+sum<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># → 6</span>
+mean<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>            <span class="token comment"># → 2</span>
+median<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>          <span class="token comment"># → 2</span>
+min<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># → 1</span>
+max<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>             <span class="token comment"># → 3</span>
+range<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>           <span class="token comment"># → 1 3  (min and max)</span>
+quantile<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0.25</span><span class="token punctuation">)</span>     <span class="token comment"># 25th percentile → 3.25</span>
+</code></pre>
+<h3 id="recycling">Recycling</h3>
+<p>The shorter vector is <strong>repeated (recycled)</strong> to match the length of the longer one. A warning is issued if lengths are not multiples.</p>
+<pre class=" language-r"><code class="prism  language-r">c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> c<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span>
+<span class="token comment"># → 11 22 13 24</span>
+
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">+</span> c<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span>
+<span class="token comment"># → 11 22 13</span>
+
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span> 
+<span class="token comment"># → 2 3 4</span>
+</code></pre>
+<blockquote>
+<p>⚠️ <code>c(1, 2, 3, 4, 5) + 1</code> is <strong>vectorized</strong> (applies <code>+1</code> to each element), <strong>not</strong> recycling. Recycling only applies when both sides are vectors of length &gt; 1.</p>
+</blockquote>
+<h2 id="type-coercion">4. Type Coercion</h2>
+<p>R forces all elements in a vector to the <strong>same type</strong> following the hierarchy:</p>
+<p><strong>logical → integer → double → character</strong> <em>(choose rightmost)</em></p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># implicit coercion via c()</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>          <span class="token comment"># logical → double: TRUE becomes 1   → 1 1</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token boolean">FALSE</span><span class="token punctuation">)</span>         <span class="token comment"># FALSE becomes 0                    → 1 0</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"a"</span><span class="token punctuation">)</span>           <span class="token comment"># double → character: 1 becomes "1"  → "1" "a"</span>
+c<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token string">"hi"</span><span class="token punctuation">)</span>       <span class="token comment"># logical → character                → "TRUE" "hi"</span>
+c<span class="token punctuation">(</span><span class="token number">1L</span><span class="token punctuation">,</span> <span class="token number">1.5</span><span class="token punctuation">)</span>          <span class="token comment"># integer → double                   → 1.0 1.5</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2.0</span><span class="token punctuation">,</span> <span class="token string">"3"</span><span class="token punctuation">)</span>      <span class="token comment"># same data type? NO — "3" forces character → "1" "2" "3"</span>
+
+<span class="token comment"># logical to numeric </span>
+<span class="token boolean">TRUE</span> <span class="token operator">+</span> <span class="token number">1</span>            <span class="token comment"># TRUE → 1, so result is → 2</span>
+<span class="token boolean">FALSE</span> <span class="token operator">+</span> <span class="token number">1</span>           <span class="token comment"># FALSE → 0, so result is → 1</span>
+sum<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">FALSE</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># counts TRUEs → 3</span>
+
+<span class="token comment"># explicit coercion</span>
+as.integer<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">)</span>    <span class="token comment"># → 1</span>
+as.double<span class="token punctuation">(</span><span class="token string">"3.14"</span><span class="token punctuation">)</span>   <span class="token comment"># → 3.14</span>
+as.character<span class="token punctuation">(</span><span class="token number">42</span><span class="token punctuation">)</span>    <span class="token comment"># → "42"</span>
+as.logical<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>       <span class="token comment"># → FALSE</span>
+as.logical<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>       <span class="token comment"># → TRUE</span>
+as.logical<span class="token punctuation">(</span><span class="token string">"TRUE"</span><span class="token punctuation">)</span>  <span class="token comment"># → TRUE</span>
+</code></pre>
+<blockquote>
+<p>⚠️ <code>abs(TRUE)</code> is <strong>not</strong> implicit coercion — <code>abs()</code> is a numeric function being applied to a logical. TRUE is treated as 1, giving <code>abs(1) = 1</code>. This is <strong>vectorized behavior</strong>, not coercion in the <code>c()</code> sense.</p>
+</blockquote>
+<h2 id="special-values">5. Special Values</h2>
+
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NA</code></td>
+<td>Missing value (any type)</td>
+</tr>
+<tr>
+<td><code>NaN</code></td>
+<td>Not a Number (undefined math)</td>
+</tr>
+<tr>
+<td><code>Inf</code></td>
+<td>Positive infinity</td>
+</tr>
+<tr>
+<td><code>-Inf</code></td>
+<td>Negative infinity</td>
+</tr>
+<tr>
+<td><code>NULL</code></td>
+<td>Absence of a value/object</td>
+</tr>
+</tbody>
+</table><pre class=" language-r"><code class="prism  language-r">c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">NA</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>                     <span class="token comment"># NA is missing → 1 NA 3</span>
+mean<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">NA</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>               <span class="token comment"># NA propagates → NA</span>
+mean<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">NA</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> na.rm <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span> <span class="token comment"># ignore NA → 2</span>
+
+<span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span>                           <span class="token comment"># → Inf</span>
+<span class="token operator">-</span><span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span>                          <span class="token comment"># → -Inf</span>
+<span class="token number">0</span> <span class="token operator">/</span> <span class="token number">0</span>                           <span class="token comment"># → NaN</span>
+
+<span class="token comment"># testing special values</span>
+is.na<span class="token punctuation">(</span><span class="token keyword">NA</span><span class="token punctuation">)</span>          <span class="token comment"># → TRUE</span>
+is.na<span class="token punctuation">(</span><span class="token number">NaN</span><span class="token punctuation">)</span>         <span class="token comment"># → TRUE  (NaN is also considered NA)</span>
+is.nan<span class="token punctuation">(</span><span class="token number">NaN</span><span class="token punctuation">)</span>        <span class="token comment"># → TRUE</span>
+is.nan<span class="token punctuation">(</span><span class="token keyword">NA</span><span class="token punctuation">)</span>         <span class="token comment"># → FALSE (NA is not NaN)</span>
+is.infinite<span class="token punctuation">(</span><span class="token number">Inf</span><span class="token punctuation">)</span>   <span class="token comment"># → TRUE</span>
+is.null<span class="token punctuation">(</span><span class="token keyword">NULL</span><span class="token punctuation">)</span>      <span class="token comment"># → TRUE</span>
+
+<span class="token comment"># NULL removes elements when used in vectors</span>
+c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">NULL</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>      <span class="token comment"># NULL disappears → 1 3</span>
+length<span class="token punctuation">(</span><span class="token keyword">NULL</span><span class="token punctuation">)</span>       <span class="token comment"># → 0</span>
+</code></pre>
+<h2 id="vector-subsetting">6. Vector Subsetting</h2>
+<pre class=" language-r"><code class="prism  language-r">x <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">,</span> <span class="token string">"d"</span><span class="token punctuation">,</span> <span class="token string">"e"</span><span class="token punctuation">)</span>  <span class="token comment"># create a character vector of length 5</span>
+
+<span class="token comment"># by position</span>
+x<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>            <span class="token comment"># → "b"</span>
+x<span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">]</span>          <span class="token comment"># → "a" "b" "c"</span>
+x<span class="token punctuation">[</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">]</span>   <span class="token comment"># → "a" "c" "e"</span>
+x<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>           <span class="token comment"># → "a" "c" "d" "e"</span>
+x<span class="token punctuation">[</span><span class="token operator">-</span>c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span>     <span class="token comment"># → "c" "d" "e"</span>
+
+<span class="token comment"># by logical vector</span>
+x<span class="token punctuation">[</span>c<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">FALSE</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">FALSE</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span><span class="token punctuation">]</span>  <span class="token comment"># → "a" "c" "e"</span>
+x<span class="token punctuation">[</span>x <span class="token operator">!=</span> <span class="token string">"b"</span><span class="token punctuation">]</span>                           <span class="token comment"># → "a" "c" "d" "e"</span>
+
+<span class="token comment"># by name</span>
+y <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span>a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> c <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>   <span class="token comment"># named vector</span>
+y<span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span>                          <span class="token comment"># → b</span>
+                                <span class="token comment"># → 2</span>
+y<span class="token punctuation">[</span>c<span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">]</span>                  <span class="token comment"># → a c</span>
+                                <span class="token comment"># → 1 3</span>
+
+<span class="token comment"># comparison &amp; logical operators</span>
+nums <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
+nums<span class="token punctuation">[</span>nums <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">]</span>          <span class="token comment"># → 7 9</span>
+nums<span class="token punctuation">[</span>nums <span class="token operator">&gt;=</span> <span class="token number">4</span><span class="token punctuation">]</span>         <span class="token comment"># → 7 9 4</span>
+nums<span class="token punctuation">[</span>nums <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">]</span>         <span class="token comment"># → 1</span>
+nums<span class="token punctuation">[</span>nums <span class="token operator">!=</span> <span class="token number">3</span><span class="token punctuation">]</span>         <span class="token comment"># → 7 1 9 4</span>
+
+<span class="token comment"># index finding</span>
+which.max<span class="token punctuation">(</span>nums<span class="token punctuation">)</span>         <span class="token comment"># → 4</span>
+which.min<span class="token punctuation">(</span>nums<span class="token punctuation">)</span>         <span class="token comment"># → 3</span>
+which<span class="token punctuation">(</span>nums <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">)</span>         <span class="token comment"># → 2 4</span>
+</code></pre>
+<h2 id="lists-non-atomic-vectors">7. Lists (Non-atomic Vectors)</h2>
+<p>Lists can store <strong>different types and nested objects</strong>.</p>
+<pre class=" language-r"><code class="prism  language-r">lst <span class="token operator">&lt;-</span> list<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>  <span class="token comment"># create a list with mixed types</span>
+
+<span class="token comment"># accessing</span>
+lst<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>      <span class="token comment"># returns a LIST of length 1 (still a list)</span>
+lst<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>    <span class="token comment"># returns the actual ELEMENT (the number 1)</span>
+
+<span class="token comment"># named list</span>
+lst2 <span class="token operator">&lt;-</span> list<span class="token punctuation">(</span>a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">,</span> c <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>
+lst2<span class="token operator">$</span>a          <span class="token comment"># $ operator → 1</span>
+lst2<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">]</span>     <span class="token comment"># → "hello"</span>
+lst2<span class="token punctuation">[</span><span class="token string">"c"</span><span class="token punctuation">]</span>       <span class="token comment"># → returns a list (not the value)</span>
+
+<span class="token comment"># nesting</span>
+nested <span class="token operator">&lt;-</span> list<span class="token punctuation">(</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">,</span> y <span class="token operator">=</span> list<span class="token punctuation">(</span>a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+nested<span class="token operator">$</span>y<span class="token operator">$</span>a            <span class="token comment"># → 10</span>
+nested<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">"y"</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">"b"</span><span class="token punctuation">]</span><span class="token punctuation">]</span>  <span class="token comment"># → 20</span>
+</code></pre>
+<h3 id="⚠️-list13-vs-list1-2-3">⚠️ <code>list(1:3)</code> vs <code>list(1, 2, 3)</code></h3>
+<pre class=" language-r"><code class="prism  language-r">list<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span>       <span class="token comment"># ONE list element which is the vector c(1,2,3)</span>
+list<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>   <span class="token comment"># THREE elements, each a single number</span>
+
+length<span class="token punctuation">(</span>list<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    <span class="token comment"># → 1</span>
+length<span class="token punctuation">(</span>list<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># → 3</span>
+</code></pre>
+<h2 id="matrices">8. Matrices</h2>
+<p>Two-dimensional, <strong>same-type</strong> data structure (all elements must share one type).</p>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># creating matrices</span>
+A <span class="token operator">&lt;-</span> matrix<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span> nrow <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>        <span class="token comment"># fills by COLUMN (default)</span>
+<span class="token comment">#      [,1] [,2] [,3]</span>
+<span class="token comment"># [1,]   1    3    5</span>
+<span class="token comment"># [2,]   2    4    6</span>
+
+B <span class="token operator">&lt;-</span> matrix<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span> nrow <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> byrow <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>  <span class="token comment"># fills by ROW</span>
+<span class="token comment">#      [,1] [,2] [,3]</span>
+<span class="token comment"># [1,]   1    2    3</span>
+<span class="token comment"># [2,]   4    5    6</span>
+
+C <span class="token operator">&lt;-</span> matrix<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">9</span><span class="token punctuation">,</span> nrow <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> byrow <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">)</span>
+<span class="token comment">#      [,1] [,2] [,3]</span>
+<span class="token comment"># [1,]   1    2    3</span>
+<span class="token comment"># [2,]   4    5    6</span>
+<span class="token comment"># [3,]   7    8    9</span>
+
+<span class="token comment"># indexing [row, col]</span>
+A<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span>         <span class="token comment"># row 2, col 2 → 4</span>
+A<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">]</span>          <span class="token comment"># entire row 1 → 1 3 5</span>
+A<span class="token punctuation">[</span> <span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span>         <span class="token comment"># entire col 2 → 3 4</span>
+B<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>        <span class="token comment"># row 1, drop col 1 → 2 3 </span>
+C<span class="token punctuation">[</span> <span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+
+<span class="token comment"># properties</span>
+nrow<span class="token punctuation">(</span>A<span class="token punctuation">)</span>         <span class="token comment"># number of rows → 2</span>
+ncol<span class="token punctuation">(</span>A<span class="token punctuation">)</span>         <span class="token comment"># number of cols → 3</span>
+dim<span class="token punctuation">(</span>A<span class="token punctuation">)</span>          <span class="token comment"># dimensions → 2 3</span>
+</code></pre>
+<blockquote>
+<p>⚠️ A matrix is <strong>NOT</strong> a list — it cannot hold mixed types. All elements share the same type (coercion applies).</p>
+</blockquote>
+<blockquote>
+<p>⚠️ <code>mat = matrix(1:5, nrow = 1)</code> is <strong>not</strong> the same as <code>mat = 1:5</code>. The former is a 1×5 matrix; the latter is a plain vector.</p>
+</blockquote>
+<h2 id="control-statements--functions">9. Control Statements &amp; Functions</h2>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># conditionals</span>
+x <span class="token operator">&lt;-</span> <span class="token number">5</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&gt;</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>           <span class="token comment"># condition: is x &gt; 10? No</span>
+  print<span class="token punctuation">(</span><span class="token string">"big"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&gt;</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>     <span class="token comment"># condition: is x &gt; 3? Yes</span>
+  print<span class="token punctuation">(</span><span class="token string">"medium"</span><span class="token punctuation">)</span>       <span class="token comment"># → "medium"</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  print<span class="token punctuation">(</span><span class="token string">"small"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment"># for loop</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token keyword">in</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>        <span class="token comment"># iterate i over 1, 2, 3</span>
+  print<span class="token punctuation">(</span>i<span class="token punctuation">)</span>              <span class="token comment"># → 1 (then 2, then 3)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment"># while loop</span>
+i <span class="token operator">&lt;-</span> <span class="token number">1</span>                  <span class="token comment"># initialize counter</span>
+<span class="token keyword">while</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;=</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>        <span class="token comment"># check condition before each iteration</span>
+  print<span class="token punctuation">(</span>i<span class="token punctuation">)</span>              <span class="token comment"># → 1 (then 2, then 3)</span>
+  i <span class="token operator">&lt;-</span> i <span class="token operator">+</span> <span class="token number">1</span>            <span class="token comment"># increment counter (must do manually!)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment"># functions</span>
+add <span class="token operator">&lt;-</span> <span class="token keyword">function</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment"># define function with 2 arguments</span>
+  return<span class="token punctuation">(</span>a <span class="token operator">+</span> b<span class="token punctuation">)</span>         <span class="token comment"># explicitly return sum</span>
+<span class="token punctuation">}</span>
+add<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>               <span class="token comment"># call function → 5</span>
+
+f <span class="token operator">&lt;-</span> <span class="token keyword">function</span><span class="token punctuation">(</span>x <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment"># x defaults to 10 if not provided</span>
+  x <span class="token operator">*</span> <span class="token number">2</span>
+<span class="token punctuation">}</span>
+f<span class="token punctuation">(</span><span class="token punctuation">)</span>                     <span class="token comment"># uses default → 20</span>
+f<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>                    <span class="token comment"># overrides default → 10</span>
+
+g <span class="token operator">&lt;-</span> <span class="token keyword">function</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  x <span class="token operator">+</span> <span class="token number">1</span>                 <span class="token comment"># implicit return: last line is automatically returned</span>
+<span class="token punctuation">}</span>
+g<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>                    <span class="token comment"># → 5</span>
+</code></pre>
+<h2 id="unix--shell-commands">10. Unix / Shell Commands</h2>
+<pre class=" language-r"><code class="prism  language-r"><span class="token comment"># R functions for file navigation</span>
+getwd<span class="token punctuation">(</span><span class="token punctuation">)</span>           <span class="token comment"># print current working directory (like pwd in terminal)</span>
+setwd<span class="token punctuation">(</span><span class="token string">"path"</span><span class="token punctuation">)</span>     <span class="token comment"># change working directory</span>
+list.files<span class="token punctuation">(</span><span class="token punctuation">)</span>      <span class="token comment"># list files in current directory (like ls in terminal)</span>
+
+<span class="token comment"># reading files using relative paths</span>
+read.csv<span class="token punctuation">(</span><span class="token string">"data/file.csv"</span><span class="token punctuation">)</span>       <span class="token comment"># relative to current working directory</span>
+read.csv<span class="token punctuation">(</span><span class="token string">"../data/file.csv"</span><span class="token punctuation">)</span>    <span class="token comment"># one level up, then into data/</span>
+</code></pre>
+<h3 id="shell-commands-terminal">Shell Commands (Terminal)</h3>
+
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pwd</code></td>
+<td>print current working directory</td>
+</tr>
+<tr>
+<td><code>ls</code></td>
+<td>list files in current directory</td>
+</tr>
+<tr>
+<td><code>ls -l</code></td>
+<td>list with details (permissions, size)</td>
+</tr>
+<tr>
+<td><code>ls -a</code></td>
+<td>list including hidden files</td>
+</tr>
+<tr>
+<td><code>cd path</code></td>
+<td>change directory</td>
+</tr>
+<tr>
+<td><code>cd ..</code></td>
+<td>go up one level (parent directory)</td>
+</tr>
+<tr>
+<td><code>cd ~</code></td>
+<td>go to home directory</td>
+</tr>
+<tr>
+<td><code>cp source dest</code></td>
+<td>copy a file</td>
+</tr>
+<tr>
+<td><code>cp -r src/ dest/</code></td>
+<td>copy an entire directory</td>
+</tr>
+<tr>
+<td><code>mv source dest</code></td>
+<td>move or <strong>rename</strong> a file/directory</td>
+</tr>
+<tr>
+<td><code>rm file</code></td>
+<td>remove a file</td>
+</tr>
+<tr>
+<td><code>rm -r dir</code></td>
+<td>remove a directory recursively</td>
+</tr>
+<tr>
+<td><code>rm -rf dir</code></td>
+<td>force remove (⚠️ no confirmation!)</td>
+</tr>
+<tr>
+<td><code>mkdir dir</code></td>
+<td>make a new directory</td>
+</tr>
+<tr>
+<td><code>touch file</code></td>
+<td>create an empty file</td>
+</tr>
+</tbody>
+</table><h3 id="path-reference-guide">Path Reference Guide</h3>
+
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td>current directory</td>
+</tr>
+<tr>
+<td><code>..</code></td>
+<td>parent directory (one level up)</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>root directory (top of file system)</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>home directory</td>
+</tr>
+<tr>
+<td><code>path/to/file</code></td>
+<td>relative path (from current location)</td>
+</tr>
+<tr>
+<td><code>/path/to/file</code></td>
+<td>absolute path (from root)</td>
+</tr>
+</tbody>
+</table><p><strong>Example</strong>: Move <code>rawdata/file.csv</code> up to the parent <code>data</code> folder:</p>
+<pre class=" language-bash"><code class="prism  language-bash"><span class="token function">mv</span> rawdata/file.csv <span class="token punctuation">..</span>
+</code></pre>
+<h2 id="common-traps">11. Common Traps</h2>
+<h3 id="🔴--vs--—-list-vs-element">🔴 <code>[</code> vs <code>[[</code> — list vs element</h3>
+<pre class=" language-r"><code class="prism  language-r">lst <span class="token operator">&lt;-</span> list<span class="token punctuation">(</span>a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">)</span>
+
+lst<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span>     <span class="token comment"># → returns a LIST: $a\n[1] 1</span>
+lst<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span><span class="token punctuation">]</span>   <span class="token comment"># → returns the VALUE: [1] 1</span>
+lst<span class="token operator">$</span>a        <span class="token comment"># → returns the VALUE: [1] 1 (same as [[]])</span>
+</code></pre>
+<h3 id="🔴-length-confusion-—-list13-vs-list123">🔴 Length confusion — <code>list(1:3)</code> vs <code>list(1,2,3)</code></h3>
+<pre class=" language-r"><code class="prism  language-r">length<span class="token punctuation">(</span>list<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    <span class="token comment"># ONE element (the vector 1 2 3) → 1</span>
+length<span class="token punctuation">(</span>list<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># THREE elements → 3</span>
+length<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">)</span>          <span class="token comment"># plain vector of three numbers → 3</span>
+</code></pre>
+<h3 id="🔴-logical-arithmetic">🔴 Logical arithmetic</h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token boolean">TRUE</span> <span class="token operator">+</span> <span class="token number">1</span>     <span class="token comment"># TRUE coerces to 1 → 2</span>
+<span class="token boolean">FALSE</span> <span class="token operator">+</span> <span class="token number">5</span>    <span class="token comment"># FALSE coerces to 0 → 5</span>
+sum<span class="token punctuation">(</span>c<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> <span class="token boolean">FALSE</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># counts TRUEs → 2</span>
+</code></pre>
+<h3 id="🔴-na-vs-na">🔴 NA vs <code>"NA"</code></h3>
+<pre class=" language-r"><code class="prism  language-r"><span class="token keyword">NA</span>       <span class="token comment"># actual missing value — is.na(NA) → TRUE</span>
+<span class="token string">"NA"</span>     <span class="token comment"># the string "NA" — is.na("NA") → FALSE</span>
+</code></pre>
+<h3 id="🔴-typeof-for-integers">🔴 <code>typeof()</code> for integers</h3>
+<pre class=" language-r"><code class="prism  language-r">typeof<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>    <span class="token comment"># → "double"   (plain numbers are double by default)</span>
+typeof<span class="token punctuation">(</span><span class="token number">1L</span><span class="token punctuation">)</span>   <span class="token comment"># → "integer"  (L suffix makes it integer)</span>
+typeof<span class="token punctuation">(</span><span class="token boolean">TRUE</span><span class="token punctuation">)</span> <span class="token comment"># → "logical"</span>
+</code></pre>
+<h3 id="🔴-indexing-starts-at-1-not-0">🔴 Indexing starts at 1 (not 0)</h3>
+<pre class=" language-r"><code class="prism  language-r">x <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">)</span>
+x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>    <span class="token comment"># → "a"  (first element, NOT "b")</span>
+x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>    <span class="token comment"># → character(0)  (empty — not an error, but not useful)</span>
+</code></pre>
+<h3 id="🔴-matrix-fill-order-by-column-not-row">🔴 Matrix fill order (by column, not row)</h3>
+<pre class=" language-r"><code class="prism  language-r">matrix<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span> nrow <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment"># fills DOWN columns first:</span>
+<span class="token comment">#      [,1] [,2] [,3]</span>
+<span class="token comment"># [1,]   1    3    5</span>
+<span class="token comment"># [2,]   2    4    6</span>
+<span class="token comment"># Use byrow = TRUE to fill across rows instead</span>
+</code></pre>
+<h3 id="🔴-single-bracket-on-list-returns-a-list-for--to-work-need-names">🔴 Single-bracket on list returns a list (for <code>$</code> to work, need names)</h3>
+<pre class=" language-r"><code class="prism  language-r">lst <span class="token operator">&lt;-</span> list<span class="token punctuation">(</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">3</span><span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token number">4</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">)</span>
+lst<span class="token punctuation">[</span><span class="token string">"x"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>       <span class="token comment"># ❌ indexing the returned list (length 1) → NULL / NA</span>
+lst<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">"x"</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>     <span class="token comment"># ✅ get element, then index into it → 2</span>
+lst<span class="token operator">$</span>x<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>          <span class="token comment"># ✅ same as above → 2</span>
+</code></pre>
+
+    </div>
+  </div>
+</body>
+
+</html>

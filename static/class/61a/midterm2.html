@@ -1,0 +1,388 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="cs-61a-textbook-summary-for-midterm-2">CS 61A Textbook Summary for Midterm 2</h1>
+<h2 id="recursive-functions-1.7">1. Recursive Functions (<a href="https://www.composingprograms.com/pages/17-recursive-functions.html">1.7</a>)</h2>
+<h3 id="structure">Structure</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> base_condition<span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> base_value
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> combine<span class="token punctuation">(</span>f<span class="token punctuation">(</span>simpler_args<span class="token punctuation">)</span><span class="token punctuation">,</span> other computation<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="examples">Examples</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">sum_digits</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> n
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> sum_digits<span class="token punctuation">(</span>n <span class="token operator">//</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">+</span> n <span class="token operator">%</span> <span class="token number">10</span>
+
+<span class="token keyword">def</span> <span class="token function">fact</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> n <span class="token operator">*</span> fact<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Mutual recursion:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">is_even</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token boolean">True</span>
+    <span class="token keyword">return</span> is_odd<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">is_odd</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token boolean">False</span>
+    <span class="token keyword">return</span> is_even<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Tree recursion:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">fib</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token keyword">return</span> fib<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span> <span class="token operator">+</span> fib<span class="token punctuation">(</span>n<span class="token number">-2</span><span class="token punctuation">)</span>
+
+</code></pre>
+<p>Counting partitions:</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">count_partitions</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token keyword">if</span> n <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">or</span> m <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token keyword">return</span> count_partitions<span class="token punctuation">(</span>n<span class="token operator">-</span>m<span class="token punctuation">,</span> m<span class="token punctuation">)</span> <span class="token operator">+</span> count_partitions<span class="token punctuation">(</span>n<span class="token punctuation">,</span> m<span class="token number">-1</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>Always have a <strong>base case</strong>.</li>
+<li>Avoid infinite recursion.</li>
+<li>Use <strong>memoization</strong> to optimize overlapping subproblems.</li>
+<li><code>print</code> can trace recursive execution.</li>
+</ul>
+<h2 id="introduction-2.1">2. Introduction (<a href="https://www.composingprograms.com/pages/21-introduction.html">2.1</a>)</h2>
+<ul>
+<li>Introduces structured program design:
+<ul>
+<li>Start from functions → data abstraction → OOP → efficiency.</li>
+</ul>
+</li>
+<li>Focus on separating <strong>what</strong> (specification) from <strong>how</strong> (implementation).</li>
+</ul>
+<h2 id="data-abstraction-2.2">3. Data Abstraction (<a href="https://www.composingprograms.com/pages/22-data-abstraction.html">2.2</a>)</h2>
+<h3 id="core-idea">Core Idea</h3>
+<ul>
+<li>Separate <em>interface</em> (what you can do) from <em>representation</em> (how it’s done).</li>
+</ul>
+<h3 id="example-rational-numbers">Example: Rational Numbers</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">rational</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> d<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    g <span class="token operator">=</span> gcd<span class="token punctuation">(</span>n<span class="token punctuation">,</span> d<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>n<span class="token operator">//</span>g<span class="token punctuation">,</span> d<span class="token operator">//</span>g<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">numer</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">return</span> x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+<span class="token keyword">def</span> <span class="token function">denom</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">return</span> x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">add_rationals</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> rational<span class="token punctuation">(</span>numer<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token operator">*</span>denom<span class="token punctuation">(</span>y<span class="token punctuation">)</span> <span class="token operator">+</span> numer<span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token operator">*</span>denom<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    denom<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token operator">*</span>denom<span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="functional-pair">Functional Pair</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">pair</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> i <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> x
+        <span class="token keyword">if</span> i <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span> <span class="token keyword">return</span> y
+    <span class="token keyword">return</span> get
+
+<span class="token keyword">def</span> <span class="token function">select</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> p<span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="rules">Rules</h3>
+<ul>
+<li>Only access data via constructors/selectors.</li>
+<li>Changing representation shouldn’t affect external code.</li>
+<li>Never cross the abstraction barrier.</li>
+</ul>
+<h2 id="sequences-2.3">4. Sequences (<a href="https://www.composingprograms.com/pages/23-sequences.html">2.3</a>)</h2>
+<h3 id="syntax">Syntax</h3>
+<pre class=" language-python"><code class="prism  language-python">lst <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span>
+lst<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>      <span class="token comment"># indexing</span>
+<span class="token builtin">len</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span>    <span class="token comment"># length</span>
+lst <span class="token operator">+</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token comment"># concatenation</span>
+lst <span class="token operator">*</span> <span class="token number">2</span>     <span class="token comment"># repetition</span>
+</code></pre>
+<h3 id="iteration">Iteration</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">for</span> x <span class="token keyword">in</span> lst<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>lst<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="unpacking">Unpacking</h3>
+<pre class=" language-python"><code class="prism  language-python">pairs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span> x<span class="token punctuation">,</span> y <span class="token keyword">in</span> pairs<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="range">Range</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>        <span class="token comment"># [0,1,2,3,4]</span>
+<span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span>     <span class="token comment"># [2,3,4,5,6]</span>
+</code></pre>
+<h3 id="concept">Concept</h3>
+<ul>
+<li>Treat sequences generically, not as lists specifically.</li>
+</ul>
+<h2 id="mutable-data-2.4">5. Mutable Data (<a href="https://www.composingprograms.com/pages/24-mutable-data.html">2.4</a>)</h2>
+<h3 id="mutability">Mutability</h3>
+<ul>
+<li>Data that can change after creation.</li>
+</ul>
+<h3 id="lists">Lists</h3>
+<pre class=" language-python"><code class="prism  language-python">lst <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+lst<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">5</span>
+lst<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token number">9</span><span class="token punctuation">)</span>
+lst<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="dictionaries">Dictionaries</h3>
+<pre class=" language-python"><code class="prism  language-python">d <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+d<span class="token punctuation">[</span><span class="token string">'x'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">10</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>d<span class="token punctuation">[</span><span class="token string">'x'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">del</span> d<span class="token punctuation">[</span><span class="token string">'x'</span><span class="token punctuation">]</span>
+</code></pre>
+<h3 id="nonlocal--global">Nonlocal / Global</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    x <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">def</span> <span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">nonlocal</span> x
+        x <span class="token operator">+=</span> <span class="token number">1</span>
+    inner<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> x
+</code></pre>
+<h3 id="notes-1">Notes</h3>
+<ul>
+<li>Use mutation when needed; otherwise prefer immutability.</li>
+<li>Watch for side effects.</li>
+<li>Keep abstraction barriers.</li>
+</ul>
+<h2 id="object-oriented-programming-2.5">6. Object-Oriented Programming (<a href="https://www.composingprograms.com/pages/25-object-oriented-programming.html">2.5</a>)</h2>
+<h3 id="class-structure">Class Structure</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">ClassName</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>x <span class="token operator">=</span> x
+    <span class="token keyword">def</span> <span class="token function">method</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>x <span class="token operator">+</span> y
+
+obj <span class="token operator">=</span> ClassName<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>method<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="inheritance">Inheritance</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Animal</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">speak</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"..."</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Dog</span><span class="token punctuation">(</span>Animal<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">speak</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>speak<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Woof"</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="notes-2">Notes</h3>
+<ul>
+<li><code>self</code> = instance reference.</li>
+<li>Class attrs shared; instance attrs unique.</li>
+<li>Override methods for polymorphism.</li>
+<li>Prefer composition when inheritance isn’t clear.</li>
+</ul>
+<h2 id="object-abstraction-2.7">7. Object Abstraction (<a href="https://www.composingprograms.com/pages/27-object-abstraction.html">2.7</a>)</h2>
+<h3 id="example">Example</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Rational</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> n<span class="token punctuation">,</span> d<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        g <span class="token operator">=</span> gcd<span class="token punctuation">(</span>n<span class="token punctuation">,</span> d<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>numer <span class="token operator">=</span> n <span class="token operator">//</span> g
+        self<span class="token punctuation">.</span>denom <span class="token operator">=</span> d <span class="token operator">//</span> g
+
+    <span class="token keyword">def</span> <span class="token function">__repr__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> f<span class="token string">"{self.numer}/{self.denom}"</span>
+
+    <span class="token keyword">def</span> <span class="token function">__eq__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> other<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>numer <span class="token operator">*</span> other<span class="token punctuation">.</span>denom <span class="token operator">==</span> other<span class="token punctuation">.</span>numer <span class="token operator">*</span> self<span class="token punctuation">.</span>denom
+
+    <span class="token keyword">def</span> <span class="token function">__add__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> other<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> Rational<span class="token punctuation">(</span>self<span class="token punctuation">.</span>numer <span class="token operator">*</span> other<span class="token punctuation">.</span>denom <span class="token operator">+</span> other<span class="token punctuation">.</span>numer <span class="token operator">*</span> self<span class="token punctuation">.</span>denom<span class="token punctuation">,</span>
+                        self<span class="token punctuation">.</span>denom <span class="token operator">*</span> other<span class="token punctuation">.</span>denom<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="notes-3">Notes</h3>
+<ul>
+<li>Use special methods (<code>__repr__</code>, <code>__eq__</code>, <code>__add__</code>, etc.) for behavior.</li>
+<li>Hide internal representation.</li>
+<li>Maintain consistent interface regardless of internals.</li>
+</ul>
+<h2 id="efficiency-2.8">8. Efficiency (<a href="https://www.composingprograms.com/pages/28-efficiency.html">2.8</a>)</h2>
+<h3 id="core-concepts">Core Concepts</h3>
+<ul>
+<li><strong>Time complexity</strong>: growth rate vs input size.</li>
+<li><strong>Space complexity</strong>: memory used.</li>
+<li><strong>Asymptotic notation</strong>: Big-O, Θ, Ω.</li>
+</ul>
+<h3 id="memoization">Memoization</h3>
+<pre class=" language-python"><code class="prism  language-python">cache <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">def</span> <span class="token function">fib</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token keyword">in</span> cache<span class="token punctuation">:</span> <span class="token keyword">return</span> cache<span class="token punctuation">[</span>n<span class="token punctuation">]</span>
+    <span class="token keyword">if</span> n <span class="token operator">&lt;=</span> <span class="token number">2</span><span class="token punctuation">:</span> result <span class="token operator">=</span> n<span class="token number">-1</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span> result <span class="token operator">=</span> fib<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span> <span class="token operator">+</span> fib<span class="token punctuation">(</span>n<span class="token number">-2</span><span class="token punctuation">)</span>
+    cache<span class="token punctuation">[</span>n<span class="token punctuation">]</span> <span class="token operator">=</span> result
+    <span class="token keyword">return</span> result
+</code></pre>
+<h3 id="fast-power">Fast Power</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">fast_pow</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token keyword">if</span> n <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        y <span class="token operator">=</span> fast_pow<span class="token punctuation">(</span>x<span class="token punctuation">,</span> n<span class="token operator">//</span><span class="token number">2</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> y <span class="token operator">*</span> y
+    <span class="token keyword">return</span> x <span class="token operator">*</span> fast_pow<span class="token punctuation">(</span>x<span class="token punctuation">,</span> n<span class="token number">-1</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="notes-4">Notes</h3>
+<ul>
+<li>Use caching to avoid recomputation.</li>
+<li>Choose algorithms with lower growth orders.</li>
+<li>Balance time vs space.</li>
+</ul>
+<h2 id="implicit-sequences-4.2">9. Implicit Sequences (<a href="https://www.composingprograms.com/pages/42-implicit-sequences.html">4.2</a>)</h2>
+<h3 id="concept-1">Concept</h3>
+<ul>
+<li>Infinite or lazy sequences — compute elements on demand.</li>
+</ul>
+<h3 id="example-1">Example</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">class</span> <span class="token class-name">Stream</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> first<span class="token punctuation">,</span> compute_rest<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>first <span class="token operator">=</span> first
+        self<span class="token punctuation">.</span>_compute_rest <span class="token operator">=</span> compute_rest
+        self<span class="token punctuation">.</span>_rest <span class="token operator">=</span> <span class="token boolean">None</span>
+
+    @<span class="token builtin">property</span>
+    <span class="token keyword">def</span> <span class="token function">rest</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>_rest <span class="token keyword">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>_rest <span class="token operator">=</span> self<span class="token punctuation">.</span>_compute_rest<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>_rest
+</code></pre>
+<h3 id="notes-5">Notes</h3>
+<ul>
+<li>Use <code>.first</code> and <code>.rest</code> to access.</li>
+<li>Avoid recomputation — cache results.</li>
+<li>Enables working with infinite data streams.</li>
+<li>Be mindful of recursion depth.</li>
+</ul>
+<h2 id="recursion-deep-dive">10. Recursion Deep Dive</h2>
+<h3 id="structure-of-recursive-functions">10.1 Structure of Recursive Functions</h3>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">func</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> base_condition<span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> base_value               <span class="token comment"># base case</span>
+    smaller <span class="token operator">=</span> simplify<span class="token punctuation">(</span>args<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> combine<span class="token punctuation">(</span>func<span class="token punctuation">(</span>smaller<span class="token punctuation">)</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span> <span class="token comment"># recursive case</span>
+</code></pre>
+<ul>
+<li><strong>Base case</strong>: stops recursion, must be reached.</li>
+<li><strong>Recursive case</strong>: must simplify input toward base.</li>
+<li>Each call creates a new <strong>stack frame</strong> with its own local variables.</li>
+</ul>
+<h3 id="common-patterns">10.2 Common Patterns</h3>
+<h4 id="linear-recursion">1. Linear recursion</h4>
+<p>Processes one subproblem at a time.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">sum_list</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token operator">not</span> lst<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token keyword">return</span> lst<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> sum_list<span class="token punctuation">(</span>lst<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Stack depth proportional to input size <code>n</code>.</li>
+<li>Common for list traversal and counting.</li>
+</ul>
+<h4 id="tree-recursion">2. Tree recursion</h4>
+<p>Multiple recursive calls per level.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">fib</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> n
+    <span class="token keyword">return</span> fib<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span> <span class="token operator">+</span> fib<span class="token punctuation">(</span>n<span class="token number">-2</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Exponential growth in calls.</li>
+<li>Use memoization to reduce to O(n).</li>
+</ul>
+<h4 id="tail-recursion-conceptual">3. Tail recursion (conceptual)</h4>
+<p>Recursive call is the last action.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">factorial</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> acc<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> acc
+    <span class="token keyword">return</span> factorial<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">,</span> acc<span class="token operator">*</span>n<span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Can be optimized into iteration (Python doesn’t optimize tail calls).</li>
+<li>Useful when converting recursion to loops.</li>
+</ul>
+<h4 id="mutual-recursion">4. Mutual recursion</h4>
+<p>Functions calling each other.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">even</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token boolean">True</span>
+    <span class="token keyword">return</span> odd<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">odd</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token keyword">return</span> <span class="token boolean">False</span>
+    <span class="token keyword">return</span> even<span class="token punctuation">(</span>n<span class="token number">-1</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Used in alternating conditions (e.g. games, parity checks).</li>
+</ul>
+<h4 id="helper-recursion">5. Helper recursion</h4>
+<p>Encapsulate state or accumulator in a helper function.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">reverse_list</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">helper</span><span class="token punctuation">(</span>rest<span class="token punctuation">,</span> acc<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token operator">not</span> rest<span class="token punctuation">:</span>
+            <span class="token keyword">return</span> acc
+        <span class="token keyword">return</span> helper<span class="token punctuation">(</span>rest<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>rest<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">+</span> acc<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> helper<span class="token punctuation">(</span>lst<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>Reduces arguments in main call.</li>
+<li>Keeps clean external API.</li>
+</ul>
+<h3 id="recursion-on-structures">10.3 Recursion on Structures</h3>
+<h4 id="lists-1">Lists</h4>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">count_occurrences</span><span class="token punctuation">(</span>lst<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token operator">not</span> lst<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>lst<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> x<span class="token punctuation">)</span> <span class="token operator">+</span> count_occurrences<span class="token punctuation">(</span>lst<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span>
+</code></pre>
+<h4 id="trees">Trees</h4>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">tree_sum</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token operator">not</span> t<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token number">0</span>
+    <span class="token keyword">return</span> t<span class="token punctuation">.</span>label <span class="token operator">+</span> <span class="token builtin">sum</span><span class="token punctuation">(</span>tree_sum<span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token keyword">for</span> b <span class="token keyword">in</span> t<span class="token punctuation">.</span>branches<span class="token punctuation">)</span>
+</code></pre>
+<h4 id="nested-data">Nested data</h4>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">flatten</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token operator">not</span> lst<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    first<span class="token punctuation">,</span> rest <span class="token operator">=</span> lst<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> lst<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+    <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>first<span class="token punctuation">,</span> <span class="token builtin">list</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> flatten<span class="token punctuation">(</span>first<span class="token punctuation">)</span> <span class="token operator">+</span> flatten<span class="token punctuation">(</span>rest<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>first<span class="token punctuation">]</span> <span class="token operator">+</span> flatten<span class="token punctuation">(</span>rest<span class="token punctuation">)</span>
+</code></pre>
+<h3 id="optimization">10.4 Optimization</h3>
+<h4 id="memoization-1">Memoization</h4>
+<pre class=" language-python"><code class="prism  language-python">cache <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> x <span class="token keyword">in</span> cache<span class="token punctuation">:</span> <span class="token keyword">return</span> cache<span class="token punctuation">[</span>x<span class="token punctuation">]</span>
+    result <span class="token operator">=</span> compute<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    cache<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> result
+    <span class="token keyword">return</span> result
+</code></pre>
+<h4 id="divide--conquer">Divide &amp; Conquer</h4>
+<p>Split into halves to reduce recursion depth.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">merge_sort</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> lst
+    mid <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span><span class="token operator">//</span><span class="token number">2</span>
+    left <span class="token operator">=</span> merge_sort<span class="token punctuation">(</span>lst<span class="token punctuation">[</span><span class="token punctuation">:</span>mid<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    right <span class="token operator">=</span> merge_sort<span class="token punctuation">(</span>lst<span class="token punctuation">[</span>mid<span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> merge<span class="token punctuation">(</span>left<span class="token punctuation">,</span> right<span class="token punctuation">)</span>
+</code></pre>
+</div>
+</body>
+
+</html>

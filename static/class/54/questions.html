@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 54 — Final Exam Mastery Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1916;
+    --surface2: #222018;
+    --border: #2e2c27;
+    --gold: #c9a84c;
+    --gold-dim: #8a6f30;
+    --cream: #f0e8d5;
+    --cream-dim: #a89878;
+    --red: #c45c3a;
+    --green: #5a9e6f;
+    --blue: #4a7fa5;
+    --purple: #8a6fc4;
+    --text: #ddd5c4;
+    --text-dim: #7a7265;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 0 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(201,168,76,0.12) 0%, transparent 70%);
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  header .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cream-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 0.5rem 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  nav .nav-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  nav a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--cream-dim);
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+  /* MAIN LAYOUT */
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+  /* EXAM SECTION HEADERS */
+  .exam-header {
+    margin: 3rem 0 2rem;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+  }
+  .exam-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .exam-header p {
+    font-size: 0.9rem;
+    color: var(--cream-dim);
+    margin-top: 0.25rem;
+    font-style: italic;
+  }
+
+  /* PROBLEM CARD */
+  .problem {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+  .problem-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .problem-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--gold);
+    color: #0f0e0c;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .problem-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--cream);
+    flex: 1;
+  }
+  .topic-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .tag-eigen { background: rgba(138,111,196,0.2); color: var(--purple); border: 1px solid rgba(138,111,196,0.3); }
+  .tag-svd { background: rgba(74,127,165,0.2); color: var(--blue); border: 1px solid rgba(74,127,165,0.3); }
+  .tag-ode { background: rgba(196,92,58,0.2); color: var(--red); border: 1px solid rgba(196,92,58,0.3); }
+  .tag-fourier { background: rgba(90,158,111,0.2); color: var(--green); border: 1px solid rgba(90,158,111,0.3); }
+  .tag-proof { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .tag-linalg { background: rgba(90,158,111,0.15); color: #7ecf9a; border: 1px solid rgba(90,158,111,0.3); }
+  .tag-system { background: rgba(196,92,58,0.15); color: #e88a6a; border: 1px solid rgba(196,92,58,0.3); }
+
+  .problem-body { padding: 1.5rem; }
+  .problem-body.collapsed { display: none; }
+
+  /* PROBLEM STATEMENT */
+  .problem-stmt {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: var(--cream);
+    font-size: 0.95rem;
+  }
+
+  /* FRAMEWORK SECTIONS */
+  .fw-section {
+    margin-bottom: 1.5rem;
+  }
+  .fw-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  .label-bridge { background: rgba(74,127,165,0.2); color: var(--blue); }
+  .label-solution { background: rgba(90,158,111,0.2); color: var(--green); }
+  .label-curveball { background: rgba(196,92,58,0.2); color: var(--red); }
+  .label-missing { background: rgba(201,168,76,0.25); color: var(--gold); border: 1px solid var(--gold-dim); }
+
+  .fw-section p { margin-bottom: 0.6rem; }
+  .fw-section ul, .fw-section ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .fw-section li { margin-bottom: 0.35rem; }
+
+  /* STEPS */
+  .step {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 0 4px 4px 0;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  .step-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+  }
+
+  /* MATH DISPLAY */
+  .math-block {
+    background: #0a0908;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.85rem 1.25rem;
+    margin: 0.6rem 0;
+    overflow-x: auto;
+    font-size: 0.95rem;
+  }
+
+  /* NOTES/ALERTS */
+  .note {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+  }
+  .note-trap {
+    background: rgba(196,92,58,0.1);
+    border-left: 3px solid var(--red);
+  }
+  .note-trap::before { content: "⚠ TRAP: "; font-weight: 600; color: var(--red); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+  .note-verify {
+    background: rgba(90,158,111,0.08);
+    border-left: 3px solid var(--green);
+  }
+  .note-verify::before { content: "✓ VERIFY: "; font-weight: 600; color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+  .note-lecture {
+    background: rgba(74,127,165,0.08);
+    border-left: 3px solid var(--blue);
+  }
+  .note-lecture::before { content: "📖 NOTES: "; font-weight: 600; color: var(--blue); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+  .note-missing {
+    background: rgba(201,168,76,0.08);
+    border-left: 3px solid var(--gold);
+  }
+  .note-missing::before { content: "[MISSING FROM NOTES] "; font-weight: 600; color: var(--gold); font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+
+  .variation {
+    background: rgba(138,111,196,0.07);
+    border: 1px solid rgba(138,111,196,0.2);
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    margin: 0.4rem 0;
+    font-size: 0.9rem;
+  }
+
+  /* dividers */
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* inline code */
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85em;
+    background: rgba(255,255,255,0.06);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    color: var(--cream);
+  }
+
+  strong { color: var(--cream); }
+  em { color: var(--cream-dim); }
+
+  /* answer box */
+  .answer-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 100%);
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 0.85rem 1.25rem;
+    margin: 0.75rem 0;
+  }
+  .answer-box::before { content: "FINAL ANSWER: "; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 0.25rem; }
+
+  /* expand toggle */
+  .toggle-hint {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  @media (max-width: 600px) {
+    .problem-header { flex-wrap: wrap; }
+    nav { padding: 0.5rem 1rem; }
+    main { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Math 54 Final Exam Mastery Guide</h1>
+  <div class="subtitle">UC Berkeley · Linear Algebra & Differential Equations · Full Walkthrough</div>
+</header>
+
+<nav>
+  <span class="nav-label">Jump to:</span>
+  <a href="#exam1">Exam 1</a>
+  <a href="#e1p1">E1·P1</a><a href="#e1p2">E1·P2</a><a href="#e1p3">E1·P3</a>
+  <a href="#e1p4">E1·P4</a><a href="#e1p5">E1·P5</a><a href="#e1p6">E1·P6</a>
+  <a href="#e1p7">E1·P7</a><a href="#e1p8">E1·P8</a><a href="#e1p9">E1·P9</a>
+  <span class="nav-label">|</span>
+  <a href="#exam2">Exam 2</a>
+  <a href="#e2p1">E2·P1</a><a href="#e2p2">E2·P2</a><a href="#e2p3">E2·P3</a>
+  <a href="#e2p4">E2·P4</a><a href="#e2p5">E2·P5</a><a href="#e2p6">E2·P6</a>
+  <a href="#e2p7">E2·P7</a><a href="#e2p8">E2·P8</a>
+  <span class="nav-label">|</span>
+  <a href="#exam3">Exam 3</a>
+  <a href="#e3p1">E3·P1</a><a href="#e3p2">E3·P2</a><a href="#e3p3">E3·P3</a>
+  <a href="#e3p4">E3·P4</a><a href="#e3p5">E3·P5</a><a href="#e3p6">E3·P6</a>
+  <a href="#e3p7">E3·P7</a><a href="#e3p8">E3·P8</a><a href="#e3p9">E3·P9</a>
+</nav>
+
+<main>
+
+<!-- ================================================ EXAM 1 ================================================ -->
+<div class="exam-header" id="exam1">
+  <h2>Past Exam 1 — 9 Problems</h2>
+  <p>Eigenvalues · Diagonalization · Projections · SVD · ODE · Systems · Fourier Series</p>
+</div>
+
+<!-- E1 P1 -->
+<div class="problem" id="e1p1">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P1</span>
+    <span class="problem-title">Eigenvalues &amp; Diagonalization of a 2×2 Matrix</span>
+    <span class="topic-tag tag-eigen">Eigenvalues</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(A = \begin{bmatrix}1&2\\8&1\end{bmatrix}\).
+      (a) Compute the eigenvalues of \(A\).
+      (b) Find invertible \(P\) and diagonal \(D\) such that \(A = PDP^{-1}\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Eigenvalue decomposition / Diagonalization.</p>
+      <div class="note note-lecture">Chapter 5 of your notes: "Eigenvalue λ is real iff det(A−λI)=0." Diagonalization procedure: find eigenvalues → find eigenvectors → build P (cols = eigenvectors), D (diagonal = eigenvalues).</div>
+      <p><strong>First Move Logic:</strong> A 2×2 non-triangular matrix → expand the 2×2 determinant directly. The visual cue: diagonal entries are equal (both 1), so the characteristic polynomial will factor cleanly.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Find Eigenvalues</div>
+        <p>Solve \(\det(A - \lambda I) = 0\):</p>
+        <div class="math-block">
+          \[\det\begin{bmatrix}1-\lambda & 2\\ 8 & 1-\lambda\end{bmatrix} = (1-\lambda)^2 - 16 = \lambda^2 - 2\lambda - 15 = (\lambda-5)(\lambda+3) = 0\]
+        </div>
+        <div class="answer-box">\(\lambda_1 = 5, \quad \lambda_2 = -3\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Find Eigenvectors → Build P, D</div>
+        <p><strong>For \(\lambda_1=5\):</strong> Row-reduce \((A-5I)\mathbf{u}=\mathbf{0}\):</p>
+        <div class="math-block">\[\begin{bmatrix}-4&2\\8&-4\end{bmatrix}\to\begin{bmatrix}1&-\tfrac12\\0&0\end{bmatrix}\implies u_1=\frac12 u_2 \implies \mathbf{v}_1=\begin{bmatrix}1\\2\end{bmatrix}\]</div>
+        <p><strong>For \(\lambda_2=-3\):</strong> Row-reduce \((A+3I)\mathbf{u}=\mathbf{0}\):</p>
+        <div class="math-block">\[\begin{bmatrix}4&2\\8&4\end{bmatrix}\to\begin{bmatrix}1&\tfrac12\\0&0\end{bmatrix}\implies u_1=-\frac12 u_2 \implies \mathbf{v}_2=\begin{bmatrix}1\\-2\end{bmatrix}\]</div>
+        <div class="answer-box">
+          \[P=\begin{bmatrix}1&1\\2&-2\end{bmatrix},\quad D=\begin{bmatrix}5&0\\0&-3\end{bmatrix},\quad A=PDP^{-1}\]
+        </div>
+        <p><em>Note:</em> Column order must match — column \(k\) of \(P\) is the eigenvector for the \(k\)-th diagonal entry of \(D\).</p>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> Professor could ask for \(A^{10}\). Use \(A^k = PD^kP^{-1}\), so \(A^{10} = P\begin{bmatrix}5^{10}&0\\0&(-3)^{10}\end{bmatrix}P^{-1}\).</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Is A diagonalizable over ℝ?" — Yes, because 2 distinct real eigenvalues always gives 2 LI eigenvectors.</div>
+      <div class="note note-trap">Mixing up column order — if you put \(\mathbf{v}_1\) in column 2 of P, you must put \(\lambda_1=5\) in the (2,2) position of D. The pairing must be consistent.</div>
+      <div class="note note-verify">Verify: compute \(A\mathbf{v}_1\) and check it equals \(5\mathbf{v}_1\). For our answer: \(A[1,2]^T = [1+4, 8+2]^T=[5,10]^T=5[1,2]^T\). ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P2 -->
+<div class="problem" id="e1p2">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P2</span>
+    <span class="problem-title">Integer Entries &amp; Determinant Proofs</span>
+    <span class="topic-tag tag-proof">Proof</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(A\) be an invertible 3×3 matrix.
+      (a) If all entries of \(A\) and \(A^{-1}\) are integers, prove \(\det A = \pm 1\).
+      (b) If all entries of \(A\) are integers and \(\det A = \pm 1\), prove all entries of \(A^{-1}\) are integers.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Determinant algebra; adjugate (classical adjoint) matrix.</p>
+      <div class="note note-lecture">Your notes: "det(AB)=det(A)det(B)"; "Triangular det(A) = product of diagonal"; "A A⁻¹ = I so det(A)det(A⁻¹)=1". The adjugate formula is referenced but not detailed — see below.</div>
+      <div class="note note-missing">The adjugate/cofactor matrix formula \(A^{-1} = \frac{1}{\det A}\mathrm{adj}(A)\) where \(\mathrm{adj}(A)_{ij}\) = signed (j,i)-cofactor of \(A\) is NOT explicitly in your notes, but is required for part (b). The key fact: if \(A\) has integer entries, every cofactor is a determinant of an integer submatrix → integer → adj(A) has integer entries.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Both have integer entries ⟹ det A = ±1</div>
+        <ul>
+          <li>Since \(A\) has integer entries: \(\det A\) is computed by products/sums of integers, so \(\det A \in \mathbb{Z}\).</li>
+          <li>Since \(A^{-1}\) has integer entries: similarly \(\det(A^{-1}) \in \mathbb{Z}\).</li>
+          <li>From \(AA^{-1}=I\): \(\det(A)\cdot\det(A^{-1})=\det(I)=1\).</li>
+          <li>We have two integers whose product is 1. The only integer solutions are \(\det A = 1, \det A^{-1}=1\) or \(\det A=-1, \det A^{-1}=-1\).</li>
+        </ul>
+        <div class="answer-box">Therefore \(\det A = \pm 1\). \(\square\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Integer entries + det A = ±1 ⟹ A⁻¹ has integer entries</div>
+        <p>The formula for the matrix inverse is:</p>
+        <div class="math-block">\[A^{-1} = \frac{1}{\det A}\,\mathrm{adj}(A)\]</div>
+        <ul>
+          <li><strong>adj(A) has integer entries:</strong> Each entry of adj(A) is a cofactor \(C_{ji}=(-1)^{i+j}M_{ji}\), where \(M_{ji}\) is the determinant of a 2×2 submatrix of \(A\). Since \(A\) has integer entries, these 2×2 determinants are integers, so every cofactor is an integer.</li>
+          <li><strong>Division by ±1:</strong> Since \(\det A = \pm 1\), we get \(A^{-1} = \pm\,\mathrm{adj}(A)\), which is a matrix of integers.</li>
+        </ul>
+        <div class="answer-box">All entries of \(A^{-1}\) are integers. \(\square\)</div>
+        <p><em>This matches the lecture note fact: "If A is a matrix with integer entries and det(A)=−1, A⁻¹ also has integer entries."</em></p>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> Same proof for n×n. It's identical — the argument doesn't depend on matrix size.</div>
+      <div class="note note-trap">The direction matters: "integers ⟹ det=±1" uses both A and A⁻¹ having integers. The other direction only requires A having integers plus det=±1. Don't flip the hypotheses!</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P3 -->
+<div class="problem" id="e1p3">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P3</span>
+    <span class="problem-title">Eigenvalues of an Orthogonal Projection Matrix</span>
+    <span class="topic-tag tag-eigen">Eigenvalues</span>
+    <span class="topic-tag tag-linalg">Projections</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(V\) be a 4-dimensional subspace of \(\mathbb{R}^{20}\). Define \(T:\mathbb{R}^{20}\to\mathbb{R}^{20}\) by \(T(y)=\mathrm{proj}_V y\), and let \(A\) be the standard matrix.
+      (a) Find all eigenvalues of \(A\). (b) Characteristic polynomial. (c) Rank of \(A\). (d) dim(Nul A). (e) Is A symmetric?
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Properties of orthogonal projection matrices (Chapter 6/7 bridge).</p>
+      <div class="note note-lecture">Your notes state: Img(T) = column span, Ker(T) = null space. Rank-Nullity Theorem. Chapter 7: "A is orthogonally diagonalizable" for symmetric matrices.</div>
+      <div class="note note-missing">Key fact about projections not explicitly stated in notes: A projection matrix satisfies \(A^2 = A\) (idempotent). This forces eigenvalues to be 0 or 1 only — since if \(Av=\lambda v\), then \(A^2v=\lambda^2 v=\lambda v\), so \(\lambda^2=\lambda\), giving \(\lambda=0\) or \(\lambda=1\).</div>
+      <p><strong>First Move Logic:</strong> Think geometrically. Any vector in \(V\) projects to itself (eigenvalue 1). Any vector in \(V^\perp\) projects to zero (eigenvalue 0). dim(V)=4, dim(V⊥)=16.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">(a) Eigenvalues</div>
+        <p>For \(\mathbf{v}\in V\): \(T(\mathbf{v})=\mathbf{v}=1\cdot\mathbf{v}\). So \(\lambda=1\) with eigenspace \(V\), dimension 4.</p>
+        <p>For \(\mathbf{v}\in V^\perp\): \(T(\mathbf{v})=\mathbf{0}=0\cdot\mathbf{v}\). So \(\lambda=0\) with eigenspace \(V^\perp\), dimension 16.</p>
+        <div class="answer-box">Eigenvalues: \(\lambda=1\) (multiplicity 4) and \(\lambda=0\) (multiplicity 16).</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">(b) Characteristic Polynomial</div>
+        <div class="answer-box">\[p(\lambda) = \det(A-\lambda I) = (-1)^{20}\lambda^{16}(\lambda-1)^4 = \lambda^{16}(\lambda-1)^4\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">(c) Rank of A</div>
+        <p>Col(A) = range of T = all possible projections onto V = V itself.</p>
+        <div class="answer-box">\(\mathrm{rank}(A)=\dim(V)=4\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">(d) dim(Nul A)</div>
+        <p>By Rank-Nullity: \(\mathrm{nullity}(A)=20-\mathrm{rank}(A)=20-4=16\). (Nul A = V⊥.)</p>
+        <div class="answer-box">\(\dim(\mathrm{Nul}\,A)=16\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">(e) Is A symmetric?</div>
+        <p>Yes. Orthogonal projection matrices are always symmetric: \(A^T=A\). Proof sketch: the standard matrix of orthogonal projection onto V is \(P=Q(Q^TQ)^{-1}Q^T\) (where Q has basis of V as columns), and \(P^T=P\). Also, A is orthogonally diagonalizable (Chapter 7) since it's symmetric with real eigenvalues.</p>
+        <div class="answer-box">Yes, \(A\) is symmetric (\(A^T=A\)).</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Is A diagonalizable?" Yes — it has 20 LI eigenvectors (4 from V, 16 from V⊥ together spanning ℝ²⁰).</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Find \(A^{100}\)." Since \(A^2=A\) (idempotent), \(A^{100}=A\).</div>
+      <div class="note note-trap">Don't confuse algebraic multiplicity (from char. poly.) with geometric multiplicity (eigenspace dimension). For projection matrices they're always equal — but this is NOT generally true!</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P4 -->
+<div class="problem" id="e1p4">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P4</span>
+    <span class="problem-title">Singular Value Decomposition of a 3×2 Matrix</span>
+    <span class="topic-tag tag-svd">SVD</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(A=\begin{bmatrix}1&1\\0&1\\-1&1\end{bmatrix}\).
+      (a) Find the singular values. (b) Find the SVD \(A=U\Sigma V^T\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> SVD (Chapter 7). Your notes outline the full algorithm including the worked example.</p>
+      <div class="note note-lecture">From your notes: "Singular values = √(eigenvalues of A^T A), arranged decreasing. SVD steps: (1) Compute A^T A. (2) Find eigenvalues. (3) Find V (eigenvectors of A^T A). (4) u_i = (1/σ_i)Av_i. (5) Complete U basis."</div>
+      <p><strong>First Move Logic:</strong> A is 3×2, rank 2 (columns [1,0,-1]^T and [1,1,1]^T appear independent). So we expect 2 non-zero singular values and Σ will be 3×2.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Step 1 — Compute A^T A</div>
+        <div class="math-block">
+          \[A^TA = \begin{bmatrix}1&0&-1\\1&1&1\end{bmatrix}\begin{bmatrix}1&1\\0&1\\-1&1\end{bmatrix} = \begin{bmatrix}1+0+1 & 1+0-1\\1+0-1 & 1+1+1\end{bmatrix}=\begin{bmatrix}2&0\\0&3\end{bmatrix}\]
+        </div>
+        <p>Lucky! \(A^TA\) is already diagonal.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 2 — Eigenvalues of A^T A (= σ²)</div>
+        <p>Eigenvalues: \(\lambda_1=3,\ \lambda_2=2\) (arranged largest first).</p>
+        <div class="answer-box">(a) Singular values: \(\sigma_1=\sqrt{3},\ \sigma_2=\sqrt{2}\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 3 — Find V (eigenvectors of A^T A)</div>
+        <p>For \(\lambda_1=3\): column 2 → \(\mathbf{v}_1=\begin{bmatrix}0\\1\end{bmatrix}\)</p>
+        <p>For \(\lambda_2=2\): column 1 → \(\mathbf{v}_2=\begin{bmatrix}1\\0\end{bmatrix}\)</p>
+        <div class="math-block">\[V=\begin{bmatrix}0&1\\1&0\end{bmatrix}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 4 — Find U: u_i = (1/σ_i)Av_i</div>
+        <div class="math-block">
+          \[\mathbf{u}_1=\frac{1}{\sqrt3}A\mathbf{v}_1=\frac{1}{\sqrt3}\begin{bmatrix}1\\1\\1\end{bmatrix},\qquad \mathbf{u}_2=\frac{1}{\sqrt2}A\mathbf{v}_2=\frac{1}{\sqrt2}\begin{bmatrix}1\\0\\-1\end{bmatrix}\]
+        </div>
+        <p>For the third column of U (since U must be 3×3), find \(\mathbf{u}_3\in\mathrm{Nul}(A^T)\), orthogonal to \(\mathbf{u}_1,\mathbf{u}_2\). Use cross-product of (numerator) vectors [1,1,1] and [1,0,−1]:</p>
+        <div class="math-block">
+          \[\begin{bmatrix}1\\1\\1\end{bmatrix}\times\begin{bmatrix}1\\0\\-1\end{bmatrix}=\begin{bmatrix}(1)(-1)-(1)(0)\\(1)(1)-(1)(-1)\\(1)(0)-(1)(1)\end{bmatrix}=\begin{bmatrix}-1\\2\\-1\end{bmatrix}\]
+          \[\mathbf{u}_3=\frac{1}{\sqrt6}\begin{bmatrix}-1\\2\\-1\end{bmatrix}\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 5 — Assemble SVD</div>
+        <div class="answer-box">
+          \[A=U\Sigma V^T,\quad U=\begin{bmatrix}\tfrac{1}{\sqrt3}&\tfrac{1}{\sqrt2}&\tfrac{-1}{\sqrt6}\\\tfrac{1}{\sqrt3}&0&\tfrac{2}{\sqrt6}\\\tfrac{1}{\sqrt3}&\tfrac{-1}{\sqrt2}&\tfrac{-1}{\sqrt6}\end{bmatrix},\quad \Sigma=\begin{bmatrix}\sqrt3&0\\0&\sqrt2\\0&0\end{bmatrix},\quad V^T=\begin{bmatrix}0&1\\1&0\end{bmatrix}\]
+        </div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Find the best rank-1 approximation." Answer: \(\sigma_1\mathbf{u}_1\mathbf{v}_1^T\).</div>
+      <div class="note note-trap">σ₁ ≥ σ₂: always order singular values from largest to smallest. The eigenvectors of A^T A must be ordered accordingly, and then u_i must match. Mismatching an eigenvector with the wrong σ scrambles the whole decomposition.</div>
+      <div class="note note-verify">Check: \(A\mathbf{v}_1 = \sigma_1\mathbf{u}_1\)? \(A[0,1]^T=[1,1,1]^T\) and \(\sqrt3\cdot\frac{1}{\sqrt3}[1,1,1]^T=[1,1,1]^T\). ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P5 -->
+<div class="problem" id="e1p5">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P5</span>
+    <span class="problem-title">Prove Nul(A^T A) = Nul(A) and rank equality</span>
+    <span class="topic-tag tag-proof">Proof</span>
+    <span class="topic-tag tag-svd">Rank</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(A\) be any matrix.
+      (a) Prove \(\mathrm{Nul}(A^TA)=\mathrm{Nul}(A)\). (Hint: use the dot product.)
+      (b) Prove that rank of \(A\) equals rank of \(A^TA\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Null space algebra; Rank-Nullity Theorem.</p>
+      <div class="note note-lecture">Your notes: "Ker(T) = solutions to Ax=0." Rank-Nullity: rank+nullity=dim(V). Inner product: ||v||²=v·v ≥ 0, equals 0 only if v=0.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Prove the two null spaces are equal</div>
+        <p>Show Nul(A) ⊆ Nul(A^T A) <strong>and</strong> Nul(A^T A) ⊆ Nul(A).</p>
+        <p><strong>Direction 1 (easy):</strong> If \(\mathbf{x}\in\mathrm{Nul}(A)\), then \(A\mathbf{x}=\mathbf{0}\), so \(A^TA\mathbf{x}=A^T\mathbf{0}=\mathbf{0}\). Thus \(\mathbf{x}\in\mathrm{Nul}(A^TA)\).</p>
+        <p><strong>Direction 2 (uses the hint):</strong> If \(\mathbf{x}\in\mathrm{Nul}(A^TA)\), then \(A^TA\mathbf{x}=\mathbf{0}\). Multiply both sides by \(\mathbf{x}^T\) on the left:</p>
+        <div class="math-block">\[\mathbf{x}^T A^T A\mathbf{x}=0 \implies (A\mathbf{x})^T(A\mathbf{x})=0 \implies \|A\mathbf{x}\|^2=0 \implies A\mathbf{x}=\mathbf{0}\]</div>
+        <div class="answer-box">Therefore \(\mathrm{Nul}(A^TA)=\mathrm{Nul}(A)\). \(\square\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — rank(A) = rank(A^T A)</div>
+        <p>Both \(A\) (as \(m\times n\)) and \(A^TA\) (as \(n\times n\)) have <em>n</em> columns. From part (a), \(\mathrm{nullity}(A)=\mathrm{nullity}(A^TA)\). Applying Rank-Nullity to each:</p>
+        <div class="math-block">\[\mathrm{rank}(A)+\mathrm{nullity}(A)=n=\mathrm{rank}(A^TA)+\mathrm{nullity}(A^TA)\]</div>
+        <div class="answer-box">Since nullities are equal, \(\mathrm{rank}(A)=\mathrm{rank}(A^TA)\). \(\square\)</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Show rank(A) = rank(A^T)." This follows by applying the same argument: rank(A)=rank(A^T A)=rank(A A^T)=rank(A^T) (using the transpose version of part b).</div>
+      <div class="note note-trap">The key algebraic trick is multiplying by x^T to convert A^T Ax = 0 into a norm squared. Students forget to use the hint and try to argue purely with matrix algebra, which is much harder.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P6 -->
+<div class="problem" id="e1p6">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P6</span>
+    <span class="problem-title">IVP: Second-Order ODE with Non-Homogeneous RHS</span>
+    <span class="topic-tag tag-ode">ODE</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Solve the initial value problem: \(y''+4y=e^t,\quad y(0)=1,\quad y'(0)=2\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Non-homogeneous 2nd-order ODE with constant coefficients (Chapter 4, Method of Undetermined Coefficients).</p>
+      <div class="note note-lecture">Your notes: "General = homogeneous + particular solution." Homogeneous: find r from characteristic equation. Particular: guess form based on RHS type. Check if k is a root → adjust s.</div>
+      <p><strong>First Move Logic:</strong> Characteristic equation gives complex roots (since +4y with no y' term). RHS is e^t: check if k=1 is a root of r²+4=0. Since roots are r=±2i, k=1 is NOT a root → s=0, straightforward guess.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Step 1 — Homogeneous Solution</div>
+        <div class="math-block">\[r^2+4=0\implies r=\pm 2i\implies \alpha=0,\,\beta=2\]</div>
+        <div class="math-block">\[y_h=c_1\cos(2t)+c_2\sin(2t)\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 2 — Particular Solution (Undetermined Coefficients)</div>
+        <p>RHS = \(e^t\). The exponent k=1 is not a root of \(r^2+4=0\), so s=0. Guess: \(y_p=Ae^t\).</p>
+        <div class="math-block">\[y_p''=Ae^t\implies Ae^t+4Ae^t=e^t\implies 5A=1\implies A=\tfrac15\]</div>
+        <div class="math-block">\[y_p=\tfrac{1}{5}e^t\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 3 — General Solution</div>
+        <div class="math-block">\[y(t)=c_1\cos(2t)+c_2\sin(2t)+\tfrac{1}{5}e^t\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 4 — Apply Initial Conditions</div>
+        <p>\(y(0)=c_1+\tfrac15=1\implies c_1=\tfrac45\)</p>
+        <div class="math-block">\[y'(t)=-2c_1\sin(2t)+2c_2\cos(2t)+\tfrac{1}{5}e^t\]</div>
+        <p>\(y'(0)=2c_2+\tfrac15=2\implies c_2=\tfrac{9}{10}\)</p>
+        <div class="answer-box">\[y(t)=\tfrac{4}{5}\cos(2t)+\tfrac{9}{10}\sin(2t)+\tfrac{1}{5}e^t\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> If RHS were \(e^{2i\cdot t}=\cos(2t)\) (same frequency as homogeneous), you'd need to multiply the particular guess by t: \(y_p=t(A\cos 2t+B\sin 2t)\).</div>
+      <div class="note note-trap">After finding the general solution, students forget to differentiate y(t) fully before applying y'(0). Make sure to differentiate the y_p term too!</div>
+      <div class="note note-verify">Plug y(0)=4/5+1/5=5/5=1. ✓ y'(0)=2(9/10)+1/5=9/5+1/5=10/5=2. ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P7 -->
+<div class="problem" id="e1p7">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P7</span>
+    <span class="problem-title">Homogeneous Linear System x'=Ax</span>
+    <span class="topic-tag tag-system">Systems</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Consider \(x'(t)=\begin{bmatrix}1&1\\-2&4\end{bmatrix}x(t)\).
+      (a) Find a fundamental matrix. (b) Solve for \(x(0)=\begin{bmatrix}1\\1\end{bmatrix}\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Eigenvalue method for linear systems (Chapter 9).</p>
+      <div class="note note-lecture">Your notes: "Given x'=Ax, guess x(t)=e^{rt}u. This gives (A-rI)u=0." General solution: sum of e^{r_k t}u_k terms. Fundamental matrix: columns are these solutions.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Step 1 — Eigenvalues</div>
+        <div class="math-block">\[\det(A-rI)=(1-r)(4-r)+2=r^2-5r+6=(r-2)(r-3)=0\]</div>
+        <p>\(r_1=2,\quad r_2=3\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 2 — Eigenvectors</div>
+        <p><strong>r₁=2:</strong> \((A-2I)=\begin{bmatrix}-1&1\\-2&2\end{bmatrix}\to\mathbf{u}_1=\begin{bmatrix}1\\1\end{bmatrix}\)</p>
+        <p><strong>r₂=3:</strong> \((A-3I)=\begin{bmatrix}-2&1\\-2&1\end{bmatrix}\to\mathbf{u}_2=\begin{bmatrix}1\\2\end{bmatrix}\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Fundamental Matrix</div>
+        <div class="answer-box">\[X(t)=\begin{bmatrix}e^{2t}&e^{3t}\\e^{2t}&2e^{3t}\end{bmatrix}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Apply Initial Condition x(0)=[1,1]^T</div>
+        <p>Solve \(c_1\mathbf{u}_1+c_2\mathbf{u}_2=x(0)\):</p>
+        <div class="math-block">\[\begin{bmatrix}1&1\\1&2\end{bmatrix}\begin{bmatrix}c_1\\c_2\end{bmatrix}=\begin{bmatrix}1\\1\end{bmatrix}\implies c_2=0,\;c_1=1\]</div>
+        <div class="answer-box">\[x(t)=e^{2t}\begin{bmatrix}1\\1\end{bmatrix}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> Complex eigenvalues (see Exam 3 P6) — use the formula x₁=e^{αt}(cos βt · a − sin βt · b), x₂=e^{αt}(sin βt · a + cos βt · b).</div>
+      <div class="variation">🔀 <strong>Variation:</strong> Repeated eigenvalues (see Exam 3 P7) — need generalized eigenvectors.</div>
+      <div class="note note-trap">When solving for c₁, c₂, you're solving [u₁ u₂][c₁;c₂]=x(0), NOT just reading off components. Set up the matrix equation and row-reduce.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P8 -->
+<div class="problem" id="e1p8">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P8</span>
+    <span class="problem-title">Linear Independence of Vector-Valued Functions</span>
+    <span class="topic-tag tag-proof">Linear Independence</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Determine whether \(\mathbf{f}_1=\begin{bmatrix}\sin x\\\sin x\end{bmatrix},\ \mathbf{f}_2=\begin{bmatrix}\sin x\\\cos x\end{bmatrix},\ \mathbf{f}_3=\begin{bmatrix}\cos x\\\cos x\end{bmatrix}\) are LI on \((-\infty,\infty)\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Linear independence of vector functions; Wronskian (Chapter 9).</p>
+      <div class="note note-lecture">Your notes show the Wronskian for scalar functions. For vector functions, set up c₁f₁+c₂f₂+c₃f₃=0 for all x and show c₁=c₂=c₃=0.</div>
+      <div class="note note-missing">For 2-component vector functions, you cannot directly write a 3×3 Wronskian determinant. Instead, parse the linear combination into two scalar equations and use the fact that {sin x, cos x} are linearly independent over ℝ.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Set up linear combination = 0</div>
+        <p>Assume \(c_1\mathbf{f}_1+c_2\mathbf{f}_2+c_3\mathbf{f}_3=\mathbf{0}\) for all \(x\in(-\infty,\infty)\):</p>
+        <div class="math-block">
+          \[\text{Row 1: }(c_1+c_2)\sin x + c_3\cos x = 0\text{ for all }x\]
+          \[\text{Row 2: }c_1\sin x + (c_2+c_3)\cos x = 0\text{ for all }x\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Use LI of {sin x, cos x}</div>
+        <p>Since \(\sin x\) and \(\cos x\) are linearly independent, their coefficients must separately equal zero:</p>
+        <p><strong>From Row 1:</strong> \(c_1+c_2=0\) and \(c_3=0\)</p>
+        <p><strong>From Row 2:</strong> \(c_1=0\) and \(c_2+c_3=0\)</p>
+        <p>From \(c_3=0\) and \(c_2+c_3=0\): \(c_2=0\). From \(c_1+c_2=0\): \(c_1=0\).</p>
+        <div class="answer-box">All constants are zero, so \(\mathbf{f}_1, \mathbf{f}_2, \mathbf{f}_3\) are <strong>linearly independent</strong> on \((-\infty,\infty)\).</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Alternative approach (Wronskian at a point):</strong> Evaluate at specific x values. At x=0: c₁[0;0]+c₂[0;1]+c₃[1;1]=[0;0] → c₃=0, c₂=0. At x=π/2: c₁[1;1]+c₂[1;0]=[0;0] → c₁=0. Consistent.</div>
+      <div class="note note-trap">Three 2-component vectors: you might think "there are more vectors (3) than components (2) so they're LD." That rule (Rule 3 from your notes: "more columns than rows, LD") applies to constant vectors in ℝⁿ, NOT to function spaces. In function space, three functions can still be LI.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E1 P9 -->
+<div class="problem" id="e1p9">
+  <div class="problem-header">
+    <span class="problem-num">E1 · P9</span>
+    <span class="problem-title">Fourier Series of a Step Function</span>
+    <span class="topic-tag tag-fourier">Fourier</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      \(f(x)=0\) for \(-\pi\le x\le 0\), \(f(x)=1\) for \(0\le x\le\pi\).
+      (a) Write the Fourier series. (b) Find \(g(0),g(\pi/2),g(\pi)\). (c) Write \(g(\pi/2)\) as an infinite series.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Fourier series; Dirichlet's convergence theorem (Chapter 10).</p>
+      <div class="note note-lecture">Your notes: General Fourier series formula, a₀/2 + Σ(aₙcos(nx)+bₙsin(nx)). Dirichlet's Theorem: at a jump discontinuity, converges to midpoint = (1/2)[f(x⁺)+f(x⁻)].</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Compute Fourier Coefficients (L=π)</div>
+        <div class="math-block">
+          \[a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\,dx=\frac{1}{\pi}\int_0^{\pi}1\,dx=1\]
+          \[a_n=\frac{1}{\pi}\int_0^{\pi}\cos(nx)\,dx=\frac{1}{\pi}\left[\frac{\sin(nx)}{n}\right]_0^{\pi}=\frac{\sin(n\pi)}{n\pi}=0\]
+          \[b_n=\frac{1}{\pi}\int_0^{\pi}\sin(nx)\,dx=\frac{1}{\pi}\left[-\frac{\cos(nx)}{n}\right]_0^{\pi}=\frac{1-\cos(n\pi)}{n\pi}=\frac{1-(-1)^n}{n\pi}\]
+        </div>
+        <p>\(b_n=\frac{2}{n\pi}\) for odd n; \(b_n=0\) for even n.</p>
+        <div class="answer-box">\[f(x)\sim\frac{1}{2}+\frac{2}{\pi}\left(\sin x+\frac{\sin 3x}{3}+\frac{\sin 5x}{5}+\cdots\right)=\frac{1}{2}+\frac{2}{\pi}\sum_{k=0}^{\infty}\frac{\sin((2k+1)x)}{2k+1}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Values of g (periodic limit function)</div>
+        <p><strong>g(0):</strong> Jump discontinuity. \(f(0^-)=0,\,f(0^+)=1\). By Dirichlet: \(g(0)=\tfrac{0+1}{2}=\tfrac{1}{2}\).</p>
+        <p><strong>g(π/2):</strong> f is continuous there, \(f(\pi/2)=1\). So \(g(\pi/2)=1\).</p>
+        <p><strong>g(π):</strong> Jump discontinuity. \(f(\pi^-)=1,\,f(-\pi^+)=0\). By Dirichlet: \(g(\pi)=\tfrac{1+0}{2}=\tfrac{1}{2}\).</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (c) — Write g(π/2) as infinite series</div>
+        <p>Substitute x=π/2 into the Fourier series and use g(π/2)=1:</p>
+        <div class="math-block">
+          \[1=\frac{1}{2}+\frac{2}{\pi}\left(\sin\frac{\pi}{2}+\frac{\sin\frac{3\pi}{2}}{3}+\frac{\sin\frac{5\pi}{2}}{5}+\cdots\right)=\frac{1}{2}+\frac{2}{\pi}\left(1-\frac{1}{3}+\frac{1}{5}-\cdots\right)\]
+        </div>
+        <div class="answer-box">\[g\!\left(\frac{\pi}{2}\right)=\frac{1}{2}+\frac{2}{\pi}\sum_{k=0}^{\infty}\frac{(-1)^k}{2k+1}=1\implies \frac{\pi}{4}=1-\frac{1}{3}+\frac{1}{5}-\frac{1}{7}+\cdots\] (Leibniz formula for π)</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> Asked for the even or odd extension. If even extension: only cosine terms (all bₙ=0). If odd extension: only sine terms (all aₙ=0). The factor in front changes to 2/L when using half-range extensions.</div>
+      <div class="note note-trap">Don't forget a₀ is divided by 2 in the series: the series is a₀/2 + Σ(...), not a₀ + Σ(...).</div>
+      <div class="note note-trap">At discontinuities and endpoints, the Fourier series does NOT converge to the function value — it converges to the midpoint of the jump.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================ EXAM 2 ================================================ -->
+<div class="exam-header" id="exam2">
+  <h2>Past Exam 2 — 8 Problems</h2>
+  <p>Diagonalizability · Polynomial Transformations · Projections · Least Squares · Quadratic Forms · ODE</p>
+</div>
+
+<!-- E2 P1 -->
+<div class="problem" id="e2p1">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P1</span>
+    <span class="problem-title">Condition for Diagonalizability (Upper-Triangular Matrix)</span>
+    <span class="topic-tag tag-eigen">Diagonalization</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(A=\begin{bmatrix}2&h&0\\0&2&1\\0&0&3\end{bmatrix}\). For what values of \(h\) is \(A\) diagonalizable?
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Diagonalizability criterion.</p>
+      <div class="note note-lecture">Your notes: "An n×n matrix A is diagonalizable iff it has n LI eigenvectors." For triangular matrices: "diagonal entries are eigenvalues." Key: when an eigenvalue has multiplicity > 1, check if geometric multiplicity = algebraic multiplicity.</div>
+      <p><strong>First Move Logic:</strong> Upper triangular → eigenvalues are diagonal entries: λ=2 (multiplicity 2), λ=3 (multiplicity 1). For diagonalizability, we need dim(Eigenspace(A,2)) = 2. Check the rank of A−2I.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Eigenvalues (from triangular structure)</div>
+        <p>\(\lambda_1=2\) (multiplicity 2), \(\lambda_2=3\) (multiplicity 1). λ₂ always gives 1 eigenvector — no issue there.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Check geometric multiplicity of λ=2</div>
+        <div class="math-block">
+          \[A-2I=\begin{bmatrix}0&h&0\\0&0&1\\0&0&1\end{bmatrix}\xrightarrow{\text{reduce}}\begin{bmatrix}0&h&0\\0&0&1\\0&0&0\end{bmatrix}\]
+        </div>
+        <p><strong>If \(h\neq 0\):</strong> Two pivots (in cols 2 and 3), rank=2, nullity=1. Only 1 eigenvector — NOT enough for multiplicity 2. <em>Not diagonalizable.</em></p>
+        <p><strong>If \(h=0\):</strong> Only one pivot (col 3), rank=1, nullity=2. Two eigenvectors — equals algebraic multiplicity. <em>Diagonalizable!</em></p>
+        <div class="answer-box">\(A\) is diagonalizable if and only if \(h=0\).</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Find eigenvectors when h=0." A−2I=[0 0 0; 0 0 1; 0 0 0]. Free: x₁,x₂. Eigenvectors: [1;0;0] and [0;1;0].</div>
+      <div class="note note-trap">For triangular matrices, students often assume they're always diagonalizable. They're NOT if a repeated eigenvalue doesn't have enough eigenvectors. Always check nullity of (A−λI).</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P2 -->
+<div class="problem" id="e2p2">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P2</span>
+    <span class="problem-title">Matrix of a Linear Transformation on P₂</span>
+    <span class="topic-tag tag-linalg">Lin. Trans.</span>
+    <span class="topic-tag tag-eigen">Eigenvalues</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      \(T:P_2\to P_2\) defined by \(T(f)=t^2f''+f'+f\). 
+      (a) Find the matrix of T relative to \(\{1,t,t^2\}\). (b) Find the eigenvalues of T.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Representing a linear transformation in a basis.</p>
+      <div class="note note-lecture">Your notes: "To get a matrix for a linear transformation, fix a basis for V and W. Compute T(e₁) and T(e₂)." Column k of [T] = coordinate vector of T(basis vector k). Polynomials behave like vectors; P₂ has basis {1,t,t²}.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Apply T to each basis element</div>
+        <div class="math-block">
+          \[T(1)=t^2\cdot0+0+1=1=1\cdot1+0\cdot t+0\cdot t^2 \implies \text{col}_1=\begin{bmatrix}1\\0\\0\end{bmatrix}\]
+          \[T(t)=t^2\cdot0+1+t=1+t \implies \text{col}_2=\begin{bmatrix}1\\1\\0\end{bmatrix}\]
+          \[T(t^2)=t^2\cdot2+2t+t^2=3t^2+2t \implies \text{col}_3=\begin{bmatrix}0\\2\\3\end{bmatrix}\]
+        </div>
+        <div class="answer-box">\[[T]=\begin{bmatrix}1&1&0\\0&1&2\\0&0&3\end{bmatrix}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Eigenvalues of T</div>
+        <p>[T] is upper triangular, so eigenvalues = diagonal entries:</p>
+        <div class="answer-box">Eigenvalues of T: \(\lambda_1=1\) (mult. 2), \(\lambda_2=3\) (mult. 1).</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Find the eigenfunctions of T." For λ=1, solve T(f)=f, i.e., t²f''+f'+f=f → t²f''+f'=0. The constant function f=1 is one eigenfunction (T(1)=1).</div>
+      <div class="note note-trap">The coordinate vector goes in COLUMN k — not row k. Each column represents the image of a basis vector in coordinates of the output basis.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P3 -->
+<div class="problem" id="e2p3">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P3</span>
+    <span class="problem-title">Orthogonal Projection (Closest Point in Subspace)</span>
+    <span class="topic-tag tag-linalg">Projection</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Find the closest point to \(\mathbf{v}=\begin{bmatrix}3\\5\\4\\1\end{bmatrix}\) in \(W=\mathrm{span}\left\{\mathbf{w}_1=\begin{bmatrix}1\\-1\\0\\1\end{bmatrix},\,\mathbf{w}_2=\begin{bmatrix}0\\1\\-1\\1\end{bmatrix}\right\}\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Orthogonal projection onto a subspace (Chapter 6).</p>
+      <div class="note note-lecture">Your notes: "proj_W(v) = proj_{w1}(v) + proj_{w2}(v) if w1, w2 are orthogonal." Each term: (v·wᵢ/‖wᵢ‖²)wᵢ.</div>
+      <p><strong>First Move Logic:</strong> Always check orthogonality first! If w₁·w₂=0, use the simple sum formula. If not, must use Gram-Schmidt first.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Check orthogonality</div>
+        <div class="math-block">\[\mathbf{w}_1\cdot\mathbf{w}_2=(1)(0)+(-1)(1)+(0)(-1)+(1)(1)=0-1+0+1=0\checkmark\]</div>
+        <p>They are orthogonal — use direct projection formula.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Compute projection components</div>
+        <div class="math-block">
+          \[\mathbf{v}\cdot\mathbf{w}_1=3-5+0+1=-1,\quad\|\mathbf{w}_1\|^2=1+1+0+1=3\]
+          \[\mathbf{v}\cdot\mathbf{w}_2=0+5-4+1=2,\quad\|\mathbf{w}_2\|^2=0+1+1+1=3\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Compute closest point</div>
+        <div class="math-block">
+          \[\mathrm{proj}_W\mathbf{v}=\frac{-1}{3}\begin{bmatrix}1\\-1\\0\\1\end{bmatrix}+\frac{2}{3}\begin{bmatrix}0\\1\\-1\\1\end{bmatrix}=\begin{bmatrix}-1/3\\1/3\\0\\-1/3\end{bmatrix}+\begin{bmatrix}0\\2/3\\-2/3\\2/3\end{bmatrix}\]
+        </div>
+        <div class="answer-box">\[\mathrm{proj}_W\mathbf{v}=\begin{bmatrix}-1/3\\1\\-2/3\\1/3\end{bmatrix}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>If w₁, w₂ are NOT orthogonal:</strong> Must run Gram-Schmidt first, or set up the normal equations proj_W(v) = A(A^T A)^{-1}A^T v where A=[w₁ w₂].</div>
+      <div class="note note-verify">Check: (v − proj) ⊥ W. Compute v−proj=[10/3, 4, 14/3, 2/3]. Dot with w₁: 10/3−4+0+2/3=10/3+2/3−4=4−4=0. ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P4 -->
+<div class="problem" id="e2p4">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P4</span>
+    <span class="problem-title">Least-Squares Line of Best Fit</span>
+    <span class="topic-tag tag-linalg">Least Squares</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Find \(y=\beta_0+\beta_1 x\) (least-squares) for the data \((-1,2),(0,5),(1,6),(2,9)\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Least-squares solutions to overdetermined systems (Chapter 6).</p>
+      <div class="note note-lecture">Your notes: "Solve normal equations A^T A x̂ = A^T b." The worked example shows exactly this setup with a design matrix X.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Build Design Matrix X and response y</div>
+        <div class="math-block">
+          \[X=\begin{bmatrix}1&-1\\1&0\\1&1\\1&2\end{bmatrix},\quad \mathbf{y}=\begin{bmatrix}2\\5\\6\\9\end{bmatrix}\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Compute Normal Equations</div>
+        <div class="math-block">
+          \[X^TX=\begin{bmatrix}4&2\\2&6\end{bmatrix},\quad X^T\mathbf{y}=\begin{bmatrix}22\\22\end{bmatrix}\]
+          \[\text{Normal equations: }\begin{bmatrix}4&2\\2&6\end{bmatrix}\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}=\begin{bmatrix}22\\22\end{bmatrix}\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Solve (det = 24−4=20)</div>
+        <div class="math-block">
+          \[\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}=\frac{1}{20}\begin{bmatrix}6&-2\\-2&4\end{bmatrix}\begin{bmatrix}22\\22\end{bmatrix}=\frac{1}{20}\begin{bmatrix}88\\44\end{bmatrix}=\begin{bmatrix}22/5\\11/5\end{bmatrix}\]
+        </div>
+        <div class="answer-box">\[y=\frac{22}{5}+\frac{11}{5}x\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> Fit a quadratic y=β₀+β₁x+β₂x². Add a column [x²] to X. Normal equations are now 3×3.</div>
+      <div class="note note-trap">Computing X^T X wrong is the most common error. Be systematic: X^T X is n×n (here 2×2) and X^T b is n×1. Entry (i,j) of X^T X = dot product of column i and column j of X.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P5 -->
+<div class="problem" id="e2p5">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P5</span>
+    <span class="problem-title">Quadratic Form — Matrix and Definiteness</span>
+    <span class="topic-tag tag-linalg">Quadratic Forms</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      \(Q(x)=x_1^2+2x_1x_2+x_2^2\). (a) Find symmetric matrix A with Q(x)=x^T Ax. (b) Classify Q.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Quadratic forms and their classification (Chapter 7).</p>
+      <div class="note note-lecture">Your notes: "Place coefficients of squared terms on main diagonal, split cross-product coefficients evenly between A_ij and A_ji." Classification by eigenvalue signs.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Build Matrix A</div>
+        <p>Diagonal: coefficients of x₁², x₂² → both 1. Off-diagonal: coefficient of 2x₁x₂ is 2, split: A₁₂=A₂₁=1.</p>
+        <div class="answer-box">\[A=\begin{bmatrix}1&1\\1&1\end{bmatrix}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Classify via eigenvalues</div>
+        <div class="math-block">
+          \[\det(A-\lambda I)=(1-\lambda)^2-1=\lambda^2-2\lambda=\lambda(\lambda-2)=0\implies\lambda_1=0,\;\lambda_2=2\]
+        </div>
+        <p>One eigenvalue is 0 (positive), one is 0 (zero) → not all positive, not all negative.</p>
+        <div class="answer-box">Q is <strong>Positive Semidefinite</strong>: \(Q(x)\ge0\) for all x, with equality when x is an eigenvector for λ=0.</div>
+        <p><em>Note: Q(x) = (x₁+x₂)² ≥ 0, which confirms this directly.</em></p>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>For cross-product only (no square terms):</strong> e.g., Q=x₁x₂ → A=[0 1/2; 1/2 0], eigenvalues ±1/2 → indefinite.</div>
+      <div class="note note-trap">Don't put the full coefficient of x₁x₂ in one off-diagonal entry. The 2 in 2x₁x₂ must be split: A₁₂=A₂₁=1.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P6 -->
+<div class="problem" id="e2p6">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P6</span>
+    <span class="problem-title">Particular Solution Form (Resonance Case)</span>
+    <span class="topic-tag tag-ode">ODE</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      What form to find a particular solution to \(y''+2y'+y=e^{-t}\)?
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Method of Undetermined Coefficients — resonance (Chapter 4).</p>
+      <div class="note note-lecture">Your notes: "If exponent k is a root → s=1 (or s=2 if double root). Multiply naive guess by t^s."</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Find the roots</div>
+        <div class="math-block">\[r^2+2r+1=(r+1)^2=0\implies r=-1\text{ (double root)}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Check resonance</div>
+        <p>RHS = \(e^{-t}\), so k=−1. This matches the root r=−1 with multiplicity 2. Therefore s=2.</p>
+        <p>Naive guess would be \(Ae^{-t}\), multiply by t² to get:</p>
+        <div class="answer-box">\[y_p = At^2e^{-t}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 Resonance table: k not a root → y_p=Ae^{kt}. k is a simple root → y_p=Ate^{kt}. k is a double root → y_p=At²e^{kt}.</div>
+      <div class="note note-trap">Forgetting to check the multiplicity of the root. If k matches a root of multiplicity 2, the factor must be t², not t.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P7 -->
+<div class="problem" id="e2p7">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P7</span>
+    <span class="problem-title">Convert Scalar ODE to First-Order System</span>
+    <span class="topic-tag tag-system">Systems</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Find matrix A such that \(y''+3y'+2y=0\) is equivalent to \(x'(t)=Ax(t)\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Companion matrix / state-space form.</p>
+      <div class="note note-lecture">Your notes Chapter 9 example: "Let x₁=y, x₂=y'. x₁'=x₂, x₂'=y''=..." Then write as [x₁,x₂]'=A[x₁,x₂].</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Define state variables</div>
+        <p>Let \(x_1=y,\;x_2=y'\). Then:</p>
+        <div class="math-block">
+          \[x_1'=y'=x_2\]
+          \[x_2'=y''=-2y-3y'=-2x_1-3x_2\]
+        </div>
+        <div class="answer-box">\[A=\begin{bmatrix}0&1\\-2&-3\end{bmatrix}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>For 3rd order:</strong> Add x₃=y''. x₃'=y'''=−ay−by'−cy'' = pattern reading coefficients in reverse with negative signs.</div>
+      <div class="note note-trap">The companion matrix for y''+py'+qy=0 is always [[0, 1], [−q, −p]]. Students often put coefficients in the wrong order or wrong sign.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E2 P8 -->
+<div class="problem" id="e2p8">
+  <div class="problem-header">
+    <span class="problem-num">E2 · P8</span>
+    <span class="problem-title">Solve IVP Using Fundamental Matrix</span>
+    <span class="topic-tag tag-system">Systems</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Given fundamental matrix \(X(t)=\begin{bmatrix}e^t&te^t\\0&e^t\end{bmatrix}\) and \(x(0)=\begin{bmatrix}1\\1\end{bmatrix}\), find \(x(1)\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Using the fundamental matrix to solve IVPs.</p>
+      <div class="note note-lecture">Key formula: \(x(t)=X(t)X(0)^{-1}x(0)\). First evaluate X at t=0, invert it, then multiply.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Evaluate X(0)</div>
+        <div class="math-block">\[X(0)=\begin{bmatrix}1&0\\0&1\end{bmatrix}=I\implies X(0)^{-1}=I\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Solve for x(t)</div>
+        <div class="math-block">\[x(t)=X(t)\cdot I\cdot x(0)=X(t)\begin{bmatrix}1\\1\end{bmatrix}=\begin{bmatrix}e^t+te^t\\e^t\end{bmatrix}=e^t\begin{bmatrix}1+t\\1\end{bmatrix}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Evaluate at t=1</div>
+        <div class="answer-box">\[x(1)=e\begin{bmatrix}2\\1\end{bmatrix}=\begin{bmatrix}2e\\e\end{bmatrix}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>If X(0) ≠ I:</strong> Must compute X(0)^{−1} explicitly, then x(t)=X(t)X(0)^{-1}x(0). The vector c=X(0)^{-1}x(0) contains the constants c₁,c₂.</div>
+      <div class="note note-trap">Checking that x(t) solves x'=Ax AND satisfies x(0)=[1,1]^T. Verify x(0)=X(0)·c=I·[1,1]^T=[1,1]^T. ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================ EXAM 3 ================================================ -->
+<div class="exam-header" id="exam3">
+  <h2>Past Exam 3 — 9 Problems</h2>
+  <p>Proofs · Abstract Linear Algebra · Higher-Order ODE · Generalized Eigenvectors · Fourier · SVD</p>
+</div>
+
+<!-- E3 P1 -->
+<div class="problem" id="e3p1">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P1</span>
+    <span class="problem-title">If A² = 0: Col A ⊆ Nul A, and rank ≤ n/2</span>
+    <span class="topic-tag tag-proof">Proof</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let A be n×n with \(A^2=0\). (a) Show Col A ⊆ Nul A. (b) Show rank A ≤ n/2.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Column space, null space, rank-nullity (Ch. 4).</p>
+      <div class="note note-lecture">Your notes: "Col(A) = set of all outputs Ax. Ker(A) = solutions to Ax=0. Rank+Nullity=n."</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Col A ⊆ Nul A</div>
+        <p>Take any \(\mathbf{y}\in\mathrm{Col}(A)\). Then \(\mathbf{y}=A\mathbf{x}\) for some \(\mathbf{x}\).</p>
+        <p>Compute: \(A\mathbf{y}=A(A\mathbf{x})=A^2\mathbf{x}=\mathbf{0}\mathbf{x}=\mathbf{0}\).</p>
+        <div class="answer-box">So \(\mathbf{y}\in\mathrm{Nul}(A)\), proving Col A ⊆ Nul A. \(\square\)</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — rank A ≤ n/2</div>
+        <p>From part (a): \(\dim(\mathrm{Col}\,A)\le\dim(\mathrm{Nul}\,A)\), i.e., \(\mathrm{rank}(A)\le\mathrm{nullity}(A)\).</p>
+        <p>By Rank-Nullity: \(\mathrm{rank}(A)+\mathrm{nullity}(A)=n\).</p>
+        <p>Substituting: \(\mathrm{rank}(A)\le n-\mathrm{rank}(A)\implies 2\,\mathrm{rank}(A)\le n\).</p>
+        <div class="answer-box">\(\mathrm{rank}(A)\le n/2\). \(\square\)</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "Can rank A = n/2?" Yes — example: n=2, A=[0 1; 0 0], A²=0, rank=1=n/2.</div>
+      <div class="note note-trap">Part (b) requires both an inequality AND the rank-nullity theorem. Don't forget to use rank+nullity=n to connect them.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P2 -->
+<div class="problem" id="e3p2">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P2</span>
+    <span class="problem-title">Antisymmetric Transformation: Eigenvalue, Kernel, and Matrix Proofs</span>
+    <span class="topic-tag tag-proof">Proof</span>
+    <span class="topic-tag tag-linalg">Lin. Trans.</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(T:\mathbb{R}^n\to\mathbb{R}^n\) satisfy \(T(\mathbf{v})\cdot\mathbf{u}=-\mathbf{v}\cdot T(\mathbf{u})\) for all u,v.
+      (a) If λ is a real eigenvalue, λ=0. (b) Nul T = Range(T)⊥. (c) Matrix A of T satisfies A^T=−A.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Abstract linear algebra proofs using inner products.</p>
+      <div class="note note-lecture">Your notes: "Orthogonality: u·v=0. Img(T)=column span. Ker(T)=null space. If Ker(T)={0} then injective." The orthogonal complement is defined in Ch. 6.</div>
+      <div class="note note-missing">The concept of an "antisymmetric" (skew-symmetric) transformation is not in your notes. The property T(v)·u = −v·T(u) means T^T = −T (the matrix is skew-symmetric). Real eigenvalues of skew-symmetric matrices are always 0.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — Real eigenvalue must be 0</div>
+        <p>Suppose \(T\mathbf{v}=\lambda\mathbf{v}\) with \(\lambda\in\mathbb{R}\). Apply the property with u=v:</p>
+        <div class="math-block">\[T(\mathbf{v})\cdot\mathbf{v}=-\mathbf{v}\cdot T(\mathbf{v})\implies\lambda\|\mathbf{v}\|^2=-\lambda\|\mathbf{v}\|^2\implies 2\lambda\|\mathbf{v}\|^2=0\]</div>
+        <p>Since \(\mathbf{v}\neq\mathbf{0}\), we get \(\lambda=0\). \(\square\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Nul T = Range(T)⊥</div>
+        <p>Must show both containments.</p>
+        <p><strong>(⊆)</strong> Let \(\mathbf{v}\in\mathrm{Nul}(T)\), so T(v)=0. For any T(u)∈Range(T): \(\mathbf{v}\cdot T(\mathbf{u})=-T(\mathbf{v})\cdot\mathbf{u}=-0=0\). So v⊥Range(T).</p>
+        <p><strong>(⊇)</strong> Let v⊥Range(T), so v·T(u)=0 for all u. Then T(v)·u=−v·T(u)=0 for all u. Since u is arbitrary, T(v)=0, so v∈Nul T. \(\square\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (c) — A^T = −A</div>
+        <p>For any vectors u,v: \((A\mathbf{v})\cdot\mathbf{u}=\mathbf{v}^TA^T\mathbf{u}\) and \(-\mathbf{v}\cdot(A\mathbf{u})=-\mathbf{v}^TA\mathbf{u}\).</p>
+        <p>Since \((A\mathbf{v})\cdot\mathbf{u}=-\mathbf{v}\cdot(A\mathbf{u})\) holds for all u,v: \(\mathbf{v}^TA^T\mathbf{u}=-\mathbf{v}^TA\mathbf{u}\) for all u,v, which implies:</p>
+        <div class="answer-box">\(A^T=-A\). \(\square\)</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 Note that for symmetric matrices (A^T=A), eigenvectors from different eigenspaces are orthogonal. For skew-symmetric (A^T=−A), all real eigenvalues are zero — complex eigenvalues are purely imaginary.</div>
+      <div class="note note-trap">In part (a), the key step is T(v)·v = −v·T(v). Since T(v)·v = v·T(v) (dot product is commutative), this gives 2λ‖v‖²=0. Students forget that the dot product is symmetric.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P3 -->
+<div class="problem" id="e3p3">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P3</span>
+    <span class="problem-title">Show e^{At} is Orthogonal when A^T = −A</span>
+    <span class="topic-tag tag-proof">Proof</span>
+    <span class="topic-tag tag-system">Matrix Exp</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let A be a matrix with \(A^T=-A\). Show that \(e^{At}\) is an orthogonal matrix for any t.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Matrix exponential; orthogonal matrices.</p>
+      <div class="note note-lecture">Your notes: "Orthogonal matrix: U^{-1}=U^T, det U = ±1." You need to show (e^{At})^T(e^{At})=I.</div>
+      <div class="note note-missing">Key facts needed: (1) \((e^{At})^T = e^{A^Tt}\) (transpose of matrix exponential). (2) Since A and −A commute, \(e^{At}e^{-At}=e^0=I\). These properties of the matrix exponential are standard Berkeley results.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Show (e^{At})^T e^{At} = I</div>
+        <p>Use the property \((e^{At})^T=e^{A^Tt}\):</p>
+        <div class="math-block">\[(e^{At})^T\cdot e^{At}=e^{A^Tt}\cdot e^{At}=e^{-At}\cdot e^{At}=e^{(-A+A)t}=e^0=I\]</div>
+        <p>The key step \(e^{-At}e^{At}=e^0\) holds because \(-A\) and \(A\) commute (their product is \(-A^2=A(-A)\), same either way).</p>
+        <div class="answer-box">\((e^{At})^T=\left(e^{At}\right)^{-1}\), so \(e^{At}\) is orthogonal for all t. \(\square\)</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Connection:</strong> This is why rotation matrices are orthogonal — the generators of rotations (angular velocity matrices) are skew-symmetric.</div>
+      <div class="note note-trap">The property e^{X}e^{Y}=e^{X+Y} only holds when X and Y commute! Here X=−At and Y=At commute since (−A)A=−A²=A(−A). Always verify commutativity first.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P4 -->
+<div class="problem" id="e3p4">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P4</span>
+    <span class="problem-title">IVP: 3rd-Order ODE (Non-Homogeneous)</span>
+    <span class="topic-tag tag-ode">ODE</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Solve \(y'''-y''+y'-y=e^x,\quad y(0)=0,\;y'(0)=1,\;y''(0)=1\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Higher-order ODE with IVP (Chapter 4).</p>
+      <div class="note note-lecture">Your notes show 3rd-order examples: "Let x₁=y, x₂=y', x₃=y''." Characteristic equation factored. Particular solution by undetermined coefficients.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Step 1 — Factor Characteristic Equation</div>
+        <div class="math-block">
+          \[r^3-r^2+r-1=r^2(r-1)+(r-1)=(r^2+1)(r-1)=0\]
+          \[r_1=1,\quad r_{2,3}=\pm i\]
+        </div>
+        <div class="math-block">\[y_h=c_1e^x+c_2\cos x+c_3\sin x\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 2 — Particular Solution</div>
+        <p>RHS = \(e^x\), k=1. But r=1 is a root (multiplicity 1), so s=1. Guess: \(y_p=Axe^x\).</p>
+        <div class="math-block">
+          \[y_p'=A(1+x)e^x,\quad y_p''=A(2+x)e^x,\quad y_p'''=A(3+x)e^x\]
+        </div>
+        <p>Substitute and collect:</p>
+        <div class="math-block">
+          \[A[(3+x)-(2+x)+(1+x)-x]e^x=e^x\implies A[2]e^x=e^x\implies A=\tfrac12\]
+        </div>
+        <div class="math-block">\[y_p=\tfrac{x}{2}e^x\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 3 — Apply IVP</div>
+        <div class="math-block">\[y(x)=c_1e^x+c_2\cos x+c_3\sin x+\tfrac{x}{2}e^x\]</div>
+        <p><strong>y(0)=0:</strong> \(c_1+c_2=0\)</p>
+        <p><strong>y'(0)=1:</strong> \(y'=c_1e^x-c_2\sin x+c_3\cos x+\frac12e^x+\frac x2e^x\) → \(c_1+c_3+\frac12=1\implies c_1+c_3=\frac12\)</p>
+        <p><strong>y''(0)=1:</strong> \(y''=c_1e^x-c_2\cos x-c_3\sin x+e^x+\frac x2e^x\) → \(c_1-c_2+1=1\implies c_1=c_2\)</p>
+        <p>From c₁=c₂ and c₁+c₂=0: \(c_1=c_2=0\). From c₁+c₃=1/2: \(c_3=\tfrac12\).</p>
+        <div class="answer-box">\[y(x)=\tfrac{1}{2}\sin x+\tfrac{x}{2}e^x=\tfrac{1}{2}(\sin x+xe^x)\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="note note-trap">When the RHS matches a homogeneous solution, multiply by t (or t² for double roots) BEFORE substituting. If you forget this and use y_p=Ae^x, you'll get 0=1 when plugging in — a contradiction that signals resonance.</div>
+      <div class="note note-verify">Check: at x=0, y=0 ✓; y'=(1/2)cos(0)+(1/2)(e^0+0)=1/2+1/2=1 ✓; y''=−(1/2)sin(0)+e^0=0+1=1 ✓.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P5 -->
+<div class="problem" id="e3p5">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P5</span>
+    <span class="problem-title">Wronskian ≠ 0 Implies Linear Independence</span>
+    <span class="topic-tag tag-proof">Proof</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Prove: if \(W[f,g](x_0)\neq 0\) for some \(x_0\), then f and g are linearly independent.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Wronskian test (Chapter 4/9).</p>
+      <div class="note note-lecture">Your notes show the Wronskian formula and state "W≠0 → linearly independent" with examples. This problem asks you to prove it by contrapositive.</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution (by Contrapositive)</div>
+
+      <div class="step">
+        <div class="step-label">Proof by contrapositive: if LI fails, then W=0 everywhere</div>
+        <p>Suppose f and g are linearly dependent. Then there exist constants c₁,c₂ (not both 0) such that \(c_1f(x)+c_2g(x)=0\) for all x. Differentiating: \(c_1f'(x)+c_2g'(x)=0\) for all x.</p>
+        <p>This means \(\begin{bmatrix}f(x)&g(x)\\f'(x)&g'(x)\end{bmatrix}\begin{bmatrix}c_1\\c_2\end{bmatrix}=\begin{bmatrix}0\\0\end{bmatrix}\) has a nontrivial solution at every x.</p>
+        <p>Therefore the matrix is singular at every x, so \(W[f,g](x)=\det\begin{bmatrix}f&g\\f'&g'\end{bmatrix}=0\) for all x — including x=x₀.</p>
+        <div class="answer-box">Contrapositive: LD ⟹ W=0 everywhere. Equivalently: W(x₀)≠0 ⟹ f and g are linearly independent. \(\square\)</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Important caveat:</strong> W=0 everywhere does NOT imply LD for arbitrary functions (only for solutions of ODEs with continuous coefficients). This subtlety sometimes appears on exams.</div>
+      <div class="note note-trap">Don't try to prove this directly — the contrapositive ("LD ⟹ W≡0") is much cleaner. Direct proof requires showing nonzero W implies no nontrivial c₁,c₂ exist, which is harder to write cleanly.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P6 -->
+<div class="problem" id="e3p6">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P6</span>
+    <span class="problem-title">Fundamental Matrix for x'=Ax (Real Distinct Eigenvalues)</span>
+    <span class="topic-tag tag-system">Systems</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Find the fundamental matrix for \(x'(t)=\begin{bmatrix}3&4\\4&3\end{bmatrix}x(t)\).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p>Same technique as Exam 1 P7 — eigenvalue method.</p>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Eigenvalues</div>
+        <div class="math-block">\[\det(A-rI)=(3-r)^2-16=r^2-6r-7=(r-7)(r+1)=0\implies r_1=7,\;r_2=-1\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Eigenvectors</div>
+        <p><strong>r₁=7:</strong> \(A-7I=\begin{bmatrix}-4&4\\4&-4\end{bmatrix}\to\mathbf{u}_1=\begin{bmatrix}1\\1\end{bmatrix}\)</p>
+        <p><strong>r₂=−1:</strong> \(A+I=\begin{bmatrix}4&4\\4&4\end{bmatrix}\to\mathbf{u}_2=\begin{bmatrix}1\\-1\end{bmatrix}\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Fundamental Matrix</div>
+        <div class="answer-box">\[X(t)=\begin{bmatrix}e^{7t}&e^{-t}\\e^{7t}&-e^{-t}\end{bmatrix}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Verify it's a fundamental matrix:</strong> det(X(t)) = −e^{7t}e^{-t} − e^{7t}e^{-t} = −2e^{6t} ≠ 0 for all t. ✓ (Wronskian nonzero → columns are LI solutions.)</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P7 -->
+<div class="problem" id="e3p7">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P7</span>
+    <span class="problem-title">Generalized Eigenvectors and General Solution (Repeated Eigenvalue)</span>
+    <span class="topic-tag tag-system">Systems</span>
+    <span class="topic-tag tag-eigen">Generalized Eigenvec.</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      \(A=\begin{bmatrix}1&1&1\\0&1&1\\0&0&1\end{bmatrix}\).
+      (a) Find eigenvalues and generalized eigenvector basis. (b) General solution of x'(t)=Ax(t).
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Jordan chain / generalized eigenvectors for repeated eigenvalues.</p>
+      <div class="note note-missing">Generalized eigenvectors are NOT in your lecture notes. This is a critical [MISSING FROM NOTES] technique. When an eigenvalue λ has algebraic multiplicity k but geometric multiplicity &lt; k, you need a Jordan chain: v₁ is the eigenvector (Av₁=λv₁), then find v₂ such that (A−λI)v₂=v₁, then v₃ with (A−λI)v₃=v₂, etc. The solutions to x'=Ax are then e^{λt}v₁, e^{λt}(tv₁+v₂), e^{λt}(t²v₁/2!+tv₂+v₃).</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Eigenvalue: λ=1 (multiplicity 3)</div>
+        <div class="math-block">\[A-I=\begin{bmatrix}0&1&1\\0&0&1\\0&0&0\end{bmatrix}\xrightarrow{\text{RREF}}\begin{bmatrix}0&1&0\\0&0&1\\0&0&0\end{bmatrix}\]</div>
+        <p>Free: x₁. From RREF: x₂=0, x₃=0. Only one eigenvector: \(\mathbf{v}_1=\begin{bmatrix}1\\0\\0\end{bmatrix}\).</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Generalized eigenvector v₂: solve (A−I)v₂ = v₁</div>
+        <div class="math-block">\[\begin{bmatrix}0&1&1\\0&0&1\\0&0&0\end{bmatrix}\begin{bmatrix}a\\b\\c\end{bmatrix}=\begin{bmatrix}1\\0\\0\end{bmatrix}\implies c=0,\;b+c=1\implies b=1\]</div>
+        <p>Pick a=0: \(\mathbf{v}_2=\begin{bmatrix}0\\1\\0\end{bmatrix}\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Generalized eigenvector v₃: solve (A−I)v₃ = v₂</div>
+        <div class="math-block">\[\begin{bmatrix}0&1&1\\0&0&1\\0&0&0\end{bmatrix}\begin{bmatrix}a\\b\\c\end{bmatrix}=\begin{bmatrix}0\\1\\0\end{bmatrix}\implies c=1,\;b+c=0\implies b=-1\]</div>
+        <p>Pick a=0: \(\mathbf{v}_3=\begin{bmatrix}0\\-1\\1\end{bmatrix}\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — General Solution</div>
+        <div class="math-block">
+          \[\mathbf{x}_1(t)=e^t\mathbf{v}_1=e^t\begin{bmatrix}1\\0\\0\end{bmatrix}\]
+          \[\mathbf{x}_2(t)=e^t(t\mathbf{v}_1+\mathbf{v}_2)=e^t\begin{bmatrix}t\\1\\0\end{bmatrix}\]
+          \[\mathbf{x}_3(t)=e^t\!\left(\tfrac{t^2}{2}\mathbf{v}_1+t\mathbf{v}_2+\mathbf{v}_3\right)=e^t\begin{bmatrix}t^2/2\\t-1\\1\end{bmatrix}\]
+        </div>
+        <div class="answer-box">\[\mathbf{x}(t)=c_1e^t\begin{bmatrix}1\\0\\0\end{bmatrix}+c_2e^t\begin{bmatrix}t\\1\\0\end{bmatrix}+c_3e^t\begin{bmatrix}t^2/2\\t-1\\1\end{bmatrix}\]</div>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Jordan chain pattern:</strong> For a Jordan block of size k with eigenvalue λ, the solutions are e^{λt}v₁, e^{λt}(tv₁+v₂), ..., e^{λt}(t^{k-1}/(k-1)!·v₁+...+v_k).</div>
+      <div class="note note-trap">The generalized eigenvector equations must be solved in order: first v₁ (eigenvector), then (A−λI)v₂=v₁, then (A−λI)v₃=v₂. You cannot skip a level.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P8 -->
+<div class="problem" id="e3p8">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P8</span>
+    <span class="problem-title">Fourier Sine Series for f(x) = x² on [0,π]</span>
+    <span class="topic-tag tag-fourier">Fourier</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Compute the Fourier sine series for \(f(x)=x^2\) on \([0,\pi]\). Does it converge to f(x)?
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> Half-range Fourier sine series (Chapter 10).</p>
+      <div class="note note-lecture">Your notes: "Pretend function is odd by extending to (−π,π). Only bₙ needed. Use factor of 2/L instead of 1/L, but integrate over [0,π] only."</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Compute bₙ (integration by parts, twice)</div>
+        <div class="math-block">
+          \[b_n=\frac{2}{\pi}\int_0^\pi x^2\sin(nx)\,dx\]
+        </div>
+        <p><strong>IBP 1:</strong> u=x², dv=sin(nx)dx → du=2x dx, v=−cos(nx)/n</p>
+        <div class="math-block">
+          \[=\frac{2}{\pi}\left[\frac{-x^2\cos(nx)}{n}\bigg|_0^\pi+\frac{2}{n}\int_0^\pi x\cos(nx)\,dx\right]=\frac{2}{\pi}\cdot\frac{-\pi^2(-1)^n}{n}+\frac{4}{n\pi}\int_0^\pi x\cos(nx)\,dx\]
+        </div>
+        <p><strong>IBP 2:</strong> \(\int_0^\pi x\cos(nx)dx=\left[\frac{x\sin(nx)}{n}\right]_0^\pi-\frac{1}{n}\int_0^\pi\sin(nx)dx=0+\frac{1}{n^2}[\cos(nx)]_0^\pi=\frac{(-1)^n-1}{n^2}\)</p>
+        <div class="math-block">
+          \[b_n=\frac{-2\pi(-1)^n}{n}+\frac{4((-1)^n-1)}{n^3\pi}\]
+        </div>
+        <p>For <strong>even n</strong>: \(b_n=\dfrac{-2\pi}{n}\). For <strong>odd n</strong>: \(b_n=\dfrac{2\pi}{n}-\dfrac{8}{n^3\pi}\).</p>
+        <div class="answer-box">
+          \[x^2\sim\sum_{n=1}^\infty b_n\sin(nx)\quad\text{on }[0,\pi]\]
+          <p>Since f(x)=x² is continuous on [0,π] and f(0)=0=f(π)... wait, f(π)=π²≠0, so at x=π the odd extension has a jump. The series converges to x² for x∈(0,π), and to 0 at x=0 and x=π (midpoints of the jumps).</p>
+        </div>
+        <p><strong>Convergence:</strong> The series converges to f(x)=x² for all x∈(0,π) since f is continuous there. At the endpoints (jump discontinuities of the odd extension), it converges to 0 ≠ f(π)=π².</p>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Cosine series:</strong> Even extension, only aₙ needed. bₙ=0. The cosine series converges to x² even at the endpoints since f(0)=0 and f(π)=π² matches the even extension.</div>
+      <div class="note note-trap">Half-range formulas: for sine series bₙ = (2/L)∫₀ᴸ f(x)sin(nπx/L)dx. When L=π, this simplifies to (2/π)∫₀^π f(x)sin(nx)dx. The extra factor of 2 vs. the full-range formula is critical.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E3 P9 -->
+<div class="problem" id="e3p9">
+  <div class="problem-header">
+    <span class="problem-num">E3 · P9</span>
+    <span class="problem-title">SVD of A = [1 1; 2 1; 1 2] + Best Rank-1 Approximation</span>
+    <span class="topic-tag tag-svd">SVD</span>
+  </div>
+  <div class="problem-body">
+    <div class="problem-stmt">
+      Let \(A=\begin{bmatrix}1&1\\2&1\\1&2\end{bmatrix}\). (a) Find the SVD. (b) Find the best rank-1 approximation.
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-bridge">1 · Conceptual Bridge</div>
+      <p><strong>Topic:</strong> SVD (Chapter 7). Same algorithm as E1·P4.</p>
+      <div class="note note-lecture">Your notes: "Best rank-1 approximation = σ₁u₁v₁^T" (first term of the spectral decomposition via SVD).</div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-solution">2 · Step-by-Step Solution</div>
+
+      <div class="step">
+        <div class="step-label">Step 1 — Compute A^T A</div>
+        <div class="math-block">
+          \[A^TA=\begin{bmatrix}1&2&1\\1&1&2\end{bmatrix}\begin{bmatrix}1&1\\2&1\\1&2\end{bmatrix}=\begin{bmatrix}6&5\\5&6\end{bmatrix}\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 2 — Eigenvalues of A^T A</div>
+        <div class="math-block">
+          \[\det(A^TA-\lambda I)=(6-\lambda)^2-25=\lambda^2-12\lambda+11=(\lambda-11)(\lambda-1)=0\]
+        </div>
+        <p>\(\lambda_1=11,\;\lambda_2=1\). Singular values: \(\sigma_1=\sqrt{11},\;\sigma_2=1\).</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 3 — V (eigenvectors of A^T A)</div>
+        <p>For \(\lambda_1=11\): \(\begin{bmatrix}-5&5\\5&-5\end{bmatrix}\to\mathbf{v}_1=\tfrac{1}{\sqrt2}\begin{bmatrix}1\\1\end{bmatrix}\)</p>
+        <p>For \(\lambda_2=1\): \(\begin{bmatrix}5&5\\5&5\end{bmatrix}\to\mathbf{v}_2=\tfrac{1}{\sqrt2}\begin{bmatrix}1\\-1\end{bmatrix}\)</p>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Step 4 — U: u_i = (1/σ_i)Av_i</div>
+        <div class="math-block">
+          \[\mathbf{u}_1=\frac{1}{\sqrt{11}}\cdot\frac{1}{\sqrt2}\begin{bmatrix}2\\3\\3\end{bmatrix}=\frac{1}{\sqrt{22}}\begin{bmatrix}2\\3\\3\end{bmatrix}\]
+          \[\mathbf{u}_2=1\cdot\frac{1}{\sqrt2}\begin{bmatrix}0\\1\\-1\end{bmatrix}=\frac{1}{\sqrt2}\begin{bmatrix}0\\1\\-1\end{bmatrix}\]
+        </div>
+        <p>For \(\mathbf{u}_3\) (complete U to 3×3), use cross product of numerator vectors \([2,3,3]\) and \([0,1,-1]\):</p>
+        <div class="math-block">\[[2,3,3]\times[0,1,-1]=[-6,2,2]\implies\mathbf{u}_3=\frac{1}{\sqrt{44}}\begin{bmatrix}-6\\2\\2\end{bmatrix}=\frac{1}{\sqrt{11}}\begin{bmatrix}-3\\1\\1\end{bmatrix}\]</div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (a) — SVD</div>
+        <div class="answer-box">
+          \[U=\begin{bmatrix}\frac{2}{\sqrt{22}}&0&\frac{-3}{\sqrt{11}}\\\frac{3}{\sqrt{22}}&\frac{1}{\sqrt2}&\frac{1}{\sqrt{11}}\\\frac{3}{\sqrt{22}}&\frac{-1}{\sqrt2}&\frac{1}{\sqrt{11}}\end{bmatrix},\quad\Sigma=\begin{bmatrix}\sqrt{11}&0\\0&1\\0&0\end{bmatrix},\quad V=\begin{bmatrix}\frac{1}{\sqrt2}&\frac{1}{\sqrt2}\\\frac{1}{\sqrt2}&\frac{-1}{\sqrt2}\end{bmatrix}\]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-label">Part (b) — Best Rank-1 Approximation</div>
+        <div class="math-block">
+          \[A_1=\sigma_1\mathbf{u}_1\mathbf{v}_1^T=\sqrt{11}\cdot\frac{1}{\sqrt{22}}\begin{bmatrix}2\\3\\3\end{bmatrix}\cdot\frac{1}{\sqrt2}\begin{bmatrix}1&1\end{bmatrix}=\frac{1}{2}\begin{bmatrix}2&2\\3&3\\3&3\end{bmatrix}\]
+        </div>
+        <div class="answer-box">\[A_1=\begin{bmatrix}1&1\\\frac{3}{2}&\frac{3}{2}\\\frac{3}{2}&\frac{3}{2}\end{bmatrix}\]</div>
+        <p>This is the closest rank-1 matrix to A in the Frobenius norm sense.</p>
+      </div>
+    </div>
+
+    <div class="fw-section">
+      <div class="fw-label label-curveball">3 · Curveball Insurance</div>
+      <div class="variation">🔀 <strong>Variation:</strong> "What is the condition number?" σ₁/σₙ = √11/1 = √11 (for a square matrix; A here is 3×2 so it's not defined by this formula, but for square matrices it measures sensitivity to perturbations).</div>
+      <div class="note note-trap">The best rank-1 approximation uses σ₁ (the LARGEST singular value), not σ₂. Also, u₁v₁^T produces a 3×2 matrix — double-check dimensions match A.</div>
+      <div class="note note-verify">Check: u₁^T u₁ = (4+9+9)/22 = 22/22 = 1. ✓ u₂^T u₂ = (0+1+1)/2 = 1. ✓ u₁^T u₂ = (0+3−3)/(√22·√2)=0. ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE FOOTER -->
+<div style="margin-top:3rem; padding:1.5rem; background:var(--surface2); border:1px solid var(--border); border-radius:6px; border-top:3px solid var(--gold);">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:0.7rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:1rem;">Quick Reference — Key Formulas</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; font-size:0.85rem;">
+    <div>
+      <strong style="color:var(--cream);">Eigenvalues/SVD</strong><br>
+      • det(A−λI)=0 for eigenvalues<br>
+      • SVD: A=UΣV^T; σᵢ=√(λᵢ of A^TA)<br>
+      • Best rank-k approx: Σ σᵢuᵢvᵢ^T
+    </div>
+    <div>
+      <strong style="color:var(--cream);">ODE Particular Solutions</strong><br>
+      • e^{kt}: multiply by t^s where s=multiplicity of k as root<br>
+      • sin/cos: guess A sin+B cos (s from α+iβ being a root)<br>
+      • General = homogeneous + particular
+    </div>
+    <div>
+      <strong style="color:var(--cream);">Fourier Series (L=π)</strong><br>
+      • a₀/2 + Σ aₙcos(nx)+bₙsin(nx)<br>
+      • Sine series: bₙ=(2/π)∫₀^π f sin(nx)dx<br>
+      • Dirichlet: jump → converge to midpoint
+    </div>
+    <div>
+      <strong style="color:var(--cream);">Key Theorems</strong><br>
+      • Rank+Nullity=n<br>
+      • A diagonalizable ↔ n LI eigenvectors<br>
+      • Symmetric → orthogonally diagonalizable
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+</body>
+</html>
