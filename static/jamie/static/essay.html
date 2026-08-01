@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collegewise Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0b2754;
+      --navy-dark: #071b3a;
+      --navy-mid:  #3d87bd;
+      --gold:      #f5a623;
+      --gold-dark: #d4891a;
+      --bg:        #f0f4f8;
+      --card:      #ffffff;
+      --text:      #1e2d45;
+      --muted:     #5a7080;
+      --border:    #dde4ed;
+      --pill-text: #1a3d6e;
+    }
+
+    body {
+      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── TOP NAVBAR ──────────────────────────────────────────── */
+    .navbar {
+      background: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      min-height: 64px;
+      border-bottom: 1px solid var(--border);
+      gap: 0;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      height: 64px;
+    }
+    .navbar-logo {
+      width: 46px;
+      height: 46px;
+      background: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .navbar-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--navy-dark);
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .navbar-link:hover {
+      background: rgba(11,39,84,0.05);
+      border-color: var(--navy-dark);
+    }
+    .navbar-link svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    /* ── CATEGORY PILLS ──────────────────────────────────────── */
+    .pill-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      height: 64px;
+      flex: 1 1 auto;
+      justify-content: flex-end;
+    }
+    .pill-bar::-webkit-scrollbar { display: none; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.7);
+      background: rgba(0,0,0,0.07);
+      border: 1px solid transparent;
+      cursor: default;
+      transition: background 0.12s, color 0.12s;
+      text-decoration: none;
+    }
+    .pill:hover, .pill.active {
+      background: var(--gold);
+      color: var(--navy-dark);
+      border-color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ── MAIN CONTENT ────────────────────────────────────────── */
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── SECTION HEADER ──────────────────────────────────────── */
+    .section-title {
+      font-family: 'Open Sans', serif;
+      font-size: 1.9rem;
+      color: var(--navy);
+      margin-bottom: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+    .section { margin-bottom: 4rem; }
+
+    /* ── VIDEO GRID ──────────────────────────────────────────── */
+    .video-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .video-card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(11,39,84,0.06);
+    }
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: var(--navy-dark);
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-label {
+      padding: 0.75rem 1.1rem;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .video-label-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ── PDF GRID ────────────────────────────────────────────── */
+    .pdf-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .pdf-card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(11,39,84,0.06);
+    }
+    .pdf-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pdf-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #e4ecf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pdf-icon svg { width: 14px; height: 14px; color: var(--navy); }
+    .pdf-header h3 {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: 0.005em;
+    }
+    .pdf-wrapper {
+      position: relative;
+      padding-bottom: 70%;
+      height: 0;
+      overflow: hidden;
+    }
+    .pdf-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .navbar { padding: 0 1rem; }
+      .page { padding: 2rem 1.25rem 4rem; }
+      .pill-bar {
+        width: 100%;
+        height: 48px;
+        justify-content: flex-start;
+        border-top: 1px solid var(--border);
+        padding: 0 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <div class="navbar-logo">
+        <img src="https://collegewise.com/hubfs/collegewise-logo-100-100%20(1).svg" alt="Collegewise Logo" style="width: 100%; height: 100%;">
+      </div>
+      <a href="https://collegewise.com/blog" class="navbar-link" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Visit Collegewise Blog
+      </a>
+    </div>
+    <div class="pill-bar">
+      <a href="#videos" class="pill active">Essay Writing</a>
+      <a href="#common-app-guide" class="pill">Common App</a>
+      <a href="#uc-app-guide" class="pill">UC Application</a>
+      <a href="#bootcamp-handbook" class="pill">Bootcamp</a>
+    </div>
+  </nav>
+  <main class="page">
+
+    <!-- VIDEOS -->
+    <section class="section" id="videos">
+      <h2 class="section-title">Essay Writing Videos</h2>
+      <div class="video-stack">
+
+        <div class="video-card">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/a_TKXD5sVnk"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-label"><span class="video-label-dot"></span>Getting Started with Your College Essay</div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/xChsPhjl1ac"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-label"><span class="video-label-dot"></span>Essay Principle 1: Don't try to impress</div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/udYRs_iD5qU"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-label"><span class="video-label-dot"></span>Essay Principle 2: Own your story</div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/CY7iiyRKVFk"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-label"><span class="video-label-dot"></span>Essay Principle 3: Don't repeat information</div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/dkfPL2QxnZU"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="video-label"><span class="video-label-dot"></span>Essay Principle 4: Sound like you</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PDFS -->
+    <section class="section" id="pdfs">
+      <h2 class="section-title">Strategy Guides &amp; Handbooks</h2>
+      <div class="pdf-stack">
+
+        <div class="pdf-card" id="common-app-guide">
+          <div class="pdf-header">
+            <div class="pdf-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <h3>Common App Guide</h3>
+          </div>
+          <div class="pdf-wrapper">
+            <iframe src="https://jamiecheung.site/common-app-guide.pdf?t=1781747701793" loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <div class="pdf-card" id="uc-app-guide">
+          <div class="pdf-header">
+            <div class="pdf-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <h3>UC App Guide</h3>
+          </div>
+          <div class="pdf-wrapper">
+            <iframe src="https://jamiecheung.site/uc-app-guide.pdf?t=1781747752754" loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <div class="pdf-card" id="bootcamp-handbook">
+          <div class="pdf-header">
+            <div class="pdf-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <h3>Bootcamp Handbook</h3>
+          </div>
+          <div class="pdf-wrapper">
+            <iframe src="https://jamiecheung.site/bootcamp-handbook.pdf?t=1781747771776" loading="lazy"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

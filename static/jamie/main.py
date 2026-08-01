@@ -454,6 +454,10 @@ def home():
 def edit_route():
     return render_template_string(EDITOR_HTML, csrf_token=generate_csrf())
 
+@app.route("/essay")
+def essay():
+    return app.send_static_file("essay.html")
+
 def get_static_files():
     files = []
     total_size = 0
