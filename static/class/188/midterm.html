@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CS 188 Midterm Study Guide</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
+</script>
+<style>
+  body {
+    /* Uses SF Pro / New York system fonts */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1d1d1f;          /* Apple's standard primary text color */
+    background-color: #fbfbfd; /* Apple's soft light background */
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+    max-width: 680px;
+    margin: 60px auto;
+    padding: 0 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings with tighter tracking and weights */
+  h1, h2, h3, h4 {
+    color: #000000;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+  }
+
+  h1 { font-size: 2.25em; }
+  h2 { font-size: 1.5em; border-bottom: 1px solid #e8e8ed; padding-bottom: 0.3em; }
+  h3 { font-size: 1.25em; }
+
+  /* Links with Apple's distinct blue */
+  a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  p, li {
+    color: #515154; /* Slightly softer gray for body prose */
+  }
+
+  /* Inline Code */
+  code {
+    font-family: "SF Mono", SFMono-Regular, ui-monospace, Menlo, monospace;
+    background: #f5f5f7;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    color: #bf4040; /* Subtle brick-red tint often used for code inline */
+  }
+
+  /* Code Blocks */
+  pre {
+    background: #f5f5f7;
+    padding: 16px;
+    overflow-x: auto;
+    border-radius: 12px; /* Smooth, iOS-style rounded corners */
+    border: 1px solid #e8e8ed;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.9em;
+    color: #1d1d1f;
+  }
+
+  /* Math display blocks (same visual treatment as pre/code boxes) */
+  .math-block {
+    background: #f5f5f7;
+    padding: 16px;
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e8e8ed;
+    margin: 1em 0;
+    text-align: left;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3px solid #86868b;
+    margin: 2em 0;
+    padding-left: 18px;
+    color: #6e6e73;
+    font-style: normal;
+  }
+
+  /* Subtle styling for tables if your markdown has them */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2em 0;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e8e8ed;
+  }
+
+  th {
+    color: #000;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<h1 id="cs-188-midterm-study-guide">CS 188 Midterm Study Guide</h1>
+
+<h2 id="1-search">1. Search</h2>
+
+<h3 id="1-1-search-problem-components">1.1 Search Problem Components</h3>
+<p>A search problem = <strong>(states, actions, transition model, action cost, start state, goal test)</strong>.</p>
+<ul>
+<li><strong>World state</strong>: all information. <strong>Search state</strong>: only what's needed for planning (space efficiency).</li>
+<li><strong>State space size</strong>: use the <em>fundamental counting principle</em> — multiply the number of possibilities for each independent variable object (e.g., position × direction × ghost positions × food-boolean combos).</li>
+</ul>
+
+<h3 id="1-2-state-space-graphs-vs-search-trees">1.2 State Space Graphs vs. Search Trees</h3>
+<ul>
+<li><strong>State space graph</strong>: each state appears <strong>exactly once</strong>. Usually too big to store.</li>
+<li><strong>Search tree</strong>: each node = a <em>path</em> from start; states can repeat. Built on-demand via <code>getSuccessors</code>/actions/costs.</li>
+</ul>
+
+<h3 id="1-3-uninformed-search-properties-table">1.3 Uninformed Search — properties table</h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Fringe</th>
+<th>Complete?</th>
+<th>Optimal?</th>
+<th>Time</th>
+<th>Space</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DFS</strong></td>
+<td>Stack (LIFO)</td>
+<td>No (infinite branches/cycles)</td>
+<td>No</td>
+<td>\( O(b^m) \)</td>
+<td>\( O(bm) \)</td>
+</tr>
+<tr>
+<td><strong>BFS</strong></td>
+<td>Queue (FIFO)</td>
+<td>Yes</td>
+<td>Only if all costs equal</td>
+<td>\( O(b^s) \)</td>
+<td>\( O(b^s) \)</td>
+</tr>
+<tr>
+<td><strong>UCS</strong></td>
+<td>Priority queue by backward cost \(g(n)\)</td>
+<td>Yes</td>
+<td>Yes (costs \(\ge 0\))</td>
+<td>\( O(b^{C^*/\varepsilon}) \)</td>
+<td>\( O(b^{C^*/\varepsilon}) \)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>\(b\) = branching factor, \(m\) = max depth, \(s\) = depth of shallowest solution, \(C^*\) = optimal cost, \(\varepsilon\) = min edge cost.</li>
+<li><strong>Key pattern</strong>: if all costs = 1, UCS \(\equiv\) BFS.</li>
+<li><strong>Branching factor</strong> for "choose 2 of \(s\) items" type problems \(\approx O(s^2)\), not \(O(s)\).</li>
+<li>Multiple distinct paths to the same goal can exist even without repeated elements — order of operations differs.</li>
+</ul>
+
+<h3 id="1-4-informed-search">1.4 Informed Search</h3>
+<p><strong>Heuristic \(h(n)\)</strong>: estimate of cost from \(n\) to nearest goal. Usually derived from a <strong>relaxed problem</strong> (remove constraints, e.g. ignore walls → Manhattan/Euclidean distance).</p>
+<ul>
+<li><strong>Greedy search</strong>: priority = \(h(n)\) only. Fast but not complete/optimal.</li>
+<li><strong>A* search</strong>: priority = \(f(n) = g(n) + h(n)\) (backward + forward cost estimate). Complete &amp; optimal <strong>if heuristic is admissible</strong> (tree search) or <strong>consistent</strong> (graph search).</li>
+</ul>
+
+<p><strong>Admissibility</strong>: \( 0 \le h(n) \le h^*(n) \) for all \(n\) (never overestimates true cost to goal). Required for A* <strong>tree search</strong> optimality.</p>
+
+<p><strong>Consistency</strong>: \( h(n) \le \text{cost}(n, n') + h(n') \) for every edge (triangle inequality). Consistency \(\Rightarrow\) admissibility. Required for A* <strong>graph search</strong> optimality (an inconsistent-but-admissible heuristic keeps A* graph search <strong>complete</strong> but may lose <strong>optimality</strong>).</p>
+
+<p><strong>Combining heuristics</strong>: \( \max(h_1, h_2, \ldots) \) of admissible heuristics is admissible and dominates each individually. Sum of two admissible heuristics is generally <strong>not</strong> admissible (can double count).</p>
+
+<p><strong>Dominance</strong>: \(h_a\) dominates \(h_b\) if \( h_a(n) \ge h_b(n) \) for all \(n\) (both admissible). Bigger-but-still-admissible = better/faster.</p>
+
+<p><strong>Building admissible heuristics — common exam patterns:</strong></p>
+<ul>
+<li>Distance-based lower bounds (Manhattan, Euclidean, "furthest unvisited item," "count of unvisited items") are usually admissible if they under-count required steps.</li>
+<li>A heuristic that can be more than 1 unit away from the true "1 step to goal" cost while claiming a small gap is often admissible but <strong>not consistent</strong> — check by comparing heuristic drop vs. actual edge cost.</li>
+<li>Heuristics involving resources that aren't required to be depleted/full at the goal (e.g., "unused power cell count," "battery charge") are typically <strong>not admissible</strong> unless the goal test constrains that resource.</li>
+</ul>
+
+<h3 id="1-5-graph-search">1.5 Graph Search</h3>
+<p>Tree search + a <strong>reached/closed set</strong> to avoid re-expanding states. For A* graph search to stay optimal, you must re-expand/update a state if you find a <strong>cheaper</strong> path to it (check \( \text{reached}[state] > \text{new cost} \) before finalizing).</p>
+
+<h3 id="1-6-local-search-no-path-needed-just-the-goal-config-">1.6 Local Search (no path needed, just the goal config)</h3>
+<ul>
+<li><strong>Hill-climbing</strong>: move to best neighbor; incomplete (stuck at local maxima/plateaus/shoulders). Random-restart hill-climbing is complete.</li>
+<li><strong>Simulated annealing</strong>: allows "bad" moves with probability based on a decreasing temperature; converges to global max as \(T \to 0\) slowly.</li>
+<li><strong>Local beam search</strong>: tracks \(k\) states simultaneously, chooses best \(k\) successors from combined pool (not \(k\) independent hill-climbs).</li>
+<li><strong>Genetic algorithms</strong>: population + fitness-proportional selection + crossover + mutation.</li>
+</ul>
+
+<h2 id="2-constraint-satisfaction-problems-csps-">2. Constraint Satisfaction Problems (CSPs)</h2>
+
+<h3 id="2-1-definition">2.1 Definition</h3>
+<p>CSP = (Variables \(X_1, \ldots, X_n\), Domains, Constraints). Goal: assignment satisfying all constraints (an <strong>identification</strong> problem — no cost to minimize, order doesn't matter).</p>
+<ul>
+<li><strong>Unary constraint</strong>: involves 1 variable → pruned into domain directly, not drawn as an edge.</li>
+<li><strong>Binary constraint</strong>: involves 2 variables → edge in constraint graph.</li>
+<li><strong>Higher-order constraint</strong>: 3+ variables → drawn as a hyper-edge/shared node.</li>
+</ul>
+
+<h3 id="2-2-solving-backtracking-search">2.2 Solving: Backtracking Search</h3>
+<p>DFS + (1) fixed variable ordering, (2) only assign values consistent with existing assignments (fail fast).</p>
+
+<h3 id="2-3-filtering">2.3 Filtering</h3>
+<ul>
+<li><strong>Forward checking</strong>: after assigning \(X_i\), remove values from <strong>domains of unassigned neighbors</strong> that violate the constraint with \(X_i\)'s new value.</li>
+<li><strong>Arc consistency (AC-3)</strong>: for arc \(X_i \to X_j\), remove any value \(v\) in \(\text{Dom}(X_i)\) if there's <strong>no</strong> value \(w\) in \(\text{Dom}(X_j)\) making \((v,w)\) consistent. If you prune from \(X_i\), re-add all arcs \(X_k \to X_i\) \((k \ne j)\) to the queue. Runs until queue empty or a domain empties (triggers backtrack).
+<ul>
+<li><strong>Important asymmetry</strong>: arc \(A \to B\) consistent does NOT imply \(B \to A\) consistent — check both directions separately.</li>
+<li>AC-3 worst case: \( O(ed^3) \), \(e\) = #arcs, \(d\) = max domain size.</li>
+</ul>
+</li>
+<li>Forward checking = special case of enforcing arc consistency only on arcs into newly-assigned-adjacent variables (weaker than full AC-3).</li>
+</ul>
+
+<h3 id="2-4-ordering-heuristics">2.4 Ordering Heuristics</h3>
+<ul>
+<li><strong>MRV (Minimum Remaining Values)</strong>: pick the unassigned variable with the <strong>smallest domain</strong> next (fails fast).</li>
+<li><strong>LCV (Least Constraining Value)</strong>: pick the value that <strong>prunes the fewest options</strong> from neighbors' domains.</li>
+</ul>
+
+<h3 id="2-5-structure-exploitation">2.5 Structure Exploitation</h3>
+<ul>
+<li><strong>Tree-structured CSP</strong> (no cycles in constraint graph): solvable in <strong>\(O(nd^2)\)</strong> via:
+<ol>
+<li>Pick a root, orient edges away from root (topological order).</li>
+<li>Backward pass: enforce arc consistency \( \text{Parent}(X_i) \to X_i \) from last to first.</li>
+<li>Forward assignment: assign each \(X_i\) a value consistent with its parent, in topological order — guaranteed to succeed.</li>
+</ol>
+</li>
+<li><strong>Cutset conditioning</strong>: find smallest <strong>cutset</strong> (variable removal set) that makes remaining graph tree-structured. Try all \(d^c\) assignments to the cutset, solve the resulting tree CSP for each. Runtime: \( O(d^c (n-c) d^2) \).</li>
+<li>A CSP with \( \text{AllDiff}(X_1, \ldots, X_n) \) (all pairwise inequalities) → <strong>fully connected</strong> graph.</li>
+<li>A CSP with \( \text{AllDiff}(X_i, X_{i+1}) \) chain constraints → <strong>tree-structured (linear chain)</strong> graph.</li>
+<li>To find a cutset of size 1 that disconnects a chain-like AllDiff structure: remove a "shared"/middle variable connecting sub-cliques.</li>
+</ul>
+
+<h3 id="2-6-local-search-for-csps">2.6 Local Search for CSPs</h3>
+<p><strong>Min-conflicts heuristic</strong>: pick a random conflicted variable, reassign to the value <strong>minimizing the number of violated constraints</strong> (ties broken arbitrarily — all minimizing values are valid answers). Very fast in practice, especially for large CSPs, but incomplete.</p>
+
+<h2 id="3-adversarial-search-games">3. Adversarial Search / Games</h2>
+
+<h3 id="3-1-game-formulation">3.1 Game Formulation</h3>
+<p>(Initial state \(s_0\), \( \text{Players}(s) \), \( \text{Actions}(s) \), \( \text{Result}(s,a) \), \( \text{Terminal-test}(s) \), \( \text{Utility}(s, \text{player}) \))</p>
+
+<h3 id="3-2-minimax">3.2 Minimax</h3>
+<ul>
+<li><strong>Value of state</strong>: \( V(s) = \max_{s' \in \text{successors}(s)} V(s') \) if agent-controlled, \( V(s) = \min_{s' \in \text{successors}(s)} V(s') \) if opponent-controlled, known value if terminal.</li>
+<li>Assumes opponent plays <strong>optimally against you</strong> (adversarial/zero-sum assumption).</li>
+<li>Traverses like DFS/postorder: \( O(b^m) \) time, \( O(bm) \) space.</li>
+</ul>
+
+<h3 id="3-3-alpha-beta-pruning">3.3 Alpha-Beta Pruning</h3>
+<ul>
+<li>Prune a branch when you know it <strong>cannot</strong> affect the value at an ancestor decision node — i.e., a min node's current best-so-far is already \(\le\) the max ancestor's best-so-far (\(\alpha\)), or vice versa (\(\beta\)).</li>
+<li><strong>Does not change the root value</strong>; may prune nodes but never changes correctness.</li>
+<li>Best case runtime: \( O(b^{m/2}) \) — doubles effectively-searchable depth, requires good move ordering.</li>
+<li><strong>A node whose value directly bounds a sibling/ancestor decision can never be safely pruned</strong> if it's the deciding comparison (e.g. the very first child compared at a min/max node providing the initial bound must always be visited).</li>
+</ul>
+
+<h3 id="3-4-expectimax">3.4 Expectimax</h3>
+<ul>
+<li>Adds <strong>chance nodes</strong>: \( V(s) = \sum_{s'} P(s'\mid s) \cdot V(s') \) — average, not min/max.</li>
+<li>Use when opponent/environment is <strong>not adversarial</strong> (random or otherwise suboptimal/known-distribution).</li>
+<li><strong>Cannot prune the same way as minimax</strong> in general (no known finite bounds \(\Rightarrow\) any child could swing the average arbitrarily), unless values are bounded.</li>
+<li>Minimizer = special case of chance node (puts all probability mass on the worst outcome for you).</li>
+</ul>
+
+<h3 id="3-5-mixed-general-trees">3.5 Mixed/General Trees</h3>
+<ul>
+<li>Node types can freely alternate (multiple ghosts, mixed min/chance/max layers) — just apply the correct rule per layer.</li>
+<li><strong>General-sum games</strong>: utility is a <strong>tuple</strong> (one value per player); each player maximizes <em>their own</em> coordinate at nodes they control.</li>
+<li>Zero-sum games: adding an extra action to <strong>minimizer</strong> nodes can only <strong>decrease or keep the same</strong> the max-node ancestor value; adding extra action to <strong>maximizer</strong> nodes can only <strong>increase or keep the same</strong> the value. For expectimax: extra action at chance nodes → value can go <strong>any direction</strong>; extra action at maximizer nodes (with chance-node parents) → root can only <strong>increase or stay the same</strong>.</li>
+</ul>
+
+<h3 id="3-6-evaluation-functions">3.6 Evaluation Functions</h3>
+<p>Used at depth-limited cutoff instead of true terminal utility. Typically a <strong>linear combination of features</strong>:</p>
+<div class="math-block">\[ \text{Eval}(s) = w_1 f_1(s) + w_2 f_2(s) + \cdots + w_n f_n(s) \]</div>
+<p>Weight sign/magnitude reflects feature importance and whether it helps/hurts the agent.</p>
+
+<h3 id="3-7-monte-carlo-tree-search-mcts-">3.7 Monte Carlo Tree Search (MCTS)</h3>
+<p>For huge branching factors (e.g., Go). Loop: (1) use UCB to descend to an unexpanded leaf, (2) expand + rollout to get win/loss, (3) backpropagate result.</p>
+
+<p><strong>UCB1</strong>:</p>
+<div class="math-block">\[ \text{UCB1}(n) = \frac{U(n)}{N(n)} + C \sqrt{\frac{\log N(\text{parent})}{N(n)}} \]</div>
+<p>— first term = exploitation (win rate), second = exploration bonus (favors less-visited nodes). As \(N \to \infty\), UCT → minimax behavior.</p>
+
+<h2 id="4-markov-decision-processes-mdps-">4. Markov Decision Processes (MDPs)</h2>
+
+<h3 id="4-1-definition">4.1 Definition</h3>
+<p>(States \(S\), Actions \(A\), Transition function \( T(s,a,s') = P(s' \mid s,a) \), Reward \( R(s,a,s') \), start state, discount \(\gamma\), possibly terminal states).</p>
+<ul>
+<li><strong>Markov property</strong>: \( P(s_{t+1} \mid s_t,a_t,\ldots,s_0) = P(s_{t+1} \mid s_t,a_t) \) — memoryless. If a problem needs history (e.g., "has visited X before," "actions taken so far," "used-once actions") that info <strong>must be added to the state</strong>, or the Markov property is violated.</li>
+<li><strong>Q-state / action state</strong>: \((s,a)\) — like an expectimax chance node; agent spends 0 time here.</li>
+<li><strong>Discounted utility</strong>: \( U = R_0 + \gamma R_1 + \gamma^2 R_2 + \cdots \); converges iff \(|\gamma| < 1\) (bounded by \( R_{\max}/(1-\gamma) \)).</li>
+</ul>
+
+<h3 id="4-2-bellman-equation-optimality-condition-not-an-algorithm-">4.2 Bellman Equation (optimality condition, not an algorithm)</h3>
+<div class="math-block">
+\[
+V^*(s) = \max_{a} \sum_{s'} T(s,a,s') \left[ R(s,a,s') + \gamma V^*(s') \right]
+\]
+\[
+Q^*(s,a) = \sum_{s'} T(s,a,s') \left[ R(s,a,s') + \gamma V^*(s') \right]
+\]
+\[
+V^*(s) = \max_{a} Q^*(s,a)
+\]
+</div>
+
+<h3 id="4-3-value-iteration">4.3 Value Iteration</h3>
+<div class="math-block">
+\[
+V_0(s) = 0 \text{ for all } s
+\]
+\[
+V_{k+1}(s) \leftarrow \max_{a} \sum_{s'} T(s,a,s') \left[ R(s,a,s') + \gamma V_k(s') \right]
+\]
+</div>
+<p>Iterate until convergence (\( V_{k+1}(s) = V_k(s) \) for all \(s\)). This is the <strong>Bellman update/operator</strong> — a <strong>contraction by \(\gamma\)</strong> in max-norm, which guarantees convergence.</p>
+<ul>
+<li>\( V_k(s) \) = value with a <strong>k-step horizon</strong> (= depth-k expectimax value).</li>
+<li>Runtime per iteration: \( O(|S|^2 |A|) \).</li>
+</ul>
+
+<p><strong>Q-value iteration</strong> (same idea, one level later):</p>
+<div class="math-block">
+\[
+Q_{k+1}(s,a) \leftarrow \sum_{s'} T(s,a,s') \left[ R(s,a,s') + \gamma \max_{a'} Q_k(s',a') \right]
+\]
+</div>
+
+<h3 id="4-4-policy-extraction">4.4 Policy Extraction</h3>
+<div class="math-block">
+\[
+\pi^*(s) = \operatorname*{argmax}_{a} \sum_{s'} T(s,a,s') \left[ R(s,a,s') + \gamma V^*(s') \right]
+\]
+</div>
+<p>Cheaper if you already have optimal <strong>Q-values</strong> (just argmax, no re-computation needed).</p>
+
+<h3 id="4-5-policy-iteration">4.5 Policy Iteration</h3>
+<ol>
+<li>Start with arbitrary policy \(\pi_0\).</li>
+<li><strong>Policy evaluation</strong>: solve \( V^{\pi}(s) = \sum_{s'} T(s,\pi(s),s') \left[ R(s,\pi(s),s') + \gamma V^{\pi}(s') \right] \) — a linear system (no max needed since action is fixed), or iterate to convergence.</li>
+<li><strong>Policy improvement</strong>: \( \pi_{i+1}(s) = \operatorname*{argmax}_{a} \sum_{s'} T(s,a,s') \left[ R(s,a,s') + \gamma V^{\pi_i}(s') \right] \).</li>
+<li>Repeat until policy stops changing → optimal.</li>
+<li>Converges in <strong>fewer iterations</strong> than value iteration typically (policies converge faster than values), though each iteration can be more expensive.</li>
+</ol>
+
+<h3 id="4-6-reading-the-reward-discount-structure-common-exam-traps-">4.6 Reading the reward/discount structure (common exam traps)</h3>
+<ul>
+<li>If discount \(\gamma\) affects <strong>only</strong> a uniform final-multiplier (single terminal reward, fixed horizon), then changing \(\gamma\) (\(\gamma<1\)) does <strong>not</strong> change the optimal policy — only scales values uniformly.</li>
+<li>If \(\gamma=0\), agent is fully myopic: \( Q(s,a) = \sum_{s'} T(s,a,s') R(s,a,s') \), i.e., maximize <strong>immediate expected reward only</strong>.</li>
+<li>To find smallest \(k\) where \(V_k(s)\) becomes nonzero/optimal: trace which states get nonzero reward first (adjacent to reward states), then propagate outward one "hop" per iteration.</li>
+<li><strong>State-space reduction</strong>: if only relative quantities matter (e.g., score difference, not raw scores) for both transitions and rewards, you can collapse variables into their difference without changing the optimal policy. But <strong>do not</strong> discard information required to compute the transition/reward (e.g., turns remaining, or an opponent's score if only used via a difference term you didn't keep).</li>
+</ul>
+
+<h2 id="5-reinforcement-learning-rl-">5. Reinforcement Learning (RL)</h2>
+
+<h3 id="5-1-big-picture">5.1 Big Picture</h3>
+<p>Online planning: transition/reward functions are <strong>unknown</strong>. Agent must <strong>explore</strong> (act, observe \((s,a,s',r)\) samples) to learn, then <strong>exploit</strong>.</p>
+<ul>
+<li><strong>Sample</strong>: one \((s,a,s',r)\) tuple. <strong>Episode</strong>: a sequence of samples ending in a terminal state.</li>
+<li><strong>Model-based learning</strong>: estimate \(\hat T(s,a,s')\) and \(\hat R(s,a,s')\) via counting/averaging observed transitions, then run value/policy iteration on the estimated MDP.
+<ul>
+<li>\( \hat T(s,a,s') = \dfrac{\text{count}(s,a,s')}{\text{count}(s,a)} \).</li>
+</ul>
+</li>
+<li><strong>Model-free learning</strong>: skip the model, estimate values or Q-values directly from samples.</li>
+</ul>
+
+<h3 id="5-2-passive-rl-fixed-policy-learn-its-value-">5.2 Passive RL (fixed policy \(\pi\), learn its value)</h3>
+<p><strong>Direct evaluation</strong>: for each state, average the <strong>total observed return</strong> across all visits under \(\pi\). Simple but slow — ignores the fact that neighbor states' returns are correlated via the Bellman equation, so it "wastes" transition information and has high variance.</p>
+
+<p><strong>Temporal Difference (TD) Learning</strong>: update after every single transition using an exponential moving average:</p>
+<div class="math-block">
+\[
+\text{sample} = R(s,\pi(s),s') + \gamma V^{\pi}(s')
+\]
+\[
+V^{\pi}(s) \leftarrow (1-\alpha)\, V^{\pi}(s) + \alpha \cdot \text{sample}
+\]
+</div>
+<ul>
+<li>\(\alpha\) = learning rate \(\in [0,1]\). Learns online, weights older samples exponentially less. Faster convergence than direct evaluation.</li>
+<li>TD learning and direct evaluation are both <strong>on-policy</strong> (they evaluate the policy being followed).</li>
+</ul>
+
+<h3 id="5-3-active-rl-q-learning">5.3 Active RL — Q-Learning</h3>
+<p>Learns <strong>Q-values directly</strong>, no model needed at all, and learns the <em>optimal</em> policy even while acting suboptimally/randomly (<strong>off-policy</strong>):</p>
+<div class="math-block">
+\[
+\text{sample} = R(s,a,s') + \gamma \max_{a'} Q(s',a')
+\]
+\[
+Q(s,a) \leftarrow (1-\alpha)\, Q(s,a) + \alpha \cdot \text{sample}
+\]
+</div>
+<p>Equivalently: \( Q(s,a) \leftarrow Q(s,a) + \alpha \cdot [\text{sample} - Q(s,a)] \) ("shift toward the new estimate").</p>
+
+<p><strong>Convergence guarantee</strong>: Q-learning converges to \(Q^*\) if (1) every \((s,a)\) pair is visited <strong>infinitely often</strong>, and (2) the learning rate \(\alpha\) is decreased appropriately (e.g. \(\to 0\)) over time. With a <strong>constant</strong> \(\alpha\), Q-values may keep fluctuating and not settle. If you stop exploring (\(\varepsilon \to 0\)) before convergence, you generally will <strong>not</strong> learn optimal Q-values everywhere (you stop visiting some \((s,a)\) pairs).</p>
+
+<p><strong>Approximate Q-Learning</strong> (generalizes across states via features):</p>
+<div class="math-block">
+\[
+Q(s,a) = w_1 f_1(s,a) + w_2 f_2(s,a) + \cdots + w_n f_n(s,a)
+\]
+\[
+\text{difference} = \left[ R(s,a,s') + \gamma \max_{a'} Q(s',a') \right] - Q(s,a)
+\]
+\[
+w_i \leftarrow w_i + \alpha \cdot \text{difference} \cdot f_i(s,a)
+\]
+</div>
+<ul>
+<li>The magnitude of weight change is <strong>proportional to the feature value</strong> \(f_i(s,a)\) — the feature with largest \(|value|\) changes the most.</li>
+<li>Larger \(|w_i|\) \(\Rightarrow\) that feature dominates the action-preference direction (sign of weight tells you if higher feature value is good or bad).</li>
+</ul>
+
+<h3 id="5-4-exploration-vs-exploitation">5.4 Exploration vs. Exploitation</h3>
+<ul>
+<li><strong>\(\varepsilon\)-greedy</strong>: with probability \(\varepsilon\) act randomly (explore), else take the argmax action (exploit). Simple but \(\varepsilon\) must be manually decayed.</li>
+<li><strong>Exploration function</strong>: \( f(s,a) = Q(s,a) + \dfrac{k}{N(s,a)} \) — adds an optimism bonus for rarely-visited \((s,a)\); update rule becomes \( Q(s,a) \leftarrow (1-\alpha)Q(s,a) + \alpha\left[R + \gamma \max_{a'} f(s',a')\right] \). Bonus fades automatically as \(N\) grows, no manual \(\varepsilon\) schedule needed.</li>
+<li><strong>Regret</strong>: total reward lost versus always acting optimally from the start (a way to score learning algorithms, not just their final policy).</li>
+</ul>
+
+<h3 id="5-5-quick-sanity-checks-common-exam-angles-">5.5 Quick sanity checks (common exam angles)</h3>
+<ul>
+<li>Approximate Q-learning: choosing between two Q-states differing in one feature, sign of that feature's weight tells you the preferred direction (positive weight \(\Rightarrow\) prefer higher feature value; negative weight \(\Rightarrow\) prefer lower).</li>
+<li>Weighted-average variants of TD updates: weighting by "highest return gets weight 1, rest get weight 0" \(\Rightarrow\) update <strong>equals</strong> using only the single highest-return sample (ignore the rest).</li>
+<li>A batch update that over-weights high-return samples (weights not uniform, decreasing with rank) produces <strong>biased-high</strong> value estimates relative to the true sample average.</li>
+</ul>
+
+<h2 id="6-bayes-nets">6. Bayes Nets</h2>
+
+<h3 id="6-1-probability-basics">6.1 Probability Basics</h3>
+<ul>
+<li>Product/chain rule: \( P(A,B) = P(A\mid B)P(B) = P(B\mid A)P(A) \); general: \( P(A_1,\ldots,A_k) = \prod_{i=1}^{k} P(A_i \mid A_1 \ldots A_{i-1}) \).</li>
+<li>Bayes' Rule: \( P(A \mid B) = \dfrac{P(B \mid A)P(A)}{P(B)} \).</li>
+<li>Marginalization ("summing out"): \( P(A) = \sum_{b} P(A, B=b) \).</li>
+<li><strong>Inference by Enumeration</strong>: (1) select rows matching evidence, (2) sum out hidden variables, (3) normalize.</li>
+</ul>
+
+<h3 id="6-2-bayes-net-structure">6.2 Bayes Net Structure</h3>
+<ul>
+<li>DAG + one CPT per node: \( P(X_i \mid \text{Parents}(X_i)) \).</li>
+<li>Joint distribution factorization: \( P(X_1,\ldots,X_n) = \prod_{i=1}^{n} P(X_i \mid \text{Parents}(X_i)) \).</li>
+<li><strong>CPT size</strong>: \( (\text{domain size})^{(\#\text{parents}+1)} \) entries (e.g., 3 ternary parents feeding one ternary node → \(3^3 = 27\) entries — parents' own values aren't included, just the count of conditioning variables + itself).</li>
+<li>Edges do <strong>not</strong> necessarily imply causation — just possible dependence.</li>
+</ul>
+
+<h3 id="6-3-independence-from-structure">6.3 Independence from Structure</h3>
+<ul>
+<li>Each node is conditionally independent of its <strong>non-descendants</strong> given its <strong>parents</strong>.</li>
+<li>Each node is conditionally independent of everything else given its <strong>Markov blanket</strong> (parents + children + children's other parents).</li>
+</ul>
+
+<h3 id="6-4-d-separation-the-three-canonical-triples">6.4 D-Separation — the three canonical triples</h3>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Unobserved middle</th>
+<th>Observed middle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Causal chain</strong> \(X \to Y \to Z\)</td>
+<td>Active (dependent)</td>
+<td><strong>Inactive</strong> (\(X \perp Z \mid Y\))</td>
+</tr>
+<tr>
+<td><strong>Common cause</strong> \(X \leftarrow Y \to Z\)</td>
+<td>Active</td>
+<td><strong>Inactive</strong> (\(X \perp Z \mid Y\))</td>
+</tr>
+<tr>
+<td><strong>Common effect</strong> \(X \to Y \leftarrow Z\)</td>
+<td><strong>Inactive</strong> (\(X \perp Z\))</td>
+<td>Active (dependent) — also active if any <strong>descendant</strong> of \(Y\) is observed!</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Algorithm</strong>: to test \( X \perp Y \mid \{Z_1,\ldots,Z_k\} \):</p>
+<ol>
+<li>Shade all observed nodes.</li>
+<li>Enumerate every undirected path between \(X\) and \(Y\); decompose into consecutive triples.</li>
+<li>A path is <strong>active</strong> if all its triples are active; it "d-connects" \(X\) and \(Y\).</li>
+<li>If <strong>no</strong> active path exists, \(X\) and \(Y\) are guaranteed conditionally independent given the evidence. If even one active path exists, independence is <strong>not guaranteed</strong>.</li>
+</ol>
+
+<h3 id="6-5-exact-inference">6.5 Exact Inference</h3>
+<ul>
+<li><strong>Variable elimination</strong>: join factors involving a hidden variable, then sum it out; repeat one variable at a time. Much cheaper than forming the full joint (avoids exponential blow-up) as long as intermediate factors stay small.</li>
+<li>Combining two variables into one joint variable in the graph: new CPT sizes = (product of combined domains) × (parents/children domains) — compute entry counts before/after to see net change.</li>
+</ul>
+
+<h3 id="6-6-approximate-inference-sampling-">6.6 Approximate Inference (Sampling)</h3>
+<ul>
+<li><strong>Prior sampling</strong>: simulate the whole net top-down via each CPT; unbiased but wasteful if querying rare evidence (must discard samples not matching evidence).</li>
+<li><strong>Rejection sampling</strong>: reject early as soon as a sampled variable contradicts evidence (saves time vs. prior sampling but still discards samples).</li>
+<li><strong>Likelihood weighting</strong>: fix evidence variables to their observed values (never rejects), and <strong>weight</strong> each sample by \( \prod_i P(e_i \mid \text{Parents}(e_i)) \) — ensures every CPT still contributes.</li>
+<li><strong>Gibbs sampling</strong>: initialize all variables randomly, then repeatedly resample <strong>one variable at a time</strong> conditioned on the current values of all others (using only its Markov blanket); converges to the true posterior over many iterations even starting from a low-probability state.</li>
+</ul>
+
+<h2 id="7-exam-pattern-recognition-cheatsheet">7. Exam Pattern-Recognition Cheatsheet</h2>
+<ul>
+<li><strong>"Select all that are admissible"</strong>: check \( h(n) \le h^*(n) \) at the <em>worst case</em> configuration — try extreme/edge assignments (e.g., all distances equal, one huge one small) to find counterexamples.</li>
+<li><strong>"Which search finds the lowest-cost/shallowest solution"</strong>: uniform per-step cost \(\Rightarrow\) BFS = UCS = iterative deepening all work; non-uniform costs \(\Rightarrow\) only UCS (or A* with consistent \(h\)) guaranteed optimal.</li>
+<li><strong>Branching factor questions</strong>: count max actions from <em>any</em> single state, express asymptotically (e.g., "any pair" \(\Rightarrow O(s^2)\), not \(O(s)\)).</li>
+<li><strong>CSP arc-consistency "what remains after enforcing \(X \to Y\)"</strong>: only prune values from the <strong>tail</strong> (\(X\)) that have zero support in \(Y\)'s current domain; don't touch \(Y\)'s domain from a \(X \to Y\) arc.</li>
+<li><strong>Minimax/alpha-beta pruning "which nodes are not visited"</strong>: trace left-to-right, prune a subtree exactly when the current bound at an ancestor already guarantees that subtree cannot change the final decision.</li>
+<li><strong>Value iteration "first nonzero at depth k"</strong>: nonzero rewards propagate outward one graph-hop per VI iteration — trace shortest-path-in-hops from a reward-yielding transition to the queried state.</li>
+<li><strong>MDP/RL question mentioning "must remember whether X happened before"</strong>: signals a <strong>Markov property violation</strong> — the fix is always to augment the state representation, not change the algorithm.</li>
+<li><strong>D-separation shortcut</strong>: common-effect (collider) structures are the only ones that <em>flip</em> behavior (blocked when unobserved, active when observed or a descendant is observed) — everything else (chains, common cause) is blocked once observed.</li>
+</ul>
+
+</body>
+</html>
