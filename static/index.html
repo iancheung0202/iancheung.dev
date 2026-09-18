@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
   <head>
+    <script>
+      (function() {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
     <meta name="google-site-verification" content="e4J0Puet18Z4EBwksu6zRnj__1AAaGoDSFUWLWtPQXs" />
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -17,6 +26,8 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Doto:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Doto:wght@700&display=swap" rel="stylesheet"></noscript>
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
@@ -39,6 +50,7 @@
   <body style="cursor: url('assets/img/custom-purple-cursor.png'), auto;">
     <audio id="audio" src="assets/audio/The Circadian Rhythm - Ian Cheung.m4a"></audio>
     <header id="header">
+      <div class="header-photo"></div>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-12 d-flex flex-column">
@@ -69,27 +81,19 @@
             <nav id="navbar" class="navbar">
               <ul>
                 <li>
-                  <a class="nav-link active" href="#header" id="home" data-pitch="C4">intro</a>
-                </li>
-                <li class="nav-divider page">/</li>
-                <!-- <li>
-                  <a class="nav-link page" href="#projects" id="navProjects" data-pitch="E4">projects</a>
-                </li>
-                <li class="nav-divider page">/</li> -->
-                <li>
-                  <a class="nav-link page" href="#music" id="navMusic" data-pitch="E4">music</a>
-                </li>
-                <li class="nav-divider page">/</li>
-                <!-- <li>
-                  <a class="nav-link page" href="#blog" data-pitch="C5">blog</a>
-                </li>
-                <li class="nav-divider page">/</li> -->
-                <li>
-                  <a class="non-nav-link page" href="https://home.iancheung.dev" target="_blank" data-pitch="G4" id="homelab-nav-link">homelab</a>
+                  <a class="nav-link active" href="#header" id="home" data-pitch="C4">home</a>
                 </li>
                 <li class="nav-divider page">/</li>
                 <li>
-                  <a class="non-nav-link page" href="resume.pdf" target="_blank" data-pitch="C5" id="resume-nav-link">resume</a>
+                  <a class="nav-link page" href="#story" id="nav-story" data-pitch="E4">story</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="nav-link page" href="#notes" id="nav-notes" data-pitch="G4">notes</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="non-nav-link page" href="resume.pdf" data-pitch="C5" id="resume-nav-link">resume</a>
                 </li>
               </ul>
               <i class="bi bi-list mobile-nav-toggle" id="mobile-nav-toggle"></i>
@@ -173,9 +177,6 @@
               <a href="https://www.strava.com/athletes/126909167" class="strava" target="_blank">
                 <i class="bi bi-strava"></i>
               </a>
-              <!-- <a href="https://www.medium.com/@iancheung0202" class="medium" target="_blank">
-                <i class="bi bi-medium"></i>
-              </a> -->
             </div>
           </div>
           <div class="col-lg-4 col-md-12 d-flex align-items-stretch">
@@ -238,472 +239,87 @@
                       </div>
                     </div>
                   </div>
-
-                  <div id="terminal-wrapper">
-                    <div style="background: #1e1e1e; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-family: 'Courier New', monospace; overflow: hidden; border: 1px solid #333;">
-                      <div style="background: #2d2d2d; padding: 8px 12px; display: flex; align-items: center; border-bottom: 1px solid #333;">
-                        <div class="window-button red"></div>
-                        <div class="window-button yellow"></div>
-                        <div class="window-button green"></div>
-                        <div class="window-title">Terminal</div>
-                      </div>
-                      <div id="terminal-container" onclick="document.getElementById('terminal-input').focus()">
-                        <div id="terminal-output">
-                          <div><span style="color: #569cd6;">[INFO]</span> Initializing session...</div>
-                          <div><span style="color: #6a9955;">[SUCCESS]</span> Logged in as guest.</div>
-                          <div>Type 'help' for a list of commands.</div>
-                        </div>
-                        <div class="terminal-input-line">
-                          <span id="terminal-prompt"><span style="color: #dcdcaa;">guest@iancheung.dev</span>:<span style="color: #4ec9b0;">~</span>$</span>
-                          <span id="terminal-input" contenteditable="true" role="textbox" spellcheck="false" style="outline: none;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="shell-in-a-box">
-                  <div class="col-lg-12 col-md-12 d-flex align-items-stretch" style="height: 100%;">
-                    <div class="window-div" style="width: 100%; height: 100%; display: flex; flex-direction: column; background: #f1f1f1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                      <div style="background: #dee1e6; padding: 8px 12px 0 12px; display: flex; align-items: center;">
-                        <div style="display: flex; margin-bottom: 6px;">
-                          <div class="window-button red"></div>
-                          <div class="window-button yellow"></div>
-                          <div class="window-button green"></div>
-                        </div>
-                        <div style="background: white; padding: 6px 12px; border-radius: 8px 8px 0 0; font-size: 12px; font-family: sans-serif; flex: 0 1 auto; min-width: 120px; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 2px rgba(0,0,0,0.1);">
-                           <img src="assets/img/favicon.png" style="width: 14px; height: 14px; opacity: 0.8;">
-                           <span id="browser-tab-title" style="color: #3c4043;">Ian's Homelab&nbsp;&nbsp;&nbsp;</span>
-                        </div>
-                      </div>
-
-                      <div style="background: white; padding: 6px 12px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; gap: 12px;">
-                        <div style="display: flex; gap: 12px; color: #5f6368; font-size: 14px;">
-                          <i class="bi bi-arrow-left" id="browser-back-btn" style="cursor: pointer; opacity: 0.6;"></i>
-                          <i class="bi bi-arrow-right" id="browser-forward-btn" style="cursor: pointer; opacity: 0.6;"></i>
-                          <i class="bi bi-arrow-clockwise" style="cursor: pointer;" onclick="const iframe = document.getElementById('browser-iframe'); const addr = document.getElementById('browser-address-bar'); iframe.src = addr.value;"></i>
-                        </div>
-                        <input type="text" id="browser-address-bar" value="https://home.iancheung.dev/" style="flex: 1; background: #f1f3f4; border: none; border-radius: 16px; padding: 6px 16px; font-size: 13px; outline: none; color: #202124; font-family: inherit;">
-                      </div>
-
-                      <iframe id="browser-iframe" src="https://home.iancheung.dev/" style="width: 100%; flex: 1; min-height: 500px; border: none;" allow="clipboard-read; clipboard-write; self" onload="this.contentWindow.focus()"></iframe>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </header>
-    
-    <!-- <section id="projects" class="resume">
-      <div class="about-me container">
-        <div class="row">
-          <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
-            <h3><i class="bi bi-person"></i> Full Stack Developer &amp; Data Engineer.</h3>
-            <p>
-              <small id="paragraph">My name is Ian, and I am a full-stack web developer, Discord bot developer, and data engineer. It was actually the onset of the pandemic and the shift to online schooling that prompted my interest in coding. Having my routine disrupted, I felt compelled to learn something new, particularly with the abundance of free time available due to online schooling. Thus, I began dedicating my evenings and weekends to constructing (horrible) websites for myself and my friends. Now, programming is still one of my most fulfilling hobbies, most notably due to the ability to create products I or someone else could use. Mastering computer programming also allows me to think independently, solve problems, and be resilient when facing seemingly impossible challenges.</small>
-            </p>
-            <p>
-              <small id="paragraph">As such, I am very eager to explore coding outside of school through developing mini-games, websites, and Discord bots. Particularly, this website is used for me to learn more about front-end web development, as well as showcasing my achievements and the projects that I completed.</small>
-            </p>
-            <div class="row">
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://tierlist.mysticraft.xyz/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/tierlist-demo.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      MystiCraft Tierlist 
-                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
-                        <span class="checkmark-icon">
-                          <svg viewbox="0 0 24 24">
-                            <polyline points="3 11 7 17 20 7"/>
-                          </svg>
-                        </span>
-                        APP
-                      </div>
-                    </h4>
-                    <p>Web + Discord Application 
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Client Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://servercv.com/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/servercv-demo.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      ServerCV 
-                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
-                        <span class="checkmark-icon">
-                          <svg viewbox="0 0 24 24">
-                            <polyline points="3 11 7 17 20 7"/>
-                          </svg>
-                        </span>
-                        APP
-                      </div>
-                    </h4>
-                    <p>Web + Discord Application 
-                      <a href="https://github.com/iancheung0202/ServerCV" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://fischl.app/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/fischl-demo.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      Fischl 
-                      <div class="app-badge" data-toggle="tooltip" data-placement="top" title="Verified App">
-                        <span class="checkmark-icon">
-                          <svg viewbox="0 0 24 24">
-                            <polyline points="3 11 7 17 20 7"/>
-                          </svg>
-                        </span>
-                        APP
-                      </div>
-                    </h4>
-                    <p>Verified Discord Python Bot 
-                      <a href="https://github.com/iancheung0202/Fischl" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://cloud.iancheung.dev/s/tDFi7PzcbNfELyP" target="_blank">
-                
-                  <div class="icon-box">
-                    <img src="assets/img/collisioneers.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      Analysis of California Traffic Collisions
-                    </h4>
-                    <p>Exploratory Data Analysis Project <a href="https://github.com/iancheung0202/Traffic-Collisions-Analysis" target="_blank">
-                      <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                    </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Stanford University DATASCI 112"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://colab.research.google.com/drive/1P-HjOVVsKfAfO2tAeJwsaQFkiGEL9XEF?usp=sharing" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/obj_dect.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      Object Detection
-                    </h4>
-                    <p>Python Neural Network Project <a href="https://cloud.iancheung.dev/s/ByorKiXfbQaHAMc" target="_blank">
-                        <i class="ri-slideshow-3-line" id="normal-text" data-toggle="tooltip" data-placement="top" title="Project Description + Demo"></i>
-                      </a>
-                      <a href="https://colab.research.google.com/drive/16pHtFNER0nHd_uQSO80RnsVZ40g1isDb?usp=sharing" target="_blank"><i class="bi-plus-circle-fill" id="normal-text" data-toggle="tooltip" data-placement="top" title="Real-time Detection Application"></i></a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Best Project Presentation for Inspirit AI"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>This application only runs on Google Colab.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://iancheung0202.github.io/RecycleSorter/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/original.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      RecycleSorter
-                    </h4>
-                    <p>JavaScript Image Classification Project <a href="https://github.com/iancheung0202/RecycleSorter" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Most Creative Award Entry for GunnHacks 9.0"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>This application currently does not support all browsers.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/htmlessentials.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      HTML Essentials
-                    </h4>
-                    <p>Publication <a href="https://cloud.iancheung.dev/s/PjCwRCQLXJsQwST" target="_blank">
-                        <i class="bi bi-eye" id="normal-text" data-toggle="tooltip" data-placement="top" title="View PDF"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Personal Project"></i>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://github.com/iancheung0202/dodge-n-shoot" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/dodge-n-shoot.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      Dodge n' Shoot
-                    </h4>
-                    <p>Python Mini-game <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Project for Python Game Development by UCode"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>You must install Python &amp; Pygame on your local machine to run it.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-lg-4 col-md-6 d-flex align-items-stretch project-box">
-                <a href="https://iancheung0202.github.io/lsc-library-attendance-2021-22/" target="_blank">
-                  <div class="icon-box">
-                    <img src="assets/img/library-attendance.png" class="img-fluid project-img" height="200px">
-                    <h4>
-                      Librarian Attendance System
-                    </h4>
-                    <p>HTML, CSS &amp; JS Front-end System <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank">
-                        <i class="bi bi-code-slash" id="normal-text" data-toggle="tooltip" data-placement="top" title="Source Code"></i>
-                      </a>
-                      <i class="bi bi-app-indicator" id="normal-text" data-toggle="tooltip" data-placement="top" title="Adopted by LSC Library Board while serving as Chief IT Developer during 2021-22"></i>
-                    </p>
-                    <p>
-                      <small>
-                        <em>This system is depreciated and does not work as intended.</em>
-                      </small>
-                    </p>
-                  </div>
-                </a>
-              </div>
-            </div> 
-            <div class="row">
-              <div class="col-lg-6">
-                <h3 class="resume-title resume-title-left">
-                  <i class="bi bi-code"></i> Projects
-                </h3>
-                <div class="resume-item resume-item-left resume-item-coding">
-                  <h4>MystiCraft Tierlist</h4>
-                  <h5>2024 - 2025</h5>
-                  <p>
-                    <em>Web + Discord Application</em>
-                  </p>
-                  <small id="paragraph">A web and Discord application for creating and sharing tier lists. This is a verified Discord application showcasing full-stack development with a client project.</small>
-                </div>
-                <div class="resume-item resume-item-left resume-item-coding">
-                  <h4>ServerCV</h4>
-                  <h5>2023 - 2024</h5>
-                  <p>
-                    <em>Web + Discord Application</em>
-                  </p>
-                  <small id="paragraph">A web and Discord application for managing server CVs. <a href="https://github.com/iancheung0202/ServerCV" target="_blank">Source code available on GitHub.</a></small>
-                </div>
-                <div class="resume-item resume-item-left resume-item-coding">
-                  <h4>Fischl</h4>
-                  <h5>2023 - Present</h5>
-                  <p>
-                    <em>Verified Discord Python Bot</em>
-                  </p>
-                  <small id="paragraph">A verified Discord bot built in Python with advanced features and community support. <a href="https://github.com/iancheung0202/Fischl" target="_blank">Source code on GitHub.</a></small>
-                </div>
-                <div class="resume-item resume-item-left resume-item-coding">
-                  <h4>Analysis of California Traffic Collisions</h4>
-                  <h5>2024</h5>
-                  <p>
-                    <em>Exploratory Data Analysis Project</em>
-                  </p>
-                  <small id="paragraph">A comprehensive exploratory data analysis of California traffic collision data using Python. <a href="https://github.com/iancheung0202/Traffic-Collisions-Analysis" target="_blank">Stanford University DATASCI 112</a></small>
-                </div>
-              </div>
-              
-              <div class="col-lg-6">
-                <h3 class="resume-title">
-                  <i class="bi bi-briefcase"></i> Experience
-                </h3>
-                <div class="resume-item resume-item-coding">
-                  <h4>Mathematics Mentor</h4>
-                  <h5>September 2025 - Current</h5>
-                  <a href="https://publicservice.berkeley.edu/programs/bridging-berkeley/" target="_blank">
-                    <p>
-                      <em>Bridging Berkeley</em>
-                    </p>
-                  </a>
-                  <small id="paragraph">Every Tuesdays and Thursdays, I provide math mentorship and academic support to 20 students in a local middle school in Berkeley after school.</small>
-                </div>
-                <div class="resume-item resume-item-coding">
-                  <h4>Vice President for Education</h4>
-                  <h4>Beginning Programming in Python Instructor</h4>
-                  <h5>April 2023 - April 2025</h5>
-                  <a href="https://www.openbrackets.us/" target="_blank">
-                    <p>
-                      <em>OpenBrackets</em>
-                    </p>
-                  </a>
-                  <small id="paragraph">Inspired to bridge the digital divide in our community, we provide support in computer science to middle and high school kids who may not receive it at home, and encourage kids consider tech as a career, regardless of their background. As an instructor, I fully designed a <a href="https://drive.google.com/drive/folders/1FiYVVwxnvKQCv9WU3sMp46D4Jc2xZ2Bp?usp=sharing" target="_blank">curriculum</a> for 6-12 years old to learn Python in a fun and rewarding way, all while mastering the basics of programming in Python. </small>
-                </div>
-                <div class="resume-item resume-item-coding">
-                  <a href="https://www.redwoodcity.org/departments/library/volunteer" target="_blank">
-                    <h4>Coding Club Teaching Assistant</h4>
-                  </a>
-                  <h5>June 2023 - August 2023</h5>
-                  <a href="https://www.redwoodcity.org/departments/library/volunteer" target="_blank">
-                    <p>
-                      <em>Redwood City Public Library</em>
-                    </p>
-                  </a>
-                  <small id="paragraph">Every Sunday, I witnessed young kids' enthusiasm and creativity flourish as they learned coding fundamentals by programming robots and building LEGOs. We provided individual support and created a supportive environment for the children to grow, try, and learn. Moreover, explaining seemingly simple concepts to children significantly improved my communication and problem-solving skills as well. </small>
-                </div>
-                <div class="resume-item resume-item-coding">
-                  <h4>Chief IT Developer</h4>
-                  <h5>September 2021- June 2022</h5>
-                  <p>
-                    <em>La Salle College Library Board</em>
-                  </p>
-                  <small id="paragraph">My primary role was to oversee the library's technological infrastructure and I was responsible for managing and maintaining the library's hardware and software, as well as implementing new technologies to improve the library's operations and services. I had worked closely with the library committee team and <a href="https://github.com/iancheung0202/lsc-library-attendance-2021-22" target="_blank" style="color: #47aeff;">developed an automatic clock-in system</a> for school librarians, resulting in a significant improvement in our efficiency in recording attendance. </small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section> -->
 
-    <section id="music">
-      <div class="resume">
-        <div class="about-me container">
-          <div class="pt-4 pb-3">
-            <div class="d-flex align-items-center gap-3 flex-wrap">
-              <img id="yt-channel-avatar-img" class="yt-channel-avatar" alt="Ian Cheung">
-              <div>
-                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                  <span class="yt-channel-name" id="yt-channel-name-text">Ian Cheung</span>
-                  <span class="yt-oac-badge" title="Official Artist Channel">
-                    <i class="bi bi-music-note"></i> Official Artist Channel
-                  </span>
-                </div>
-                <div class="yt-channel-meta d-flex align-items-center flex-wrap gap-1">
-                  <span id="yt-channel-handle-text">@iancheung0202</span>
-                  <span>·</span>
-                  <span>he/him</span>
-                  <span>·</span>
-                  <span><span id="yt-sub-purecounter" data-purecounter-start="0" data-purecounter-end="0" data-purecounter-duration="1" class="purecounter">0</span> subscribers</span>
-                  <span>·</span>
-                  <span id="yt-video-count">0 videos</span>
-                </div>
-                <a href="https://www.youtube.com/@iancheung0202?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="yt-subscribe-btn mt-2">Subscribe</a>
-              </div>
-            </div>
-          </div>
-          <div>
-            <ul class="nav music-tabs" id="musicTabs" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="composition-tab" data-bs-toggle="tab" data-bs-target="#composition" type="button" role="tab" aria-controls="composition" aria-selected="true">Compositions</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="solo-tab" data-bs-toggle="tab" data-bs-target="#solo" type="button" role="tab" aria-controls="solo" aria-selected="false">Solo</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="chamber-tab" data-bs-toggle="tab" data-bs-target="#chamber" type="button" role="tab" aria-controls="chamber" aria-selected="false">Chamber Music</button>
-              </li>
+    <section id="story">
+      <div class="container">
+        <div class="section-title">
+          <h2>story</h2>
+          <p>about me</p>
+        </div>
+        <p class="paragraph">A small collection of pages about how I got here.</p>
+
+        <div class="story-wrap">
+          <aside class="story-sidebar">
+            <ul class="story-tree" id="story-tree">
+              <li class="story-status">loading…</li>
             </ul>
-            <div class="tab-content pt-3" id="musicTabsContent">
-              <div class="tab-pane fade show active" id="composition" role="tabpanel" aria-labelledby="composition-tab">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH7PepiRWjm7J4Qmwm3IOhNY">
-                  <div class="col-12 text-center text-muted py-3"><small>Loading...</small></div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="solo" role="tabpanel" aria-labelledby="solo-tab">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH4qflv_8jZQe_59uJHeiDPy">
-                  <div class="col-12 text-center text-muted py-3"><small>Loading...</small></div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="chamber" role="tabpanel" aria-labelledby="chamber-tab">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3 playlist-videos" data-playlist="PLpUrrjNSgaH6byLvURf5Yt1qxkuJobSa4">
-                  <div class="col-12 text-center text-muted py-3"><small>Loading...</small></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </aside>
 
-          <div class="row" style="margin-top: 20px;">
-            <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
-              <h3>Violinist.</h3>
-              <div class="counts col-lg-2 col-md-4" style="float: right;">
-                <div class="count-box">
-                    <i class="bi bi-music-note"></i>
-                     <script>
-                      const years = new Date().getFullYear() - 2012;
-                      document.write('<span data-purecounter-start="0" data-purecounter-end="' + years + '" data-purecounter-duration="1" class="purecounter">' + years + '</span>');
-                     </script>
-                    <p style="text-align: center;">Years of Music Education</p>
-                </div>
-              </div>
-              <p>
-                <small class="paragraph">I have studied violin for 11 years, most recently with Professor Chen Zhao of the San Francisco Symphony and Conservatory of Music, where I attended the Pre-College Program (2023–2025). In the 2024–25 season, I served as co-concertmaster of the San Francisco Symphony Youth Orchestra. Born and raised in Hong Kong, I studied with Professor Michael Ma, former Head of Strings at the Hong Kong Academy for Performing Arts, and Ms. Li Junjun. In 2022, I earned the Fellowship of Trinity College London (FTCL) Level 7 Diploma in Violin Performance.</small>
-              </p>
-              <p>
-                <small class="paragraph">After moving to the San Francisco Bay Area in 2022, I became active in Gunn High School’s music program, serving as concertmaster of the String, Chamber, and Symphony Orchestras (2022–2025). In March 2024, I led the Chamber Orchestra at the National Orchestra Cup in New York City, where we won the Grand Champion title, and I received the Best High Strings Soloist award. I was also a member of the CASMEC High School Symphony Orchestra in 2023.</small>
-              </p>
-              <p>
-                <small class="paragraph">As a soloist, I earned a Command Performance at the 2023 CMEA Solo Festival and performed at the 2024 Junior Bach Festival. I have also participated in masterclasses with Lin Cho-Liang and Wang Liang. Beyond classical music, I enjoy programming, composing, piano, video games, and biking. I aspire to merge my interests in music and software to create technology that inspires people to share and make art.</small>
-              </p>
-            </div>
+          <div class="story-page" id="story-page">
+            <div class="story-status">loading…</div>
           </div>
         </div>
-      </div>
       </div>
     </section>
 
-    <!-- <section id="blog" class="resume">
-      <div class="about-me container">
-        <div class="row">
-          <div class="col-lg-12 pt-4 pt-lg-0 content" data-aos="fade-left">
-            <div class="container">
-              <div class="section-title">
-                <h2>
-                  <a href="https://medium.com/@iancheung0202" class="medium" target="_blank">
-                    <i class="bi bi-medium" style="color: #000000"></i> Medium Posts
-                  </a>
-                </h2>
-              </div>
-              <div id="medium-posts-container" class="row"></div>
-            </div>
-            <div class="container">
-              <div class="section-title">
-                <h2>
-                  <a href="https://instagram.com/iancheung0202" class="instagram" target="_blank">
-                    <i class="bi bi-instagram" style="color: #c13584"></i> Instagram Posts
-                  </a>
-                </h2>
-              </div>
-              <div class="tagembed-widget" style="width:100%;height:100%;" data-widget-id="161012" view-url="https://widgets.tagembed.com/161012"></div>
-            </div>
+    <section id="notes">
+      <div class="container">
+        <div class="section-title">
+          <h2>notes</h2>
+          <p>public board</p>
+        </div>
+        <p class="paragraph">I'm deeply honored to have you on my website. Leave a sketch and a message for the world to see!</p>
+        <div class="notes-wall" id="notes-wall"><p class="notes-msg">Building the wall…</p></div>
+        <p class="notes-foot"><button type="button" id="notes-admin">Tip:</button> If you see something not right, flip it over and hit <b>Report</b></p>
+      </div>
+    </section>
+
+    <dialog class="nc-dialog" id="nc-dialog" aria-label="Leave a note">
+      <div class="nc-body">
+        <div class="nc-polaroid">
+          <canvas id="nc-canvas" aria-label="Drawing area"></canvas>
+          <input class="nc-caption" id="nc-text" maxlength="44" placeholder="write something…" autocomplete="off">
+          <input class="nc-name" id="nc-name" maxlength="24" placeholder="— your name (optional)" autocomplete="off">
+        </div>
+        <div class="nc-tools">
+          <div class="nc-row"><span class="nc-label">tool</span>
+            <button type="button" class="nc-btn" data-k="tool" data-v="pen">Pen</button>
+            <button type="button" class="nc-btn" data-k="tool" data-v="eraser">Eraser</button>
+            <button type="button" class="nc-btn" data-k="tool" data-v="stamp">Stamp</button>
+          </div>
+          <div class="nc-row" id="nc-stamps"><span class="nc-label">stamp</span></div>
+          <div class="nc-row" id="nc-inks"><span class="nc-label">ink</span></div>
+          <div class="nc-row" id="nc-papers"><span class="nc-label">paper</span></div>
+          <div class="nc-row"><span class="nc-label">size</span><input type="range" id="nc-size" min="2" max="24" value="6" aria-label="Brush size"></div>
+          <div class="nc-row">
+            <button type="button" class="nc-btn" id="nc-undo">Undo</button>
+            <button type="button" class="nc-btn" id="nc-clear">Clear</button>
+          </div>
+          <p class="nc-error" id="nc-error" role="alert"></p>
+          <div class="nc-row">
+            <button type="button" class="nc-btn nc-go" id="nc-submit">Pin it to the wall</button>
+            <button type="button" class="nc-btn" id="nc-cancel">Cancel</button>
           </div>
         </div>
-        <br>
+        <input class="nc-site" id="nc-site" tabindex="-1" autocomplete="off" aria-hidden="true">
       </div>
-    </section> -->
-
+    </dialog>
 
     <div class="credits">
-      <span style="padding: 9px; border-radius: 5px;" id="normal-text"> &copy; <script>
-          document.write(new Date().getFullYear());
-        </script> Ian Cheung | 📸 <b id="photo-filename">Loading background...</b></span>
+      <span id="photo-filename"></span>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked@18.0.13/lib/marked.umd.js"></script>
     <script src="assets/js/extensions.js"></script>
     <script src="https://widget.tagembed.com/embed.min.js"></script>
     <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/notes.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

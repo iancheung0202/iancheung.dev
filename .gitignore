@@ -1,3 +1,4 @@
 .env
 todos.json
 .well-known/
+notes/

@@ -27,6 +27,8 @@
       }
     }
   }
+  
+  const currentSection = () => window.location.hash.split('/')[0]
 
   /**
    * Scrolls to an element with header offset
@@ -50,12 +52,11 @@
   window.addEventListener('popstate', () => {
     let section;
   
-    if (!window.location.hash || window.location.hash === '#header') {
-      // If there's no hash or the hash is #header, we're on the home page
+    if (!currentSection() || currentSection() === '#header') {
       section = select('#header');
       select('#header').classList.remove('header-top');
     } else {
-      section = select(window.location.hash);
+      section = select(currentSection());
       select('#header').classList.add('header-top');
     }
   
@@ -68,18 +69,17 @@
       section.classList.add('section-show');
     }
   
-    // Update the active class on the navbar links
     let navlinks = select('#navbar .nav-link', true);
     navlinks.forEach((item) => {
       item.classList.remove('active');
-      if (item.getAttribute('href') === window.location.hash) {
+      if (item.getAttribute('href') === currentSection()) {
         item.classList.add('active');
       }
     });
   
     // Handle the case for the home page with no hash
-    if (!window.location.hash || window.location.hash === '#header') {
-      navlinks[0].classList.add('active'); // Assuming the first link is the home link
+    if (!currentSection() || currentSection() === '#header') {
+      navlinks[0].classList.add('active');
     }
   });
   
@@ -150,18 +150,14 @@
    * Activate/show sections on load with hash links
    */
   window.addEventListener('load', () => {
-    const storedTheme = localStorage.getItem("theme");
-
-    const targetTheme = storedTheme
-      ? storedTheme
-      : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
     if (window.applyTheme) {
-      window.applyTheme(targetTheme === 'dark', false);
+      window.applyTheme(currentTheme === 'dark', false);
     }
 
-    if (window.location.hash) {
-      let initial_nav = select(window.location.hash)
+    if (currentSection()) {
+      let initial_nav = select(currentSection())
 
       if (initial_nav) {
         let header = select('#header')
@@ -170,7 +166,7 @@
         header.classList.add('header-top')
 
         navlinks.forEach((item) => {
-          if (item.getAttribute('href') === window.location.hash) {
+          if (item.getAttribute('href') === currentSection()) {
             item.classList.add('active')
           } else {
             item.classList.remove('active')
