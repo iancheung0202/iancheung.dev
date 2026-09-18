@@ -1,58 +1,172 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>500 — Internal Server Error</title>
-
-  <!-- Fallback redirect after 15s if JS disabled -->
-  <meta http-equiv="refresh" content="15;url=/">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>Something Broke in the Dark</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root { color-scheme: light dark; }
+    html { height: 100%; }
+
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin: 0; min-height: 100svh; display: grid; place-items: center;
+      height: 100%;
+      margin: 0;
+      background: url("https://wallpapercave.com/wp/6SLzBEY.jpg") no-repeat left top;
+      background-size: cover;
+      overflow: hidden;
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: center;
+      align-items: center;
+      cursor: default;
     }
-    .card {
-      max-width: 680px; padding: 2rem 2.5rem; border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.08);
-      text-align: center; line-height: 1.5;
+
+    .text {
+      text-align: center;
+      user-select: none;
     }
-    h1 { margin: 0 0 .5rem; font-size: clamp(2rem, 3vw, 2.5rem); }
-    p { margin: .25rem 0; font-size: 1.05rem; }
-    a { text-decoration: none; }
-    .btn {
-      display: inline-block; margin-top: 1rem; padding: .7rem 1.1rem;
-      border-radius: 12px; border: 1px solid currentColor;
+
+    .text h1 {
+      color: white;
+      margin: 0;
+      font-size: 12em;
+      line-height: 1;
+      text-align: center;
+      text-shadow: -5px 5px 0px rgba(0,0,0,0.7), -10px 10px 0px rgba(0,0,0,0.4), -15px 15px 0px rgba(0,0,0,0.2);
+      font-family: monospace;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s ease;
     }
-    .muted { opacity: .7; font-size: .95rem; }
+    .text h1:active { transform: scale(0.96); }
+
+    .text h2 {
+      color: white;
+      font-size: 3.2em;
+      text-shadow: -5px 5px 0px rgba(0,0,0,0.7);
+      text-align: center;
+      margin: 6px 0 0;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    .text h3 {
+      color: white;
+      font-size: 1.4em;
+      text-shadow: -5px 5px 0px rgba(0,0,0,0.7);
+      margin: 14px 30px 0;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 24px;
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #ffd76a;
+      text-decoration: none;
+      border: 2px solid #ffd76a;
+      border-radius: 8px;
+      padding: 8px 18px;
+      text-shadow: -2px 2px 0px rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.35);
+      z-index: 5;
+      position: relative;
+    }
+
+    .torch {
+      margin: -150px 0 0 -150px;
+      width: 200px;
+      height: 200px;
+      box-shadow: 0 0 0 9999em #000000f7;
+      opacity: 1;
+      border-radius: 50%;
+      position: fixed;
+      background: rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.6s ease, width 0.6s ease, height 0.6s ease, margin 0.6s ease;
+      pointer-events: none;
+    }
+    .torch::after {
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 40px 2px #000, 0 0 20px 4px rgba(13,13,10,0.2);
+    }
+    .torch.lit {
+      width: 3000px;
+      height: 3000px;
+      margin: -1500px 0 0 -1500px;
+      box-shadow: 0 0 0 9999em rgba(0,0,0,0.15);
+    }
+
+    .blow-out {
+      display: none;
+      margin-top: 12px;
+      cursor: pointer;
+      color: #ffd76a;
+      border: 1px solid #ffd76a;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.35);
+      font-family: monospace;
+      font-size: 0.9em;
+      z-index: 5;
+      position: relative;
+    }
+    .blow-out.show { display: inline-block; }
+    .blow-out:hover { background: rgba(255,215,106,0.15); }
   </style>
 </head>
-<body>
-  <main class="card" role="main" aria-live="polite">
-    <h1>500 — Internal Server Error</h1>
-    <p class="muted">Oops! Something went wrong on our end.</p>
-    <p class="muted">We’ll send you back home in <span id="seconds">15</span> seconds…</p>
-    <p><a class="btn" href="/">Return to Homepage</a></p>
-  </main>
+<body translate="no">
+  <div class="text">
+    <h1 id="code-num">500</h1>
+    <h2>Uh, Ohh</h2>
+    <h3 id="msg">something broke in the dark and even the torch couldn't fix it</h3>
+    <br>
+    <a class="back-link" href="https://iancheung.dev">&larr; Back to iancheung.dev</a>
+    <br>
+    <button class="blow-out" id="blow-out">blow torch out</button>
+  </div>
 
+  <div class="torch" id="torch"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script>
+    $(document).mousemove(function (event) {
+      $('#torch').css({ top: event.pageY, left: event.pageX });
+    });
+
     (function () {
-      const secondsEl = document.getElementById("seconds");
-      let remaining = 15;
+      var clicks = 0;
+      var needed = 5;
+      var codeEl = document.getElementById('code-num');
+      var torch = document.getElementById('torch');
+      var msg = document.getElementById('msg');
+      var blowOut = document.getElementById('blow-out');
+      var original = msg.textContent;
+      var joke = "something broke in the dark, and turning it off and on again just made it darker";
 
-      const tick = setInterval(() => {
-        remaining -= 1;
-        if (remaining <= 0) {
-          clearInterval(tick);
-          location.replace("/"); // redirect home
-        } else {
-          secondsEl.textContent = String(remaining);
+      codeEl.addEventListener('click', function () {
+        if (torch.classList.contains('lit')) return;
+        clicks++;
+        codeEl.style.transform = 'scale(' + (1 + clicks * 0.02) + ')';
+        if (clicks >= needed) {
+          torch.classList.add('lit');
+          msg.textContent = joke;
+          blowOut.classList.add('show');
         }
-      }, 1000);
+      });
 
-      document.querySelector("a.btn").addEventListener("click", () => clearInterval(tick));
+      blowOut.addEventListener('click', function () {
+        torch.classList.remove('lit');
+        msg.textContent = original;
+        blowOut.classList.remove('show');
+        clicks = 0;
+        codeEl.style.transform = 'scale(1)';
+      });
     })();
   </script>
 </body>

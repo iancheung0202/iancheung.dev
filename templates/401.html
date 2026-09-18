@@ -1,102 +1,173 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>401 Unauthorized! - ianbrawlstars.com</title>
+  <title>Too Dark to Enter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<base href="//s3-us-west-2.amazonaws.com/s.cdpn.io/157670/">
-<style>
-html {
-  height: 100%;
-}
+  <style>
+    html { height: 100%; }
 
-body {
-  height: 100%;
-  background: url("https://wallpapercave.com/wp/6SLzBEY.jpg") no-repeat left top;
-  background-size: cover;
-  overflow: hidden;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  align-items: center;
-}
+    body {
+      height: 100%;
+      margin: 0;
+      background: url("https://wallpapercave.com/wp/6SLzBEY.jpg") no-repeat left top;
+      background-size: cover;
+      overflow: hidden;
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: center;
+      align-items: center;
+      cursor: default;
+    }
 
-.text h1 {
-  color: #011718;
-  margin-top: -200px;
-  font-size: 15em;
-  text-align: center;
-  text-shadow: -5px 5px 0px rgba(0, 0, 0, 0.7), -10px 10px 0px rgba(0, 0, 0, 0.4), -15px 15px 0px rgba(0, 0, 0, 0.2);
-  font-family: monospace;
-  font-weight: bold;
-}
+    .text {
+      text-align: center;
+      user-select: none;
+    }
 
-.text h2 {
-  color: black;
-  font-size: 5em;
-  text-shadow: -5px 5px 0px rgba(0, 0, 0, 0.7);
-  text-align: center;
-  margin-top: -150px;
-  font-family: monospace;
-  font-weight: bold;
-}
+    .text h1 {
+      color: white;
+      margin: 0;
+      font-size: 12em;
+      line-height: 1;
+      text-align: center;
+      text-shadow: -5px 5px 0px rgba(0,0,0,0.7), -10px 10px 0px rgba(0,0,0,0.4), -15px 15px 0px rgba(0,0,0,0.2);
+      font-family: monospace;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .text h1:active { transform: scale(0.96); }
 
-.text h3 {
-  color: white;
-  margin-left: 30px;
-  font-size: 2em;
-  text-shadow: -5px 5px 0px rgba(0, 0, 0, 0.7);
-  margin-top: -40px;
-  font-family: monospace;
-  font-weight: bold;
-}
+    .text h2 {
+      color: white;
+      font-size: 3.2em;
+      text-shadow: -5px 5px 0px rgba(0,0,0,0.7);
+      text-align: center;
+      margin: 6px 0 0;
+      font-family: monospace;
+      font-weight: bold;
+    }
 
-.torch {
-  margin: -150px 0 0 -150px;
-  width: 200px;
-  height: 200px;
-  box-shadow: 0 0 0 9999em #000000f7;
-  opacity: 1;
-  border-radius: 50%;
-  position: fixed;
-  background: rgba(0, 0, 0, 0.3);
-}
-.torch:after {
-  content: "";
-  display: block;
-  border-radius: 50%;
-  width: 100%;
-  height: 100%;
-  top: 0px;
-  left: 0px;
-  box-shadow: inset 0 0 40px 2px #000, 0 0 20px 4px rgba(13, 13, 10, 0.2);
-}
-</style>
-  <script>
-  window.console = window.console || function(t) {};
-</script>
-  <script>
-  if (document.location.search.match(/type=embed/gi)) {
-    window.parent.postMessage("resize", "*");
-  }
-</script>
+    .text h3 {
+      color: white;
+      font-size: 1.4em;
+      text-shadow: -5px 5px 0px rgba(0,0,0,0.7);
+      margin: 14px 30px 0;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 24px;
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #ffd76a;
+      text-decoration: none;
+      border: 2px solid #ffd76a;
+      border-radius: 8px;
+      padding: 8px 18px;
+      text-shadow: -2px 2px 0px rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.35);
+      z-index: 5;
+      position: relative;
+    }
+
+    .torch {
+      margin: -150px 0 0 -150px;
+      width: 200px;
+      height: 200px;
+      box-shadow: 0 0 0 9999em #000000f7;
+      opacity: 1;
+      border-radius: 50%;
+      position: fixed;
+      background: rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.6s ease, width 0.6s ease, height 0.6s ease, margin 0.6s ease;
+      pointer-events: none;
+    }
+    .torch::after {
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 40px 2px #000, 0 0 20px 4px rgba(13,13,10,0.2);
+    }
+    .torch.lit {
+      width: 3000px;
+      height: 3000px;
+      margin: -1500px 0 0 -1500px;
+      box-shadow: 0 0 0 9999em rgba(0,0,0,0.15);
+    }
+
+    .blow-out {
+      display: none;
+      margin-top: 12px;
+      cursor: pointer;
+      color: #ffd76a;
+      border: 1px solid #ffd76a;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.35);
+      font-family: monospace;
+      font-size: 0.9em;
+      z-index: 5;
+      position: relative;
+    }
+    .blow-out.show { display: inline-block; }
+    .blow-out:hover { background: rgba(255,215,106,0.15); }
+  </style>
 </head>
-<body translate="no" >
+<body translate="no">
   <div class="text">
-  <h1>401</h1>
-	<h2>Uh, Ohh</h2>
-  <h3>we cannot authorize your access here cuz its too dark and it might be dangerous</h3>
-</div>
-<div class="torch"></div>
-    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
-      <script id="rendered-js" >
-$(document).mousemove(function (event) {
-  $('.torch').css({
-    'top': event.pageY,
-    'left': event.pageX });
+    <h1 id="code-num">401</h1>
+    <h2>Uh, Ohh</h2>
+    <h3 id="msg">we cannot authorize your access here cuz it's too dark and it might be dangerous</h3>
+    <br>
+    <a class="back-link" href="https://iancheung.dev">&larr; Back to iancheung.dev</a>
+    <br>
+    <button class="blow-out" id="blow-out">blow torch out</button>
+  </div>
 
-});
-    </script>
+  <div class="torch" id="torch"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    $(document).mousemove(function (event) {
+      $('#torch').css({ top: event.pageY, left: event.pageX });
+    });
+
+    (function () {
+      var clicks = 0;
+      var needed = 5;
+      var codeEl = document.getElementById('code-num');
+      var torch = document.getElementById('torch');
+      var msg = document.getElementById('msg');
+      var blowOut = document.getElementById('blow-out');
+      var original = msg.textContent;
+      var joke = "we cannot authorize your access here cuz it's too dark and, honestly, you forgot the secret handshake";
+
+      codeEl.addEventListener('click', function () {
+        if (torch.classList.contains('lit')) return;
+        clicks++;
+        codeEl.style.transform = 'scale(' + (1 + clicks * 0.02) + ')';
+        if (clicks >= needed) {
+          torch.classList.add('lit');
+          msg.textContent = joke;
+          blowOut.classList.add('show');
+        }
+      });
+
+      blowOut.addEventListener('click', function () {
+        torch.classList.remove('lit');
+        msg.textContent = original;
+        blowOut.classList.remove('show');
+        clicks = 0;
+        codeEl.style.transform = 'scale(1)';
+      });
+    })();
+  </script>
 </body>
 </html>
