@@ -2,3 +2,4 @@
 todos.json
 .well-known/
 notes/
+.flask_secret
