@@ -12,20 +12,14 @@ load_dotenv()
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.url_map.strict_slashes = False
 
-# --- Session secret key -----------------------------------------------------
-# NOTE: this used to be `os.urandom(24)`, regenerated every process start.
-# That silently invalidated every session cookie (including the notes-wall
-# device id below) on every restart, which defeats any cookie-based rate
-# limiting. Prefer a key from the environment; otherwise persist a generated
-# one to disk next to this file so it survives restarts/deploys.
-_SECRET_KEY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".flask_secret")
+SECRET_KEY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".flask_secret")
 
-def _load_secret_key():
+def load_secret_key():
     env_key = os.getenv("FLASK_SECRET_KEY")
     if env_key:
         return env_key.encode()
     try:
-        with open(_SECRET_KEY_FILE, "rb") as f:
+        with open(SECRET_KEY_FILE, "rb") as f:
             key = f.read()
             if key:
                 return key
@@ -33,16 +27,14 @@ def _load_secret_key():
         pass
     key = os.urandom(32)
     try:
-        with open(_SECRET_KEY_FILE, "wb") as f:
+        with open(SECRET_KEY_FILE, "wb") as f:
             f.write(key)
-        os.chmod(_SECRET_KEY_FILE, 0o600)
+        os.chmod(SECRET_KEY_FILE, 0o600)
     except OSError:
-        pass  # worst case we fall back to an in-memory key for this run
+        pass
     return key
 
-app.secret_key = _load_secret_key()
-# Keep people (and their notes-wall device id) signed in across visits instead
-# of only for the browser session.
+app.secret_key = load_secret_key()
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=400)
 
 @app.before_request

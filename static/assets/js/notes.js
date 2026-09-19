@@ -55,7 +55,6 @@
     return `${hrs}h`;
   }
 
-  /* ---------- wall ---------- */
   function addTile() {
     const limited = !admin && cooldownUntil > Date.now();
     const b = h("button", "pcard pcard-add" + (limited ? " pcard-cooldown" : ""));
@@ -178,7 +177,7 @@
 
       if (initial) {
         wall.replaceChildren(addTile(), ...visible.map((n) => card(n)));
-        if (!d.notes.length) wall.append(h("p", "notes-msg", "the wall is empty. be the first to pin something."));
+        if (!d.notes.length) wall.append(h("p", "notes-msg", "the board is empty. be the first to publish something."));
       } else {
         loadMoreBtn?.remove();
         loadMoreBtn = null;
@@ -186,7 +185,7 @@
       }
       renderLoadMore();
     } catch {
-      if (initial) wall.replaceChildren(addTile(), h("p", "notes-msg", "couldn't load the wall right now."));
+      if (initial) wall.replaceChildren(addTile(), h("p", "notes-msg", "couldn't load the board right now."));
       else toast("Couldn't load more notes right now.");
     }
   }
@@ -199,27 +198,27 @@
     catch (e) { alert(e.message); }
   });
 
-  const dlg = $("#nc-dialog"), cv = $("#nc-canvas"), ctx = cv.getContext("2d");
+  const dlg = $("#notes-dialog"), cv = $("#notes-canvas"), ctx = cv.getContext("2d");
   const S = 400;
   cv.width = cv.height = S;
   const INKS = ["#1b1b1b", "#e5484d", "#f5a524", "#18d26e", "#2b7fff", "#a855f7"];
   const PAPERS = ["#ffffff", "#fff4c2", "#d9ecff", "#ffd9e6", "#dff5e1", "#1b1b1b"];
-  const STAMPS = ["🐳", "🍵", "🌸", "⭐", "☁️", "🔥", "⛰️", "🎉", "🤠", "💙"];
+  const STAMPS = ["🐳", "🍵", "🌸", "⭐", "☁️", "🔥", "⛰️", "🎉", "🤠", "💙", "🖥️", "👀", "🐻", "🫡", "💯", "❗", "🎻", "🎵"];
   const st = { tool: "pen", ink: INKS[0], paper: PAPERS[0], stamp: STAMPS[0], size: 6 };
   let undo = [], drawing = false, last = null;
 
   const fill = (box, list, cls, style) => list.forEach((v) => {
     const b = h("button", cls);
     b.type = "button";
-    b.dataset.k = box.id === "nc-inks" ? "ink" : box.id === "nc-papers" ? "paper" : "stamp";
+    b.dataset.k = box.id === "notes-inks" ? "ink" : box.id === "notes-papers" ? "paper" : "stamp";
     b.dataset.v = v;
     b.setAttribute("aria-label", v);
     style ? (b.style.background = v) : (b.textContent = v);
     box.append(b);
   });
-  fill($("#nc-inks"), INKS, "nc-sw", true);
-  fill($("#nc-papers"), PAPERS, "nc-sw", true);
-  fill($("#nc-stamps"), STAMPS, "nc-stamp", false);
+  fill($("#notes-inks"), INKS, "notes-sw", true);
+  fill($("#notes-papers"), PAPERS, "notes-sw", true);
+  fill($("#notes-stamps"), STAMPS, "notes-stamp", false);
 
   function sync() {
     dlg.querySelectorAll("[data-k]").forEach((b) => b.classList.toggle("on", String(st[b.dataset.k]) === b.dataset.v));
@@ -234,7 +233,7 @@
     if (b.dataset.k === "stamp") st.tool = "stamp";
     sync();
   });
-  $("#nc-size").addEventListener("input", (e) => (st.size = +e.target.value));
+  $("#notes-size").addEventListener("input", (e) => (st.size = +e.target.value));
 
   const pos = (e) => {
     const r = cv.getBoundingClientRect();
@@ -271,16 +270,16 @@
   });
   cv.addEventListener("pointermove", (e) => { if (drawing) stroke(...pos(e)); });
   ["pointerup", "pointercancel"].forEach((t) => cv.addEventListener(t, () => (drawing = false)));
-  $("#nc-undo").addEventListener("click", () => { const s = undo.pop(); if (s) ctx.putImageData(s, 0, 0); });
-  $("#nc-clear").addEventListener("click", () => { snap(); ctx.clearRect(0, 0, S, S); });
-  $("#nc-cancel").addEventListener("click", () => dlg.close());
+  $("#notes-undo").addEventListener("click", () => { const s = undo.pop(); if (s) ctx.putImageData(s, 0, 0); });
+  $("#notes-clear").addEventListener("click", () => { snap(); ctx.clearRect(0, 0, S, S); });
+  $("#notes-cancel").addEventListener("click", () => dlg.close());
 
-  const err = (m) => ($("#nc-error").textContent = m || "");
+  const err = (m) => ($("#notes-error").textContent = m || "");
   function openComposer() {
     err("");
     sync();
     dlg.showModal();
-    $("#nc-text").focus();
+    $("#notes-text").focus();
   }
 
   function exportPng() {
@@ -293,21 +292,21 @@
     return o.toDataURL("image/png");
   }
 
-  $("#nc-submit").addEventListener("click", async (e) => {
-    const text = $("#nc-text").value.trim();
+  $("#notes-submit").addEventListener("click", async (e) => {
+    const text = $("#notes-text").value.trim();
     if (!text) return err("write a caption first ✍️");
     err("");
     e.target.disabled = true;
     try {
       const n = await api("api/notes", {
         method: "POST",
-        body: JSON.stringify({ text, name: $("#nc-name").value, website: $("#nc-site").value, image: exportPng() }),
+        body: JSON.stringify({ text, name: $("#notes-name").value, website: $("#notes-site").value, image: exportPng() }),
       });
       cooldownUntil = Date.now() + 24 * 3600 * 1000; 
       dlg.close();
       ctx.clearRect(0, 0, S, S);
       undo = [];
-      $("#nc-text").value = $("#nc-name").value = "";
+      $("#notes-text").value = $("#notes-name").value = "";
       wall.querySelector(".notes-msg")?.remove();
       wall.querySelector(".pcard-add").replaceWith(addTile());
       wall.querySelector(".pcard-add").after(card(n, true));

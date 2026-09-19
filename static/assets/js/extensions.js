@@ -48,7 +48,7 @@
             var preloadImg = new Image();
             preloadImg.onload = function() {
                 if (headerPhoto) headerPhoto.style.backgroundImage = "url('" + url + "')";
-                if (filenameElem) filenameElem.textContent = filename.replace(/\.[^/.]+$/, "");
+                if (filenameElem) filenameElem.innerHTML = filename.replace(/\.[^/.]+$/, "") + " 📸";
                 requestAnimationFrame(function() {
                     if (headerPhoto) headerPhoto.classList.add('is-visible');
                     if (creditsElem) creditsElem.classList.add('is-visible');

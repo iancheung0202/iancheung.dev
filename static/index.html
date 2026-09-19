@@ -217,16 +217,16 @@
                           <span class="dc-section-label">GAME COLLECTION</span>
                           <div class="dc-games-row d-flex gap-1">
                             <img class="dc-game-thumb"
-                                 src="https://cdn.discordapp.com/app-icons/1402418491272986635/166fbad351ecdd02d11a3b464748f66b.png?size=128"
-                                 title="Minecraft" alt="Minecraft"
+                                 src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC83Z3RXWGp1Sm5TMlpDWG1Db2tTZC5wbmcifQ:supercell:VSJq-hqEuQm-KltmcyeZuofET4OrgzLTfo81s1YQXeQ?width=128&height=128"
+                                 title="Brawl Stars" alt="Brawl Stars"
                                  onerror="this.style.display='none'">
                             <img class="dc-game-thumb"
                                  src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC80SEQzUWJTN0g3VnJkUE1ENVp2eC5wbmcifQ:supercell:m3Kilkm5YQ79_Njnrsso7xomOdmXqQlrAZPacydXARM?width=128&height=128"
                                  title="Clash Royale" alt="Clash Royale"
                                  onerror="this.style.display='none'">
                             <img class="dc-game-thumb"
-                                 src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC83Z3RXWGp1Sm5TMlpDWG1Db2tTZC5wbmcifQ:supercell:VSJq-hqEuQm-KltmcyeZuofET4OrgzLTfo81s1YQXeQ?width=128&height=128"
-                                 title="Brawl Stars" alt="Brawl Stars"
+                                 src="https://cdn.discordapp.com/app-icons/1402418491272986635/166fbad351ecdd02d11a3b464748f66b.png?size=128"
+                                 title="Minecraft" alt="Minecraft"
                                  onerror="this.style.display='none'">
                           </div>
                         </div>
@@ -275,39 +275,39 @@
           <p>public board</p>
         </div>
         <p class="paragraph">I'm deeply honored to have you on my website. Leave a sketch and a message for the world to see!</p>
-        <div class="notes-wall" id="notes-wall"><p class="notes-msg">Building the wall…</p></div>
-        <p class="notes-foot"><button type="button" id="notes-admin">Tip:</button> If you see something not right, flip it over and hit <b>Report</b></p>
+        <div class="notes-wall" id="notes-wall"><p class="notes-msg">loading...</p></div>
+        <p class="notes-foot"><button type="button" id="notes-admin">Tip:</button> If you see something that's not right, flip it over and hit <b>Report</b>.</p>
       </div>
     </section>
 
-    <dialog class="nc-dialog" id="nc-dialog" aria-label="Leave a note">
-      <div class="nc-body">
-        <div class="nc-polaroid">
-          <canvas id="nc-canvas" aria-label="Drawing area"></canvas>
-          <input class="nc-caption" id="nc-text" maxlength="44" placeholder="write something…" autocomplete="off">
-          <input class="nc-name" id="nc-name" maxlength="24" placeholder="— your name (optional)" autocomplete="off">
+    <dialog class="notes-dialog" id="notes-dialog" aria-label="Leave a note">
+      <div class="notes-body">
+        <div class="notes-polaroid">
+          <canvas id="notes-canvas" aria-label="Drawing area"></canvas>
+          <input class="notes-caption" id="notes-text" maxlength="44" placeholder="write something…" autocomplete="off">
+          <input class="notes-name" id="notes-name" maxlength="24" placeholder="your name (optional)" autocomplete="off">
         </div>
-        <div class="nc-tools">
-          <div class="nc-row"><span class="nc-label">tool</span>
-            <button type="button" class="nc-btn" data-k="tool" data-v="pen">Pen</button>
-            <button type="button" class="nc-btn" data-k="tool" data-v="eraser">Eraser</button>
-            <button type="button" class="nc-btn" data-k="tool" data-v="stamp">Stamp</button>
+        <div class="notes-tools">
+          <div class="notes-row"><span class="notes-label">tool</span>
+            <button type="button" class="notes-btn" data-k="tool" data-v="pen">Pen</button>
+            <button type="button" class="notes-btn" data-k="tool" data-v="eraser">Eraser</button>
+            <button type="button" class="notes-btn" data-k="tool" data-v="stamp">Stamp</button>
           </div>
-          <div class="nc-row" id="nc-stamps"><span class="nc-label">stamp</span></div>
-          <div class="nc-row" id="nc-inks"><span class="nc-label">ink</span></div>
-          <div class="nc-row" id="nc-papers"><span class="nc-label">paper</span></div>
-          <div class="nc-row"><span class="nc-label">size</span><input type="range" id="nc-size" min="2" max="24" value="6" aria-label="Brush size"></div>
-          <div class="nc-row">
-            <button type="button" class="nc-btn" id="nc-undo">Undo</button>
-            <button type="button" class="nc-btn" id="nc-clear">Clear</button>
+          <div class="notes-row" id="notes-stamps"><span class="notes-label">stamp</span></div>
+          <div class="notes-row" id="notes-inks"><span class="notes-label">ink</span></div>
+          <div class="notes-row" id="notes-papers"><span class="notes-label">paper</span></div>
+          <div class="notes-row"><span class="notes-label">size</span><input type="range" id="notes-size" min="2" max="24" value="6" aria-label="Brush size"></div>
+          <div class="notes-row">
+            <button type="button" class="notes-btn" id="notes-undo">Undo</button>
+            <button type="button" class="notes-btn" id="notes-clear">Clear</button>
           </div>
-          <p class="nc-error" id="nc-error" role="alert"></p>
-          <div class="nc-row">
-            <button type="button" class="nc-btn nc-go" id="nc-submit">Pin it to the wall</button>
-            <button type="button" class="nc-btn" id="nc-cancel">Cancel</button>
+          <p class="notes-error" id="notes-error" role="alert"></p>
+          <div class="notes-row">
+            <button type="button" class="notes-btn notes-go" id="notes-submit">Publish</button>
+            <button type="button" class="notes-btn" id="notes-cancel">Cancel</button>
           </div>
         </div>
-        <input class="nc-site" id="nc-site" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input class="notes-site" id="notes-site" tabindex="-1" autocomplete="off" aria-hidden="true">
       </div>
     </dialog>
 
