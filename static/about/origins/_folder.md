@@ -1,5 +1,5 @@
 ---
 label: origins
-icon: icon.svg
-order: 1
+order: 0
 ---
+

@@ -11,12 +11,18 @@
     return e;
   };
   const api = (url, opts = {}) =>
-    fetch(url, { headers: { "Content-Type": "application/json" }, credentials: "same-origin", ...opts })
-      .then(async (r) => {
-        const d = await r.json().catch(() => ({}));
-        if (!r.ok) throw new Error(d.error || "Something went wrong.");
-        return d;
-      });
+    fetch(url, {
+      credentials: "same-origin",
+      ...opts,
+      headers: { "Content-Type": "application/json", "X-Requested-With": "fetch", ...(opts.headers || {}) },
+    }).then(async (r) => {
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        if (r.status === 401 && window.SiteAdmin) window.SiteAdmin.refresh();
+        throw new Error(d.error || "Something went wrong.");
+      }
+      return d;
+    });
   const ls = {
     get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
     set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
@@ -35,7 +41,13 @@
 
   function trashAndRemove(cardEl, after) {
     cardEl.classList.add("trashing");
-    const done = () => { cardEl.remove(); after && after(); };
+    let finished = false;
+    const done = () => {
+      if (finished) return; 
+      finished = true;
+      cardEl.remove();
+      after && after();
+    };
     cardEl.addEventListener("animationend", done, { once: true });
     setTimeout(done, 900); 
   }
@@ -76,7 +88,7 @@
   }
 
   function card(n, fresh) {
-    const c = h("article", "pcard" + (fresh ? " printing" : ""));
+    const c = h("article", "pcard" + (fresh ? " printing" : "") + (n.pinned ? " pcard-pinned" : ""));
     c.style.setProperty("--rot", rot(n.id) + "deg");
     c.tabIndex = 0;
     c.setAttribute("aria-label", "Note: " + n.text);
@@ -105,18 +117,22 @@
       b.addEventListener("click", () => fn(b));
       return b;
     };
-    const act = async (method) => {
+    const act = async (method, body) => {
       try {
-        await api("api/notes/" + n.id, { method });
+        await api("api/notes/" + n.id, {
+          method,
+          body: body ? JSON.stringify(body) : undefined,
+        });
         if (method === "DELETE") trashAndRemove(c, load);
         else load();
       } catch (e) { alert(e.message); }
     };
     if (admin) {
-      if (n.status === "hidden") {
-        back.append(h("div", "pdate", "HIDDEN · " + n.reports + " REPORTS"), btn("Restore", () => act("PATCH")));
-      }
-      back.append(btn("Delete", () => confirm("Delete this note for good?") && act("DELETE")));
+      if (n.reports) back.append(h("div", "pdate", n.reports + (n.reports === 1 ? " REPORT" : " REPORTS")));
+      back.append(
+        btn(n.pinned ? "Unpin" : "Pin", () => act("PATCH", { action: n.pinned ? "unpin" : "pin" })),
+        btn("Delete", () => confirm("Delete this note for good?") && act("DELETE"))
+      );
     } else {
       back.append(btn("Report", async (b) => {
         b.disabled = true;
@@ -145,7 +161,7 @@
     return c;
   }
 
-  let cursor = null;
+  let offset = 0;
   let hasMore = false;
   let loadMoreBtn = null;
 
@@ -165,12 +181,13 @@
 
   async function load(initial = true) {
     try {
-      const url = initial ? "api/notes" : `api/notes?before=${encodeURIComponent(cursor)}`;
+      const url = initial ? "api/notes" : `api/notes?offset=${offset}`;
       const d = await api(url);
       admin = d.admin;
       cooldownUntil = d.cooldown_seconds > 0 ? Date.now() + d.cooldown_seconds * 1000 : 0;
       hasMore = !!d.has_more;
-      if (d.notes.length) cursor = d.notes[d.notes.length - 1].created;
+      if (initial) offset = d.notes.length;
+      else offset += d.notes.length;
 
       const reported = new Set(getReportedIds());
       const visible = d.notes.filter((n) => admin || !reported.has(n.id));
@@ -190,20 +207,45 @@
     }
   }
 
-  $("#notes-admin").addEventListener("click", async () => {
-    if (admin) return alert("You're in admin mode. Flip a note to moderate it.");
-    const password = prompt("Enter the admin password to moderate notes:");
-    if (!password) return;
-    try { await api("api/notes/admin", { method: "POST", body: JSON.stringify({ password }) }); load(); }
-    catch (e) { alert(e.message); }
+  $("#notes-admin").addEventListener("click", () => {
+    if (!window.SiteAdmin) return alert("Admin tools failed to load. Refresh the page and try again.");
+    window.SiteAdmin.toggle();
   });
+
+  if (window.SiteAdmin) {
+    window.SiteAdmin.subscribe((isAdmin) => {
+      if (isAdmin !== admin) load();
+    });
+  }
 
   const dlg = $("#notes-dialog"), cv = $("#notes-canvas"), ctx = cv.getContext("2d");
   const S = 400;
   cv.width = cv.height = S;
   const INKS = ["#1b1b1b", "#e5484d", "#f5a524", "#18d26e", "#2b7fff", "#a855f7"];
   const PAPERS = ["#ffffff", "#fff4c2", "#d9ecff", "#ffd9e6", "#dff5e1", "#1b1b1b"];
-  const STAMPS = ["🐳", "🍵", "🌸", "⭐", "☁️", "🔥", "⛰️", "🎉", "🤠", "💙", "🖥️", "👀", "🐻", "🫡", "💯", "❗", "🎻", "🎵"];
+  const EMOJI_FONT = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif';
+  const ALL_STAMPS = ["🐳", "🍵", "🌸", "⭐", "☁️", "🔥", "⛰️", "🎉", "🤠", "💙", "🖥️", "👀", "🐻", "🐾", "❗", "🎻", "🎵", "🫡"];
+  function supportedEmoji(list) {
+    try {
+      const probe = document.createElement("canvas");
+      probe.width = probe.height = 40;
+      const px = probe.getContext("2d", { willReadFrequently: true });
+      const sig = (ch) => {
+        px.clearRect(0, 0, 40, 40);
+        px.font = `28px ${EMOJI_FONT}`;
+        px.textBaseline = "top";
+        px.fillStyle = "#000";
+        px.fillText(ch, 2, 2);
+        return px.getImageData(0, 0, 40, 40).data;
+      };
+      const same = (a, b) => { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false; return true; };
+      const blank = (a) => { for (let i = 3; i < a.length; i += 4) if (a[i]) return false; return true; };
+      const tofu = [sig("\u{10FFFF}"), sig("\u{FFFFD}")];
+      const ok = list.filter((ch) => { const d = sig(ch); return !blank(d) && !tofu.some((t) => same(d, t)); });
+      return ok.length ? ok : list;
+    } catch { return list; }
+  }
+  const STAMPS = supportedEmoji(ALL_STAMPS);
   const st = { tool: "pen", ink: INKS[0], paper: PAPERS[0], stamp: STAMPS[0], size: 6 };
   let undo = [], drawing = false, last = null;
 
@@ -258,7 +300,7 @@
     const [x, y] = pos(e);
     if (st.tool === "stamp") {
       ctx.globalCompositeOperation = "source-over";
-      ctx.font = `${st.size * 5 + 24}px serif`;
+      ctx.font = `${st.size * 5 + 24}px ${EMOJI_FONT}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(st.stamp, x, y);

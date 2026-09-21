@@ -1,6 +1,6 @@
 ---
 title: building discord bots
-order: 2
+order: 1
 ---
 
 <details>

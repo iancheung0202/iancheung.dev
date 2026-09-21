@@ -29,18 +29,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Doto:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Doto:wght@700&display=swap" rel="stylesheet"></noscript>
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap-icons.min.css">
     <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <script src="assets/vendor/jquery/jquery.min.js" defer></script>
+    <script src="assets/vendor/tone/tone.js"></script>
     <link href="assets/css/style.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     
-    <meta name="keywords" content="Ian Cheung, Music, Violin, Composition, Composer, Web Developer, Python, HTML, CSS, JavaScript, Ian, Coding">
+    <meta name="keywords" content="Ian Cheung, Music, Violin, Composition, Composer, Web Developer, Discord Bot Developer, Full Stack Developer, Python, Berkeley">
     <meta name="author" content="Ian Cheung">
     <meta property="og:url" content="https://www.iancheung.dev">
     <meta property="og:site_name" content="Ian Cheung">
-    <meta property="og:description" content="Ian Cheung is a freshman at UC Berkeley who is interested in data science, programming, music, and community leadership. As a front-end web and Discord bot developer, Ian is passionate about creating innovative solutions that enhance user experiences.">
-    <meta name="description" content="Ian Cheung is a freshman at UC Berkeley who is interested in data science, programming, music, and community leadership. As a front-end web and Discord bot developer, Ian is passionate about creating innovative solutions that enhance user experiences.">
+    <meta property="og:description" content="Ian Cheung is a sophomore at UC Berkeley, currently studying Applied Mathematics and Data Science. He is interested in data analysis, programming, music, and community leadership.">
+    <meta name="description" content="Ian Cheung is a sophomore at UC Berkeley, currently studying Applied Mathematics and Data Science. He is interested in data analysis, programming, music, and community leadership. ">
     <meta property="og:title" content="Ian Cheung - Portfolio">
     <meta property="og:image" content="">
     <meta name="theme-color" content="#1e90ff">
@@ -180,7 +180,7 @@
             </div>
           </div>
           <div class="col-lg-4 col-md-12 d-flex align-items-stretch">
-            <div class="window-div w-100" style="height:auto; align-self:flex-start; max-height:calc(100vh - 220px); overflow-y:auto;">
+            <div class="window-div discord-pending w-100" style="height:auto; align-self:flex-start; max-height:calc(100vh - 220px); overflow-y:auto;">
               <div class="window-bar">
                 <div class="window-button red"></div>
                 <div class="window-button yellow"></div>
@@ -189,51 +189,42 @@
               <div id="window-body-wrapper">
                 <div id="curious-section">
                   <div class="discord-about-me p-0">
-                    <div id="dc-profile-card">
-                      <div class="dc-banner" id="dc-banner"></div>
-                      <div class="dc-header-row">
-                        <div class="dc-avatar-container">
-                          <div class="dc-avatar-ring">
-                            <img class="dc-avatar-img" id="dc-avatar" src="https://cdn.discordapp.com/avatars/692254240290242601/f2629db9da31f30fb3b8738b39e7346f.png?size=1024" alt="ian.">
+                    <div id="discord-profile-card">
+                      <div class="discord-banner" id="discord-banner"></div>
+                      <div class="discord-header-row">
+                        <div class="discord-avatar-container">
+                          <div class="discord-avatar-ring">
+                            <img class="discord-avatar-img" id="discord-avatar" src="https://cdn.discordapp.com/avatars/692254240290242601/f2629db9da31f30fb3b8738b39e7346f.png?size=1024" alt="ian.">
                           </div>
-                          <span class="dc-status-badge" id="dc-status-badge" data-status="offline" title="Offline"><div class="dc-status-symbol dc-status-offline-symbol"></div></span>
+                          <span class="discord-status-badge" id="discord-status-badge" data-status="offline" title="Offline"><div class="discord-status-symbol discord-status-offline-symbol"></div></span>
                         </div>
-                        <div id="dc-custom-status-area"></div>
+                        <div id="discord-custom-status-area"></div>
                       </div>
-                      <div class="dc-profile-body">
-                        <div class="dc-name-block mb-2">
-                          <div class="dc-display-name d-flex align-items-center flex-wrap">ian.
-                            <a href="https://discord.gg/mysticraft" target="_blank"><span class="dc-badge"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" class="dc-badge-img" alt="">MYST</span></a>
-                            <button class="dc-copy-btn" id="dc-copy-btn" title="Copy User ID"><i class="bi bi-copy"></i></button>
+                      <div class="discord-profile-body">
+                        <div class="discord-name-block mb-2">
+                          <div class="discord-display-name d-flex align-items-center flex-wrap">ian.
+                            <a href="https://discord.gg/mysticraft" target="_blank"><span class="discord-badge"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" class="discord-badge-img" alt="">MYST</span></a>
+                            <button class="discord-copy-btn" id="discord-copy-btn" title="Copy User ID"><i class="bi bi-copy"></i></button>
                           </div>
-                          <div class="dc-username-pronouns d-flex align-items-center gap-1">
-                            <span class="dc-username">iancheung.dev</span>
-                            <span class="dc-dot-sep">•</span>
-                            <span class="dc-pronouns">he/him</span>
-                          </div>
-                        </div>
-                        <div class="dc-divider"></div>
-                        <div class="dc-section-block dc-section-inline d-flex align-items-center gap-2 mb-1">
-                          <span class="dc-section-label">GAME COLLECTION</span>
-                          <div class="dc-games-row d-flex gap-1">
-                            <img class="dc-game-thumb"
-                                 src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC83Z3RXWGp1Sm5TMlpDWG1Db2tTZC5wbmcifQ:supercell:VSJq-hqEuQm-KltmcyeZuofET4OrgzLTfo81s1YQXeQ?width=128&height=128"
-                                 title="Brawl Stars" alt="Brawl Stars"
-                                 onerror="this.style.display='none'">
-                            <img class="dc-game-thumb"
-                                 src="https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJwYXRoIjoic3VwZXJjZWxsXC9maWxlXC80SEQzUWJTN0g3VnJkUE1ENVp2eC5wbmcifQ:supercell:m3Kilkm5YQ79_Njnrsso7xomOdmXqQlrAZPacydXARM?width=128&height=128"
-                                 title="Clash Royale" alt="Clash Royale"
-                                 onerror="this.style.display='none'">
-                            <img class="dc-game-thumb"
-                                 src="https://cdn.discordapp.com/app-icons/1402418491272986635/166fbad351ecdd02d11a3b464748f66b.png?size=128"
-                                 title="Minecraft" alt="Minecraft"
-                                 onerror="this.style.display='none'">
+                          <div class="discord-username-pronouns d-flex align-items-center gap-1">
+                            <span class="discord-username">iancheung.dev</span>
+                            <span class="discord-dot-sep">•</span>
+                            <span class="discord-pronouns">he/him</span>
                           </div>
                         </div>
-                        <div class="dc-divider"></div>
+                        <hr class="discord-divider">
+                        <div class="discord-section-block discord-section-inline d-flex align-items-center gap-2 mb-1">
+                          <span class="discord-section-label">GAME COLLECTION</span>
+                          <div class="discord-games-row d-flex gap-1">
+                            <img class="discord-game-logo" src="assets/img/brawl.png" title="Brawl Stars" alt="Brawl Stars" onerror="this.style.display='none'">
+                            <img class="discord-game-logo" src="assets/img/clash.png" title="Clash Royale" alt="Clash Royale" onerror="this.style.display='none'">
+                            <img class="discord-game-logo" src="assets/img/minecraft.png" title="Minecraft" alt="Minecraft" onerror="this.style.display='none'">
+                          </div>
+                        </div>
+                        <hr class="discord-divider">
                         <div id="discord-activity-feed">
-                          <div class="dc-no-activity">
-                            <span>Loading activity...</span>
+                          <div class="discord-no-activity">
+                            <span>loading...</span>
                           </div>
                         </div>
                       </div>
@@ -282,10 +273,17 @@
 
     <dialog class="notes-dialog" id="notes-dialog" aria-label="Leave a note">
       <div class="notes-body">
-        <div class="notes-polaroid">
-          <canvas id="notes-canvas" aria-label="Drawing area"></canvas>
-          <input class="notes-caption" id="notes-text" maxlength="44" placeholder="write something…" autocomplete="off">
-          <input class="notes-name" id="notes-name" maxlength="24" placeholder="your name (optional)" autocomplete="off">
+        <div class="notes-left">
+          <div class="notes-polaroid">
+            <canvas id="notes-canvas" aria-label="Drawing area"></canvas>
+            <input class="notes-caption" id="notes-text" maxlength="44" placeholder="write something…" autocomplete="off">
+            <input class="notes-name" id="notes-name" maxlength="24" placeholder="your name (optional)" autocomplete="off">
+          </div>
+          <p class="notes-error" id="notes-error" role="alert"></p>
+          <div class="notes-row notes-row-submit">
+            <button type="button" class="notes-btn notes-go" id="notes-submit">Publish</button>
+            <button type="button" class="notes-btn" id="notes-cancel">Cancel</button>
+          </div>
         </div>
         <div class="notes-tools">
           <div class="notes-row"><span class="notes-label">tool</span>
@@ -301,20 +299,16 @@
             <button type="button" class="notes-btn" id="notes-undo">Undo</button>
             <button type="button" class="notes-btn" id="notes-clear">Clear</button>
           </div>
-          <p class="notes-error" id="notes-error" role="alert"></p>
-          <div class="notes-row">
-            <button type="button" class="notes-btn notes-go" id="notes-submit">Publish</button>
-            <button type="button" class="notes-btn" id="notes-cancel">Cancel</button>
-          </div>
         </div>
         <input class="notes-site" id="notes-site" tabindex="-1" autocomplete="off" aria-hidden="true">
       </div>
     </dialog>
 
-    <div class="credits">
+    <div class="footer">
       <span id="photo-filename"></span>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/marked@18.0.13/lib/marked.umd.js"></script>
+    <script src="assets/js/admin.js"></script>
     <script src="assets/js/extensions.js"></script>
     <script src="https://widget.tagembed.com/embed.min.js"></script>
     <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>

@@ -11,7 +11,7 @@ For a long time, I had wanted a place for the small, meandering stuff that doesn
 
 It is also **not** a blog, per se. I don't really have much to write about other than my life story and experiences. For the longest time (since I started web dev in 2020), I had treated my website as a portfolio/resume representing the perfect version of myself; but over the years, I have slowly lost interest in that format and found it unappealing for the most part. As a side effect, over time, my website just became the outdated version of my resume and the works I do, since it was also quite cumbersome to update the contents of the website.
 
-My life story, hopefully just like yours, is extremely rich fruitful, and definitely does not fit entirely onto this website. My goal is to add a lot more pages down the line and eventually *(or at least attempt to)* populate them enough to ultimately cover the majority of the facets of my life, both currently and previously. 
+My life story, hopefully just like yours, is extremely rich and fruitful, and definitely does not fit entirely onto this website. My goal is to add a lot more pages down the line and eventually *(or at least attempt to)* populate them enough to ultimately cover the majority of the facets of my life, both currently and previously. 
 
 Regardless, if you walked away from my website having at least learnt one or two new things about me, I would more than satisfied and immensely grateful.
 

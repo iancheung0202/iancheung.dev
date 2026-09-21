@@ -178,9 +178,6 @@
         }, 350);
 
         scrollto(window.location.hash)
-        let windowDiv = select(".window-div");
-        windowDiv.style.visibility = "hidden";
-        windowDiv.style.display = "none";
       }
     }
   });

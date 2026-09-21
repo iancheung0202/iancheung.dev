@@ -1,6 +1,6 @@
 ---
 title: life as musician
-order: 1
+order: 0
 ---
 
 hmmm
