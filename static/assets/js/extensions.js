@@ -588,6 +588,7 @@
      */
     document.addEventListener('DOMContentLoaded', () => {
         const btn = select('#mobile-nav-toggle');
+        const footer = select('.footer');
         if (!btn) return;
         
         function addClassAfterDelay() {
@@ -598,10 +599,13 @@
         }, 4000);
         }
         function removeClassOnClick() {
-        btn.classList.remove('wobble');
-        btn.classList.add('clicked');
-        btn.removeEventListener('click', removeClassOnClick);
+            btn.classList.remove('wobble');
+            btn.classList.add('clicked');
+            btn.removeEventListener('click', removeClassOnClick);
         }
+        btn.addEventListener('click', () => {
+            if (footer) footer.classList.toggle('is-visible');
+        });
         addClassAfterDelay();
         btn.addEventListener('click', removeClassOnClick);
     });

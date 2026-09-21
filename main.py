@@ -17,7 +17,7 @@ from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 from dotenv import load_dotenv
-from flask import Flask, abort, jsonify, redirect, render_template, render_template_string, request, send_file, session, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, request, send_file, session, url_for
 
 load_dotenv()
 
@@ -229,21 +229,67 @@ def pricing_page():
 
 @app.route("/class/")
 def grade_page():
-    class_root = os.path.join(app.static_folder, "class")
-    files = sorted(
-        os.path.relpath(os.path.join(root, filename), app.static_folder).replace(os.sep, "/")
-        for root, _, filenames in os.walk(class_root)
-        for filename in filenames
-    )
-    return render_template_string(
-        "<!doctype html><html><body><ul>"
-        "{% for file in files %}<li><a href=\"{{ url_for('static', filename=file) }}\">{{ file }}</a></li>{% endfor %}"
-        "</ul></body></html>",
-        files=files,
-    )
+    return render_template("class.html")
 
 
-### Story pages (public, read-only)
+
+
+### Class pages
+
+
+CLASS_DIR = os.path.join(app.static_folder, "class")
+
+
+def class_url(*parts: str) -> str:
+    return "/class/" + "/".join(quote(part) for part in parts)
+
+
+def class_file_names(folder_path: str) -> list[str]:
+    return [
+        name
+        for name in os.listdir(folder_path)
+        if not name.startswith(("_", ".")) and os.path.isfile(os.path.join(folder_path, name))
+    ]
+
+
+@app.route("/api/class")
+def class_tree():
+    folders = []
+
+    for folder in list_folders(CLASS_DIR):
+        folder_path = os.path.join(CLASS_DIR, folder)
+        pages = []
+        for filename in class_file_names(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            pages.append(
+                {
+                    "key": f"{folder}/{filename}",
+                    "title": filename,
+                    "url": class_url(folder, filename),
+                    "updated": datetime.fromtimestamp(os.path.getmtime(file_path), tz=timezone.utc).isoformat(),
+                }
+            )
+
+        if not pages:
+            continue 
+        pages.sort(key=lambda p: p["title"].lower())
+
+        folder_meta = read_front_matter(os.path.join(folder_path, FOLDER_META_FILE))
+        folders.append(
+            {
+                "id": folder,
+                "label": folder_meta.get("label") or folder.replace("-", " ").replace("_", " "),
+                "icon": resolve_icon(CLASS_DIR, class_url, folder, folder_meta.get("icon")),
+                "order": parse_order(folder_meta.get("order")),
+                "pages": pages,
+            }
+        )
+
+    folders.sort(key=lambda f: (f["order"], f["label"].lower()))
+    return jsonify({"folders": folders})
+
+
+### Story pages
 
 
 def read_front_matter(path: str) -> dict[str, str]:
@@ -282,25 +328,33 @@ def about_url(*parts: str) -> str:
     return "about/" + "/".join(quote(part) for part in parts)
 
 
-def resolve_folder_icon(folder: str, icon: str | None) -> str | None:
+def resolve_icon(base_dir: str, url_builder, folder: str, icon: str | None) -> str | None:
     if not icon:
         return None
     if icon.startswith(("http://", "https://", "/")):
         return icon
-    local = os.path.join(ABOUT_DIR, folder, icon)
+    local = os.path.join(base_dir, folder, icon)
     if os.path.isfile(local):
-        return f"{about_url(folder, icon)}?v={int(os.path.getmtime(local))}"
+        return f"{url_builder(folder, icon)}?v={int(os.path.getmtime(local))}"
     return None
 
 
-def folder_names() -> list[str]:
-    if not os.path.isdir(ABOUT_DIR):
+def resolve_folder_icon(folder: str, icon: str | None) -> str | None:
+    return resolve_icon(ABOUT_DIR, about_url, folder, icon)
+
+
+def list_folders(base_dir: str) -> list[str]:
+    if not os.path.isdir(base_dir):
         return []
     return [
         name
-        for name in os.listdir(ABOUT_DIR)
-        if not name.startswith((".", "_")) and os.path.isdir(os.path.join(ABOUT_DIR, name))
+        for name in os.listdir(base_dir)
+        if not name.startswith((".", "_")) and os.path.isdir(os.path.join(base_dir, name))
     ]
+
+
+def folder_names() -> list[str]:
+    return list_folders(ABOUT_DIR)
 
 
 def page_filenames(folder_path: str) -> list[str]:

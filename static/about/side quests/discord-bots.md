@@ -1,5 +1,5 @@
 ---
-title: building discord bots
+title: building software
 order: 1
 ---
 

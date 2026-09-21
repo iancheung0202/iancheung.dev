@@ -1,6 +1,6 @@
 ---
-title: life as musician
+title: my musician life
 order: 0
 ---
 
-hmmm
+ifykyk

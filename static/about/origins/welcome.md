@@ -19,12 +19,6 @@ Regardless, if you walked away from my website having at least learnt one or two
 
 Every page you read here is now written in plain [markdown](https://www.markdownguide.org/) and automatically rendered to HTML, which makes it tenfold easier to keep it up to date. 
 
-I have categorized the pages to make it easier to browse through my life chapters, though I highly advise you not to fit yourself in a box with labels.
-
-- some pages are very short
-- some ramble on and on and on and on...
-- all of them are true, as far as I remember
-
-I will first write as much about my history and past experiences first. In the future, as time progresses, I will be able to update those experiences and add more content/pages accordingly. Heck, I might be able to even add some new categories as I discover more of the world, who knows?
+I have categorized the pages to make it easier to browse through my life chapters. For now, I will first try to backfill as much about my history and past experiences first. In the future, as time progresses, I will be able to update those experiences and add more content/pages accordingly. Heck, I might be able to even add some new categories as I discover more of the world, who knows?
 
 > This is **__my__** life story. I did not use, and will not be using any LLMs to generate, edit, or assist in writing any of the text content you see in any way. What you see is the result of hundreds of thousands of spontaneous keystrokes pressed by my fingers on the keyboards, controlled by millions of neurons firing from my brain. These writings are not perfect, nor are they meant to be. I will admit, though, that AI has fundamentally changed the way we write, think, and communicate; you might even find some subtle yet striking similarities between my writing and a typical LLM-generated output. I regularly use AI to help my day-to-day workflow and tasks, but this time, I want to take 100% control and ownership of it. This applies to every single chapter of my life, and so should yours too.
