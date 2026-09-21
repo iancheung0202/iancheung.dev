@@ -1680,7 +1680,7 @@ select.story-edit-title { appearance: auto; }
 }
 
 /*--------------------------------------------------------------
-# Class Page (standalone /class/, reuses .story-* above)
+# Class Page 
 --------------------------------------------------------------*/
 
 .class-shell {
@@ -1690,7 +1690,7 @@ select.story-edit-title { appearance: auto; }
 
 .class-shell .container {
   max-width: 1100px;
-  padding: 60px 30px 80px;
+  padding: 30px 30px 80px;
 }
 
 .class-topbar {
