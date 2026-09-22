@@ -212,6 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return text;
     };
 
+    if (typeof marked !== 'undefined' && typeof markedKatex !== 'undefined' && !marked.__katexInstalled) {
+        marked.use(markedKatex({ throwOnError: false }));
+        marked.__katexInstalled = true;
+    }
+
     const renderMarkdown = (md, page) => {
         if (typeof marked === 'undefined') throw new Error('marked failed to load');
 

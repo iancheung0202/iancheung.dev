@@ -1548,6 +1548,15 @@ button,
   border-collapse: collapse;
 }
 
+.story-content .katex-display {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0;
+}
+
+.story-content .katex { font-size: 1.05em; }
+
 .story-content th,
 .story-content td {
   padding: 8px 14px;
