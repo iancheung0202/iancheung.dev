@@ -5,6 +5,8 @@ order: 1
 
 Hey. You have landed on my story section, welcome!
 
+![](https://media.tenor.com/aXerDGlcb28AAAAM/hi-hello.gif)
+
 ## so, what is this?
 
 For a long time, I had wanted a place for the small, meandering stuff that doesn't fit anywhere else. It's not meant to be a project showcase or a resume. You can find them on your own [elsewhere](/resume.pdf) really easily if you really wanted to. 

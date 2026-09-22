@@ -538,8 +538,8 @@
     toggleLightDarkButton.setAttribute('title', 'Enable Dark Mode');
 
     const PITCHES = {
-        light: { home: 'C4', story: 'E4', notes: 'G4', resume: 'C5' },
-        dark: { home: 'B3', story: 'Eb4', notes: 'Gb4', resume: 'B4' }
+        light: { home: 'C4', story: 'E4', notes: 'G4', class: 'Bb4', resume: 'C5' },
+        dark: { home: 'B3', story: 'Eb4', notes: 'Gb4', class: 'A4', resume: 'B4' }
     };
     const CHORDS = {
         light: ["C3", "G3", "C4"],
@@ -567,6 +567,7 @@
         select('#home')?.setAttribute('data-pitch', pitches.home);
         select('#nav-story')?.setAttribute('data-pitch', pitches.story);
         select('#nav-notes')?.setAttribute('data-pitch', pitches.notes);
+        select('#nav-class')?.setAttribute('data-pitch', pitches.class);
         select('a[href="resume.pdf"]')?.setAttribute('data-pitch', pitches.resume);
 
         const tooltip = bootstrap.Tooltip.getInstance(toggleLightDarkButton);

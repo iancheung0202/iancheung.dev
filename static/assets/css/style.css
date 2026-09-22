@@ -1205,6 +1205,8 @@ button,
   gap: 30px;
   margin-top: 20px;
   align-items: flex-start;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .story-sidebar {
@@ -1296,6 +1298,8 @@ button,
 .story-page {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
+  width: 100%;
   border-left: 1px solid var(--very-fade-text-color);
   padding-left: 30px;
 }
@@ -1550,12 +1554,19 @@ button,
 
 .story-content .katex-display {
   margin: 1em 0;
-  overflow-x: auto;
-  overflow-y: hidden;
   padding: 2px 0;
 }
 
-.story-content .katex { font-size: 1.05em; }
+.story-content .katex {
+  font-size: 1.05em;
+  max-width: 100%;
+}
+
+.story-content .katex-html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+}
 
 .story-content th,
 .story-content td {
@@ -1585,6 +1596,21 @@ button,
 .story-content summary {
   cursor: pointer;
   color: var(--text-color);
+}
+
+.story-content,
+.story-page-inner {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .story-wrap {
+    gap: 20px;
+  }
+
+  .story-sidebar {
+    width: 180px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1738,11 +1764,20 @@ select.story-edit-title { appearance: auto; }
 .class-shell {
   min-height: 100vh;
   background: var(--background-color);
+  overflow-x: hidden;
 }
 
 .class-shell .container {
   max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
   padding: 30px 30px 80px;
+}
+
+@media (max-width: 768px) {
+  .class-shell .container {
+    padding: 20px 16px 60px;
+  }
 }
 
 .class-topbar {
@@ -1822,5 +1857,8 @@ select.story-edit-title { appearance: auto; }
 @media (max-width: 768px) {
   .class-frame {
     height: 65vh;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 }
