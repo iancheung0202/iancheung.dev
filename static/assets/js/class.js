@@ -28,10 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let folders = [];
     const pages = new Map();
+    const bodyCache = new Map();
     let currentKey = null;
+    let renderToken = 0;
+    const openFolders = new Set(); 
 
     const isMobile = window.matchMedia('(max-width: 768px)');
     const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'long', timeStyle: 'short' });
+    const FRONT_MATTER = /^\uFEFF?---[ \t]*\r?\n(?:([\s\S]*?)\r?\n)?---[ \t]*(?:\r?\n|$)/;
 
     const el = (tag, className, text) => {
         const node = document.createElement(tag);
@@ -39,6 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (text !== undefined) node.textContent = text;
         return node;
     };
+
+    const folderArrow = () => {
+        const span = el('span', 'story-folder-arrow');
+        span.innerHTML = '<svg viewBox="0 0 6 10" aria-hidden="true"><path d="M0 0 L6 5 L0 10 Z"/></svg>';
+        return span;
+    };
+
+    const isMarkdownFile = (page) => /\.md$/i.test(page.title || page.url || '');
 
     const isPlainClick = (e) => e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
@@ -98,7 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         folders.forEach((folder) => {
             const folderEl = el('li', 'story-folder');
+            folderEl.dataset.folderId = folder.id;
+
+            if (folder.pages.some((p) => p.key === currentKey)) openFolders.add(folder.id);
+            const isOpen = openFolders.has(folder.id);
+            folderEl.classList.toggle('is-open', isOpen);
+
             const label = el('span', 'story-folder-label');
+            label.setAttribute('role', 'button');
+            label.tabIndex = 0;
+            label.setAttribute('aria-expanded', String(isOpen));
+            label.append(folderArrow());
 
             const fallbackIcon = () => el('span', 'story-folder-icon', '📁');
             if (folder.icon) {
@@ -138,6 +160,30 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(link.dataset.page, { scroll: true });
     });
 
+    const toggleFolder = (label) => {
+        const folderEl = label.closest('.story-folder');
+        if (!folderEl) return;
+        const id = folderEl.dataset.folderId;
+        const nowOpen = !openFolders.has(id);
+        if (nowOpen) openFolders.add(id); else openFolders.delete(id);
+        folderEl.classList.toggle('is-open', nowOpen);
+        label.setAttribute('aria-expanded', String(nowOpen));
+    };
+
+    treeEl.addEventListener('click', (e) => {
+        const label = e.target.closest('.story-folder-label');
+        if (!label || !isPlainClick(e)) return;
+        toggleFolder(label);
+    });
+
+    treeEl.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const label = e.target.closest('.story-folder-label');
+        if (!label) return;
+        e.preventDefault();
+        toggleFolder(label);
+    });
+
     const loadTree = async () => {
         const res = await fetch('/api/class', { cache: 'no-cache' });
         if (!res.ok) throw new Error(`HTTP ${res.status} for /api/class`);
@@ -157,9 +203,51 @@ document.addEventListener('DOMContentLoaded', () => {
         pageEl.replaceChildren(el('div', 'story-status', 'no files have been posted yet.'));
     };
 
-    const showPage = (key, { updateUrl = true, scroll = false } = {}) => {
+    const loadMarkdown = async (page) => {
+        if (bodyCache.has(page.key)) return bodyCache.get(page.key);
+        const res = await fetch(page.url, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`HTTP ${res.status} for ${page.url}`);
+        const text = (await res.text()).replace(FRONT_MATTER, '');
+        bodyCache.set(page.key, text);
+        return text;
+    };
+
+    const renderMarkdown = (md, page) => {
+        if (typeof marked === 'undefined') throw new Error('marked failed to load');
+
+        const tpl = document.createElement('template');
+        tpl.innerHTML = marked.parse(md);
+        const mdUrl = new URL(page.url, document.baseURI);
+
+        tpl.content.querySelectorAll('img[src]').forEach((img) => {
+            try {
+                img.setAttribute('src', new URL(img.getAttribute('src'), mdUrl).href);
+            } catch (_) { /* leave as written */ }
+        });
+
+        tpl.content.querySelectorAll('a[href]').forEach((a) => {
+            const href = a.getAttribute('href');
+            if (href.startsWith('#')) return;
+
+            let url;
+            try { url = new URL(href, mdUrl); } catch (_) { return; }
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+
+            if (url.origin !== location.origin) {
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+            } else {
+                a.setAttribute('href', url.href);
+            }
+        });
+
+        return tpl.content;
+    };
+
+    const showPage = async (key, { updateUrl = true, scroll = false } = {}) => {
         const page = pages.get(key);
         if (!page) return;
+        const token = ++renderToken;
         currentKey = key;
 
         treeEl.querySelectorAll('.story-link').forEach((link) => {
@@ -170,18 +258,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const article = el('article', 'story-page-inner');
 
-        const frame = document.createElement('iframe');
-        frame.className = 'class-frame';
-        frame.src = page.url;
-        frame.title = page.title;
-        frame.loading = 'lazy';
+        if (isMarkdownFile(page)) {
+            let body;
+            try {
+                const md = await loadMarkdown(page);
+                body = renderMarkdown(md, page);
+            } catch (err) {
+                console.error('[class]', err);
+                body = el('p', 'story-status', 'this file could not be loaded.');
+            }
+            if (token !== renderToken) return;
 
-        article.append(
-            el('div', 'story-breadcrumb', `${page.folderLabel} /`),
-            buildTitle(page),
-            frame,
-            buildMeta(new Date(page.updated))
-        );
+            const content = el('div', 'story-content');
+            content.append(body);
+
+            article.append(
+                el('div', 'story-breadcrumb', `${page.folderLabel} /`),
+                el('h3', null, page.title),
+                content,
+                buildMeta(new Date(page.updated))
+            );
+        } else {
+            const frame = document.createElement('iframe');
+            frame.className = 'class-frame';
+            frame.src = page.url;
+            frame.title = page.title;
+            frame.loading = 'lazy';
+
+            article.append(
+                el('div', 'story-breadcrumb', `${page.folderLabel} /`),
+                buildTitle(page),
+                frame,
+                buildMeta(new Date(page.updated))
+            );
+        }
 
         pageEl.replaceChildren(article);
 
@@ -205,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderEmpty();
                 return;
             }
-            showPage(first, { updateUrl: false });
+            await showPage(first, { updateUrl: false });
         } catch (err) {
             console.error('[class]', err);
             treeEl.replaceChildren(el('li', 'story-status', "couldn't load the file list."));

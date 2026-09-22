@@ -12,6 +12,8 @@
   --ui-font: "Open Sans", sans-serif;
   --handwriting-font: "Caveat", cursive;
   --datestamp-font: "Doto", "Courier New", monospace;
+  --folder-name-font: "Poppins", Georgia, serif;
+  --file-name-font: "Atkinson Hyperlegible Next VF", var(--ui-font);
 
   --discord-card-bg: #f2f3f5;
   --discord-card-section-bg: #e3e5e8;
@@ -42,6 +44,15 @@
   font-family: "Crowd Pleaser";
   src: url("../font/Crowd Pleaser.otf") format("opentype");
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Next VF";
+  src: url("../font/AtkinsonHyperlegibleNext.ttf") format("truetype-variations"),
+       url("../font/AtkinsonHyperlegibleNext.ttf") format("truetype");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -1203,8 +1214,7 @@ button,
   font-size: 14px;
 }
 
-.story-tree,
-.story-tree ul {
+.story-tree {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -1219,8 +1229,33 @@ button,
   align-items: center;
   gap: 8px;
   font-weight: 600;
+  font-family: var(--folder-name-font);
   color: var(--fade-text-color);
   margin-bottom: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.story-folder-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--fade-text-color);
+  transition: transform .15s ease;
+}
+
+.story-folder-arrow svg {
+  width: 9px;
+  height: 9px;
+  fill: currentColor;
+  display: block;
+}
+
+.story-folder.is-open .story-folder-arrow {
+  transform: rotate(90deg);
 }
 
 .story-folder-icon {
@@ -1233,15 +1268,23 @@ button,
   text-align: center;
 }
 
-.story-tree ul {
-  padding-left: 18px;
+.story-folder > ul {
+  list-style: none;
+  margin: 4px 0 0 7px;
+  padding: 4px 0 2px 12px;
   border-left: 1px dashed var(--very-fade-text-color);
+  display: none;
+}
+
+.story-folder.is-open > ul {
+  display: block;
 }
 
 .story-link {
   display: block;
   padding: 3px 0;
   color: var(--fade-text-color) !important;
+  font-family: var(--file-name-font);
   font-size: 13px;
 }
 

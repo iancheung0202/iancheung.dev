@@ -664,6 +664,7 @@
         let renderToken = 0;
         let currentKey = null;
         let unsavedGuard = null;
+        const openFolders = new Set(); 
 
         const FRONT_MATTER = /^\uFEFF?---[ \t]*\r?\n(?:([\s\S]*?)\r?\n)?---[ \t]*(?:\r?\n|$)/;
         const isMobile = window.matchMedia('(max-width: 768px)');
@@ -674,6 +675,12 @@
             if (className) node.className = className;
             if (text !== undefined) node.textContent = text;
             return node;
+        };
+
+        const folderArrow = () => {
+            const span = el('span', 'story-folder-arrow');
+            span.innerHTML = '<svg viewBox="0 0 6 10" aria-hidden="true"><path d="M0 0 L6 5 L0 10 Z"/></svg>';
+            return span;
         };
 
         const slugify = (text) => text.toLowerCase().trim().replace(/[^\p{L}\p{N}\s-]/gu, '').replace(/\s/g, '-');
@@ -835,7 +842,17 @@
 
             folders.forEach((folder, fi) => {
                 const folderEl = el('li', 'story-folder');
+                folderEl.dataset.folderId = folder.id;
+
+                if (folder.pages.some((p) => p.key === currentKey)) openFolders.add(folder.id);
+                const isOpen = openFolders.has(folder.id);
+                folderEl.classList.toggle('is-open', isOpen);
+
                 const label = el('span', 'story-folder-label');
+                label.setAttribute('role', 'button');
+                label.tabIndex = 0;
+                label.setAttribute('aria-expanded', String(isOpen));
+                label.append(folderArrow());
 
                 const fallbackIcon = () => el('span', 'story-folder-icon', '📁');
                 if (folder.icon) {
@@ -899,6 +916,30 @@
             if (!link || !isPlainClick(e)) return;
             e.preventDefault();
             showPage(link.dataset.page, { scroll: true });
+        });
+
+        const toggleFolder = (label) => {
+            const folderEl = label.closest('.story-folder');
+            if (!folderEl) return;
+            const id = folderEl.dataset.folderId;
+            const nowOpen = !openFolders.has(id);
+            if (nowOpen) openFolders.add(id); else openFolders.delete(id);
+            folderEl.classList.toggle('is-open', nowOpen);
+            label.setAttribute('aria-expanded', String(nowOpen));
+        };
+
+        treeEl.addEventListener('click', (e) => {
+            const label = e.target.closest('.story-folder-label');
+            if (!label || !isPlainClick(e)) return;
+            toggleFolder(label);
+        });
+
+        treeEl.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            const label = e.target.closest('.story-folder-label');
+            if (!label) return;
+            e.preventDefault();
+            toggleFolder(label);
         });
 
         const loadTree = async () => {
@@ -1086,7 +1127,6 @@
             );
             if (admin) article.prepend(pageAdminBar(page));
 
-            // Single swap: title, content and images all appear together.
             pageEl.replaceChildren(article);
 
             if (scroll && (isMobile.matches || pageEl.getBoundingClientRect().top < 0)) {
