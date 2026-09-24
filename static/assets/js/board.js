@@ -62,7 +62,7 @@
     b.setAttribute("aria-label", "Leave a message");
     const f = h("div", "pface");
     f.innerHTML = PENCIL;
-    f.append(h("div", "pcap", "leave a message"));
+    // f.append(h("div", "pcap", "leave a message"));
     b.append(h("div", "pcard-inner"));
     b.firstChild.append(f);
     b.addEventListener("click", () => (admin ? openComposer() : openAccessDialog()));
@@ -169,14 +169,15 @@
 
   // Live-updating access code, visible only in admin mode.
   const codeEl = $("#notes-admin-code");
+  const regenBtn = $("#notes-admin-regen");
   let codeTimer = null;
+  function renderCode(d) {
+    codeEl.hidden = false;
+    codeEl.innerHTML = `One-time code: <b>${d.code}</b> (resets in ${d.seconds_left}s)`;
+  }
   async function refreshCode() {
     try {
-      const d = await window.SiteAdmin.api("api/admin/wall-code");
-      codeEl.hidden = false;
-      codeEl.innerHTML = d.used
-        ? `code <b>${d.code}</b> · already used — next one in ${d.seconds_left}s`
-        : `code <b>${d.code}</b> · resets in ${d.seconds_left}s`;
+      renderCode(await window.SiteAdmin.api("api/admin/wall-code"));
     } catch {
       codeEl.hidden = true;
     }
@@ -185,12 +186,24 @@
     clearInterval(codeTimer);
     refreshCode();
     codeTimer = setInterval(refreshCode, 1000);
+    if (regenBtn) regenBtn.hidden = false;
   }
   function stopCodePolling() {
     clearInterval(codeTimer);
     codeTimer = null;
     codeEl.hidden = true;
+    if (regenBtn) regenBtn.hidden = true;
   }
+  regenBtn?.addEventListener("click", async () => {
+    regenBtn.disabled = true;
+    try {
+      renderCode(await window.SiteAdmin.api("api/admin/wall-code/regenerate", { method: "POST" }));
+    } catch (e) {
+      toast(e.message || "Couldn't regenerate the code.");
+    } finally {
+      regenBtn.disabled = false;
+    }
+  });
 
   if (window.SiteAdmin) {
     window.SiteAdmin.subscribe((isAdmin) => {

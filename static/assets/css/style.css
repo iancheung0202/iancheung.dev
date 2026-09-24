@@ -1640,9 +1640,11 @@ button,
 
 .notes-admin-code { margin-top: -14px; font: 600 12px/1 var(--ui-font); letter-spacing: .02em; color: var(--fade-text-color); }
 .notes-admin-code b { font-family: var(--datestamp-font); font-size: 15px; letter-spacing: 2px; color: var(--accent-green); }
+#notes-admin-regen { margin-top: 8px; padding: 3px 12px; font-size: 11px; }
 
-.pcard { --rot: 0deg; position: relative; width: 190px; perspective: 900px; transform: rotate(var(--rot)); transition: transform .25s ease; cursor: pointer; outline-offset: 8px; }
-.pcard:hover, .pcard:focus-visible { transform: rotate(var(--rot)) translateY(-6px) scale(1.04); z-index: 2; }
+.pcard { --rot: 0deg; position: relative; width: 190px; perspective: 900px; transform: rotate(var(--rot)); cursor: pointer; outline-offset: 8px; }
+.pcard-add { transition: transform .25s ease; }
+/* .pcard-add:hover, .pcard-add:focus-visible { transform: rotate(var(--rot)) translateY(-6px) scale(1.04); z-index: 2; } */
 .pcard::before { content: ""; position: absolute; z-index: 3; top: -9px; left: 50%; width: 64px; height: 20px; background: rgba(255, 226, 140, .7); transform: translateX(-50%) rotate(-3deg); pointer-events: none; }
 .pcard-inner { position: relative; aspect-ratio: 190 / 236; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.3, .7, .2, 1); }
 .pcard.flipped .pcard-inner { transform: rotateY(180deg); }
@@ -1722,7 +1724,7 @@ button,
   font: 600 20px var(--datestamp-font); text-align: center;
   outline-offset: 2px;
 }
-.access-box:focus { border-color: var(--accent-green); outline: 2px solid var(--accent-green); }
+.access-box:focus { outline: 2px solid var(--accent-green); }
 .access-box:disabled { opacity: .5; }
 .access-boxes.shake { animation: access-shake .4s; }
 @keyframes access-shake {

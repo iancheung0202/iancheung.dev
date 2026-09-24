@@ -20,7 +20,6 @@ from flask import Flask, abort, jsonify, redirect, render_template, request, sen
 
 load_dotenv()
 
-# Configuration
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY_FILE = os.path.join(BASE_DIR, ".flask_secret")
@@ -43,25 +42,19 @@ NOTES_DB = os.path.join(NOTES_DIR, "notes.json")
 NOTES_IMG = os.path.join(NOTES_DIR, "img")
 NOTES_PAGE_SIZE = 60
 
-# Wall access codes: a fresh 6-digit code every minute, handed out in person.
-# One successful check burns that minute's code and mints a short-lived ticket
-# that the drawing dialog spends when the note is actually published.
 ACCESS_STEP_SECONDS = 60
-ACCESS_TICKET_TTL = 15 * 60  # time to finish a drawing after the code is accepted
+ACCESS_TICKET_TTL = 30 * 60  # 30 minutes to post after entering code
 
 LOGIN_LOCK = threading.Lock()
 NOTES_LOCK = threading.Lock()
 ACCESS_LOCK = threading.Lock()
 login_fails: dict[str, list[float]] = {}  # ip -> failure timestamps
 login_fails_all: list[float] = []  # every failure, any ip
-access_consumed_step: int | None = None  # the minute-step whose code has already been spent
-access_tickets: dict[str, float] = {}  # ticket -> expiry time
+access_bump = 0
+access_bump_time = time.time()
+access_tickets: dict[str, float] = {} 
 
 os.makedirs(NOTES_IMG, exist_ok=True)
-
-
-# Flask setup
-
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.url_map.strict_slashes = False
@@ -74,9 +67,6 @@ app.config.update(
 )
 
 ABOUT_DIR = os.path.join(app.static_folder, "about")
-
-
-# Shared helpers
 
 
 def clean_text(value: object, limit: int) -> str:
@@ -111,9 +101,6 @@ def client_ip() -> str:
         if len(hops) >= TRUSTED_PROXY_HOPS:
             return hops[-TRUSTED_PROXY_HOPS]
     return request.remote_addr or "unknown"
-
-
-# Admin authentication
 
 
 PASSWORD = os.getenv("PASSWORD")
@@ -186,29 +173,22 @@ def admin_logout():
     return jsonify(ok=True)
 
 
-# Wall access codes
-#
-# The wall isn't open to strangers: whoever wants to leave a message needs a
-# 6-digit code that's handed to them in person and rotates every minute. The
-# code itself is never stored — it's derived from the server's secret key and
-# the current minute, so any process can check it without shared state. What
-# *is* stored is which minute has already been spent (so the same code can't
-# be reused) and the short-lived "tickets" that a correct code mints, which
-# is what actually authorizes the follow-up POST to /api/notes.
+def access_touch(now: float) -> None:
+    global access_bump, access_bump_time
+    elapsed = now - access_bump_time
+    if elapsed >= ACCESS_STEP_SECONDS:
+        windows = int(elapsed // ACCESS_STEP_SECONDS)
+        access_bump += windows
+        access_bump_time += windows * ACCESS_STEP_SECONDS
 
 
-def access_step(when: float | None = None) -> int:
-    return int((when if when is not None else time.time()) // ACCESS_STEP_SECONDS)
-
-
-def access_code(step: int) -> str:
-    digest = hmac.new(app.secret_key, f"wall-access:{step}".encode(), "sha256").digest()
+def access_code(generation: int) -> str:
+    digest = hmac.new(app.secret_key, f"wall-access:{generation}".encode(), "sha256").digest()
     return f"{int.from_bytes(digest[:4], 'big') % 1_000_000:06d}"
 
 
-def access_seconds_left(now: float | None = None) -> int:
-    now = now if now is not None else time.time()
-    return int(ACCESS_STEP_SECONDS - (now % ACCESS_STEP_SECONDS))
+def access_seconds_left(now: float) -> int:
+    return int(ACCESS_STEP_SECONDS - (now - access_bump_time))
 
 
 def purge_tickets(now: float) -> None:
@@ -229,17 +209,18 @@ def consume_ticket(ticket: str) -> bool:
 
 @app.route("/api/notes/access", methods=["POST"])
 def notes_access():
-    global access_consumed_step
+    global access_bump, access_bump_time
     data = request.get_json(silent=True) or {}
     code = re.sub(r"\D", "", str(data.get("code", "")))
     if len(code) != 6:
         return jsonify(error="Enter all 6 digits."), 400
     now = time.time()
-    step = access_step(now)
     with ACCESS_LOCK:
-        if access_consumed_step == step or not hmac.compare_digest(code, access_code(step)):
-            return jsonify(error="Wrong or already-used code. Ask for a new one."), 401
-        access_consumed_step = step
+        access_touch(now)
+        if not hmac.compare_digest(code, access_code(access_bump)):
+            return jsonify(error="Invalid code. Ask for a new one."), 401
+        access_bump += 1 
+        access_bump_time = now
         purge_tickets(now)
         ticket = uuid.uuid4().hex
         access_tickets[ticket] = now + ACCESS_TICKET_TTL
@@ -250,11 +231,23 @@ def notes_access():
 @admin_required
 def admin_wall_code():
     now = time.time()
-    step = access_step(now)
-    return jsonify(code=access_code(step), seconds_left=access_seconds_left(now), used=access_consumed_step == step)
+    with ACCESS_LOCK:
+        access_touch(now)
+        code = access_code(access_bump)
+    return jsonify(code=code, seconds_left=access_seconds_left(now))
 
 
-# Request hooks and error pages
+@app.route("/api/admin/wall-code/regenerate", methods=["POST"])
+@admin_required
+
+def admin_wall_code_regenerate():
+    global access_bump, access_bump_time
+    now = time.time()
+    with ACCESS_LOCK:
+        access_bump += 1
+        access_bump_time = now  
+        code = access_code(access_bump)
+    return jsonify(code=code, seconds_left=access_seconds_left(now))
 
 
 @app.before_request
@@ -282,9 +275,6 @@ for status in (401, 403, 404, 500):
     app.register_error_handler(status, lambda _error, status=status: (render_template(f"{status}.html"), status))
 
 
-### Static pages
-
-
 @app.route("/")
 def home():
     return app.send_static_file("index.html")
@@ -298,11 +288,6 @@ def pricing_page():
 @app.route("/class/")
 def grade_page():
     return render_template("class.html")
-
-
-
-
-### Class pages
 
 
 CLASS_DIR = os.path.join(app.static_folder, "class")
@@ -355,9 +340,6 @@ def class_tree():
 
     folders.sort(key=lambda f: (f["order"], f["label"].lower()))
     return jsonify({"folders": folders})
-
-
-### Story pages
 
 
 def read_front_matter(path: str) -> dict[str, str]:
@@ -809,9 +791,6 @@ def todo():
             return redirect(url_for("todo"))
 
     return render_template("todo.html", logged_in=session.get("todo_logged_in", False))
-
-
-### Notes section
 
 
 def load_db() -> dict:

@@ -268,12 +268,13 @@
       <div class="container">
         <div class="section-title">
           <h2>wall</h2>
-          <p>friends only</p>
+          <p>friends board</p>
         </div>
-        <p class="paragraph">Every note here is from someone who knows me. Ask me for the code and leave one of your own.</p>
+        <p class="paragraph">Every sticky note here is from someone I know. Leave your own note for the world to see.</p>
         <div class="notes-wall" id="notes-wall"><p class="notes-msg">loading...</p></div>
-        <p class="notes-foot"><button type="button" id="notes-admin">psst</button> — click a note to flip it over.</p>
+        <p class="notes-foot"><button type="button" id="notes-admin">Hint</button>: flip a note over to see who posted it</p>
         <p class="notes-admin-code" id="notes-admin-code" hidden></p>
+        <button type="button" class="notes-btn" id="notes-admin-regen" hidden>Regenerate code</button>
       </div>
     </section>
 
@@ -282,8 +283,8 @@
         <div class="access-badge" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
-        <p class="access-title">got a code?</p>
-        <p class="access-sub">ask ian for the current 6-digit code. it changes every minute, and only works once.</p>
+        <p class="access-title">Welcome to the club!</p>
+        <p class="access-sub">If you know me, ask me for the 6-digit passcode to post your own sticky note. It changes every minute, and only works once.</p>
         <div class="access-boxes" id="access-boxes">
           <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
           <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2">
