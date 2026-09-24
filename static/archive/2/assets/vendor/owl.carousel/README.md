@@ -20,9 +20,9 @@ Or download the [latest release](https://github.com/OwlCarousel2/OwlCarousel2/re
 #### Webpack
 
 Add jQuery via the "webpack.ProvidePlugin" to your webpack configuration:
-    
+
     const webpack = require('webpack');
-    
+
     //...
     plugins: [
         new webpack.ProvidePlugin({

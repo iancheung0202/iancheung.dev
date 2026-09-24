@@ -4,6 +4,7 @@
   if (!wall) return;
 
   const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
   const h = (tag, cls, text) => {
     const e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -23,33 +24,26 @@
       }
       return d;
     });
-  const ls = {
-    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
-    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
-  };
-  const rot = (id) => (parseInt(id.slice(0, 4), 16) % 90) / 10 - 4.5; 
-  const CAMERA = '<svg viewBox="0 0 64 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="12" width="58" height="37" rx="6"/><path d="M20 12l4-8h16l4 8"/><circle cx="32" cy="30" r="10"/><circle cx="32" cy="30" r="4"/><circle cx="52" cy="21" r="2" fill="currentColor"/></svg>';
-  let admin = false;
-  let cooldownUntil = 0; 
 
-  const REPORTED_KEY = "notes:reported";
-  const getReportedIds = () => { try { return JSON.parse(ls.get(REPORTED_KEY) || "[]"); } catch { return []; } };
-  const addReportedId = (id) => {
-    const ids = getReportedIds();
-    if (!ids.includes(id)) ls.set(REPORTED_KEY, JSON.stringify([...ids, id].slice(-500)));
-  };
+  // A pencil, not a camera — this wall is about leaving a mark, not a photo.
+  const PENCIL = '<svg viewBox="0 0 64 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 38l2.5-12.5L39 3a4.2 4.2 0 0 1 6 0l3 3a4.2 4.2 0 0 1 0 6L25.5 34.5z"/><path d="M32 9.5l9.5 9.5"/><path d="M11 44.5h24"/></svg>';
+  let admin = false;
+
+  function randomTilt() {
+    return (Math.random() * 9 - 4.5).toFixed(2) + "deg";
+  }
 
   function trashAndRemove(cardEl, after) {
     cardEl.classList.add("trashing");
     let finished = false;
     const done = () => {
-      if (finished) return; 
+      if (finished) return;
       finished = true;
       cardEl.remove();
       after && after();
     };
     cardEl.addEventListener("animationend", done, { once: true });
-    setTimeout(done, 900); 
+    setTimeout(done, 900);
   }
 
   let toastTimer = null;
@@ -62,34 +56,22 @@
     toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
   }
 
-  function cooldownLabel() {
-    const hrs = Math.max(1, Math.ceil((cooldownUntil - Date.now()) / 3600000));
-    return `${hrs}h`;
-  }
-
   function addTile() {
-    const limited = !admin && cooldownUntil > Date.now();
-    const b = h("button", "pcard pcard-add" + (limited ? " pcard-cooldown" : ""));
+    const b = h("button", "pcard pcard-add");
     b.type = "button";
-    b.setAttribute("aria-label", limited ? "Come back later to leave another note" : "Leave a note");
+    b.setAttribute("aria-label", "Leave a message");
     const f = h("div", "pface");
-    f.innerHTML = CAMERA;
-    f.append(h("div", "pcap", limited ? `back in ${cooldownLabel()}` : "leave a note"));
+    f.innerHTML = PENCIL;
+    f.append(h("div", "pcap", "leave a message"));
     b.append(h("div", "pcard-inner"));
     b.firstChild.append(f);
-    b.addEventListener("click", () => {
-      if (!admin && cooldownUntil > Date.now()) {
-        toast(`Come back in about ${cooldownLabel()} before you can leave another note.`);
-        return;
-      }
-      openComposer();
-    });
+    b.addEventListener("click", () => (admin ? openComposer() : openAccessDialog()));
     return b;
   }
 
   function card(n, fresh) {
-    const c = h("article", "pcard" + (fresh ? " printing" : "") + (n.pinned ? " pcard-pinned" : ""));
-    c.style.setProperty("--rot", rot(n.id) + "deg");
+    const c = h("article", "pcard" + (fresh ? " printing" : ""));
+    c.style.setProperty("--rot", randomTilt());
     c.tabIndex = 0;
     c.setAttribute("aria-label", "Note: " + n.text);
     const inner = h("div", "pcard-inner");
@@ -111,40 +93,17 @@
     back.inert = true;
     const date = new Date(n.created).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     back.append(h("div", "pdate", date.toUpperCase()), h("div", "pname", n.name ? "— " + n.name : "— anonymous"));
-    const btn = (label, fn) => {
-      const b = h("button", "pbtn", label);
-      b.type = "button";
-      b.addEventListener("click", () => fn(b));
-      return b;
-    };
-    const act = async (method, body) => {
-      try {
-        await api("api/notes/" + n.id, {
-          method,
-          body: body ? JSON.stringify(body) : undefined,
-        });
-        if (method === "DELETE") trashAndRemove(c, load);
-        else load();
-      } catch (e) { alert(e.message); }
-    };
     if (admin) {
-      if (n.reports) back.append(h("div", "pdate", n.reports + (n.reports === 1 ? " REPORT" : " REPORTS")));
-      back.append(
-        btn(n.pinned ? "Unpin" : "Pin", () => act("PATCH", { action: n.pinned ? "unpin" : "pin" })),
-        btn("Delete", () => confirm("Delete this note for good?") && act("DELETE"))
-      );
-    } else {
-      back.append(btn("Report", async (b) => {
-        b.disabled = true;
+      const del = h("button", "pbtn", "Delete");
+      del.type = "button";
+      del.addEventListener("click", async () => {
+        if (!confirm("Delete this note for good?")) return;
         try {
-          await api(`api/notes/${n.id}/report`, { method: "POST" });
-          addReportedId(n.id);
-          trashAndRemove(c);
-        } catch {
-          b.textContent = "Try again";
-          b.disabled = false;
-        }
-      }));
+          await api("api/notes/" + n.id, { method: "DELETE" });
+          trashAndRemove(c, load);
+        } catch (e) { alert(e.message); }
+      });
+      back.append(del);
     }
 
     inner.append(front, back);
@@ -184,25 +143,21 @@
       const url = initial ? "api/notes" : `api/notes?offset=${offset}`;
       const d = await api(url);
       admin = d.admin;
-      cooldownUntil = d.cooldown_seconds > 0 ? Date.now() + d.cooldown_seconds * 1000 : 0;
       hasMore = !!d.has_more;
       if (initial) offset = d.notes.length;
       else offset += d.notes.length;
 
-      const reported = new Set(getReportedIds());
-      const visible = d.notes.filter((n) => admin || !reported.has(n.id));
-
       if (initial) {
-        wall.replaceChildren(addTile(), ...visible.map((n) => card(n)));
-        if (!d.notes.length) wall.append(h("p", "notes-msg", "the board is empty. be the first to publish something."));
+        wall.replaceChildren(addTile(), ...d.notes.map((n) => card(n)));
+        if (!d.notes.length) wall.append(h("p", "notes-msg", "the wall is empty. be the first to leave something."));
       } else {
         loadMoreBtn?.remove();
         loadMoreBtn = null;
-        wall.append(...visible.map((n) => card(n)));
+        wall.append(...d.notes.map((n) => card(n)));
       }
       renderLoadMore();
     } catch {
-      if (initial) wall.replaceChildren(addTile(), h("p", "notes-msg", "couldn't load the board right now."));
+      if (initial) wall.replaceChildren(addTile(), h("p", "notes-msg", "couldn't load the wall right now."));
       else toast("Couldn't load more notes right now.");
     }
   }
@@ -212,9 +167,35 @@
     window.SiteAdmin.toggle();
   });
 
+  // Live-updating access code, visible only in admin mode.
+  const codeEl = $("#notes-admin-code");
+  let codeTimer = null;
+  async function refreshCode() {
+    try {
+      const d = await window.SiteAdmin.api("api/admin/wall-code");
+      codeEl.hidden = false;
+      codeEl.innerHTML = d.used
+        ? `code <b>${d.code}</b> · already used — next one in ${d.seconds_left}s`
+        : `code <b>${d.code}</b> · resets in ${d.seconds_left}s`;
+    } catch {
+      codeEl.hidden = true;
+    }
+  }
+  function startCodePolling() {
+    clearInterval(codeTimer);
+    refreshCode();
+    codeTimer = setInterval(refreshCode, 1000);
+  }
+  function stopCodePolling() {
+    clearInterval(codeTimer);
+    codeTimer = null;
+    codeEl.hidden = true;
+  }
+
   if (window.SiteAdmin) {
     window.SiteAdmin.subscribe((isAdmin) => {
       if (isAdmin !== admin) load();
+      isAdmin ? startCodePolling() : stopCodePolling();
     });
   }
 
@@ -334,6 +315,65 @@
     return o.toDataURL("image/png");
   }
 
+  // ---- access code: a little keypad, not a login form ----
+  const accessDlg = $("#access-dialog");
+  const accessBoxes = $$(".access-box");
+  const accessBoxWrap = $("#access-boxes");
+  const accessErr = (m) => ($("#access-error").textContent = m || "");
+  let accessTicket = null;
+
+  function openAccessDialog() {
+    accessErr("");
+    accessBoxes.forEach((b) => { b.value = ""; b.disabled = false; });
+    accessDlg.showModal();
+    accessBoxes[0].focus();
+  }
+
+  function shakeBoxes() {
+    accessBoxWrap.classList.remove("shake");
+    void accessBoxWrap.offsetWidth; // restart the animation
+    accessBoxWrap.classList.add("shake");
+  }
+
+  async function submitAccessCode() {
+    const code = accessBoxes.map((b) => b.value).join("");
+    if (code.length !== 6) return;
+    accessErr("");
+    accessBoxes.forEach((b) => (b.disabled = true));
+    try {
+      const d = await api("api/notes/access", { method: "POST", body: JSON.stringify({ code }) });
+      accessTicket = d.ticket;
+      accessDlg.close();
+      openComposer();
+    } catch (e) {
+      accessErr(e.message);
+      shakeBoxes();
+      accessBoxes.forEach((b) => { b.value = ""; b.disabled = false; });
+      accessBoxes[0].focus();
+    }
+  }
+
+  accessBoxes.forEach((box, i) => {
+    box.addEventListener("input", () => {
+      box.value = box.value.replace(/\D/g, "").slice(-1);
+      if (box.value && accessBoxes[i + 1]) accessBoxes[i + 1].focus();
+      if (accessBoxes.every((b) => b.value)) submitAccessCode();
+    });
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !box.value && accessBoxes[i - 1]) accessBoxes[i - 1].focus();
+    });
+    box.addEventListener("paste", (e) => {
+      const text = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "");
+      if (!text) return;
+      e.preventDefault();
+      accessBoxes.forEach((b, j) => (b.value = text[j] || ""));
+      (accessBoxes.find((b) => !b.value) || accessBoxes[accessBoxes.length - 1]).focus();
+      if (accessBoxes.every((b) => b.value)) submitAccessCode();
+    });
+  });
+  $("#access-cancel").addEventListener("click", () => accessDlg.close());
+  accessDlg.addEventListener("click", (e) => { if (e.target === accessDlg) accessDlg.close(); });
+
   $("#notes-submit").addEventListener("click", async (e) => {
     const text = $("#notes-text").value.trim();
     if (!text) return err("write a caption first ✍️");
@@ -342,9 +382,9 @@
     try {
       const n = await api("api/notes", {
         method: "POST",
-        body: JSON.stringify({ text, name: $("#notes-name").value, website: $("#notes-site").value, image: exportPng() }),
+        body: JSON.stringify({ text, name: $("#notes-name").value, image: exportPng(), ticket: accessTicket }),
       });
-      cooldownUntil = Date.now() + 24 * 3600 * 1000; 
+      accessTicket = null;
       dlg.close();
       ctx.clearRect(0, 0, S, S);
       undo = [];

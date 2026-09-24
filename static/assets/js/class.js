@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bodyCache = new Map();
     let currentKey = null;
     let renderToken = 0;
-    const openFolders = new Set(); 
+    const openFolders = new Set();
 
     const isMobile = window.matchMedia('(max-width: 768px)');
     const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'long', timeStyle: 'short' });

@@ -147,10 +147,10 @@ Map / Filter / Reduce style
 ```scheme
 (map fn lst) ; (map (lambda (x) (* x x)) '(1 2 3 4)) --> '(1 4 9 16)
 (filter pred lst) ; (filter even? '(1 2 3 4)) --> '(2 4)
-(foldl fn base lst) 
+(foldl fn base lst)
 ; (foldl + 0 '(1 2 3 4)) --> 10 (+ 1 (+ 2 (+ 3 (+ 4 0))))
 ; (+ (+ (+ (+ (+ (+ 0 1) 2) 3) 4) 5) 6)
-(foldr fn base lst) 
+(foldr fn base lst)
 ; (foldr + 0 '(1 2 3 4)) => 10
 ; (+ 1 (+ 2 (+ 3 (+ 4 0))))
 ```

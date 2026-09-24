@@ -11,7 +11,7 @@
  *   SiteAdmin.api(url, opts)     -> fetch JSON with the CSRF header; a 401 drops admin mode
  */
 (function () {
-  "use strict"; 
+  "use strict";
 
   let admin = false;
   const subscribers = new Set();

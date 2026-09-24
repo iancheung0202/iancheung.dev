@@ -47,7 +47,7 @@
 
         body.animated-bg {
             animation: pan 240s ease-in-out infinite;
-            background-size: 300% 300%; 
+            background-size: 300% 300%;
         }
 
         .container {
@@ -113,7 +113,7 @@
 
         .mc-input {
             background: var(--mc-input-bg);
-            border: 2px solid #A0A0A0; 
+            border: 2px solid #A0A0A0;
             border-bottom-color: #FFF;
             border-right-color: #FFF;
             color: #fff;
@@ -167,12 +167,12 @@
         .task-item:hover {
             background: #D6D6D6;
         }
-        
+
         .task-item.completed {
             opacity: 0.7;
             background: #888;
         }
-        
+
         .task-item.completed .task-title {
             text-decoration: line-through;
             color: #444;
@@ -193,7 +193,7 @@
             font-size: 22px;
             font-weight: bold;
         }
-        
+
         .task-due.overdue { color: #AA0000; font-weight: bold; }
         .task-due.soon { color: #AA5500; }
 
@@ -252,7 +252,7 @@
             <div class="mc-window">
                 <div class="mc-title-bar">Inventory</div>
                 <div class="mc-panel">
-                    
+
                     <!-- Input Form -->
                     <div style="margin-bottom: 15px; border-bottom: 2px solid #888; padding-bottom: 15px;">
                         <div class="form-row">
@@ -266,7 +266,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                           
+
                             <div class="mc-input-group" style="max-width: 50%;">
                                 <label>Due Date</label>
                                 <input type="datetime-local" id="task-due" class="mc-input">
@@ -281,7 +281,7 @@
 
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px;">
                         <span style="color: #404040;">Active Quests</span>
-                        
+
                     </div>
 
                     <div id="todo-list" class="task-list">
@@ -330,7 +330,7 @@
                 function renderTodos() {
                     const list = document.getElementById('todo-list');
                     list.innerHTML = '';
-                    
+
                     // Sort: Pinned first, then Completed last, then by Date
                     const sortedTodos = [...todos].sort((a, b) => {
                         if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
@@ -350,7 +350,7 @@
 
                         const div = document.createElement('div');
                         div.className = `task-item ${todo.completed ? 'completed' : ''}`;
-                        
+
                         let dateStr = "";
                         let dueClass = "task-due";
                         let relativeTimeStr = "";
@@ -367,7 +367,7 @@
                                 const absDiff = Math.abs(diff);
                                 const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
                                 const hours = Math.floor((absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                
+
                                 const timeText = ((days > 0) ? days + " days " : "") + hours + " hours";
                                 if (isOverdue) {
                                     relativeTimeStr = ` <span style="font-size: 0.9em; opacity: 0.8;">(${timeText} ago)</span>`;
@@ -388,11 +388,11 @@
                             <div class="task-info">
                                 <div class="task-title">${titleHtml}</div>
                                 <div class="task-meta">
-                                    <span style="color: #5555FF;">${todo.org ? '[' + escapeHtml(todo.org) + ']' : ''}</span> 
+                                    <span style="color: #5555FF;">${todo.org ? '[' + escapeHtml(todo.org) + ']' : ''}</span>
                                     ${dateStr ? `<span class="${dueClass}">Due: ${dateStr}${relativeTimeStr}</span>` : ''}
                                 </div>
                             </div>
-                            
+
                             <!-- Inventory Slots -->
                             <div class="inv-slot" title="${todo.pinned ? 'Unpin' : 'Pin'}" onclick="togglePin(${index})">
                                 <span class="pixel-icon ${todo.pinned ? 'icon-pin' : 'icon-unpin'}"></span>
@@ -447,7 +447,7 @@
                     titleInput.value = '';
                     orgInput.value = '';
                     dueInput.value = '';
-                    
+
                     saveTodos();
                 }
 
@@ -456,7 +456,7 @@
                     document.getElementById('task-title').value = todo.title || '';
                     document.getElementById('task-org').value = todo.org || '';
                     document.getElementById('task-due').value = todo.due || '';
-                    
+
                     editingId = todo.id;
                     document.getElementById('craft-btn').innerText = "Edit Task";
                     document.querySelector('.mc-input-group input').focus();
@@ -497,7 +497,7 @@
                 <div class="mc-title-bar">Server Authentication</div>
                 <div class="mc-panel" style="text-align: center;">
                     <h1>LOCKED</h1>
-                    
+
                     {% if error %}
                         <div style="background: #AA0000; color: #fff; padding: 5px; margin-bottom: 10px; border: 2px solid #500;">
                             {{ error }}

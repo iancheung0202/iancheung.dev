@@ -35,7 +35,7 @@
         }
     </script>
     <style>
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
             font-size: 14px;
@@ -55,35 +55,35 @@
             margin-bottom: 16px;
             line-height: 1.25;
         }
-        h1 { 
-            font-size: 2em; 
-            border-bottom: 1px solid #eaecef; 
+        h1 {
+            font-size: 2em;
+            border-bottom: 1px solid #eaecef;
             padding-bottom: 0.3em;
             margin-top: 0.67em 0;
         }
-        h2 { 
-            font-size: 1.5em; 
-            border-bottom: 1px solid #eaecef; 
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #eaecef;
             padding-bottom: 0.3em;
             margin-top: 1.5em;
         }
-        h3 { 
-            font-size: 1.25em; 
+        h3 {
+            font-size: 1.25em;
             margin-top: 1.25em;
         }
-        h4 { 
-            font-size: 1em; 
+        h4 {
+            font-size: 1em;
             margin-top: 1em;
         }
-        a { 
-            color: #0366d6; 
-            text-decoration: none; 
+        a {
+            color: #0366d6;
+            text-decoration: none;
         }
-        a:hover { 
-            text-decoration: underline; 
+        a:hover {
+            text-decoration: underline;
         }
-        strong { 
-            font-weight: 600; 
+        strong {
+            font-weight: 600;
         }
         pre {
             background-color:rgb(9, 7, 10);
@@ -292,7 +292,7 @@
         x[a] = x[b];
         x[b] = temp;
     }
-    
+
     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sort</span><span class="hljs-params">(String[] x)</span> {
         sort(x, <span class="hljs-number">0</span>); <span class="hljs-comment">// Call the recursive helper starting at index 0</span>
     }
@@ -329,8 +329,8 @@
         rest = r;
     }
 
-    <span class="hljs-comment">/** 
-     * Returns the size of the list using recursion 
+    <span class="hljs-comment">/**
+     * Returns the size of the list using recursion
      */</span>
     <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> {
         <span class="hljs-keyword">if</span> (rest == <span class="hljs-literal">null</span>) {
@@ -339,8 +339,8 @@
         <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-built_in">this</span>.rest.size(); <span class="hljs-comment">// Recursive call</span>
     }
 
-    <span class="hljs-comment">/** 
-     * Returns the size of the list using iteration (no recursion) 
+    <span class="hljs-comment">/**
+     * Returns the size of the list using iteration (no recursion)
      */</span>
     <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">iterativeSize</span><span class="hljs-params">()</span> {
         <span class="hljs-type">IntList</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>; <span class="hljs-comment">// Start at the current node</span>
@@ -366,8 +366,8 @@
         <span class="hljs-keyword">return</span> L;
     }
 
-    <span class="hljs-comment">/** 
-     * Returns the ith item in the list using recursion 
+    <span class="hljs-comment">/**
+     * Returns the ith item in the list using recursion
      */</span>
     <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> {
         <span class="hljs-keyword">if</span> (i == <span class="hljs-number">0</span>) {
@@ -433,7 +433,7 @@
     }
 
     <span class="hljs-comment">/** Remove all appearances of int y from the provided IntList. Destructive. */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IntList <span class="hljs-title function_">ejectD</span><span class="hljs-params">(IntList x, <span class="hljs-type">int</span> y)</span> { 
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IntList <span class="hljs-title function_">ejectD</span><span class="hljs-params">(IntList x, <span class="hljs-type">int</span> y)</span> {
         <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>) {
             <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;;
         }
@@ -714,8 +714,8 @@
 
     <span class="hljs-comment">/** PRACTICE PROBLEMS FROM CHATGPT */</span>
 
-    <span class="hljs-comment">/** Returns a new deque containing every other item 
-     * from the current deque, starting at index 0. 
+    <span class="hljs-comment">/** Returns a new deque containing every other item
+     * from the current deque, starting at index 0.
      * Non destructive method */</span>
     <span class="hljs-keyword">public</span> LinkedListDeque61B&lt;T&gt; <span class="hljs-title function_">everyOther</span><span class="hljs-params">()</span> {
         LinkedListDeque61B&lt;T&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedListDeque61B</span>&lt;&gt;();
@@ -1310,13 +1310,13 @@ System.out.println(<span class="hljs-string">"Name Comparison: "</span> + nameRe
                         </button>
                     </div>
                     <pre><code class="hljs language-java"><span class="hljs-type">int</span> <span class="hljs-title function_">larger</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> { <span class="hljs-comment">// Returns an int, takes two ints</span>
-    <span class="hljs-keyword">if</span> (x &gt; y) { 
+    <span class="hljs-keyword">if</span> (x &gt; y) {
         <span class="hljs-keyword">return</span> x;
     }
     <span class="hljs-keyword">return</span> y;
 }</code></pre>
                 </div>
-            
+
                 <div class="code-block">
                     <div class="code-header">
                         <span class="language">java</span>
@@ -1748,8 +1748,8 @@ pascals[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</sp
         rest = r;
     }
 
-    <span class="hljs-comment">/** 
-     * Returns the size of the list using recursion 
+    <span class="hljs-comment">/**
+     * Returns the size of the list using recursion
      */</span>
     <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">size</span><span class="hljs-params">()</span> {
         <span class="hljs-keyword">if</span> (rest == <span class="hljs-literal">null</span>) {
@@ -1758,8 +1758,8 @@ pascals[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</sp
         <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-built_in">this</span>.rest.size(); <span class="hljs-comment">// Recursive call</span>
     }
 
-    <span class="hljs-comment">/** 
-     * Returns the size of the list using iteration (no recursion) 
+    <span class="hljs-comment">/**
+     * Returns the size of the list using iteration (no recursion)
      */</span>
     <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">iterativeSize</span><span class="hljs-params">()</span> {
         <span class="hljs-type">IntList</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>; <span class="hljs-comment">// Start at the current node</span>
@@ -1785,8 +1785,8 @@ pascals[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</sp
         <span class="hljs-keyword">return</span> L;
     }
 
-    <span class="hljs-comment">/** 
-     * Returns the ith item in the list using recursion 
+    <span class="hljs-comment">/**
+     * Returns the ith item in the list using recursion
      */</span>
     <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">get</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> {
         <span class="hljs-keyword">if</span> (i == <span class="hljs-number">0</span>) {
@@ -1852,7 +1852,7 @@ pascals[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</sp
     }
 
     <span class="hljs-comment">/** Remove all appearances of int y from the provided IntList. Destructive. */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IntList <span class="hljs-title function_">ejectD</span><span class="hljs-params">(IntList x, <span class="hljs-type">int</span> y)</span> { 
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> IntList <span class="hljs-title function_">ejectD</span><span class="hljs-params">(IntList x, <span class="hljs-type">int</span> y)</span> {
         <span class="hljs-keyword">if</span> (x == <span class="hljs-literal">null</span>) {
             <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;;
         }
@@ -1970,7 +1970,7 @@ pascals[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</sp
 
 <span class="hljs-comment">/** Fall 2025 Midterm 1 **/</span>
 <span class="hljs-comment">/** Iterates over all numbers in an IntList that are less than or equal
- * to the integer at the front of the list. 
+ * to the integer at the front of the list.
  * Assume that L is not null. */</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">LEQIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;Integer&gt; {
     <span class="hljs-keyword">private</span> IntList current;
@@ -2276,8 +2276,8 @@ pascals[<span class="hljs-number">2</span>] = <span class="hljs-keyword">new</sp
 
     <span class="hljs-comment">/** PRACTICE PROBLEMS FROM CHATGPT */</span>
 
-    <span class="hljs-comment">/** Returns a new deque containing every other item 
-     * from the current deque, starting at index 0. 
+    <span class="hljs-comment">/** Returns a new deque containing every other item
+     * from the current deque, starting at index 0.
      * Non destructive method */</span>
     <span class="hljs-keyword">public</span> LinkedListDeque61B&lt;T&gt; <span class="hljs-title function_">everyOther</span><span class="hljs-params">()</span> {
         LinkedListDeque61B&lt;T&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedListDeque61B</span>&lt;&gt;();

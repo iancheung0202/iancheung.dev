@@ -9,7 +9,7 @@ I was born and raised in Hong Kong, a special administrative region of the Peopl
 
 ## my language
 
-**Cantonese** is my mother tongue, which is also the primary language Hongkongers communicate in. It is different from Mandarin Chinese, which is what the rest of China uses for spoken communication. But I can also read and write Chinese characters (written communication), which for the most part is identical in Hong Kong and China. Hong Kong uses Traditional Chinese characters (just like Taiwan) but China uses Simplified Chinese characters. 
+**Cantonese** is my mother tongue, which is also the primary language Hongkongers communicate in. It is different from Mandarin Chinese, which is what the rest of China uses for spoken communication. But I can also read and write Chinese characters (written communication), which for the most part is identical in Hong Kong and China. Hong Kong uses Traditional Chinese characters (just like Taiwan) but China uses Simplified Chinese characters.
 
 **English** is my second language, and is in fact also another official language of the Hong Kong SAR government. Hong Kong was once a British colony (I will not further elaborate as that will entail a full lesson on [Hong Kong's history](https://en.wikipedia.org/wiki/History_of_Hong_Kong)), and English (along with Chinese and Putonghua) are the three required language subjects to study at school. Therefore, most residents in Hong Kong can speak, write, and understand English proficiently.
 
@@ -19,7 +19,7 @@ I can also understand and read Mandarin Chinese (**Putonghua**) simply due to th
 
 ## my school
 
-I attended kindergarten (4-6 years old), primary school (6-12 years old), and secondary school (12-15 years old) before moving to California. Notice they are not called pre-school, elementary, middle, or high school as they do in the US. As mentioned, Hong Kong once was a British colony, and our education systems naturally resemble the Brits'. 
+I attended kindergarten (4-6 years old), primary school (6-12 years old), and secondary school (12-15 years old) before moving to California. Notice they are not called pre-school, elementary, middle, or high school as they do in the US. As mentioned, Hong Kong once was a British colony, and our education systems naturally resemble the Brits'.
 
 ![](la%20salle%20panoramic.jpg)
 

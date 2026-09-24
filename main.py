@@ -15,7 +15,6 @@ import uuid
 from contextlib import suppress
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
-from urllib.request import Request, urlopen
 from dotenv import load_dotenv
 from flask import Flask, abort, jsonify, redirect, render_template, request, send_file, session, url_for
 
@@ -34,9 +33,6 @@ LOGIN_WINDOW = 15 * 60
 LOGIN_MAX_PER_IP = 5
 LOGIN_MAX_GLOBAL = 40
 
-REPORT_WINDOW = 3600
-REPORT_MAX_PER_IP = 30
-
 FRONT_MATTER_RE = re.compile(r"\A\ufeff?---[ \t]*\r?\n(?:(.*?)\r?\n)?---[ \t]*(?:\r?\n|\Z)", re.S)
 FOLDER_META_FILE = "_folder.md"
 FOLDER_ICON_FILE = "_icon.png"
@@ -45,17 +41,21 @@ MAX_PAGE_CHARS = 300_000
 NOTES_DIR = os.path.join(BASE_DIR, "notes")
 NOTES_DB = os.path.join(NOTES_DIR, "notes.json")
 NOTES_IMG = os.path.join(NOTES_DIR, "img")
-NOTE_COOLDOWN = 24 * 3600  # one note per device per day
 NOTES_PAGE_SIZE = 60
 
-DISCORD_REPORT_WEBHOOK = os.getenv("DISCORD_REPORT_WEBHOOK")
-DISCORD_PING_ID = os.getenv("DISCORD_USER_ID")
+# Wall access codes: a fresh 6-digit code every minute, handed out in person.
+# One successful check burns that minute's code and mints a short-lived ticket
+# that the drawing dialog spends when the note is actually published.
+ACCESS_STEP_SECONDS = 60
+ACCESS_TICKET_TTL = 15 * 60  # time to finish a drawing after the code is accepted
 
 LOGIN_LOCK = threading.Lock()
 NOTES_LOCK = threading.Lock()
+ACCESS_LOCK = threading.Lock()
 login_fails: dict[str, list[float]] = {}  # ip -> failure timestamps
 login_fails_all: list[float] = []  # every failure, any ip
-report_hits: dict[str, list[float]] = {}  # ip -> report timestamps
+access_consumed_step: int | None = None  # the minute-step whose code has already been spent
+access_tickets: dict[str, float] = {}  # ticket -> expiry time
 
 os.makedirs(NOTES_IMG, exist_ok=True)
 
@@ -186,7 +186,75 @@ def admin_logout():
     return jsonify(ok=True)
 
 
-# Request hooks and error pages 
+# Wall access codes
+#
+# The wall isn't open to strangers: whoever wants to leave a message needs a
+# 6-digit code that's handed to them in person and rotates every minute. The
+# code itself is never stored — it's derived from the server's secret key and
+# the current minute, so any process can check it without shared state. What
+# *is* stored is which minute has already been spent (so the same code can't
+# be reused) and the short-lived "tickets" that a correct code mints, which
+# is what actually authorizes the follow-up POST to /api/notes.
+
+
+def access_step(when: float | None = None) -> int:
+    return int((when if when is not None else time.time()) // ACCESS_STEP_SECONDS)
+
+
+def access_code(step: int) -> str:
+    digest = hmac.new(app.secret_key, f"wall-access:{step}".encode(), "sha256").digest()
+    return f"{int.from_bytes(digest[:4], 'big') % 1_000_000:06d}"
+
+
+def access_seconds_left(now: float | None = None) -> int:
+    now = now if now is not None else time.time()
+    return int(ACCESS_STEP_SECONDS - (now % ACCESS_STEP_SECONDS))
+
+
+def purge_tickets(now: float) -> None:
+    for ticket, expires in list(access_tickets.items()):
+        if expires < now:
+            access_tickets.pop(ticket, None)
+
+
+def consume_ticket(ticket: str) -> bool:
+    now = time.time()
+    with ACCESS_LOCK:
+        purge_tickets(now)
+        if ticket and ticket in access_tickets:
+            access_tickets.pop(ticket, None)
+            return True
+    return False
+
+
+@app.route("/api/notes/access", methods=["POST"])
+def notes_access():
+    global access_consumed_step
+    data = request.get_json(silent=True) or {}
+    code = re.sub(r"\D", "", str(data.get("code", "")))
+    if len(code) != 6:
+        return jsonify(error="Enter all 6 digits."), 400
+    now = time.time()
+    step = access_step(now)
+    with ACCESS_LOCK:
+        if access_consumed_step == step or not hmac.compare_digest(code, access_code(step)):
+            return jsonify(error="Wrong or already-used code. Ask for a new one."), 401
+        access_consumed_step = step
+        purge_tickets(now)
+        ticket = uuid.uuid4().hex
+        access_tickets[ticket] = now + ACCESS_TICKET_TTL
+    return jsonify(ok=True, ticket=ticket)
+
+
+@app.route("/api/admin/wall-code")
+@admin_required
+def admin_wall_code():
+    now = time.time()
+    step = access_step(now)
+    return jsonify(code=access_code(step), seconds_left=access_seconds_left(now), used=access_consumed_step == step)
+
+
+# Request hooks and error pages
 
 
 @app.before_request
@@ -271,7 +339,7 @@ def class_tree():
             )
 
         if not pages:
-            continue 
+            continue
         pages.sort(key=lambda p: p["title"].lower())
 
         folder_meta = read_front_matter(os.path.join(folder_path, FOLDER_META_FILE))
@@ -311,7 +379,7 @@ def read_front_matter(path: str) -> dict[str, str]:
         value = value.strip()
         if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
             quote_char, value = value[0], value[1:-1]
-            if quote_char == '"': 
+            if quote_char == '"':
                 value = value.replace('\\"', '"').replace("\\\\", "\\")
         meta[key.strip().lower()] = value
     return meta
@@ -446,7 +514,7 @@ def split_markdown(path: str) -> tuple[dict[str, str], str]:
             body = FRONT_MATTER_RE.sub("", f.read(), count=1)
     except OSError:
         body = ""
-    return meta, body.lstrip("\n") 
+    return meta, body.lstrip("\n")
 
 
 def write_markdown(path: str, meta: dict, body: str) -> None:
@@ -753,25 +821,18 @@ def load_db() -> dict:
     except (OSError, ValueError):
         db = {}
     db.setdefault("notes", [])
-    db.setdefault("devices", {})  # device id -> last note timestamp (cooldown)
     for note in db["notes"]:
         note.pop("status", None)
-        note.setdefault("pinned", False)
-        note.setdefault("reports", [])
+        note.pop("pinned", None)
+        note.pop("reports", None)
+        note.pop("device", None)
+        note.pop("ip", None)
+        note.pop("ua", None)
     return db
 
 
 def save_db(db: dict) -> None:
     write_atomic(NOTES_DB, json.dumps(db))
-
-
-def get_device_id() -> str:
-    session.permanent = True
-    device = session.get("nid")
-    if not device:
-        device = uuid.uuid4().hex
-        session["nid"] = device
-    return device
 
 
 def image_path(note_id: str) -> str:
@@ -782,55 +843,31 @@ def find_note(db: dict, note_id: str) -> dict | None:
     return next((n for n in db["notes"] if n["id"] == note_id), None)
 
 
-def public_note(note: dict, admin: bool = False) -> dict:
-    out = {
+def public_note(note: dict) -> dict:
+    return {
         "id": note["id"],
         "text": note["text"],
         "name": note["name"],
         "created": note["created"],
         "img": f"api/notes/{note['id']}.png" if note.get("img") else None,
-        "pinned": bool(note.get("pinned")),
     }
-    if admin:
-        out["reports"] = len(note.get("reports", []))
-    return out
-
-
-def report_limited(ip: str) -> bool:
-    now = time.time()
-    hits = [t for t in report_hits.get(ip, []) if now - t < REPORT_WINDOW]
-    limited = len(hits) >= REPORT_MAX_PER_IP
-    if not limited:
-        hits.append(now)
-    report_hits[ip] = hits
-    return limited
 
 
 @app.route("/api/notes")
 def notes_list():
     admin = is_admin()
-    device = get_device_id()
     offset = max(request.args.get("offset", 0, type=int), 0)
     limit = min(max(request.args.get("limit", NOTES_PAGE_SIZE, type=int), 1), 100)
 
     with NOTES_LOCK:
         db = load_db()
-    notes = db["notes"]
-
-    notes.sort(key=lambda n: n["created"], reverse=True)
-    notes.sort(key=lambda n: not n.get("pinned"))
-
-    cooldown_started = db["devices"].get(device)
-    cooldown_seconds = 0
-    if cooldown_started:
-        cooldown_seconds = max(int(NOTE_COOLDOWN - (time.time() - cooldown_started)), 0)
+    notes = sorted(db["notes"], key=lambda n: n["created"], reverse=True)
 
     return jsonify(
         {
             "admin": admin,
-            "notes": [public_note(n, admin) for n in notes[offset : offset + limit]],
+            "notes": [public_note(n) for n in notes[offset : offset + limit]],
             "has_more": offset + limit < len(notes),
-            "cooldown_seconds": cooldown_seconds,
         }
     )
 
@@ -840,8 +877,9 @@ def notes_create():
     if request.content_length and request.content_length > 400_000:
         return jsonify(error="That drawing is too big."), 413
     data = request.get_json(silent=True) or {}
-    if data.get("website"):
-        return jsonify(ok=True)  # honeypot
+    admin = is_admin()
+    if not admin and not consume_ticket(str(data.get("ticket") or "")):
+        return jsonify(error="Your access code expired. Ask for a new one and try again."), 401
     text, name = clean_text(data.get("text"), 44), clean_text(data.get("name"), 24)
     if not text:
         return jsonify(error="Write a caption first."), 400
@@ -851,16 +889,9 @@ def notes_create():
         if png is None or not valid_png(png):
             return jsonify(error="Bad image."), 400
 
-    admin = is_admin()
-    device = get_device_id()
-    now = time.time()
+    note_id = uuid.uuid4().hex[:12]
     with NOTES_LOCK:
         db = load_db()
-        db["devices"] = {k: t for k, t in db["devices"].items() if now - t < NOTE_COOLDOWN}
-        if device in db["devices"] and not admin:  # the admin isn't rate limited (matches the UI)
-            hours = int((NOTE_COOLDOWN - (now - db["devices"][device])) // 3600) + 1
-            return jsonify(error=f"You already left a note today. Come back in about {hours}h."), 429
-        note_id = uuid.uuid4().hex[:12]
         if png:
             with open(image_path(note_id), "wb") as f:
                 f.write(png)
@@ -869,16 +900,9 @@ def notes_create():
             "text": text,
             "name": name,
             "img": bool(png),
-            "pinned": False,
             "created": datetime.now(timezone.utc).isoformat(),
-            "device": device,
-            "ip": client_ip(),
-            "ua": request.headers.get("User-Agent", "")[:400],
-            "reports": [],
         }
         db["notes"].append(note)
-        if not admin:
-            db["devices"][device] = now
         save_db(db)
     return jsonify(public_note(note)), 201
 
@@ -893,190 +917,19 @@ def notes_image(nid):
     return response
 
 
-@app.route("/api/notes/<nid>/report", methods=["POST"])
-def notes_report(nid):
-    ip = client_ip()
-    if report_limited(ip):
-        return jsonify(error="Too many reports. Try again later."), 429
-    device = get_device_id()
-    with NOTES_LOCK:
-        db = load_db()
-        note = find_note(db, nid)
-        if not note:
-            abort(404)
-        repeat = device in note["reports"]
-        if not repeat:
-            note["reports"].append(device)
-            save_db(db)
-        author = note.get("device")
-        author_notes = [m for m in db["notes"] if author and m.get("device") == author]
-        ctx = {
-            "reporter_device": device,
-            "reporter_ip": ip,
-            "reporter_ua": request.headers.get("User-Agent", ""),
-            "reporter_lang": request.headers.get("Accept-Language", ""),
-            "reporter_referer": request.headers.get("Referer", ""),
-            "site_url": request.host_url,
-            "repeat": repeat,
-            "report_count": len(note["reports"]),
-            "reporter_total_reports": sum(device in m.get("reports", []) for m in db["notes"]),
-            "reporter_is_author": author == device,
-            "author_note_count": len(author_notes),
-            "author_total_reports": sum(len(m.get("reports", [])) for m in author_notes),
-            "image_bytes": None,
-        }
-    if note.get("img"):
-        with suppress(OSError), open(image_path(nid), "rb") as f:
-            ctx["image_bytes"] = f.read()
-    if not repeat:  # a device re-reporting the same note doesn't re-ping you
-        send_report_webhook(note, ctx)
-    return jsonify(ok=True)
-
-
-@app.route("/api/notes/<nid>", methods=["DELETE", "PATCH"])
+@app.route("/api/notes/<nid>", methods=["DELETE"])
 @admin_required
-def notes_moderate(nid):
+def notes_delete(nid):
     with NOTES_LOCK:
         db = load_db()
         note = find_note(db, nid)
         if not note:
             abort(404)
-        if request.method == "DELETE":
-            db["notes"].remove(note)
-            with suppress(OSError):
-                os.remove(image_path(nid))
-        else:
-            action = (request.get_json(silent=True) or {}).get("action")
-            if action not in ("pin", "unpin"):
-                return jsonify(error="Invalid action"), 400
-            note["pinned"] = action == "pin"
+        db["notes"].remove(note)
+        with suppress(OSError):
+            os.remove(image_path(nid))
         save_db(db)
     return jsonify(ok=True)
-
-
-### Discord report webhook
-
-
-def trim(value: object, limit: int) -> str:
-    value = str(value or "")
-    return value if len(value) <= limit else value[: limit - 1] + "…"
-
-
-def discord_timestamp(iso: str | None) -> str:
-    try:
-        unix = int(datetime.fromisoformat(iso).timestamp())
-    except (TypeError, ValueError):
-        return trim(iso or "unknown", 100)
-    return f"<t:{unix}:F> (<t:{unix}:R>)"
-
-
-def encode_multipart(fields: dict, files: dict) -> tuple[bytes, str]:
-    boundary = "----report" + uuid.uuid4().hex
-    parts = []
-    for name, value in fields.items():
-        parts.append(
-            f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n'
-            f"Content-Type: application/json\r\n\r\n{value}\r\n".encode()
-        )
-    for name, (filename, data, content_type) in files.items():
-        parts.append(
-            f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"; '
-            f'filename="{filename}"\r\nContent-Type: {content_type}\r\n\r\n'.encode()
-            + data
-            + b"\r\n"
-        )
-    parts.append(f"--{boundary}--\r\n".encode())
-    return b"".join(parts), f"multipart/form-data; boundary={boundary}"
-
-
-def field(name: str, value: object, inline: bool = True) -> dict:
-    return {"name": name, "value": str(value), "inline": inline}
-
-
-def build_report_payload(note: dict, ctx: dict) -> dict:
-    has_img = bool(ctx.get("image_bytes"))
-    note_text = trim((note.get("text") or "(empty)").replace("```", "'''"), 500)
-    reporter_is_author = "**yes, reported their own note**" if ctx["reporter_is_author"] else "no"
-    repeat = "yes (same device already reported this)" if ctx["repeat"] else "no, first from this device"
-
-    note_embed = {
-        "title": "🚩 Note reported",
-        "url": ctx["site_url"] + "#notes",
-        "color": 0xE5484D,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "description": f"**Note text**\n```\n{note_text}\n```",
-        "fields": [
-            field("Note ID", f"`{note['id']}`"),
-            field("Unique reports", ctx["report_count"]),
-            field("Pinned", "yes" if note.get("pinned") else "no"),
-            field("Signed as", trim(note.get("name") or "_anonymous_", 100)),
-            field("Has drawing", "yes" if has_img else "no"),
-            field("Posted", discord_timestamp(note.get("created")), inline=False),
-        ],
-    }
-    if has_img:
-        note_embed["image"] = {"url": "attachment://note.png"}
-
-    reporter_embed = {
-        "title": "👤 Reporting user",
-        "color": 0xF5A524,
-        "fields": [
-            field("Device ID", f"`{ctx['reporter_device']}`", inline=False),
-            field("IP", f"`{trim(ctx['reporter_ip'], 100)}`"),
-            field("Language", trim(ctx.get("reporter_lang") or "unknown", 100)),
-            field("Reports filed (all notes)", ctx["reporter_total_reports"]),
-            field("Is the note's author?", reporter_is_author),
-            field("Repeat report", repeat),
-            field("Referrer", trim(ctx.get("reporter_referer") or "none", 300), inline=False),
-            field("User agent", trim(ctx.get("reporter_ua") or "unknown", 400), inline=False),
-        ],
-    }
-
-    if note.get("device"):
-        author_fields = [
-            field("Device ID", f"`{note['device']}`", inline=False),
-            field("IP at posting", f"`{trim(note.get('ip') or 'unknown', 100)}`"),
-            field("Notes on the wall", ctx["author_note_count"]),
-            field("Reports on all their notes", ctx["author_total_reports"]),
-            field("User agent at posting", trim(note.get("ua") or "unknown", 400), inline=False),
-        ]
-    else:
-        author_fields = [field("Device ID", "unknown (posted before author tracking)", inline=False)]
-    author_embed = {"title": "📝 Reported user (note author)", "color": 0x2B7FFF, "fields": author_fields}
-
-    return {
-        "content": f"<@{DISCORD_PING_ID}> a note was just reported.",
-        "allowed_mentions": {"users": [DISCORD_PING_ID]},
-        "embeds": [note_embed, reporter_embed, author_embed],
-        "attachments": [{"id": 0, "filename": "note.png"}] if has_img else [],
-    }
-
-
-def send_report_webhook(note: dict, ctx: dict) -> None:
-    if not DISCORD_REPORT_WEBHOOK:
-        app.logger.warning("DISCORD_REPORT_WEBHOOK is not set; skipping report notification.")
-        return
-
-    def worker() -> None:
-        try:
-            files = {}
-            if ctx.get("image_bytes"):
-                files["files[0]"] = ("note.png", ctx["image_bytes"], "image/png")
-            body, content_type = encode_multipart({"payload_json": json.dumps(build_report_payload(note, ctx))}, files)
-            req = Request(
-                DISCORD_REPORT_WEBHOOK,
-                data=body,
-                headers={
-                    "Content-Type": content_type,
-                    "User-Agent": "NotesReportBot (https://www.iancheung.dev, 1.0)",
-                },
-                method="POST",
-            )
-            urlopen(req, timeout=8).close()
-        except Exception as exc:
-            app.logger.warning("Discord report webhook failed: %s", exc)
-
-    threading.Thread(target=worker, daemon=True).start()
 
 
 if __name__ == "__main__":

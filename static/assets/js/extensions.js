@@ -261,7 +261,7 @@
     let windowDiv = select(".window-div");
     const toggleLightDarkButton = select('#toggle-button');
 
-    function flipMobileNavToggleColor() { // Flip color of mobile nav toggle if in light mode  
+    function flipMobileNavToggleColor() { // Flip color of mobile nav toggle if in light mode
         if (toggleLightDarkButton.getAttribute('title') !== "Enable Dark Mode") return;
         const rootStyles = getComputedStyle(document.documentElement);
         const currentColor = rootStyles.getPropertyValue('--mobile-nav-toggle-color').trim();
@@ -310,7 +310,7 @@
             document.documentElement.style.setProperty('--ui-font', 'monospace');
             button.classList.add("a-active");
         }
-        windowDiv.style.height = 'auto'; 
+        windowDiv.style.height = 'auto';
     });
 
 
@@ -323,7 +323,7 @@
         audio.src = "assets/audio/Jingle Bells.mp3";
     }
     const button = select("#btn-play");
-    let isOut; 
+    let isOut;
     on('click', '#btn-play', () => {
         if (button.classList.contains("a-active")) {
             audio.pause();
@@ -405,11 +405,11 @@
             for (i = domain.length-1; i > 0; i -= 2) {
             l = i-1, a = domain[l], b = domain[i];
             if (a >= c && a < d)
-                if (b > d) domain[l] = d; 
-                else domain.splice(l, 2); 
+                if (b > d) domain[l] = d;
+                else domain.splice(l, 2);
             else if (a < c && b > c)
-                if (b <= d) domain[i] = c; 
-                else domain.splice(i, 0, c, d); 
+                if (b <= d) domain[i] = c;
+                else domain.splice(i, 0, c, d);
             }
 
             for (i = 0, l = domain.length, measure = 0; i < l; i += 2)
@@ -579,7 +579,7 @@
     on('click', '#toggle-button', () => {
         const title = toggleLightDarkButton.getAttribute('title');
         const isCurrentlyLight = title === 'Enable Dark Mode';
-        
+
         window.applyTheme(isCurrentlyLight, true);
     });
 
@@ -591,7 +591,7 @@
         const btn = select('#mobile-nav-toggle');
         const footer = select('.footer');
         if (!btn) return;
-        
+
         function addClassAfterDelay() {
         setTimeout(function() {
             if (!btn.classList.contains('clicked')) {
@@ -665,7 +665,7 @@
         let renderToken = 0;
         let currentKey = null;
         let unsavedGuard = null;
-        const openFolders = new Set(); 
+        const openFolders = new Set();
 
         const FRONT_MATTER = /^\uFEFF?---[ \t]*\r?\n(?:([\s\S]*?)\r?\n)?---[ \t]*(?:\r?\n|$)/;
         const isMobile = window.matchMedia('(max-width: 768px)');
@@ -1298,7 +1298,7 @@
             navbar.style.background = 'var(--background-color)';
             navbar.style.zIndex = '9999';
             navbar.style.overflowY = 'auto';
-            navbar.style.paddingTop = '60px'; 
+            navbar.style.paddingTop = '60px';
         } else {
             navbar.style.position = '';
             navbar.style.top = '';
@@ -1325,7 +1325,7 @@
                     await Tone.start();
                     if (!window.webSynth) {
                         window.webSynth = new Tone.PolySynth(Tone.Synth).toDestination();
-                        window.webSynth.volume.value = -12; 
+                        window.webSynth.volume.value = -12;
                     }
                     audioUnlocked = true;
                     document.removeEventListener('click', unlockAudio);
@@ -1337,7 +1337,7 @@
             document.addEventListener('click', unlockAudio);
             document.addEventListener('keydown', unlockAudio);
             document.addEventListener('touchstart', unlockAudio);
-            
+
             document.querySelectorAll('#navbar a').forEach(item => {
                 item.addEventListener('mouseenter', () => {
                     const pitch = item.getAttribute('data-pitch');

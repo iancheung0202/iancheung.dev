@@ -59,7 +59,7 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--bg);
-      background-image: 
+      background-image:
         radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.12), transparent 25%),
         radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
       color: var(--text-body);
@@ -570,7 +570,7 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    
+
     .offer-glow-card {
       background: linear-gradient(270deg, rgba(87,36,213,0.15), rgba(155,89,208,0.15), rgba(236,72,153,0.15), rgba(87,36,213,0.15));
       background-size: 300% 300%;
@@ -578,7 +578,7 @@
       border-color: rgba(236, 72, 153, 0.3) !important;
       box-shadow: 0 0 20px rgba(236, 72, 153, 0.15), inset 0 0 15px rgba(236, 72, 153, 0.05);
     }
-    
+
     /* Interactive mouse-tracking glare */
     .tilt-card::after {
       content: "";
@@ -836,7 +836,7 @@
                     });
                   },
                   onApprove: function(data, actions) {
-                    alert(data.subscriptionID); 
+                    alert(data.subscriptionID);
                   }
               }).render('#paypal-button-container-P-4PH659821A279584HNFQF6HI');
             </script>
@@ -869,7 +869,7 @@
               }).render("#paypal-container-FQ6SDQBQX7Y58")
               .then(() => {
                   const container = document.getElementById("paypal-container-FQ6SDQBQX7Y58");
-                  
+
                   const hide = (el) => { if(el) el.style.display = 'none'; };
 
                   // Set fixed amount for Lifetime plan
@@ -882,10 +882,10 @@
                   }
                   hide(container.querySelector(".amount-container"));
                   hide(container.querySelector(".item-description"));
-                  
+
                   const img = container.querySelector(".css-au42bs");
                   if (img) img.style.width = "100px";
-                  
+
                   const descLabel = container.querySelector("#desc-label");
                   if (descLabel) descLabel.remove();
 
@@ -951,7 +951,7 @@
 
     async function fetchServerDetails() {
         // Create an array of promises to fetch all invites in parallel
-        const promises = inviteCodes.map(code => 
+        const promises = inviteCodes.map(code =>
             fetch(`https://discord.com/api/v9/invites/${code}?with_counts=true`)
                 .then(res => {
                     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
@@ -966,7 +966,7 @@
 
         // Wait for all requests to finish
         const results = await Promise.all(promises);
-        
+
         // Clear loading state
         if (results.some(r => r.data)) {
             container.innerHTML = '';
@@ -984,7 +984,7 @@
 
             const guild = data.guild;
             const memberCount = data.approximate_member_count;
-            const iconUrl = guild.icon 
+            const iconUrl = guild.icon
                 ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
                 : 'https://cdn.discordapp.com/embed/avatars/0.png';
 

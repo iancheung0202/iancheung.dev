@@ -1,5 +1,5 @@
 ## Queries
-```sql 
+```sql
 -- Basic SELECT
 SELECT [col_names] AS [alias]
 FROM [table]

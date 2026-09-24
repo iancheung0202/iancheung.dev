@@ -16,7 +16,7 @@ Two key factors enabled diverse African peoples to forge a common African Americ
 - **Shared Experience** - facing a unifying predicament as involuntary captives
 - **Cultural Commonalities** - shared values centered on communal identity
 
-> "I am because we are; and because we are, therefore, I am."  
+> "I am because we are; and because we are, therefore, I am."
 > _John Mbiti (West African scholar)_
 ## Folk Spirituals
 
@@ -43,7 +43,7 @@ Be familiar with these features:
 - Spirituals functioned as both expressions of suffering and transformation.
 - They conveyed communal understanding of shared pain and, at times, served as coded signals for secret meetings or escape plans.
 
-Arthur Jones points out that the persistent reality of children without mothers created a shared understanding that people could use to express the depth of their emotional pain.  
+Arthur Jones points out that the persistent reality of children without mothers created a shared understanding that people could use to express the depth of their emotional pain.
 Even someone who had never actually been separated from their mother could sing _Sometimes, I Feel Like a Motherless Child_ during hard times, confident that others in the community would immediately grasp the exact intensity of suffering connected to whatever difficult experiences the singer was going through.
 
 **Critical perspective:**
@@ -248,7 +248,7 @@ Generally associated with white Francophone peoples of Southwest Louisiana.
 
 ### Critical Theoretical Question
 
-John Minton challenges narrow preconceptions of folklore that equate mediated (technologically recorded/distributed) performances with static “item-centered” folksong collections.  
+John Minton challenges narrow preconceptions of folklore that equate mediated (technologically recorded/distributed) performances with static “item-centered” folksong collections.
 **Question:** How does this apply to Zydeco?
 ### Electronic Mediation in Zydeco Development
 
@@ -300,7 +300,7 @@ Terms used by the American music industry (early 1920s–late 1940s) to classify
 - Race Records included: blues, jazz, gospel choirs, vocal quartets, string bands
 ## Genre as Construct
 
-Record companies create genre labels as a way to **package and sell** music to particular audiences.  
+Record companies create genre labels as a way to **package and sell** music to particular audiences.
 Once these labels take hold, listeners adopt them as their primary way of understanding and organizing the music they consume.
 ## The Blues: Origins and Context
 
@@ -327,20 +327,20 @@ The blues combined elements of both European and African traditions to create a 
 
 **Example: “Why Don’t You Come Home Blues” – Furry Lewis (1927)**
 
-> Sarah Lee why don't you come home  
-> Sarah Lee why don't you come home  
+> Sarah Lee why don't you come home
+> Sarah Lee why don't you come home
 > I ain't had no loving gal since you been gone
-> 
-> My mama told me when I was a child  
-> My mama told me when I was a child  
+>
+> My mama told me when I was a child
+> My mama told me when I was a child
 > Good time now trouble after a while
-> 
-> If I had a-listened to what my mother said  
-> If I had a-listened to what my mother said  
+>
+> If I had a-listened to what my mother said
+> If I had a-listened to what my mother said
 > I wouldn't be in here treated this a-way
-> 
-> I'd rather see my coffin roll in front of my door  
-> I'd rather see my coffin roll in front of my door  
+>
+> I'd rather see my coffin roll in front of my door
+> I'd rather see my coffin roll in front of my door
 > Than to hear my good gal say I don't want you no more
 ### Role of Instruments
 
@@ -466,131 +466,131 @@ The blues combined elements of both European and African traditions to create a 
 # 3. Musical Enactments of Rock 'n' Roll - Lecture Highlights
 
 ## The Term 'Rock 'n' Roll'
-- First used commercially by DJ Alan Freed  
-- Applied to any music pitched to a mostly white teenage audience in his radio show  
-- Derived from references to "rockin" and "rollin" found in rhythm and blues  
+- First used commercially by DJ Alan Freed
+- Applied to any music pitched to a mostly white teenage audience in his radio show
+- Derived from references to "rockin" and "rollin" found in rhythm and blues
 - Commercial and marketing term targeting the baby boom generation (1946–64)
 ## Context of Emergence - 1950s
-- **Economic stability:** Sales of record players and radios expanded significantly after WWII  
-- **Political and cultural traumas:** Post-WWII, Cold War, anticommunism, fear of atomic weapons  
+- **Economic stability:** Sales of record players and radios expanded significantly after WWII
+- **Political and cultural traumas:** Post-WWII, Cold War, anticommunism, fear of atomic weapons
 - **Social changes:**
   - End of racial segregation in public schools (1954)
   - First generation that grew up with television
-  - Teenager invented as commercial and cultural entity  
+  - Teenager invented as commercial and cultural entity
 - **Marketing shift:** Away from racial/regional considerations → toward generational considerations
 ## Cover Versions
 ### Definition
 Recording a song previously recorded by another artist or group.
 ### Key Characteristics
-- One of the most important precedents for the rise of rock 'n' roll as a commercial phenomenon  
-- Involves adaptation of original style  
-- End goal: profiting from its success  
-- Most notorious examples: white performers covering work of African American recording artists  
-- Occurred not only between individual musicians but also between competing institutions  
+- One of the most important precedents for the rise of rock 'n' roll as a commercial phenomenon
+- Involves adaptation of original style
+- End goal: profiting from its success
+- Most notorious examples: white performers covering work of African American recording artists
+- Occurred not only between individual musicians but also between competing institutions
 - **Famous example:** *"A Little Bird Told Me"* — Paula Watson (Supreme, 1948) vs. Evelyn Knight (Decca, 1949)
 ### Case Study: "A Little Bird Told Me"
-**Original – Paula Watson (Supreme, 1948)**  
-**Cover – Evelyn Knight (Decca, 1949)**  
+**Original – Paula Watson (Supreme, 1948)**
+**Cover – Evelyn Knight (Decca, 1949)**
 
-- Supreme sued Decca, claiming infringement on arrangement, texture, and vocal style.  
-- Judge ruled in favor of Decca: **musical arrangements were not copyrightable**.  
-- Established legal principle that *the song (sheet music) is copyrighted, but individual interpretations/arrangements are not*.  
+- Supreme sued Decca, claiming infringement on arrangement, texture, and vocal style.
+- Judge ruled in favor of Decca: **musical arrangements were not copyrightable**.
+- Established legal principle that *the song (sheet music) is copyrighted, but individual interpretations/arrangements are not*.
 - Decision opened floodgates for cover versions in the 1950s.
 ## "Hound Dog"
 ### Big Mama Thornton – Original (1953)
-- **Perspective:** Woman addressing an unfaithful man  
-- **Lyrics:** “You ain’t nothin’ but a hound dog... You told me you was high class, but I could see through that”  
+- **Perspective:** Woman addressing an unfaithful man
+- **Lyrics:** “You ain’t nothin’ but a hound dog... You told me you was high class, but I could see through that”
 - **Style:** Slower tempo, blues-based, powerful female vocal
 ### Elvis Presley – Cover (1956)
-- **Perspective:** Gender-neutral, meaning unclear  
-- **Lyrics changed:** “You ain’t nothin’ but a hound dog, cryin’ all the time... you ain’t never caught a rabbit”  
+- **Perspective:** Gender-neutral, meaning unclear
+- **Lyrics changed:** “You ain’t nothin’ but a hound dog, cryin’ all the time... you ain’t never caught a rabbit”
 - **Style:** Faster tempo, rock 'n' roll arrangement, energetic performance
 ### Comparison Questions
-- How do rhythm and tempo differ?  
-- How does the use of bass and guitar change?  
-- How do vocal style and timbre compare?  
+- How do rhythm and tempo differ?
+- How does the use of bass and guitar change?
+- How do vocal style and timbre compare?
 - How do storyline and meaning of lyrics differ?
 ## Multiple Levels of Appropriation in "Hound Dog"
-- Written by white men (Leiber and Stoller) in Los Angeles who admired and stereotyped Black musical idioms  
-- Originally composed for and performed by Black woman (Big Mama Thornton)  
+- Written by white men (Leiber and Stoller) in Los Angeles who admired and stereotyped Black musical idioms
+- Originally composed for and performed by Black woman (Big Mama Thornton)
 - Made famous through cover by white man (Elvis Presley)
 ## Music Appropriation
 **Definition:** “To take for one’s own property.”
 ### Critical Questions
-- Anyone can buy/own/use music and make it their own — but *whose music is it*?  
-- How does the music change when separated from its originator?  
+- Anyone can buy/own/use music and make it their own — but *whose music is it*?
+- How does the music change when separated from its originator?
 - Does it involve loss of meaning or acquisition of new meanings?
 # 4. Early MTV & Racial Politics - Lecture Highlights
 
 ## Music Industry Crisis: 1979–Early 1980s
 
 ### Industry Structure
-- Relied on sales of a few multiplatinum recordings  
-- Hit albums were cross-promoted across multiple media platforms  
+- Relied on sales of a few multiplatinum recordings
+- Hit albums were cross-promoted across multiple media platforms
 ### Major Sales Drop
 Caused by:
-- National recession  
-- Competition from new entertainment forms  
-- Decline of disco  
+- National recession
+- Competition from new entertainment forms
+- Decline of disco
 - Increase in illegal copying of recordings
 ### Rise of New Technologies (1980s)
-- **Compact Disc (CD) – 1983:**  
-  - Marked the decline of vinyl  
-  - Higher sound quality, durability  
-  - Initially expensive but became standard  
-- **Affordable sound devices:**  
-  - Drum machines, sequencers, samplers  
+- **Compact Disc (CD) – 1983:**
+  - Marked the decline of vinyl
+  - Higher sound quality, durability
+  - Initially expensive but became standard
+- **Affordable sound devices:**
+  - Drum machines, sequencers, samplers
 - Rise of home studios → independent production
 ## The Pre-MTV Era
 ### Traditional Promotion
-- **Radio play:** Primary method to reach audiences  
+- **Radio play:** Primary method to reach audiences
 - **Concert performance:** Connect with fans, promote records
 ### Search for New Strategies
-- Industry needed new techniques to reach younger demographics  
-- Sought direct visual connection between artists and audiences  
+- Industry needed new techniques to reach younger demographics
+- Sought direct visual connection between artists and audiences
 ## Cable Television Growth and the Birth of MTV
-- **Context:** Growth of cable TV from entertainment industry deregulation  
-- **MTV Launch (1981):** Founded by Warner Amex Satellite Entertainment Company (WASEC) 
-- **Impact:** Became the dominant method to launch and promote artists  
-  - 24-hour music video programming  
-  - Revolutionary audio-visual marketing method  
+- **Context:** Growth of cable TV from entertainment industry deregulation
+- **MTV Launch (1981):** Founded by Warner Amex Satellite Entertainment Company (WASEC)
+- **Impact:** Became the dominant method to launch and promote artists
+  - 24-hour music video programming
+  - Revolutionary audio-visual marketing method
 ## MTV’s Format (Early 1980s)
 ### Racial Exclusion
-- Focused on **white rock artists**; Black artists excluded  
-- Collaborated with radio and media to boost record sales  
-- Promoted white covers of popular Black songs  
+- Focused on **white rock artists**; Black artists excluded
+- Collaborated with radio and media to boost record sales
+- Promoted white covers of popular Black songs
 ## Michael Jackson’s *Thriller*: Breaking the Color Barrier
 ### Turning Point
-- *Thriller* changed MTV’s white-only format  
-- Became **top-selling album in history**  
-- #1 for 37 weeks in 1983  
+- *Thriller* changed MTV’s white-only format
+- Became **top-selling album in history**
+- #1 for 37 weeks in 1983
 ### Musical Strategy
-- Not a concept album — diverse singles  
-- Combined pop, R&B, rock, funk  
-- Collaborations: Eddie Van Halen (*Beat It*), Paul McCartney (*The Girl Is Mine*)  
-- Goal: Bridge divides — racial, generational, genre-based  
+- Not a concept album — diverse singles
+- Combined pop, R&B, rock, funk
+- Collaborations: Eddie Van Halen (*Beat It*), Paul McCartney (*The Girl Is Mine*)
+- Goal: Bridge divides — racial, generational, genre-based
 ## Thriller’s Music Videos
-- *Billie Jean*, *Beat It*, *Thriller* — all groundbreaking  
+- *Billie Jean*, *Beat It*, *Thriller* — all groundbreaking
 ### “Thriller” (1983)
-- 14-minute mini-movie directed by John Landis  
-- Horror aesthetic, zombie choreography  
-- Vincent Price narration  
-- Elevated music videos to cinematic art  
-- Became cultural phenomenon  
-- Most expensive video of its time  
+- 14-minute mini-movie directed by John Landis
+- Horror aesthetic, zombie choreography
+- Vincent Price narration
+- Elevated music videos to cinematic art
+- Became cultural phenomenon
+- Most expensive video of its time
 ## Music Videos: Dual Function
-1. **Sell the song:** Promote and boost record sales  
-2. **Standalone product:** Entertainment medium in its own right  
+1. **Sell the song:** Promote and boost record sales
+2. **Standalone product:** Entertainment medium in its own right
 ## Impact on MTV and the Industry
-- Brought attention to new audiences  
-- Strengthened MTV’s cultural influence  
-- Created new visual language for music  
+- Brought attention to new audiences
+- Strengthened MTV’s cultural influence
+- Created new visual language for music
 ## Critical Questions: Music and Image
-- Do images change how we listen to music?  
-- How does visual representation shape interpretation?  
-- Can we separate sound from image once we’ve seen a video?  
-- Does music give meaning to images?  
-- How does genre influence visual aesthetics?  
+- Do images change how we listen to music?
+- How does visual representation shape interpretation?
+- Can we separate sound from image once we’ve seen a video?
+- Does music give meaning to images?
+- How does genre influence visual aesthetics?
 - Do music videos create new narratives or reinforce existing ones?
 # 5. The Soundtrack of America: Hollywood’s Sound, Ideology, and Media Representation - Lecture Highlights
 
@@ -598,142 +598,142 @@ Caused by:
 **“What America do we see — and what America do we hear?”**
 
 Explores:
-- How Hollywood film music shapes what we feel about the nation  
-- How media representation influences identity and power  
+- How Hollywood film music shapes what we feel about the nation
+- How media representation influences identity and power
 - The cultural, industrial, and technological systems behind them
 ## Key Concepts: What is Film Music?
-- **Adds emotion and meaning** (Chion)  
-- **Guides understanding** (Gorbman)  
-- **Operates industrially** (Adorno & Eisler)  
-- **Organizes sound and image** (Buhler et al.)  
+- **Adds emotion and meaning** (Chion)
+- **Guides understanding** (Gorbman)
+- **Operates industrially** (Adorno & Eisler)
+- **Organizes sound and image** (Buhler et al.)
 - **Circulates globally** (Slobin)
 ## Types of Film Music
-- **Diegetic:** Heard by characters (e.g. band playing on screen)  
+- **Diegetic:** Heard by characters (e.g. band playing on screen)
 - **Nondiegetic:** Heard only by audience (e.g. orchestral score)
 ## Historical Context: Hollywood Film and Film Music
 ### Early Sound Technology
-- 1877: Edison invents phonograph  
-- 1894–1927: “Silent era” (with live accompaniment)  
-- 1927: *The Jazz Singer* — first feature with synchronized sound  
+- 1877: Edison invents phonograph
+- 1894–1927: “Silent era” (with live accompaniment)
+- 1927: *The Jazz Singer* — first feature with synchronized sound
 ### *The Jazz Singer* (1927)
-- First feature with synchronized singing/dialogue  
-- Success led to the sound revolution  
-- Racial context: tied to **blackface performance**  
+- First feature with synchronized singing/dialogue
+- Success led to the sound revolution
+- Racial context: tied to **blackface performance**
 - Introduced racialized listening from the start
 ## Europe Invented, Hollywood Industrialized
-- **Geography:** California → sunlight, distance from Edison's patents  
-- **Industry:** Studio vertical integration  
-- **History:** WWI/WWII disruptions gave U.S. export power  
+- **Geography:** California → sunlight, distance from Edison's patents
+- **Industry:** Studio vertical integration
+- **History:** WWI/WWII disruptions gave U.S. export power
 ## From Music to System
-- Studio departments institutionalized scoring  
-- Leitmotif, underscoring, synchronization became standard grammar  
+- Studio departments institutionalized scoring
+- Leitmotif, underscoring, synchronization became standard grammar
 - Audiences learned cinematic continuity through sound
 ## Mark Slobin: "The Steiner Superculture"
-- Hollywood’s orchestral sound became global “superculture”  
-- Commercially driven ideology of “normal” cinematic sound  
-- **Quote:** “Film music became a supercultural force.”  
+- Hollywood’s orchestral sound became global “superculture”
+- Commercially driven ideology of “normal” cinematic sound
+- **Quote:** “Film music became a supercultural force.”
 ## Max Steiner and *King Kong* (1935)
-- Pioneered **click track synchronization**  
-- **Mickey Mousing:** Music imitates screen action  
-- **Leitmotif:** Recurring musical theme for characters/ideas  
+- Pioneered **click track synchronization**
+- **Mickey Mousing:** Music imitates screen action
+- **Leitmotif:** Recurring musical theme for characters/ideas
   - *Darth Vader’s Theme* vs. *Anakin’s Theme* — same motif, different tone
 ## The Orchestra as a Social Mirror
-- Symbol of order, discipline, cultural prestige  
-- Represents modernity and industrial coordination  
+- Symbol of order, discipline, cultural prestige
+- Represents modernity and industrial coordination
 - Elevated cinema by aligning popular art with “high art”
 ## Musical Ethnography and Ideology
-- Film scores create musical ethnographies — shaping how audiences “hear” culture  
-- Mixed authentic and imagined vernaculars  
-- Hollywood’s orchestral model influenced global cinema  
+- Film scores create musical ethnographies — shaping how audiences “hear” culture
+- Mixed authentic and imagined vernaculars
+- Hollywood’s orchestral model influenced global cinema
 ## Semiotics of Hollywood Musical Topics
-- **Heroic:** Brass fanfare → unity, heroism  
-- **Danger:** Low ostinati, snare rhythms  
-- **Romance:** Strings, suspensions  
-- **Exotic:** Modal ornaments, “non-Western” percussion  
-- **Comedy:** Staccato woods, oom-pah style  
+- **Heroic:** Brass fanfare → unity, heroism
+- **Danger:** Low ostinati, snare rhythms
+- **Romance:** Strings, suspensions
+- **Exotic:** Modal ornaments, “non-Western” percussion
+- **Comedy:** Staccato woods, oom-pah style
 - *Feeling = historically conditioned.*
 ## Ideology of the “Original” Sound
-- Recording doesn’t capture the real — it **creates** authenticity  
+- Recording doesn’t capture the real — it **creates** authenticity
 - **Key idea:** “Recording produces the feeling of the real.”
 ## Constructing Reality: Foley Sound
-- Foley = studio recreation of everyday sounds  
-- Artists sync sound effects to visuals  
-- Builds **illusion of realism**, not actual capture  
+- Foley = studio recreation of everyday sounds
+- Artists sync sound effects to visuals
+- Builds **illusion of realism**, not actual capture
 - If done correctly, sounds “feel natural” but are constructed
 ## Evolution of Sound Technology
-- 1938: Academy Curve standardizes theater playback  
-- 1966: Dolby A noise reduction  
-- 1970s: Dolby Stereo, THX standards  
-- 1990s–present: Dolby Digital → Dolby Atmos  
+- 1938: Academy Curve standardizes theater playback
+- 1966: Dolby A noise reduction
+- 1970s: Dolby Stereo, THX standards
+- 1990s–present: Dolby Digital → Dolby Atmos
 ### Dolby Atmos
-- Object-based 3D audio  
-- Places sounds spatially, including overhead  
+- Object-based 3D audio
+- Places sounds spatially, including overhead
 - Creates immersive, emotional sonic environments
 ## Key Takeaways
-- Hollywood film music is **ideological** — shapes hearing of race, gender, nationality, power  
-- The Hollywood orchestra = global **superculture**  
-- Film sound is **constructed**, not captured  
-- Musical tropes (heroic brass, romantic strings, exotic drums) = learned conventions  
-- Sound tech (from *The Jazz Singer* → Atmos) = emotional manipulation through realism  
+- Hollywood film music is **ideological** — shapes hearing of race, gender, nationality, power
+- The Hollywood orchestra = global **superculture**
+- Film sound is **constructed**, not captured
+- Musical tropes (heroic brass, romantic strings, exotic drums) = learned conventions
+- Sound tech (from *The Jazz Singer* → Atmos) = emotional manipulation through realism
 - Film music is **performative** — it produces what feels “normal” and “natural”
 # 1. Swing Historiography - Lecture Highlights
 
 ## What is Historiography?
-- Historiography = the writing of history; constructing narratives about the past.  
+- Historiography = the writing of history; constructing narratives about the past.
 - **Key question:** How do ways of writing and practicing music construct meaning and identity?
 ## The "Official History" of Jazz
-- Emerged in the 1990s: textbooks formalized style periods (New Orleans → Swing → Bebop, etc.)  
-- Framed jazz as autonomous and evolutionary  
-- Dominant narrative is **not gender neutral** — largely a history of men  
+- Emerged in the 1990s: textbooks formalized style periods (New Orleans → Swing → Bebop, etc.)
+- Framed jazz as autonomous and evolutionary
+- Dominant narrative is **not gender neutral** — largely a history of men
 ## Swing Music: Definition & Context
-- **Swing:** Big band jazz style (1930s) emphasizing horn riffs and rhythmic drive  
+- **Swing:** Big band jazz style (1930s) emphasizing horn riffs and rhythmic drive
 ### Historical Context (1935–1945)
-- Large dance orchestras dominated national hits  
-- Symbol of sophistication and modernity  
-- Controlled by white-owned corporations (e.g., MCA)  
-- Network radio → key promotional tool  
+- Large dance orchestras dominated national hits
+- Symbol of sophistication and modernity
+- Controlled by white-owned corporations (e.g., MCA)
+- Network radio → key promotional tool
 ### Visual Representation
-- 1920s: small groups, intimate (King Joe Oliver’s Creole Jazz Band)  
+- 1920s: small groups, intimate (King Joe Oliver’s Creole Jazz Band)
 - 1930s–40s: large orchestras, formal presentation (Duke Ellington Orchestra)
 ## Musical Characteristics of Swing
-- Dance music in 4/4 time  
-- **Riffs:** short melodic/rhythmic phrases used as melody, call-and-response, or background texture  
-- Example: Count Basie’s *Sent for You Yesterday* (1938)  
-- Call-and-response between sections; walking bass & swing drums drive rhythm  
+- Dance music in 4/4 time
+- **Riffs:** short melodic/rhythmic phrases used as melody, call-and-response, or background texture
+- Example: Count Basie’s *Sent for You Yesterday* (1938)
+- Call-and-response between sections; walking bass & swing drums drive rhythm
 - Typical form: 32-bar AABA (*Taking a Chance on Love*, 1940)
 ## Swing Era as Business
-- Swing industry = white-owned, profiting from Black music  
-- Marketed swing to white audiences via jukeboxes and dance halls  
-- WWII disrupted supply chains and changed demand  
+- Swing industry = white-owned, profiting from Black music
+- Marketed swing to white audiences via jukeboxes and dance halls
+- WWII disrupted supply chains and changed demand
 ## Wartime Recruitment & Women Musicians
 ### “Swing Shift Maisies”
-- Women replaced men musicians during WWII  
-- Portrayed as **temporary**, patriotic, glamorous  
-- Created both opportunity and limitation  
-- Publicity emphasized femininity > musicianship  
+- Women replaced men musicians during WWII
+- Portrayed as **temporary**, patriotic, glamorous
+- Created both opportunity and limitation
+- Publicity emphasized femininity > musicianship
 ### Significance
-- War created visibility for women musicians  
-- Women’s expertise overshadowed by gender performance  
-- Lasting tension: accepted as “temporary substitutes”  
+- War created visibility for women musicians
+- Women’s expertise overshadowed by gender performance
+- Lasting tension: accepted as “temporary substitutes”
 ## Reading: Pellegrinelli, Lara – *“Separated at ‘Birth’: Singing and the History of Jazz”*
 
 ### Central Question
 How does **gender** shape jazz historiography from its origins?
 ### Gendered Parentage
-- **Blues (Feminine):** voice, emotion, body, untrained, spiritual  
-- **Ragtime (Masculine):** instruments, skill, trained, secular, professional  
+- **Blues (Feminine):** voice, emotion, body, untrained, spiritual
+- **Ragtime (Masculine):** instruments, skill, trained, secular, professional
 
 > “The parentage of jazz... can be read as symbolically gendered.” – Pellegrinelli
 ### Jazz’s “Birth” Myth
-- “Beginnings carry weight because they produce meaning.” – Edward Said  
+- “Beginnings carry weight because they produce meaning.” – Edward Said
 - Histories mythologize jazz’s “birth” as a singular event → legitimizes innovation
 ### The Erasure of Singing
-- Singing central to origins, then disappears from history  
-- Historians focus on instrumental evolution  
+- Singing central to origins, then disappears from history
+- Historians focus on instrumental evolution
 ### Why the Erasure?
-1. **Legitimization:** Present jazz as art, not entertainment  
-2. **Evolutionary Narrative:** From primitive → sophisticated  
-3. **“Great Man” Histories:** Focus on male instrumental heroes  
+1. **Legitimization:** Present jazz as art, not entertainment
+2. **Evolutionary Narrative:** From primitive → sophisticated
+3. **“Great Man” Histories:** Focus on male instrumental heroes
 4. **Control of Sexuality:** Distance from body, women, commercialism
 ## 2. What is (Rock) Music Criticism? Or: Why Detroit Sucks
 
@@ -933,4 +933,3 @@ Rock underwent major aesthetic and technological changes:
 - Shows how jazz has always been more ethnically diverse than acknowledged.
 - Centers music as political action and cultural affirmation.
 - Expands definitions of authenticity and jazz’s sonic possibilities.
-

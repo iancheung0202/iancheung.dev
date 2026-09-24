@@ -57,13 +57,13 @@
   - Was tied to Enlightenment ideals of "the same law, same measures, same rules" for all citizens (bundled with an *emancipatory* promise of equal citizenship)
   - Took a very long time to actually replace local practice (people kept using old units informally for decades)
 
-### Reading Question 1: 
+### Reading Question 1:
 
 > What makes German forestry similar to the metric system? What's the point of the comparison?
 
 Both are **cases of the state imposing a single, simplified, uniform standard on a messy, locally varied reality**, in order to make that reality legible, countable, and controllable from the state. Both did so by *literally reshaping reality to fit the standard* (real forests became monoculture grids; local measurement customs were forcibly replaced by the meter).
 
-### Reading Question 2: 
+### Reading Question 2:
 
 > What does Scott mean by "legibility"? Legible to whom, for what?
 
@@ -74,11 +74,11 @@ Both are **cases of the state imposing a single, simplified, uniform standard on
 **Core idea:** The three "founders" of modern statistics (**Galton, Pearson, Fisher**) happened to also hold eugenicist views. In fact, **eugenics was the actual motivating purpose** behind many of their key statistical inventions.
 
 - **Galton:** invented regression/correlation, popularized the bell curve for human traits
-- **Pearson:** invented the **chi-squared test** and the basic 3-step template of **significance testing**. It was developed specifically to argue that **distinct races/skull types existed** and differed in worth. 
+- **Pearson:** invented the **chi-squared test** and the basic 3-step template of **significance testing**. It was developed specifically to argue that **distinct races/skull types existed** and differed in worth.
 - **Fisher:** wrote the textbook (*Statistical Methods for Research Workers*, 1925) that made significance testing the industry standard across all of science. He also pushed for **sterilization of the "feeble-minded"** and defended Nazi geneticists after WWII.
-- **Central argument:** significance testing only asks **"does a difference/effect exist at all?"**, not "how much," "why," or "does it matter." That "sizeless" yes/no framing was *exactly* what eugenicists needed (they just needed to prove two "races" were statistically distinct, but they didn't care about magnitude or cause). 
+- **Central argument:** significance testing only asks **"does a difference/effect exist at all?"**, not "how much," "why," or "does it matter." That "sizeless" yes/no framing was *exactly* what eugenicists needed (they just needed to prove two "races" were statistically distinct, but they didn't care about magnitude or cause).
 
-### Reading Question 3: 
+### Reading Question 3:
 
 > How should we think about statistics, given this history? What does this help us do (since we're not going to stop using stats)?
 
@@ -97,11 +97,11 @@ We should stop treating statistics as a purely neutral, objective, "view from no
 ## Quick Reference
 
 | Concept | Definition |
-| --- | --- | 
-| **Performativity** | Measuring/classifying doesn't just describe reality, but it also reshapes reality to fit the categories | 
-| **Legibility** | Making messy reality readable/manageable from a central, distant point of power | 
-| **Biopower** | Managing human life/bodies as a resource for state power | 
-| **The "view from above"** | Statistics/data lets elites/states see populations in aggregate, from a distance, instead of as individuals | 
-| **"Objectivity" as rhetoric** | Claiming neutrality can be a *strategy* to make biased conclusions seem unquestionable | 
-| **Norming/pathologizing** | Defining an "average"/"normal" type inherently defines deviations as "abnormal" or inferior | 
-| **Relational vs. comparative thinking** | Comparing entities as if independent (ladder/timeline) vs. recognizing they're causally connected (one's wealth = another's poverty) | 
+| --- | --- |
+| **Performativity** | Measuring/classifying doesn't just describe reality, but it also reshapes reality to fit the categories |
+| **Legibility** | Making messy reality readable/manageable from a central, distant point of power |
+| **Biopower** | Managing human life/bodies as a resource for state power |
+| **The "view from above"** | Statistics/data lets elites/states see populations in aggregate, from a distance, instead of as individuals |
+| **"Objectivity" as rhetoric** | Claiming neutrality can be a *strategy* to make biased conclusions seem unquestionable |
+| **Norming/pathologizing** | Defining an "average"/"normal" type inherently defines deviations as "abnormal" or inferior |
+| **Relational vs. comparative thinking** | Comparing entities as if independent (ladder/timeline) vs. recognizing they're causally connected (one's wealth = another's poverty) |

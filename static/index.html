@@ -35,7 +35,7 @@
     <script src="assets/vendor/jquery/jquery.min.js" defer></script>
     <script src="assets/vendor/tone/tone.js"></script>
     <link href="assets/css/style.css" rel="stylesheet">
-    
+
     <meta name="keywords" content="Ian Cheung, Music, Violin, Composition, Composer, Web Developer, Discord Bot Developer, Full Stack Developer, Python, Berkeley">
     <meta name="author" content="Ian Cheung">
     <meta property="og:url" content="https://www.iancheung.dev">
@@ -268,15 +268,36 @@
       <div class="container">
         <div class="section-title">
           <h2>wall</h2>
-          <p>public board</p>
+          <p>friends only</p>
         </div>
-        <p class="paragraph">I'm deeply honored to have you on my website. Leave a sketch and a message for the world to see!</p>
+        <p class="paragraph">Every note here is from someone who knows me. Ask me for the code and leave one of your own.</p>
         <div class="notes-wall" id="notes-wall"><p class="notes-msg">loading...</p></div>
-        <p class="notes-foot"><button type="button" id="notes-admin">Tip:</button> If you see something that's not right, flip it over and hit <b>Report</b>.</p>
+        <p class="notes-foot"><button type="button" id="notes-admin">psst</button> — click a note to flip it over.</p>
+        <p class="notes-admin-code" id="notes-admin-code" hidden></p>
       </div>
     </section>
 
-    <dialog class="notes-dialog" id="notes-dialog" aria-label="Leave a note">
+    <dialog class="access-dialog" id="access-dialog" aria-label="Enter access code">
+      <div class="access-body">
+        <div class="access-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <p class="access-title">got a code?</p>
+        <p class="access-sub">ask ian for the current 6-digit code. it changes every minute, and only works once.</p>
+        <div class="access-boxes" id="access-boxes">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6">
+        </div>
+        <p class="access-error" id="access-error" role="alert"></p>
+        <button type="button" class="notes-btn" id="access-cancel">Cancel</button>
+      </div>
+    </dialog>
+
+    <dialog class="notes-dialog" id="notes-dialog" aria-label="Leave a message">
       <div class="notes-body">
         <div class="notes-left">
           <div class="notes-polaroid">
@@ -305,7 +326,6 @@
             <button type="button" class="notes-btn" id="notes-clear">Clear</button>
           </div>
         </div>
-        <input class="notes-site" id="notes-site" tabindex="-1" autocomplete="off" aria-hidden="true">
       </div>
     </dialog>
 
@@ -320,7 +340,7 @@
     <script src="https://widget.tagembed.com/embed.min.js"></script>
     <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/notes.js"></script>
+    <script src="assets/js/board.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

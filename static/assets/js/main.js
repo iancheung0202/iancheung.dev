@@ -27,7 +27,7 @@
       }
     }
   }
-  
+
   const currentSection = () => window.location.hash.split('/')[0]
 
   /**
@@ -43,7 +43,7 @@
     } else {
       history.pushState(null, null, ' ');
     }
-  }  
+  }
 
   /**
    * Tracks back and forward page
@@ -51,7 +51,7 @@
 
   window.addEventListener('popstate', () => {
     let section;
-  
+
     if (!currentSection() || currentSection() === '#header') {
       section = select('#header');
       select('#header').classList.remove('header-top');
@@ -59,16 +59,16 @@
       section = select(currentSection());
       select('#header').classList.add('header-top');
     }
-  
+
     let sections = select('section', true);
     sections.forEach((item) => {
       item.classList.remove('section-show');
     });
-  
+
     if (section) {
       section.classList.add('section-show');
     }
-  
+
     let navlinks = select('#navbar .nav-link', true);
     navlinks.forEach((item) => {
       item.classList.remove('active');
@@ -76,14 +76,14 @@
         item.classList.add('active');
       }
     });
-  
+
     // Handle the case for the home page with no hash
     if (!currentSection() || currentSection() === '#header') {
       navlinks[0].classList.add('active');
     }
   });
-  
-  
+
+
   /**
    * Mobile nav toggle
    */
@@ -196,7 +196,7 @@
   })
 
   /**
-   * Initiate Pure Counter 
+   * Initiate Pure Counter
    */
   new PureCounter();
 

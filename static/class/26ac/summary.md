@@ -50,9 +50,9 @@ American music is unified yet deeply diverse—full of contradictions that help 
 
 ### Overview
 Across this unit, we examined musical traditions shaped by migration:
-- Anglo American Ballads  
-- Mexican American Corridos  
-- African American Spirituals  
+- Anglo American Ballads
+- Mexican American Corridos
+- African American Spirituals
 - French Louisiana Music (Cajun & Zydeco)
 
 Despite unique histories and sounds, shared themes connect them.
@@ -75,7 +75,7 @@ Oral transmission enables both continuity and change.
 - **Spirituals:** Passed through invisible churches and Black congregations.
 - **Cajun/Zydeco:** Learned in families and communities.
 
-**Critical Question:**  
+**Critical Question:**
 What happens when oral tradition encounters recording technology?
 #### 3. Technology, Mediation & “Authenticity”
 Recording preserves, but also transforms traditions.
@@ -235,4 +235,3 @@ Criticism defines not only genres but also places and identities.
 - Expands jazz history beyond racial binary.
 - Creates political/cultural space for marginalized voices.
 - Challenges essentialist notions of authenticity.
-

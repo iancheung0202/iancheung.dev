@@ -98,34 +98,34 @@ EDITOR_HTML = """
         #col-files { width: 20%; background: #1e1e1e; color: #ccc; min-width: 200px; resize: horizontal; overflow: auto; }
         #col-editor { width: 40%; background: #1e1e1e; min-width: 300px; resize: horizontal; overflow: auto; }
         #col-preview { flex: 1; background: white; min-width: 300px; display: flex; flex-direction: column; }
-        
+
         /* File List */
         .file-item { padding: 8px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
         .file-item:hover { background: #2a2d2e; }
         .file-item.active { background: #37373d; color: white; border-left: 3px solid #007acc; }
         .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        
+
         /* Usage Bar */
         #usage-container { padding: 15px; border-top: 1px solid #444; background: #252526; font-size: 12px; }
         #usage-bar { height: 6px; background: #444; border-radius: 3px; margin-top: 5px; overflow: hidden; }
         #usage-fill { height: 100%; background: #007acc; width: 0%; transition: width 0.3s; }
-        
+
         /* Editor */
         #editor { flex: 1; }
         #media-preview { flex: 1; display: none; justify-content: center; align-items: center; background: #1e1e1e; overflow: hidden; }
-        
+
         /* URL Bar */
         #url-bar-container { display: flex; align-items: center; background: #f0f0f0; padding: 5px 10px; border-bottom: 1px solid #ccc; gap: 5px; }
         #url-bar { flex: 1; padding: 5px 10px; border: 1px solid #ccc; border-radius: 3px; font-size: 14px; color: #333; }
         .url-btn { background: none; border: none; cursor: pointer; padding: 4px; color: #555; border-radius: 3px; }
         .url-btn:hover { background: #e0e0e0; color: #000; }
-        
+
         iframe { width: 100%; flex: 1; border: none; }
-        
+
         .actions { display: flex; gap: 5px; }
         .icon-btn { background: none; border: none; color: #aaa; cursor: pointer; padding: 2px; font-size: 12px; display: flex; align-items: center; }
         .icon-btn:hover { color: white; }
-        
+
         svg { width: 16px; height: 16px; fill: currentColor; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
@@ -146,7 +146,7 @@ EDITOR_HTML = """
         </div>
         <div style="flex:1"></div>
     </div>
-    
+
     <div id="main">
         <div id="col-files" class="column">
             <div style="padding: 10px; font-weight: bold; background: #252526; display: flex; justify-content: space-between; align-items: center;">
@@ -170,12 +170,12 @@ EDITOR_HTML = """
                 <div id="usage-bar"><div id="usage-fill"></div></div>
             </div>
         </div>
-        
+
         <div id="col-editor" class="column">
             <div id="editor"></div>
             <div id="media-preview"></div>
         </div>
-        
+
         <div id="col-preview" class="column">
             <div id="url-bar-container">
                 <input type="text" id="url-bar" value="https://jamiecheung.site" spellcheck="false" onkeydown="if(event.key==='Enter') runSite()">
@@ -194,13 +194,13 @@ EDITOR_HTML = """
         let editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/html");
-        editor.setOptions({ 
+        editor.setOptions({
             fontSize: "14px",
             enableBasicAutocompletion: true,
             enableSnippets: true,
             enableLiveAutocompletion: true
         });
-        
+
         // Override browser find when editor is focused
         document.addEventListener('keydown', function(e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
@@ -210,7 +210,7 @@ EDITOR_HTML = """
                 }
             }
         });
-        
+
         let currentFile = null;
         let files = [];
         const BASE_URL = "https://jamiecheung.site";
@@ -269,18 +269,18 @@ EDITOR_HTML = """
         async function openFile(name) {
             currentFile = name;
             renderFileList();
-            
+
             const type = getFileType(name);
             const previewContainer = document.getElementById('media-preview');
             const editorContainer = document.getElementById('editor');
-            
+
             if (type === 'text') {
                 editorContainer.style.display = 'block';
                 previewContainer.style.display = 'none';
                 const res = await fetch('/api/file/' + name);
                 const text = await res.text();
                 editor.setValue(text, -1);
-                
+
                 if (name.endsWith('.html')) editor.session.setMode("ace/mode/html");
                 else if (name.endsWith('.css')) editor.session.setMode("ace/mode/css");
                 else if (name.endsWith('.js')) editor.session.setMode("ace/mode/javascript");
@@ -290,7 +290,7 @@ EDITOR_HTML = """
                 previewContainer.style.display = 'flex';
                 previewContainer.innerHTML = '';
                 const url = '/' + name + '?t=' + new Date().getTime();
-                
+
                 if (type === 'image') {
                     previewContainer.innerHTML = `<img src="${url}" style="max-width:90%; max-height:90%; box-shadow: 0 0 20px rgba(0,0,0,0.5);">`;
                 } else if (type === 'video') {
@@ -313,10 +313,10 @@ EDITOR_HTML = """
                 const btn = document.getElementById('btn-save');
                 const origHtml = btn.innerHTML;
                 const origBg = btn.style.background;
-                
+
                 btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Saved';
                 btn.style.background = '#28a745';
-                
+
                 setTimeout(() => {
                     btn.innerHTML = origHtml;
                     btn.style.background = origBg;
@@ -342,15 +342,15 @@ EDITOR_HTML = """
             // Clean up double slashes
             path = path.replace(/\/+/g, '/');
             if (path === '') path = '/';
-            
+
             document.getElementById('site-frame').src = path;
         }
-        
+
         function copyUrl() {
             const url = document.getElementById('url-bar').value;
             navigator.clipboard.writeText(url);
         }
-        
+
         function openNewTab() {
             // Open the actual iframe src in new tab
             const frame = document.getElementById('site-frame');
@@ -365,14 +365,14 @@ EDITOR_HTML = """
                 alert("File already exists");
                 return;
             }
-            
+
             // Create empty file
             const res = await fetch('/api/file/' + name, {
                 method: 'POST',
                 headers: {'Content-Type': 'text/plain', 'X-CSRFToken': csrfToken},
                 body: ''
             });
-            
+
             if (res.ok) {
                 await loadFiles();
                 openFile(name);
@@ -482,25 +482,25 @@ def api_files():
 def api_file(filename):
     filename = os.path.basename(filename) # Security: prevent directory traversal
     path = os.path.join(STATIC_DIR, filename)
-    
+
     if request.method == 'GET':
         if not os.path.exists(path): return "Not found", 404
         return send_from_directory(STATIC_DIR, filename)
-    
+
     if request.method == 'POST':
-        # Check quota before saving? 
-        # If editing, we are replacing. 
+        # Check quota before saving?
+        # If editing, we are replacing.
         # If we want to be strict:
         content = request.data
         current_size = os.path.getsize(path) if os.path.exists(path) else 0
         _, usage = get_static_files()
         if (usage - current_size + len(content)) > QUOTA_BYTES:
             return jsonify({'error': 'Quota exceeded'}), 400
-            
+
         with open(path, 'wb') as f:
             f.write(content)
         return jsonify({'success': True})
-    
+
     if request.method == 'DELETE':
         if os.path.exists(path):
             os.remove(path)
@@ -512,19 +512,19 @@ def api_upload():
     if 'file' not in request.files: return jsonify({'error': 'No file'}), 400
     f = request.files['file']
     if f.filename == '': return jsonify({'error': 'No filename'}), 400
-    
+
     filename = os.path.basename(f.filename)
     path = os.path.join(STATIC_DIR, filename)
-    
+
     # Check quota
     f.seek(0, os.SEEK_END)
     size = f.tell()
     f.seek(0)
-    
+
     _, usage = get_static_files()
     if (usage + size) > QUOTA_BYTES:
         return jsonify({'error': 'Quota exceeded'}), 400
-        
+
     f.save(path)
     return jsonify({'success': True})
 
@@ -534,13 +534,13 @@ def api_rename():
     data = request.json
     old = os.path.basename(data.get('old'))
     new = os.path.basename(data.get('new'))
-    
+
     old_path = os.path.join(STATIC_DIR, old)
     new_path = os.path.join(STATIC_DIR, new)
-    
+
     if not os.path.exists(old_path): return jsonify({'error': 'File not found'}), 404
     if os.path.exists(new_path): return jsonify({'error': 'Destination exists'}), 400
-    
+
     os.rename(old_path, new_path)
     return jsonify({'success': True})
 

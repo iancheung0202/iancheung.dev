@@ -11,7 +11,7 @@
 * **Subset:** $A \subseteq B \iff \forall x (x \in A \to x \in B)$ $\qquad$  **Equality:** $A = B \iff A \subseteq B \wedge B \subseteq A$$\qquad$ **Power Set:** $\mathcal{P}(S) = \{A \mid A \subseteq S\}$. Cardinality $|\mathcal{P}(S)| = 2^{|S|}$$\qquad$  **Cartesian Product:** $A \times B = \{(a,b) \mid a \in A, b \in B\}$
 * **Set Difference:** $A \setminus B = \{x \in A \mid x \notin B\}$$\qquad$  **Russell's Paradox variation:** Let $A = \{s \in S \mid s \notin f(s)\}$. Then $A$ is not in the image of $f: S \to \mathcal{P}(S)$.
 #### **Functions**
-* **Injective (One-to-One):** $\forall a,b \in X, f(a) = f(b) \implies a = b$.$\qquad$  **Surjective (Onto):** $\forall y \in Y, \exists x \in X$ such that $f(x) = y$.$\qquad$ **Bijective:** Both injective and surjective (invertible). 
+* **Injective (One-to-One):** $\forall a,b \in X, f(a) = f(b) \implies a = b$.$\qquad$  **Surjective (Onto):** $\forall y \in Y, \exists x \in X$ such that $f(x) = y$.$\qquad$ **Bijective:** Both injective and surjective (invertible).
 * **Floor/Ceiling:** $\lfloor x \rfloor$ is max integer $\le x$; $\lceil x \rceil$ is min integer $\ge x$.$\qquad$**Composition:** $(f \circ g)(x) = f(g(x))$. If $f \circ g$ surjective $\implies f$ surjective. If $f \circ g$ injective $\implies g$ injective.
 #### **Cardinality**
 * **Countable Sets:** A set $S$ is countable if $|S| \le |\mathbb{Z}^+|$ (it is finite or can be listed in a sequence). Examples: $\mathbb{Z}, \mathbb{Q}$.$\qquad$ **Uncountable Sets:** A set is uncountable if it is not countable. Example: $\mathbb{R}$.
@@ -21,7 +21,7 @@
 * **LCM/GCD:** $\gcd(a, b) \times \text{lcm}(a, b) = |ab|$.$\qquad$ **Bezout’s Theorem:** $\exists r, s \in \mathbb{Z}$ such that $r \cdot a + s \cdot b = \gcd(a, b)$.$\qquad$  **Fundamental Theorem of Arithmetic:** Every integer $>1$ is unique product of primes.
 * Given $1 = ra+sb$, if $x \equiv c \pmod a$ and $x \equiv d \pmod b$, then $x=csb+dra$
 #### **Modular Arithmetic**
-* **Congruence:** $a \equiv b \pmod m \iff m \mid (a - b)$.$\qquad$  **Modular Inverse:** $a^{-1} \pmod m$ exists iff $\gcd(a, m) = 1$.$\qquad$ **Fermat's Little Theorem:** If $p$ prime and $p \nmid a$, then $a^{p-1} \equiv 1 \pmod p$. 
+* **Congruence:** $a \equiv b \pmod m \iff m \mid (a - b)$.$\qquad$  **Modular Inverse:** $a^{-1} \pmod m$ exists iff $\gcd(a, m) = 1$.$\qquad$ **Fermat's Little Theorem:** If $p$ prime and $p \nmid a$, then $a^{p-1} \equiv 1 \pmod p$.
 * **Chinese Remainder Theorem:** $x \equiv a_i \pmod{m_i}$ (coprime $m_i$).
 	* $x = \sum a_i M_i y_i \pmod M$ where $M = \prod m_i$, $M_i = M/m_i$, $y_i = M_i^{-1} \pmod{m_i}$.
 * **Divisibility Proofs (FLT Application):** *Problem:* Show $42 \mid (n^7 - n)$ by showing divisibility by factors of 42 ($2, 3, 7$) individually.
@@ -37,7 +37,7 @@
 * **Structural Induction:** Show property holds for initial elements. **Recursive Step:** Show if property holds for elements used to construct new element $x$, it holds for $x$.
 ### **Combinatorics**
 * **Permutations:** $P(n, r) = \frac{n!}{(n-r)!}$. $\qquad$ **Combinations:** $C(n, r) = \binom{n}{r} = \frac{n!}{r!(n-r)!}$.$\qquad$ **Permutations with Repetition:** $n$ objects of $k$ types ($n_1, \dots, n_k$ alike):  $\frac{n!}{n_1! n_2! \dots n_k!}$
-* **Inclusion-Exclusion:** 2 Sets: $|A \cup B| = |A| + |B| - |A \cap B|$. 3 Sets: $|A \cup B \cup C| = |A| + |B| + |C| - (|A \cap B| + |A \cap C| + |B \cap C|) + |A \cap B \cap C|$ 
+* **Inclusion-Exclusion:** 2 Sets: $|A \cup B| = |A| + |B| - |A \cap B|$. 3 Sets: $|A \cup B \cup C| = |A| + |B| + |C| - (|A \cap B| + |A \cap C| + |B \cap C|) + |A \cap B \cap C|$
 * **Distinguishable Objects:** Placing $n$ distinguishable items into $k$ distinguishable boxes: $k^n$. $\qquad \binom{-n}{r}=(-1)^r \binom{n+r-1}{r}$
 * **Binomial Theorem:** $(x+y)^n = \sum_{k=0}^n \binom{n}{k} x^{n-k}y^k$.$\qquad$ $\sum \binom{n}{k} = 2^n \qquad\sum (-1)^k \binom{n}{k} = 0$.
 * **Stars and Bars:** Solutions to $x_1 + \dots + x_r = n, x_i \ge 0$: $\binom{n+r-1}{r-1}$  $\qquad$ Solutions to $x_1 + \dots + x_n = k$, $x_i \ge b$:  $\binom{k - nb + n - 1}{n - 1}$
@@ -46,7 +46,7 @@
 * **Basic Pigeonhole Principle:** If $k+1$ objects placed in $k$ boxes, $\exists$ box with $\ge 2$ objects.$\qquad$ **Generalized:** If $N$ objects placed in $k$ boxes, $\exists$ box with $\ge \lceil N/k \rceil$ objects.
 * **Ramsey Theory:** Example: In group of 6, $\exists$ 3 mutual friends or 3 mutual strangers ($K_6 \to K_3 \text{ or } \bar{K_3}$).
 ### **Probability**
-* **Probability of Event:** $P(E) = \frac{|E|}{|S|}$ (uniform sample space). $\qquad$ **Conditional Probability:** $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$.$\qquad$ **Independence:** $A, B$ independent $\iff P(A \cap B) = P(A)P(B)$. 
+* **Probability of Event:** $P(E) = \frac{|E|}{|S|}$ (uniform sample space). $\qquad$ **Conditional Probability:** $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$.$\qquad$ **Independence:** $A, B$ independent $\iff P(A \cap B) = P(A)P(B)$.
 * **Bayes' Theorem:** $P(F \mid E) = \frac{P(E \mid F)P(F)}{P(E \mid F)P(F) + P(E \mid \bar{F})P(\bar{F})}$$\qquad$ **Bernoulli Trials:** Prob. of exactly $k$ successes in $n$ trials (prob $p$): $P(X=k) = \binom{n}{k} p^k (1-p)^{n-k}$
 * **Expected Value:** $E(X) = \sum x \cdot P(X=x)$.$\qquad$ **Binomial:** $E(X) = np$ $\qquad$ **Geometric (Wait for 1st success):** $E(X) = 1/p$.$\qquad$ **Linearity:** $E(X+Y) = E(X) + E(Y)$.
 * **Variance:** $V(X) = E(X^2) - [E(X)]^2 = \sum V(x)$ $\qquad$ **Binomial Variance:** $\sigma^2 = np(1-p)$.
@@ -55,8 +55,7 @@
 * **Handshaking Theorem:** $2|E| = \sum_{v \in V} \deg(v)$. Corollary: Number of vertices with odd degree must be even. $\qquad$**Euler's Formula:** $v - e + r = 2$ (where $r$ is regions/faces).
     * **Complete ($K_n$):** All vertices connected. Deg $= n-1$. Size $m = \binom{n}{2}$. $\qquad$ **Cycle ($C_n$):** $n \ge 3$, deg 2 everywhere.$\qquad$ **Cube ($Q_n$):** $2^n$ vertices.
     * **Wheel ($W_n$):** $C_n$ + center hub. $n+1$ vertices.$\qquad$**Bipartite:** Vertices split into disjoint sets $V_1, V_2$ with no internal edges. ($C_n$ is bipartite iff $n$ is even).
-* **Isomorphism:** Graphs $G, H$ isomorphic if bijection $f: V_G \to V_H$ preserves adjacency. 
+* **Isomorphism:** Graphs $G, H$ isomorphic if bijection $f: V_G \to V_H$ preserves adjacency.
 * **Euler Circuit:** Uses every edge once, returns to start. Exists $\iff$ all $\deg(v)$ are even.$\qquad$ **Euler Path:** Uses every edge once. Exists $\iff$ exactly 0 or 2 vertices have odd degree.
 * **Planar Graphs:** Can be drawn without edge crossings. $\qquad$ **Kuratowski's Theorem:** Non-planar $\iff$ contains subdivision of $K_5$ or $K_{3,3}$.
 * **Chromatic Number ($\chi(G)$):** Min colors so no adjacent vertices share color.$\qquad$ **Four Color Theorem:** If planar, $\chi(G) \le 4$.
-

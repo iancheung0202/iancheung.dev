@@ -36,7 +36,7 @@
 		* Rhythmic clashes (syncopation)
 		* Percussive approach
 		* Call and response
-		* Filling up the musical space 
+		* Filling up the musical space
 		* Heterogeneous sound ideal (contrasting timbre)
 		* Body motion
 	* Creative and inside metaphors, for communication, in the context of slavery (parallel in Bible)
