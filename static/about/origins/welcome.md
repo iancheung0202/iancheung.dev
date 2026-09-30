@@ -1,6 +1,6 @@
 ---
 title: welcome to my story 📒
-order: 1
+order: 0
 ---
 
 Hey. You have landed on my story section, welcome!

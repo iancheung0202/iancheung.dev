@@ -1,6 +1,6 @@
 ---
 title: growing up in hong kong 🇭🇰
-order: 2
+order: 1
 ---
 
 ![](ocean.jpg)

@@ -249,11 +249,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return tpl.content;
     };
 
+    const revealFolder = (folderId) => {
+        if (folderId === undefined || folderId === null) return;
+        openFolders.add(folderId);
+        const folderEl = treeEl.querySelector(`.story-folder[data-folder-id="${CSS.escape(String(folderId))}"]`);
+        if (!folderEl) return;
+        folderEl.classList.add('is-open');
+        folderEl.querySelector('.story-folder-label')?.setAttribute('aria-expanded', 'true');
+    };
+
     const showPage = async (key, { updateUrl = true, scroll = false } = {}) => {
         const page = pages.get(key);
         if (!page) return;
         const token = ++renderToken;
         currentKey = key;
+        revealFolder(page.folderId);
 
         treeEl.querySelectorAll('.story-link').forEach((link) => {
             link.classList.toggle('active', link.dataset.page === key);
