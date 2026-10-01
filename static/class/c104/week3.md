@@ -46,7 +46,7 @@
 
 - **Problem of Legitimation** asks: what justifies giving scientific expertise special authority over political/social decisions in the first place?
 - **Problem of Extension** asks: once we grant that legitimacy, *how far* should it extend — who else's input (lay people, affected communities) should count, and where should the boundary of "who counts as an expert" be drawn?
-- **Science as autonomous vs. transparent:** should science claim authority by staying independent/insulated from politics, or by being open/public and inviting scrutiny? 
+- **Science as autonomous vs. transparent:** should science claim authority by staying independent/insulated from politics, or by being open/public and inviting scrutiny?
 - **Epstein's point about "scientization of politics" / "politicization of science":** increasingly, political and social controversies get converted into technical disputes so that science can "settle" them — but this means each side recruits its own experts, turning science itself into a political battleground (e.g. climate change in politics).
 - **"Science as politics by other means":** the line between science and society blurs — science doesn't just describe the world, it helps **make social order**, and its power rests partly on rhetoric and persuasion, not on logic/data alone. (This directly echoes Kuhn's point from Lecture 6 that paradigm change is a matter of persuasion, not pure proof — same idea, now applied to science's relationship with the public.)
 - **"Socially robust knowledge"** isn't about scientific claims being logically/epistemically airtight, it needs two layers to achieve that:

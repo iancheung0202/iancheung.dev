@@ -1,11 +1,27 @@
 import os
-from flask import Flask, request, jsonify, render_template_string, send_from_directory, flash, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
-from flask_wtf import FlaskForm, CSRFProtect
-from flask_wtf.csrf import generate_csrf
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
+
 from dotenv import load_dotenv
+from flask import (
+    Flask,
+    flash,
+    jsonify,
+    redirect,
+    render_template_string,
+    request,
+    send_from_directory,
+    url_for,
+)
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    current_user,
+    login_required,
+    login_user,
+)
+from flask_wtf import CSRFProtect, FlaskForm
+from flask_wtf.csrf import generate_csrf
+from wtforms import PasswordField, StringField, SubmitField
+from wtforms.validators import DataRequired
 
 load_dotenv()
 
@@ -15,22 +31,26 @@ app.url_map.strict_slashes = False
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = "login"
 
 csrf = CSRFProtect(app)
+
 
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
 
+
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Login")
+
 
 LOGIN_HTML = """
 <!DOCTYPE html>
@@ -72,11 +92,11 @@ LOGIN_HTML = """
 </html>
 """
 
-STATIC_DIR = os.path.join(app.root_path, 'static')
+STATIC_DIR = os.path.join(app.root_path, "static")
 QUOTA_BYTES = 25 * 1024 * 1024
 
-USERNAME = os.environ.get('USERNAME')
-PASSWORD = os.environ.get('PASSWORD')
+USERNAME = os.environ.get("USERNAME")
+PASSWORD = os.environ.get("PASSWORD")
 
 EDITOR_HTML = """
 <!DOCTYPE html>
@@ -431,32 +451,37 @@ EDITOR_HTML = """
 </html>
 """
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('edit_route'))
+        return redirect(url_for("edit_route"))
     form = LoginForm()
     if form.validate_on_submit():
         if form.username.data == USERNAME and form.password.data == PASSWORD:
-            user = User('admin')
+            user = User("admin")
             login_user(user)
-            return redirect(url_for('edit_route'))
+            return redirect(url_for("edit_route"))
         else:
-            flash('Invalid credentials')
+            flash("Invalid credentials")
     return render_template_string(LOGIN_HTML, form=form)
+
 
 @app.route("/")
 def home():
     return app.send_static_file("index.html")
+
 
 @app.route("/editor")
 @login_required
 def edit_route():
     return render_template_string(EDITOR_HTML, csrf_token=generate_csrf())
 
+
 @app.route("/essay")
 def essay():
     return app.send_static_file("essay.html")
+
 
 def get_static_files():
     files = []
@@ -466,28 +491,31 @@ def get_static_files():
             path = os.path.join(STATIC_DIR, f)
             if os.path.isfile(path):
                 size = os.path.getsize(path)
-                files.append({'name': f, 'size': size})
+                files.append({"name": f, "size": size})
                 total_size += size
     return files, total_size
+
 
 @app.route("/api/files")
 @login_required
 def api_files():
     files, usage = get_static_files()
-    files.sort(key=lambda x: x['name'])
-    return jsonify({'files': files, 'usage': usage, 'quota': QUOTA_BYTES})
+    files.sort(key=lambda x: x["name"])
+    return jsonify({"files": files, "usage": usage, "quota": QUOTA_BYTES})
 
-@app.route("/api/file/<path:filename>", methods=['GET', 'POST', 'DELETE'])
+
+@app.route("/api/file/<path:filename>", methods=["GET", "POST", "DELETE"])
 @login_required
 def api_file(filename):
-    filename = os.path.basename(filename) # Security: prevent directory traversal
+    filename = os.path.basename(filename)  # Security: prevent directory traversal
     path = os.path.join(STATIC_DIR, filename)
 
-    if request.method == 'GET':
-        if not os.path.exists(path): return "Not found", 404
+    if request.method == "GET":
+        if not os.path.exists(path):
+            return "Not found", 404
         return send_from_directory(STATIC_DIR, filename)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         # Check quota before saving?
         # If editing, we are replacing.
         # If we want to be strict:
@@ -495,23 +523,26 @@ def api_file(filename):
         current_size = os.path.getsize(path) if os.path.exists(path) else 0
         _, usage = get_static_files()
         if (usage - current_size + len(content)) > QUOTA_BYTES:
-            return jsonify({'error': 'Quota exceeded'}), 400
+            return jsonify({"error": "Quota exceeded"}), 400
 
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             f.write(content)
-        return jsonify({'success': True})
+        return jsonify({"success": True})
 
-    if request.method == 'DELETE':
+    if request.method == "DELETE":
         if os.path.exists(path):
             os.remove(path)
-        return jsonify({'success': True})
+        return jsonify({"success": True})
 
-@app.route("/api/upload", methods=['POST'])
+
+@app.route("/api/upload", methods=["POST"])
 @login_required
 def api_upload():
-    if 'file' not in request.files: return jsonify({'error': 'No file'}), 400
-    f = request.files['file']
-    if f.filename == '': return jsonify({'error': 'No filename'}), 400
+    if "file" not in request.files:
+        return jsonify({"error": "No file"}), 400
+    f = request.files["file"]
+    if f.filename == "":
+        return jsonify({"error": "No filename"}), 400
 
     filename = os.path.basename(f.filename)
     path = os.path.join(STATIC_DIR, filename)
@@ -523,26 +554,30 @@ def api_upload():
 
     _, usage = get_static_files()
     if (usage + size) > QUOTA_BYTES:
-        return jsonify({'error': 'Quota exceeded'}), 400
+        return jsonify({"error": "Quota exceeded"}), 400
 
     f.save(path)
-    return jsonify({'success': True})
+    return jsonify({"success": True})
 
-@app.route("/api/rename", methods=['POST'])
+
+@app.route("/api/rename", methods=["POST"])
 @login_required
 def api_rename():
     data = request.json
-    old = os.path.basename(data.get('old'))
-    new = os.path.basename(data.get('new'))
+    old = os.path.basename(data.get("old"))
+    new = os.path.basename(data.get("new"))
 
     old_path = os.path.join(STATIC_DIR, old)
     new_path = os.path.join(STATIC_DIR, new)
 
-    if not os.path.exists(old_path): return jsonify({'error': 'File not found'}), 404
-    if os.path.exists(new_path): return jsonify({'error': 'Destination exists'}), 400
+    if not os.path.exists(old_path):
+        return jsonify({"error": "File not found"}), 404
+    if os.path.exists(new_path):
+        return jsonify({"error": "Destination exists"}), 400
 
     os.rename(old_path, new_path)
-    return jsonify({'success': True})
+    return jsonify({"success": True})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2009)

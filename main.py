@@ -11,12 +11,22 @@ import struct
 import threading
 import time
 import uuid
-
 from contextlib import suppress
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
+
 from dotenv import load_dotenv
-from flask import Flask, abort, jsonify, redirect, render_template, request, send_file, session, url_for
+from flask import (
+    Flask,
+    abort,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    session,
+    url_for,
+)
 
 load_dotenv()
 
@@ -32,7 +42,9 @@ LOGIN_WINDOW = 15 * 60
 LOGIN_MAX_PER_IP = 5
 LOGIN_MAX_GLOBAL = 40
 
-FRONT_MATTER_RE = re.compile(r"\A\ufeff?---[ \t]*\r?\n(?:(.*?)\r?\n)?---[ \t]*(?:\r?\n|\Z)", re.S)
+FRONT_MATTER_RE = re.compile(
+    r"\A\ufeff?---[ \t]*\r?\n(?:(.*?)\r?\n)?---[ \t]*(?:\r?\n|\Z)", re.S
+)
 FOLDER_META_FILE = "_folder.md"
 FOLDER_ICON_FILE = "_icon.png"
 MAX_PAGE_CHARS = 300_000
@@ -52,7 +64,7 @@ login_fails: dict[str, list[float]] = {}  # ip -> failure timestamps
 login_fails_all: list[float] = []  # every failure, any ip
 access_bump = 0
 access_bump_time = time.time()
-access_tickets: dict[str, float] = {} 
+access_tickets: dict[str, float] = {}
 
 os.makedirs(NOTES_IMG, exist_ok=True)
 
@@ -82,7 +94,11 @@ def decode_base64(value: object) -> bytes | None:
 
 
 def valid_png(data: bytes, max_dim: int = 600) -> bool:
-    if len(data) > 300_000 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+    if (
+        len(data) > 300_000
+        or data[:8] != b"\x89PNG\r\n\x1a\n"
+        or data[12:16] != b"IHDR"
+    ):
         return False
     width, height = struct.unpack(">II", data[16:24])
     return 0 < width <= max_dim and 0 < height <= max_dim
@@ -97,7 +113,11 @@ def write_atomic(path: str, text: str) -> None:
 
 def client_ip() -> str:
     if TRUSTED_PROXY_HOPS > 0:
-        hops = [p.strip() for p in request.headers.get("X-Forwarded-For", "").split(",") if p.strip()]
+        hops = [
+            p.strip()
+            for p in request.headers.get("X-Forwarded-For", "").split(",")
+            if p.strip()
+        ]
         if len(hops) >= TRUSTED_PROXY_HOPS:
             return hops[-TRUSTED_PROXY_HOPS]
     return request.remote_addr or "unknown"
@@ -135,7 +155,10 @@ def admin_required(view):
 def login_blocked(ip: str, now: float) -> bool:
     login_fails[ip] = [t for t in login_fails.get(ip, []) if now - t < LOGIN_WINDOW]
     login_fails_all[:] = [t for t in login_fails_all if now - t < LOGIN_WINDOW]
-    return len(login_fails[ip]) >= LOGIN_MAX_PER_IP or len(login_fails_all) >= LOGIN_MAX_GLOBAL
+    return (
+        len(login_fails[ip]) >= LOGIN_MAX_PER_IP
+        or len(login_fails_all) >= LOGIN_MAX_GLOBAL
+    )
 
 
 @app.route("/api/admin/status")
@@ -183,7 +206,9 @@ def access_touch(now: float) -> None:
 
 
 def access_code(generation: int) -> str:
-    digest = hmac.new(app.secret_key, f"wall-access:{generation}".encode(), "sha256").digest()
+    digest = hmac.new(
+        app.secret_key, f"wall-access:{generation}".encode(), "sha256"
+    ).digest()
     return f"{int.from_bytes(digest[:4], 'big') % 1_000_000:06d}"
 
 
@@ -219,7 +244,7 @@ def notes_access():
         access_touch(now)
         if not hmac.compare_digest(code, access_code(access_bump)):
             return jsonify(error="Invalid code. Ask for a new one."), 401
-        access_bump += 1 
+        access_bump += 1
         access_bump_time = now
         purge_tickets(now)
         ticket = uuid.uuid4().hex
@@ -239,20 +264,23 @@ def admin_wall_code():
 
 @app.route("/api/admin/wall-code/regenerate", methods=["POST"])
 @admin_required
-
 def admin_wall_code_regenerate():
     global access_bump, access_bump_time
     now = time.time()
     with ACCESS_LOCK:
         access_bump += 1
-        access_bump_time = now  
+        access_bump_time = now
         code = access_code(access_bump)
     return jsonify(code=code, seconds_left=access_seconds_left(now))
 
 
 @app.before_request
 def api_write_guard():
-    if request.path.startswith("/api/") and request.method not in ("GET", "HEAD", "OPTIONS"):
+    if request.path.startswith("/api/") and request.method not in (
+        "GET",
+        "HEAD",
+        "OPTIONS",
+    ):
         if request.headers.get("X-Requested-With") != "fetch":
             return jsonify(error="Bad request."), 400
 
@@ -272,7 +300,10 @@ def api_no_store(response):
 
 
 for status in (401, 403, 404, 500):
-    app.register_error_handler(status, lambda _error, status=status: (render_template(f"{status}.html"), status))
+    app.register_error_handler(
+        status,
+        lambda _error, status=status: (render_template(f"{status}.html"), status),
+    )
 
 
 @app.route("/")
@@ -301,7 +332,8 @@ def class_file_names(folder_path: str) -> list[str]:
     return [
         name
         for name in os.listdir(folder_path)
-        if not name.startswith(("_", ".")) and os.path.isfile(os.path.join(folder_path, name))
+        if not name.startswith(("_", "."))
+        and os.path.isfile(os.path.join(folder_path, name))
     ]
 
 
@@ -319,7 +351,9 @@ def class_tree():
                     "key": f"{folder}/{filename}",
                     "title": filename,
                     "url": class_url(folder, filename),
-                    "updated": datetime.fromtimestamp(os.path.getmtime(file_path), tz=timezone.utc).isoformat(),
+                    "updated": datetime.fromtimestamp(
+                        os.path.getmtime(file_path), tz=timezone.utc
+                    ).isoformat(),
                 }
             )
 
@@ -331,8 +365,11 @@ def class_tree():
         folders.append(
             {
                 "id": folder,
-                "label": folder_meta.get("label") or folder.replace("-", " ").replace("_", " "),
-                "icon": resolve_icon(CLASS_DIR, class_url, folder, folder_meta.get("icon")),
+                "label": folder_meta.get("label")
+                or folder.replace("-", " ").replace("_", " "),
+                "icon": resolve_icon(
+                    CLASS_DIR, class_url, folder, folder_meta.get("icon")
+                ),
                 "order": parse_order(folder_meta.get("order")),
                 "pages": pages,
             }
@@ -378,7 +415,9 @@ def about_url(*parts: str) -> str:
     return "about/" + "/".join(quote(part) for part in parts)
 
 
-def resolve_icon(base_dir: str, url_builder, folder: str, icon: str | None) -> str | None:
+def resolve_icon(
+    base_dir: str, url_builder, folder: str, icon: str | None
+) -> str | None:
     if not icon:
         return None
     if icon.startswith(("http://", "https://", "/")):
@@ -399,7 +438,8 @@ def list_folders(base_dir: str) -> list[str]:
     return [
         name
         for name in os.listdir(base_dir)
-        if not name.startswith((".", "_")) and os.path.isdir(os.path.join(base_dir, name))
+        if not name.startswith((".", "_"))
+        and os.path.isdir(os.path.join(base_dir, name))
     ]
 
 
@@ -436,7 +476,9 @@ def about_tree():
                     "title": meta.get("title") or slug.replace("-", " "),
                     "order": parse_order(meta.get("order")),
                     "url": about_url(folder, filename),
-                    "updated": datetime.fromtimestamp(os.path.getmtime(file_path), tz=timezone.utc).isoformat(),
+                    "updated": datetime.fromtimestamp(
+                        os.path.getmtime(file_path), tz=timezone.utc
+                    ).isoformat(),
                 }
             )
 
@@ -448,7 +490,8 @@ def about_tree():
         folders.append(
             {
                 "id": folder,
-                "label": folder_meta.get("label") or folder.replace("-", " ").replace("_", " "),
+                "label": folder_meta.get("label")
+                or folder.replace("-", " ").replace("_", " "),
                 "icon": resolve_folder_icon(folder, folder_meta.get("icon")),
                 "order": parse_order(folder_meta.get("order")),
                 "pages": pages,
@@ -533,7 +576,12 @@ def sorted_pages(folder_path: str) -> list[tuple[str, dict, str]]:
     for filename in page_filenames(folder_path):
         path = os.path.join(folder_path, filename)
         items.append((path, read_front_matter(path), filename[:-3]))
-    items.sort(key=lambda t: (parse_order(t[1].get("order")), (t[1].get("title") or t[2]).lower()))
+    items.sort(
+        key=lambda t: (
+            parse_order(t[1].get("order")),
+            (t[1].get("title") or t[2]).lower(),
+        )
+    )
     return items
 
 
@@ -542,7 +590,12 @@ def sorted_folders() -> list[tuple[str, dict, str]]:
     for folder in folder_names():
         meta_path = os.path.join(ABOUT_DIR, folder, FOLDER_META_FILE)
         items.append((meta_path, read_front_matter(meta_path), folder))
-    items.sort(key=lambda t: (parse_order(t[1].get("order")), (t[1].get("label") or t[2]).lower()))
+    items.sort(
+        key=lambda t: (
+            parse_order(t[1].get("order")),
+            (t[1].get("label") or t[2]).lower(),
+        )
+    )
     return items
 
 
@@ -581,7 +634,11 @@ def about_create_folder():
     position = len(folder_names())
     folder_path = os.path.join(ABOUT_DIR, folder)
     os.makedirs(folder_path, exist_ok=True)
-    write_markdown(os.path.join(folder_path, FOLDER_META_FILE), {"label": label, "order": position}, "")
+    write_markdown(
+        os.path.join(folder_path, FOLDER_META_FILE),
+        {"label": label, "order": position},
+        "",
+    )
     return jsonify(ok=True, id=folder), 201
 
 
@@ -667,7 +724,11 @@ def about_create_page(folder):
     if len(content) > MAX_PAGE_CHARS:
         return jsonify(error="That page is too long."), 413
     slug = next_slug(folder_path, slugify(title))
-    write_markdown(os.path.join(folder_path, slug + ".md"), {"title": title, "order": len(page_filenames(folder_path))}, content)
+    write_markdown(
+        os.path.join(folder_path, slug + ".md"),
+        {"title": title, "order": len(page_filenames(folder_path))},
+        content,
+    )
     return jsonify(ok=True, key=f"{folder}/{slug}"), 201
 
 
@@ -678,7 +739,11 @@ def about_get_page(folder, slug):
     if not path:
         abort(404)
     meta, body = split_markdown(path)
-    return jsonify(title=meta.get("title") or slug.replace("-", " "), content=body, key=f"{folder}/{slug}")
+    return jsonify(
+        title=meta.get("title") or slug.replace("-", " "),
+        content=body,
+        key=f"{folder}/{slug}",
+    )
 
 
 @app.route("/api/about/folders/<folder>/pages/<slug>", methods=["PUT"])
@@ -782,7 +847,9 @@ def todo():
         password = request.form.get("password")
         if password:
             if password != os.getenv("PASSWORD"):
-                return render_template("todo.html", error="Incorrect Password", logged_in=False)
+                return render_template(
+                    "todo.html", error="Incorrect Password", logged_in=False
+                )
             session["todo_logged_in"] = True
             return redirect(url_for("todo"))
 
@@ -858,7 +925,10 @@ def notes_create():
     data = request.get_json(silent=True) or {}
     admin = is_admin()
     if not admin and not consume_ticket(str(data.get("ticket") or "")):
-        return jsonify(error="Your access code expired. Ask for a new one and try again."), 401
+        return (
+            jsonify(error="Your access code expired. Ask for a new one and try again."),
+            401,
+        )
     text, name = clean_text(data.get("text"), 44), clean_text(data.get("name"), 24)
     if not text:
         return jsonify(error="Write a caption first."), 400

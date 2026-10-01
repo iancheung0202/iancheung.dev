@@ -14,14 +14,14 @@
 
 **5. Labor**
 > The socially organized use of human bodies and lifetime to reproduce the material conditions of human life
-> 
+>
 > Asking about labor helps us look to sociotechnical processes of production, working conditions, and how labor is differentially valorized, exploited, and structured in various historical and sociotechnical contexts.
-> 
+>
 > Labor is also a social agent - “organized labor” can be a political force that shapes the conditions under which labor takes place
 
 **6. Narratives**
-> Stories in time that express and explain things that matter to people: who they are, how the world is, how things work, what needs to be done, what futures are possible, desirable, or inevitable. 
-> 
+> Stories in time that express and explain things that matter to people: who they are, how the world is, how things work, what needs to be done, what futures are possible, desirable, or inevitable.
+>
 > Technology shapes and is shaped by narratives that are at-large in society. Narratives can come to feel natural, but always need to be questioned
 
 **7. Performativity**
@@ -35,10 +35,10 @@
 
 **10. Sociotechnical Systems**
 > A system in which the actions of people and technologies are intertwined such that it’s not possible to just isolate the “technical part” and deal with on its own.
-> 
+>
 > Large and highly complex sociotechnical systems distribute risks and responsibilities widely and unevenly, and are difficult to regulate. When they fail it is often difficult or even impossible to identify a single human or mechanical cause.
 
 **11. Vulnerability**
-> The condition of being exposed to others and to the risk of injury. Vulnerability is central to personhood and the human condition. It is part of every social relationship, and is at the heart of ethics. 
-> 
+> The condition of being exposed to others and to the risk of injury. Vulnerability is central to personhood and the human condition. It is part of every social relationship, and is at the heart of ethics.
+>
 > Vulnerability is differentially distributed in society: it varies by positionality (race, class, gender, immigration, disability... Technology shapes who becomes vulnerable and how
