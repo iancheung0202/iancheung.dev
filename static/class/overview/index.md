@@ -1,4 +1,4 @@
-Welcome! Looks like you have stumbled upon or been guided to my course notes archive.
+Welcome! Looks like you have stumbled upon or been guided to my private course notes archive. Although this was not originally intended for public use, you are more than welcome to take a peek inside. That said, **keep in mind that these notes were made by me, for me, so they might not be quite as helpful to you as they were for my own study routine**.
 
 ![](https://media.tenor.com/splChnZkobQAAAAM/hi-nikky.gif)
 

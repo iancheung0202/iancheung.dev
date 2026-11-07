@@ -1,6 +1,6 @@
 ---
 title: freshman year
-order: 1
+order: 0
 ---
 
 i swear croads are not that bad

@@ -1,0 +1,1217 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Math 113 Midterm Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: sticky topic rail on the left, one reading column on the right.
+     Rows are tag-left; only Method and Watch blocks get a filled surface. */
+  --bg:#fafbfc; --surface:#ffffff; --fg:#151a22; --muted:#596273; --line:#e2e6ed; --line2:#cdd3de;
+  --accent:#2747c4; --accent-soft:#e8edfc;
+  --thm:#0b7567; --thm-soft:#e0f3ef;
+  --method:#7240b0; --method-soft:#f2ecfa;
+  --watch:#a5500a; --watch-soft:#fdf1e2;
+  --fact:#4b5565;
+  --good:#17803d; --bad:#b42318;
+  --font:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ctl-h:3.7rem;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.58 var(--font);-webkit-text-size-adjust:100%}
+p,ul,ol{margin:.45em 0}
+ul,ol{padding-left:1.25rem}
+li{margin:.2em 0}
+a{color:var(--accent)}
+em{font-style:italic}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1100px;margin-inline:auto;padding-inline:16px}
+
+/* header */
+.top{padding-block:1.6rem 1rem}
+.eyebrow{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 .5rem}
+h1{font-size:clamp(1.7rem,4.2vw,2.4rem);line-height:1.08;letter-spacing:-.025em;margin:0 0 .6rem;font-weight:700;text-wrap:balance}
+.sub{color:var(--muted);max-width:46rem;margin:0 0 1rem}
+.prog-row{display:flex;align-items:center;gap:.8rem;max-width:26rem}
+.prog{flex:1;height:5px;background:var(--line);border-radius:5px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);transform-origin:left;transform:scaleX(var(--p,0));transition:transform .4s var(--ease-out)}
+.prog-txt{font:500 .72rem var(--mono);color:var(--muted);white-space:nowrap}
+
+/* control bar */
+.ctl{background:var(--bg);border-block:1px solid var(--line);z-index:30}
+.ctl .wrap{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;padding-block:.6rem}
+.search{flex:1 1 14rem;min-width:0;position:relative}
+.search input{width:100%;border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:.5rem 1rem;font-size:.95rem;transition:border-color .12s ease,box-shadow .12s ease}
+.search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.count{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);font:500 .68rem var(--mono);color:var(--muted);pointer-events:none}
+.tg{display:flex;gap:.4rem;flex-wrap:wrap}
+.btn{border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:.42rem .85rem;font-size:.84rem;font-weight:500;cursor:pointer;white-space:nowrap;transition:transform .12s ease,background-color .12s ease,border-color .12s ease,color .12s ease}
+.btn:active{transform:scale(.97)}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.btn:hover{border-color:var(--accent)}}
+.hint{width:100%;font-size:.8rem;color:var(--muted);margin:0}
+.hint[hidden]{display:none}
+
+/* layout */
+.layout{max-width:1100px;margin-inline:auto;padding-inline:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:0 2.5rem}
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;background:var(--bg);display:flex;gap:.4rem;overflow-x:auto;padding-block:.55rem;margin-inline:-16px;padding-inline:16px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.toc::-webkit-scrollbar{display:none}
+.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:.8rem;font-weight:500;padding:.3rem .65rem;border-radius:999px;border:1px solid var(--line);transition:color .12s ease,background-color .12s ease,border-color .12s ease}
+.toc a.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.toc a.done::after{content:" ✓";color:var(--good)}
+main{min-width:0;max-width:46rem}
+@media (min-width:900px){
+  .ctl{position:sticky;top:env(safe-area-inset-top,0px)}
+  .layout{grid-template-columns:12.5rem minmax(0,1fr)}
+  .toc{top:calc(var(--ctl-h) + env(safe-area-inset-top,0px) + 1rem);flex-direction:column;overflow:visible;align-self:start;border:0;margin:0;padding:1rem 0;background:none;gap:.1rem}
+  .toc a{border:0;border-radius:8px;padding:.32rem .6rem;font-size:.84rem}
+}
+
+/* topics */
+.topic{margin-block:2rem;scroll-margin-top:calc(var(--ctl-h) + 3.5rem)}
+@media (min-width:900px){.topic{scroll-margin-top:calc(var(--ctl-h) + 1rem)}}
+.t-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:2px solid var(--fg);padding-bottom:.55rem}
+.t-head h2{margin:0;font-size:1.3rem;letter-spacing:-.012em;line-height:1.2;font-weight:700;min-width:0}
+.t-toggle{display:flex;align-items:baseline;gap:.75rem;background:none;border:0;padding:0;cursor:pointer;text-align:left;font-weight:inherit;letter-spacing:inherit;color:inherit;flex-wrap:wrap}
+.lec{font:500 .68rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);white-space:nowrap}
+.wt{font:500 .62rem var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:.05rem .45rem;white-space:nowrap}
+.chev{width:.9rem;height:.9rem;flex:none;align-self:center;transition:transform .25s var(--ease-out);color:var(--muted)}
+.topic.closed .chev{transform:rotate(-90deg)}
+.rev{display:flex;gap:.4rem;align-items:center;font-size:.78rem;color:var(--muted);cursor:pointer;white-space:nowrap;flex:none}
+.rev input{width:1.05rem;height:1.05rem;accent-color:var(--accent);margin:0;cursor:pointer}
+.t-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .28s var(--ease-out)}
+.t-inner{min-height:0;overflow:hidden}
+.topic.closed .t-body{grid-template-rows:0fr}
+.topic.closed .t-inner{visibility:hidden;transition:visibility 0s linear .28s}
+.searching .topic.closed .t-body{grid-template-rows:1fr}
+.searching .topic.closed .t-inner{visibility:visible}
+.topic.nomatch{display:none}
+
+/* items */
+.it{display:grid;grid-template-columns:4.3rem minmax(0,1fr);gap:.15rem 1rem;padding-block:.9rem;border-bottom:1px solid var(--line)}
+.it::before{font:500 .67rem var(--mono);text-transform:uppercase;letter-spacing:.08em;padding-top:.28rem;color:var(--fact)}
+.it.def::before{content:"Definition";color:var(--accent)}
+.it.thm::before{content:"Theorem";color:var(--thm)}
+.it.ax::before{content:"Axiom";color:var(--accent)}
+.it.fact::before{content:"Fact"}
+.it.n::before{content:"Note"}
+.it.m::before{content:"Method";color:var(--method)}
+.it.w::before{content:"Watch";color:var(--watch)}
+.it.tool::before{content:"Tool";color:var(--method)}
+.it .b{min-width:0;transition:filter .2s var(--ease-out)}
+.it .b>:first-child{margin-top:0}
+.it .b>:last-child{margin-bottom:0}
+.it.m,.it.w,.it.tool{border-radius:12px;padding:.9rem 1rem;margin-block:.65rem;border-bottom:0}
+.it.m{background:var(--method-soft)}
+.it.w{background:var(--watch-soft)}
+.it.tool{background:var(--surface);border:1px solid var(--line)}
+.core-only .it:not(.core){display:none}
+.core-only .more{display:none}
+.core-only #t-drill{display:none}
+.core-only .it.core{border-bottom:1px solid var(--line)}
+.nomatch-it{display:none}
+.m ol{margin:.3em 0}
+.b b,.b strong{font-weight:600}
+mjx-container{max-width:100%}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;padding-block:.15rem;margin:.55em 0 !important}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-size:.88rem;width:100%;min-width:30rem}
+th,td{text-align:left;padding:.35rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .68rem var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+
+/* quiz mode */
+.quiz .it.def:not(.shown) .b,.quiz .it.thm:not(.shown) .b,.quiz .it.ax:not(.shown) .b,.quiz .it.fact:not(.shown) .b{filter:blur(7px);cursor:pointer;user-select:none;-webkit-user-select:none}
+.quiz .it.def,.quiz .it.thm,.quiz .it.ax,.quiz .it.fact{cursor:pointer}
+
+/* examples */
+details.ex{margin:.55rem 0;border-left:2px solid var(--line2);padding-left:.8rem}
+details.ex>summary{cursor:pointer;font-size:.86rem;font-weight:600;color:var(--muted);list-style:none;display:flex;gap:.45rem;align-items:center;transition:color .12s ease}
+details.ex>summary::-webkit-details-marker{display:none}
+details.ex>summary::before{content:"";width:.42rem;height:.42rem;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s var(--ease-out);flex:none}
+details.ex[open]>summary::before{transform:rotate(45deg)}
+details.ex[open]>summary{color:var(--fg)}
+details.ex>div{padding-top:.2rem}
+
+/* find grid */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:.55rem;margin:.9rem 0 .4rem}
+.fc{display:block;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.65rem .8rem;transition:transform .12s ease,border-color .12s ease;min-width:0}
+.fc:active{transform:scale(.98)}
+@media (hover:hover) and (pointer:fine){.fc:hover{border-color:var(--accent)}}
+.fc .q{display:block;font-weight:600;font-size:.9rem;line-height:1.3}
+.fc .go{display:block;font-size:.78rem;color:var(--muted);margin-top:.2rem}
+h3.sm{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:1.3rem 0 0}
+
+/* tools */
+.tf{display:flex;flex-wrap:wrap;gap:.6rem;align-items:end;margin:.4rem 0}
+.tf label{display:flex;flex-direction:column;gap:.2rem;font-size:.74rem;color:var(--muted);font-weight:500}
+.tf input{border:1px solid var(--line2);background:var(--bg);border-radius:8px;padding:.4rem .6rem;width:7rem;font-family:var(--font);font-size:.88rem}
+.tf input.wide{width:min(100%,15rem)}
+.tf input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.out{font:500 .82rem/1.55 var(--font);display:grid;gap:.25rem;margin-top:.5rem;overflow-wrap:anywhere}
+.out div b{color:var(--muted);font-weight:500}
+.out .err{color:var(--bad)}
+
+/* cayley figures */
+.cay{display:flex;flex-wrap:wrap;gap:1rem;margin:.6rem 0}
+.cay figure{margin:0;flex:1 1 13rem;min-width:0}
+.cay svg{width:100%;height:auto;max-width:20rem;display:block}
+.cay figcaption{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.cay .node{fill:var(--surface);stroke:var(--fg);stroke-width:1.2}
+.cay text{fill:var(--fg);font:500 8.5px var(--mono);text-anchor:middle;dominant-baseline:central}
+.cay .e1{stroke:var(--accent);stroke-width:1.8;fill:none}
+.cay .e2{stroke:var(--thm);stroke-width:1.8;stroke-dasharray:5 3;fill:none}
+.cay .e3{stroke:var(--watch);stroke-width:1.8;stroke-dasharray:1.5 3;stroke-linecap:round;fill:none}
+.legend{display:flex;flex-wrap:wrap;gap:.9rem;font-size:.8rem;color:var(--muted);margin:.2rem 0 .6rem;align-items:center}
+.legend svg{width:2rem;height:.6rem;vertical-align:middle;margin-right:.3rem}
+
+/* drill */
+.dr-bar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.8rem 0}
+.dr-score{font:500 .78rem var(--mono);color:var(--muted)}
+.dr-list{display:grid;gap:.6rem}
+.dr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.8rem .95rem}
+.dr p{margin:0 0 .55rem;font-weight:500}
+.dr .row{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}
+.dr .why{font-size:.88rem;margin-top:.55rem;display:none}
+.dr.done .why{display:block}
+.dr.ok{border-color:var(--good)}
+.dr.no{border-color:var(--bad)}
+.dr .res{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.07em}
+.dr.ok .res{color:var(--good)}
+.dr.no .res{color:var(--bad)}
+.dr button[disabled]{opacity:.55;cursor:default}
+
+@media (max-width:600px){
+  .it{grid-template-columns:minmax(0,1fr)}
+  .it.m,.it.w,.it.tool{padding:.8rem .85rem}
+  .t-head{align-items:flex-start}
+  details.ex{padding-left:.65rem}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important}
+}
+</style>
+<script>
+window.MathJax={
+  tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
+    macros:{Z:'\\mathbb{Z}',Q:'\\mathbb{Q}',R:'\\mathbb{R}',C:'\\mathbb{C}',Ker:'\\operatorname{Ker}',lcm:'\\operatorname{lcm}',ord:'\\operatorname{ord}',Aut:'\\operatorname{Aut}',nrm:'\\trianglelefteq'}},
+  svg:{fontCache:'global'}
+};
+</script>
+
+<header class="top"><div class="wrap">
+  <h1>Math 113 Midterm Guide</h1>
+  <div class="prog-row"><div class="prog" id="prog"><i></i></div><span class="prog-txt" id="progTxt">0 / 0 reviewed</span></div>
+</div></header>
+
+<div class="ctl"><div class="wrap">
+  <div class="search"><input id="q" type="search" placeholder="Search a term or a concept" aria-label="Search the guide" autocomplete="off"><span class="count" id="count"></span></div>
+  <div class="tg">
+    <button class="btn" id="bCore" aria-pressed="false" title="Show only the key definitions and theorems, condensed">Core only</button>
+    <button class="btn" id="bQuiz" aria-pressed="false" title="Blur definitions and theorems; tap one to reveal">Quiz mode</button>
+    <button class="btn" id="bEx" aria-pressed="false" title="Open or close all worked examples">Show examples</button>
+  </div>
+  <p class="hint" id="quizHint" hidden>Quiz mode: statements are blurred. Say it from memory, then tap to check.</p>
+</div></div>
+
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Topics"></nav>
+<main id="main">
+
+<section class="topic" id="t-equiv" data-lec="Lecture 1">
+<h2>Equivalence relations</h2>
+<div class="it def core"><div class="b">
+<p>A <b>relation</b> on \(A\) is a subset \(R\subseteq A\times A\); write \(a\sim b\) for \((a,b)\in R\). It is an <b>equivalence relation</b> if for all \(a,b,c\in A\):</p>
+<ul>
+<li><b>Reflexive:</b> \(a\sim a\).</li>
+<li><b>Symmetric:</b> \(a\sim b\Rightarrow b\sim a\).</li>
+<li><b>Transitive:</b> \(a\sim b\) and \(b\sim c\Rightarrow a\sim c\).</li>
+</ul>
+</div></div>
+<div class="it thm core"><div class="b">
+<p>Equivalence relations on \(A\) correspond exactly to partitions of \(A\). The class \([a]=\{x: x\sim a\}\) of two elements are equal or disjoint, and the classes cover \(A\).</p>
+<p class="more">This is the engine behind cosets, cycles/orbits of a permutation, conjugacy, and orbits of a \(G\)-set.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Prove \(\sim\) is an equivalence relation.</b> Three labelled paragraphs:</p>
+<ol>
+<li><b>Reflexive.</b> Let \(a\in A\). Produce the witness (usually \(e\), \(0\), or \(n=0\)).</li>
+<li><b>Symmetric.</b> Suppose \(a\sim b\); unpack it to get a witness \(x\). Build a witness for \(b\sim a\) (usually \(x^{-1}\) or \(-n\)).</li>
+<li><b>Transitive.</b> Suppose \(a\sim b\) via \(x\) and \(b\sim c\) via \(y\). Combine them (\(yx\), or \(m+n\)).</li>
+</ol>
+<details class="ex"><summary>Three examples</summary><div>
+<p><b>Cosets:</b> \(a\sim_L b\iff a^{-1}b\in H\). Reflexive: \(a^{-1}a=e\in H\). Symmetric: \((a^{-1}b)^{-1}=b^{-1}a\in H\) since \(H\) is closed under inverses. Transitive: \((a^{-1}b)(b^{-1}c)=a^{-1}c\in H\).</p>
+<p><b>Conjugacy (sample Q4a):</b> \(g\sim h\iff \exists x\in G,\ xgx^{-1}=h\). Reflexive: \(x=e\). Symmetric: \(g=x^{-1}h(x^{-1})^{-1}\). Transitive: \(h=xgx^{-1},\,k=yhy^{-1}\Rightarrow k=(yx)g(yx)^{-1}\).</p>
+<p><b>Permutation orbits:</b> \(a\sim b\iff \sigma^n(a)=b\) for some \(n\in\Z\). Reflexive \(n=0\); symmetric \(\sigma^{-n}(b)=a\); transitive \(\sigma^{m+n}(a)=c\).</p>
+</div></details>
+</div></div>
+<div class="it w"><div class="b">
+<p>To <em>disprove</em>, one counterexample is enough: \(x\ge y\) on \(\R\) is not symmetric since \(1\ge 0\) but \(0\not\ge 1\). Notice how each coset property uses a subgroup axiom: \(e\in H\) (reflexive), inverses (symmetric), closure (transitive).</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-iso" data-lec="Lecture 1">
+<h2>Binary operations & isomorphism</h2>
+<div class="it def core"><div class="b">
+<p>A <b>binary operation</b> on \(S\) is a function \(*:S\times S\to S\): defined for every \(a,b\in S\) and with output in \(S\) (<em>closed</em>). Then \(\langle S,*\rangle\) is a <b>binary algebraic structure</b>. A subset \(H\subseteq S\) inherits an induced operation iff \(H\) is closed under \(*\).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Commutative:</b> \(a*b=b*a\). <b>Associative:</b> \((a*b)*c=a*(b*c)\). <b>Identity:</b> \(e\in S\) with \(e*x=x*e=x\) for all \(x\).</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p>An identity is unique if it exists. A table is symmetric across the main diagonal iff \(*\) is commutative. Composition of functions is always associative (so matrix and permutation products are).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p>An <b>isomorphism</b> \(\Phi:\langle S,*\rangle\to\langle S',*'\rangle\) is a bijection with \(\Phi(x*y)=\Phi(x)*'\Phi(y)\) for all \(x,y\in S\). Write \(S\cong S'\). Dropping "bijection" gives a <b>homomorphism</b>.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Show \(S\cong S'\).</b></p>
+<ol>
+<li>Define \(\Phi:S\to S'\) by an explicit formula.</li>
+<li>Injective: \(\Phi(x)=\Phi(y)\Rightarrow x=y\).</li>
+<li>Surjective: given \(x'\in S'\), name \(x\in S\) with \(\Phi(x)=x'\).</li>
+<li>Operation preserved: compute \(\Phi(x*y)\) and \(\Phi(x)*'\Phi(y)\); they match.</li>
+</ol>
+<details class="ex"><summary>Examples</summary><div>
+<p>\((\R,+)\cong(\R^+,\cdot)\) via \(\Phi(x)=e^x\): injective since \(e^x=e^y\Rightarrow x=\ln e^x=\ln e^y=y\); onto since \(e^{\ln t}=t\); \(e^{x+y}=e^xe^y\).</p>
+<p>\((n\Z,+)\cong(\Z,+)\) via \(\Phi(x)=x/n\). Also \(x\mapsto -x\) is an automorphism of \((\Z,+)\) (HW 3.2).</p>
+</div></details>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Show \(S\not\cong S'\).</b> Find one structural property that differs (an isomorphism must preserve it): size; commutative or not; associative or not; has an identity; number of solutions of \(x*x=e\); element orders; cyclic or not; subgroup diagram.</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p>If \(\Phi\) is an isomorphism and \(e\) is the identity of \(S\), then \(\Phi(e)\) is the identity of \(S'\) (not "\(e\) itself"). Associativity and commutativity transfer across isomorphisms (HW 3.30: chain \(\Phi(x)*'(\Phi(y)*'\Phi(z))=\Phi(x*(y*z))=\dots\)).</p>
+</div></div>
+<div class="it w"><div class="b">
+<p>Proving associativity needs all \(a,b,c\). One test case proves nothing (HW 2.2). To disprove, give one triple: \(a*b=ab+1\) on \(\R\) is commutative but not associative, since \((a*b)*c=abc+c+1\) while \(a*(b*c)=abc+a+1\).</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-groups" data-lec="Lecture 2">
+<h2>Groups</h2>
+<div class="it ax core"><div class="b">
+<p>A <b>group</b> is \(\langle G,*\rangle\) with: (1) \(*\) associative; (2) an <b>identity</b> \(e\) with \(e*a=a*e=a\) for all \(a\); (3) each \(a\) has an <b>inverse</b> \(a^{-1}\) with \(a*a^{-1}=a^{-1}*a=e\). It is <b>abelian</b> if also commutative. \(|G|\) is the <b>order</b>.</p>
+<p>In a Cayley table: identity gives the first row and column, and every element appears exactly once in each row and column.</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p>In a group: identity and inverses are unique; <b>cancellation</b> (\(ab=ac\Rightarrow b=c\), and \(ba=ca\Rightarrow b=c\)); \(ax=b\) has the unique solution \(x=a^{-1}b\); \((ab)^{-1}=b^{-1}a^{-1}\); \((a^{-1})^{-1}=a\).</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Is \(\langle S,*\rangle\) a group?</b> Check in order and stop at the first failure, showing an explicit counterexample.</p>
+<ol>
+<li><b>Closure:</b> is the output always in \(S\)?</li>
+<li><b>Associativity</b> for all triples.</li>
+<li><b>Identity:</b> one \(e\) that works for every element.</li>
+<li><b>Inverses:</b> every element has one.</li>
+</ol>
+<details class="ex"><summary>Sample Q1, worked</summary><div>
+<ul>
+<li>\(\Q^+\) under division: closed, but not associative (\((8/4)/2=1\ne 4=8/(4/2)\)); \(a/1=a\) but \(1/a\ne a\), so no identity, so no inverses.</li>
+<li>\(\{\sigma\in S_6:\sigma(2)=4\}\): not closed (\((2\,4)(2\,4)=e\) sends 2 to 2); identity \(e\) is missing; inverse of \((2\,4\,5)\) sends 2 to 5.</li>
+<li>\(\{\sigma\in S_6:\sigma(2)=2\}\): a group (the stabilizer of 2).</li>
+<li>\(\Z\) under \(\times\): closed, associative, identity 1; inverses fail (2 has none).</li>
+</ul>
+</div></details>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Groups you should recognize.</b></p>
+<div class="scroll"><table>
+<tr><th>Group</th><th>Operation</th><th>Notes</th></tr>
+<tr><td>\(\Z,\ \Q,\ \R,\ \C\)</td><td>+</td><td>identity 0</td></tr>
+<tr><td>\(\Z_n\)</td><td>+ mod \(n\)</td><td>order \(n\), cyclic</td></tr>
+<tr><td>\(\Z_n^\times=\{a:\gcd(a,n)=1\}\)</td><td>× mod \(n\)</td><td>order \(\varphi(n)\)</td></tr>
+<tr><td>\(GL_n(\R)\)</td><td>matrix ×</td><td>invertible (\(\det\ne0\))</td></tr>
+<tr><td>\(SL_n(\R)\)</td><td>matrix ×</td><td>\(\det=1\), subgroup of \(GL_n\)</td></tr>
+<tr><td>\(O(n)=\{A:A^TA=I\}\)</td><td>matrix ×</td><td>orthogonal matrices</td></tr>
+<tr><td>\(S_n\)</td><td>composition</td><td>order \(n!\)</td></tr>
+<tr><td>\(D_n\)</td><td>composition</td><td>symmetries of an \(n\)-gon, order \(2n\)</td></tr>
+<tr><td>\(P(S)\)</td><td>symmetric difference \(\Delta\)</td><td>identity \(\varnothing\), every element is its own inverse</td></tr>
+<tr><td>\(V_4\cong\Z_2\times\Z_2\)</td><td></td><td>Klein four-group, \(x^2=e\) for all \(x\)</td></tr>
+</table></div>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Trick (HW 4.32).</b> If \(x^2=e\) for every \(x\in G\), then \(G\) is abelian: \(ab=(ab)^{-1}=b^{-1}a^{-1}=ba\).</p>
+</div></div>
+<div class="it w"><div class="b">
+<p>The inverse must be two-sided and the identity must work for <em>every</em> element. \((ab)^{-1}=b^{-1}a^{-1}\) reverses the order; it equals \(a^{-1}b^{-1}\) only in abelian groups. Zero never has a multiplicative inverse.</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-sub" data-lec="Lecture 3">
+<h2>Subgroups</h2>
+<div class="it def core"><div class="b">
+<p>A subset \(H\subseteq G\) is a <b>subgroup</b>, written \(H\le G\), if \(H\) is a group under the operation of \(G\). \(H\lt G\) means proper (\(H\ne G\)). \(\{e\}\) is the trivial subgroup; a <b>nontrivial proper</b> subgroup is neither \(\{e\}\) nor \(G\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Subgroup test.</b> \(H\le G\) iff (1) \(a,b\in H\Rightarrow ab\in H\); (2) \(e\in H\); (3) \(a\in H\Rightarrow a^{-1}\in H\). Associativity is inherited.</p>
+<p class="more"><b>One-step form:</b> \(H\ne\varnothing\) and \(ab^{-1}\in H\) for all \(a,b\in H\). <b>Finite shortcut:</b> a nonempty finite subset closed under the operation is a subgroup (HW 5.50: powers of \(a\) repeat, so \(a^n=e\) and \(a^{-1}=a^{n-1}\)).</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Prove \(H\le G\).</b></p>
+<ol>
+<li>Write the defining condition of \(H\).</li>
+<li>Check \(e\) satisfies it.</li>
+<li>Let \(a,b\in H\); show \(ab\in H\).</li>
+<li>Let \(a\in H\); show \(a^{-1}\in H\).</li>
+</ol>
+<details class="ex"><summary>Example (HW 4.18)</summary><div>
+<p>\(S=\{M\in GL_n(\R):\det M=\pm1\}\). \(\det I=1\). \(\det(AB)=\det A\det B=\pm1\). \(\det(A^{-1})=1/\det A=\pm1\).</p>
+</div></details>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Disprove \(H\le G\).</b> Show one axiom fails: missing identity (\(\Q^+\) in \((\C,+)\): \(0\notin\Q^+\); \(\{M:\det M=2\}\): \(\det I=1\)); not closed (\(\{f:f(1)=1\}\) under \(+\): \((f+g)(1)=2\)); missing inverse.</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p>Subgroups of \((\Z,+)\) are exactly \(n\Z\). \(SL_2(\C)\le GL_2(\C)\). If \(G\) is finite, \(|H|\) divides \(|G|\) (Lagrange, below). The subgroup diagram is a structural invariant.</p>
+</div></div>
+<div class="it w"><div class="b">
+<p>\(H\) must use the <em>same</em> operation as \(G\) and contain \(G\)'s identity. A subset can be a group under some other operation without being a subgroup.</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-cyc" data-lec="Lecture 4">
+<h2>Cyclic groups</h2>
+<div class="it def core"><div class="b">
+<p>\(\langle a\rangle=\{a^n:n\in\Z\}\), the smallest subgroup containing \(a\) (additively: all multiples \(na\)). \(G\) is <b>cyclic</b> if \(G=\langle a\rangle\) for some \(a\), called a generator. The <b>order</b> of \(a\) is \(|\langle a\rangle|\): the least \(n>0\) with \(a^n=e\), or \(\infty\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Division algorithm.</b> For \(n\in\Z,\ m\in\Z^+\) there are unique \(q,r\) with \(n=mq+r\), \(0\le r\lt m\).</p>
+<p>Every cyclic group is abelian. <b>Every subgroup of a cyclic group is cyclic.</b></p>
+<p class="more">Proof pattern to reuse: let \(m\) be the least positive exponent with \(a^m\in H\). For \(a^n\in H\) write \(n=qm+r\); then \(a^r=(a^m)^{-q}a^n\in H\), so \(r=0\) by minimality, and \(H=\langle a^m\rangle\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p>Subgroups of \((\Z,+)\) are exactly \(n\Z\) for \(n\ge0\). For \(r,s\in\Z^+\), \(\{nr+ms\}=d\Z\) where \(d=\gcd(r,s)\); \(d\) divides \(r\) and \(s\), and every common divisor divides \(d\). So \(\langle 18,24,39\rangle=3\Z\) (HW 7.4). If \(\gcd(r,s)=1\) and \(r\mid sm\) then \(r\mid m\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Classification.</b> If \(G=\langle a\rangle\) is infinite then \(G\cong\Z\); if \(|G|=n\) then \(G\cong\Z_n\).</p>
+<p>If \(a\) has order \(n\): \(|\langle a^s\rangle|=n/\gcd(s,n)\), and \(\langle a^s\rangle=\langle a^t\rangle\iff\gcd(s,n)=\gcd(t,n)\). <b>Corollary:</b> the generators of \(\langle a\rangle\) are the \(a^s\) with \(\gcd(s,n)=1\); there are \(\varphi(n)\).</p>
+</div></div>
+<div class="it fact"><div class="b">
+<ul>
+<li>In \(\Z_n\), the element \(k\) has order \(n/\gcd(k,n)\); generators are the units.</li>
+<li>\(\Z_n\) has exactly one subgroup for each positive divisor \(d\mid n\): \(\langle d\rangle\), of order \(n/d\). A cyclic group of order \(n\) has \(\varphi(d)\) elements of order \(d\).</li>
+<li>\(\Phi:\Z_n\to\Z_n\) is an automorphism iff \(\Phi(1)\) is a generator, so there are \(\varphi(n)\) of them (\(\Z_8\): \(1\mapsto1,3,5,7\); HW 6.14).</li>
+<li>A homomorphism out of a cyclic group is determined by the image of a generator (HW 6.44).</li>
+<li>A finite group of order \(n\) is cyclic iff it has an element of order \(n\). Prime order \(\Rightarrow\) cyclic.</li>
+<li>Not cyclic: \(V_4\), \(\Z_2\times\Z_2\), \((\Q,+)\) (no single element generates both \(1/3\) and \(1/5\)). \((\R,+)\) is not even finitely generated.</li>
+</ul>
+<details class="ex"><summary>\(\Z_{12}\) in full (sample Q7)</summary><div>
+<p>Generators: \(1,5,7,11\). Subgroups: \(\langle1\rangle=\Z_{12}\); \(\langle2\rangle=\{0,2,4,6,8,10\}\); \(\langle3\rangle=\{0,3,6,9\}\); \(\langle4\rangle=\{0,4,8\}\); \(\langle6\rangle=\{0,6\}\); \(\langle0\rangle=\{0\}\). Orders \(12,6,4,3,2,1\).</p>
+</div></details>
+</div></div>
+<div class="it tool"><div class="b">
+<p><b>\(\Z_n\) explorer.</b> Check your hand computations.</p>
+<div class="tf">
+<label>n<input id="zn" type="number" min="1" max="500" value="12"></label>
+<label>element a<input id="za" type="number" min="0" max="499" value="8"></label>
+</div>
+<div class="out" id="zout"></div>
+</div></div>
+<div class="it w"><div class="b">
+<p>Additively, \(a^n\) means \(na\). Generators of \(\Z_n\) are the \(k\) with \(\gcd(k,n)=1\) (this includes 1 and \(n-1\), excludes 0); it is not "\(k\) prime".</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-gen" data-lec="Lecture 5">
+<h2>Generating sets & Cayley graphs</h2>
+<div class="it def core"><div class="b">
+<p>\(\langle a,b\rangle\) is the set of all finite products \(a^{i_1}b^{j_1}a^{i_2}\cdots\) (integer exponents); it is a subgroup. In general \(\langle a_i\mid i\in I\rangle=\bigcap\{H\le G: a_i\in H\ \forall i\}\), the <b>smallest</b> subgroup containing every \(a_i\). They <b>generate</b> \(G\) if this equals \(G\); \(G\) is <b>finitely generated</b> if a finite set generates it.</p>
+</div></div>
+<div class="it thm"><div class="b">
+<p>An intersection of subgroups is a subgroup. Rule: \(a\Z\cap b\Z=\operatorname{lcm}(a,b)\Z\) (e.g. \(4\Z\cap6\Z=12\Z\)). Example: \(\langle2,3\rangle=\Z_6\) since \(\langle2\rangle=\{0,2,4\}\) and \(\langle3\rangle=\{0,3\}\).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p>The <b>Cayley digraph</b> \(\operatorname{Cay}(G,S)\): vertices are the elements of \(G\); for each \(x\in G\) and generator \(s\in S\) draw an edge \(x\xrightarrow{s}xs\).</p>
+<p class="more">Properties (use them to check a drawing): connected because \(S\) generates; each vertex has exactly one outgoing and one incoming edge of each generator type; relations such as \(r^4=e\), \(b^2=e\) hold starting from every vertex. If \(s\) has order 2 then \(x\to xs\to x\), so draw one undirected edge.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Draw \(\operatorname{Cay}(G,S)\).</b></p>
+<ol>
+<li>Tabulate \(x\cdot s\) for every \(x\) and every \(s\in S\).</li>
+<li>Place the \(|G|\) vertices.</li>
+<li>Draw one edge per \((x,s)\), a different style per generator, arrows only for generators of order above 2.</li>
+<li>Check: one in-edge and one out-edge per generator at every vertex.</li>
+</ol>
+<details class="ex" open><summary>Sample Q2: \(S_3\) with three generating sets</summary><div>
+<div class="legend" id="cayLegend"></div>
+<div class="cay" id="cay"></div>
+</div></details>
+</div></div>
+<div class="it w"><div class="b">
+<p>Products are composed right to left, so \(x\cdot s\) means apply \(s\) first. Pick one convention and stay consistent; the shape of the graph is what matters. Generators of order 2 do not need arrows.</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-perm" data-lec="Lecture 6–7">
+<h2>Permutations</h2>
+<div class="it def core"><div class="b">
+<p>A <b>permutation</b> of a set \(A\) is a bijection \(A\to A\). \(S_A\) is the set of all of them, a group under composition (\(\sigma\tau=\sigma\circ\tau\): apply \(\tau\) first). \(S_n=S_{\{1,\dots,n\}}\) has order \(n!\). \(S_1\) is trivial, \(S_2\cong\Z_2\), \(S_3\) is the smallest non-abelian group (order 6). If \(|A|=|B|\) then \(S_A\cong S_B\).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p>\(\sigma\) induces the equivalence relation \(a\sim b\iff\sigma^n(a)=b\) for some \(n\in\Z\). Its classes are the <b>orbits</b> (cycles). The cycle \((a_1\,a_2\,\dots\,a_k)\) sends \(a_i\mapsto a_{i+1}\), \(a_k\mapsto a_1\), and fixes everything else.</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p>Every permutation of a finite set is a <b>unique product of disjoint cycles</b>; disjoint cycles commute. Every permutation is a product of transpositions (not uniquely): \((a_1\,\dots\,a_k)=(a_1\,a_k)\cdots(a_1\,a_3)(a_1\,a_2)\), so a \(k\)-cycle is \(k-1\) transpositions.</p>
+<p><b>Parity is well defined:</b> no permutation is both a product of an even number and of an odd number of transpositions. \(A_n\) (even permutations) is a subgroup of \(S_n\) of order \(n!/2\) for \(n\ge2\). \(\Phi:S_n\to\Z_2\) (even \(\mapsto0\), odd \(\mapsto1\)) is a homomorphism.</p>
+</div></div>
+<div class="it fact"><div class="b">
+<ul>
+<li><b>Order</b> of a permutation = lcm of its disjoint cycle lengths. A \(k\)-cycle is even iff \(k\) is odd.</li>
+<li>Inverse: reverse each cycle, \((a_1\,a_2\,a_3)^{-1}=(a_3\,a_2\,a_1)\).</li>
+<li>Write cycles starting from the smallest entry; \((1\,3\,6)=(3\,6\,1)\ne(1\,6\,3)\).</li>
+<li>\(D_n\) (symmetries of a regular \(n\)-gon) has order \(2n\): \(r^k\) and \(sr^k\), with \(r^n=s^2=e\), \(srs=r^{-1}\). \(D_4\) has 8 elements and is non-abelian; its center is \(\{e,r^2\}\) (Fraleigh: \(\rho_0,\rho_2\)).</li>
+<li>Subgroups of \(D_4\): order 1 \(\{e\}\); order 2 \(\langle r^2\rangle,\langle s\rangle,\langle sr\rangle,\langle sr^2\rangle,\langle sr^3\rangle\); order 4 \(\langle r\rangle\), \(\{e,r^2,s,sr^2\}\), \(\{e,r^2,sr,sr^3\}\); order 8 itself.</li>
+</ul>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Compute products, powers, order, parity.</b></p>
+<ol>
+<li>Product: trace each number right to left, then collect cycles.</li>
+<li>Power of a \(k\)-cycle: \(c^m\) moves each entry \(m\) places along; reduce \(m\bmod k\). For several cycles, reduce \(m\) modulo the order.</li>
+<li>Parity: sum of \((\text{length}-1)\) over cycles, mod 2.</li>
+</ol>
+<details class="ex"><summary>Examples</summary><div>
+<p>\((1\,3)(1\,4\,2)\): \(1\to4\to4\), \(4\to2\to2\), \(2\to1\to3\), \(3\to3\to1\), so \((1\,4\,2\,3)\).</p>
+<p>HW 4.8: \(\sigma\) a 6-cycle, \(100=6\cdot16+4\), so \(\sigma^{100}=\sigma^4\).</p>
+<p>Order of \(((1\,4\,2\,3),2)\in S_4\times\Z_3\): \(\operatorname{lcm}(4,3)=12\).</p>
+</div></details>
+</div></div>
+<div class="it tool"><div class="b">
+<p><b>Permutation calculator.</b> Type a product in cycle notation, e.g. <code>(1 3)(1 4 2)</code>. Rightmost cycle acts first.</p>
+<div class="tf">
+<label>product<input class="wide" id="pp" type="text" value="(1 3)(1 4 2)" autocomplete="off" spellcheck="false"></label>
+<label>power k<input id="pk" type="number" value="2"></label>
+</div>
+<div class="out" id="pout"></div>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Image of a homomorphism.</b> \(\Phi[G]=\{\Phi(g):g\in G\}\) is just the set of outputs \(\Phi\) actually hits.</p>
+<ul>
+<li><b>It is a subgroup:</b> if \(\Phi:G\to G'\) is a homomorphism, then \(\Phi[G]\le G'\).</li>
+<li><b>If \(\Phi\) is also injective,</b> then \(G\cong\Phi[G]\): \(G\) sits inside \(G'\) as an exact, undistorted copy (an <b>embedding</b>), like a line inside 3-space.</li>
+</ul>
+<p class="more"><b>Why it is a subgroup:</b> it contains \(\Phi(e)=e'\); it is closed since \(\Phi(a)\Phi(b)=\Phi(ab)\); it has inverses since \(\Phi(a)^{-1}=\Phi(a^{-1})\). <b>Why \(G\cong\Phi[G]\):</b> restrict the target to \(\Phi[G]\) so the map is automatically onto; if it is also one-to-one, it is a bijection, hence an isomorphism.</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Cayley's theorem.</b> Every group \(G\) is isomorphic to a subgroup of \(S_G\). HW 8.52: \(p_a(x)=xa\) is a permutation of \(G\), and \(a\mapsto p_{a^{-1}}\) is the isomorphism.</p>
+</div></div>
+<div class="it w"><div class="b">
+<p>Right-to-left is the course convention; reading left to right gives a different (inverse-order) product. Disjoint cycles commute; overlapping ones usually do not.</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-cos" data-lec="Lecture 8" data-w="1">
+<h2>Cosets & Lagrange</h2>
+<div class="it def core"><div class="b">
+<p><b>Coset = a shifted copy of \(H\).</b> For \(H\le G\) and \(a\in G\): left coset \(aH=\{ah:h\in H\}\), right coset \(Ha=\{ha:h\in H\}\). Additively, \(a+H\). If \(G\) is abelian, \(aH=Ha\).</p>
+<p>Picture \(H\) as a line through the origin; \(a+H\) is a parallel line.</p>
+<p class="more"><b>Why it works:</b> \(a\sim_L b\iff a^{-1}b\in H\) ("\(a\) and \(b\) differ by an element of \(H\)"). Like "mod 5": \(a\sim b\iff b-a\in5\Z\). Since \(\sim_L\) is an equivalence relation, its classes (the cosets) cut \(G\) into non-overlapping pieces.</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Coset rules.</b></p>
+<ul>
+<li>\(aH=bH\iff a^{-1}b\in H\) (additively: \(b-a\in H\)).</li>
+<li>\(aH=H\iff a\in H\) (shifting by something already in \(H\) changes nothing).</li>
+<li><b>Cosets partition \(G\):</b> every element lies in exactly one coset; two cosets are equal or disjoint.</li>
+<li>\(aH\) is a subgroup only if \(a\in H\) (otherwise it misses \(e\)).</li>
+</ul>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Example.</b> \(G=\Z,\ H=3\Z\). Three cosets: \(0+H=\{\dots,-3,0,3,6,\dots\}\), \(1+H=\{\dots,-2,1,4,7,\dots\}\), \(2+H=\{\dots,-1,2,5,8,\dots\}\). They cover \(\Z\) with no overlap, and \(1+H=4+H\) since \(4-1=3\in H\). Only \(0+H\) is a subgroup.</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Index</b> \((G:H)\) = number of distinct left cosets. \((\Z:3\Z)=3\). For finite \(G\): \((G:H)=|G|/|H|\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Lagrange's theorem.</b> If \(G\) is finite and \(H\le G\), then \(|H|\) divides \(|G|\).</p>
+<p class="more"><b>Why:</b> every coset has exactly \(|H|\) elements (\(h\mapsto ah\) is a bijection, undone by \(x\mapsto a^{-1}x\)). Cosets partition \(G\) into \((G:H)\) buckets of size \(|H|\), so \(|G|=(G:H)\cdot|H|\). A group of 12 elements can never have a subgroup of size 5 or 7.</p>
+<p><b>Corollaries:</b> (1) prime order \(\Rightarrow\) cyclic, and the only subgroups are \(\{e\}\) and \(G\); (2) \(|a|\) divides \(|G|\); (3) \(a^{|G|}=e\) for all \(a\).</p>
+<p class="more">Why (3): with \(k=|a|\) and \(|G|=km\), \(a^{|G|}=(a^k)^m=e\). This generalizes Fermat's little theorem.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>List all left cosets of \(H\) in \(G\).</b></p>
+<ol>
+<li>Count: \(|G|/|H|\) cosets, each of size \(|H|\).</li>
+<li>Start with \(eH=H\). Pick any element not yet used, \(g\), and compute \(gH=\{gh\}\).</li>
+<li>Repeat until every element of \(G\) appears exactly once.</li>
+<li>For normality: compare \(gH\) with \(Hg\) for a suspicious \(g\).</li>
+</ol>
+<details class="ex"><summary>Sample Q11: \(H=\langle(1\,2\,3)\rangle\le A_4\)</summary><div>
+<p>\(|A_4|=12\), \(|H|=3\), so 4 cosets: \(H\); \((12)(34)H=\{(12)(34),(243),(143)\}\); \((13)(24)H=\{(13)(24),(142),(234)\}\); \((14)(23)H\). Not normal: with \(g=(14)(23)\), \((123)g=(142)\in Hg\) but \((142)\notin gH\), so \(gH\ne Hg\).</p>
+</div></details>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Lagrange as an impossibility tool.</b> If \(\Phi:G\to G'\) is injective, then \(G\cong\Phi[G]\le G'\), so \(|G|\) must divide \(|G'|\).</p>
+<details class="ex"><summary>Sample Q10: injective \(S_4\to D_{100}\)?</summary><div>
+<p>\(|S_4|=24\), \(|D_{100}|=200\), and \(24\nmid200\). No.</p>
+</div></details>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Classic proof patterns.</b> (HW 10.34) If \(|G|=pq\) with \(p,q\) prime, a proper subgroup has order 1, \(p\) or \(q\), so it is cyclic. (HW 11.31) If \(G\) has no proper nontrivial subgroups: any \(x\ne e\) gives \(\langle x\rangle=G\), so \(G\) is cyclic. If infinite, \(\langle x^2\rangle\) is proper nontrivial, a contradiction. If \(|G|=ab\) with \(1\lt a,b\lt|G|\), then \(\langle x^a\rangle\) is proper nontrivial. So \(|G|\) is prime.</p>
+</div></div>
+<div class="it w"><div class="b">
+<p><b>The converse of Lagrange is false:</b> \(A_4\) (order 12) has no subgroup of order 6. It does hold for abelian groups. Left and right cosets differ unless \(H\) is normal.</p>
+</div></div>
+<div class="it thm skim"><div class="b">
+<p>\(\Z_n^\times=\{i:1\le i\le n-1,\ \gcd(i,n)=1\}\) is a group under multiplication mod \(n\). <b>Fermat:</b> \(a^{p-1}\equiv1\pmod p\) for \(a\in\{1,\dots,p-1\}\) (Lagrange applied to \(\Z_p^\times\)).</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-prod" data-lec="Lecture 9" data-w="1">
+<h2>Direct products & abelian groups</h2>
+<div class="it def core"><div class="b">
+<p><b>Direct product.</b> \(G_1\times\cdots\times G_n\) uses componentwise operation. Identity \((e_1,\dots,e_n)\); order \(|G_1|\cdots|G_n|\).</p>
+<p><b>Order of an element = lcm, not product:</b> \(\ord(a_1,\dots,a_n)=\operatorname{lcm}(|a_1|,\dots,|a_n|)\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>When is a product cyclic?</b> \(\Z_m\times\Z_n\cong\Z_{mn}\iff\gcd(m,n)=1\) (also for several pairwise coprime factors).</p>
+<p class="more">\(\Z_2\times\Z_2\) is not cyclic: every element has order at most \(\operatorname{lcm}(2,2)=2\), so nothing reaches order 4.</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>FTFGAG (finite case).</b> Every finite abelian group is a product of prime-power cyclic groups \(\Z_{p^k}\), and this list is unique up to order. Every finitely generated abelian group is that times some copies of \(\Z\).</p>
+<p><b>Counting.</b> Factor \(n=p_1^{a_1}\cdots p_s^{a_s}\). The number of abelian groups of order \(n\) is \(p(a_1)\cdots p(a_s)\), where \(p(a)\) = ways to write \(a\) as a sum of positive integers: \(p(1)=1,\ p(2)=2,\ p(3)=3,\ p(4)=5\).</p>
+<p><b>Existence.</b> If \(m\) divides \(|G|\) for finite abelian \(G\), there is a subgroup of order \(m\). Square-free order \(\Rightarrow\) cyclic.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Count or list abelian groups of order \(n\).</b></p>
+<ol>
+<li>Factor \(n\) into prime powers.</li>
+<li>For each \(p^a\), split the exponent \(a\) into a sum (a partition); each split gives a product of \(\Z_{p^{\text{part}}}\).</li>
+<li>Multiply the number of choices across primes.</li>
+</ol>
+<details class="ex"><summary>Order 100 (sample Q6) and 360</summary><div>
+<p>\(100=2^2\cdot5^2\): \(2\cdot2=4\) groups. For \(2^2\): \(2\) (as \(\Z_4\)) or \(1+1\) (as \(\Z_2\times\Z_2\)). Same for \(5^2\). So \(\Z_4\times\Z_{25}\), \(\Z_2^2\times\Z_{25}\), \(\Z_4\times\Z_5^2\), \(\Z_2^2\times\Z_5^2\).</p>
+<p>\(360=2^3\cdot3^2\cdot5\): \(3\cdot2\cdot1=6\) groups. (\(2^3\): \(3\), \(2+1\), \(1+1+1\); \(3^2\): \(2\), \(1+1\); \(5\): \(1\).)</p>
+</div></details>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Are two finite abelian groups isomorphic?</b> Break both fully into prime-power pieces (use \(\Z_{mn}\cong\Z_m\times\Z_n\) for coprime \(m,n\)). They are isomorphic iff they have exactly the same pieces.</p>
+<p>HW 11.16: \(\Z_2\times\Z_{12}\cong\Z_2\times\Z_3\times\Z_4\cong\Z_4\times\Z_6\), since all give \(\{\Z_2,\Z_4,\Z_3\}\).</p>
+</div></div>
+<div class="it tool"><div class="b">
+<p><b>Abelian groups of order \(n\).</b></p>
+<div class="tf"><label>n<input id="an" type="number" min="2" max="5000" value="360"></label></div>
+<div class="out" id="aout"></div>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Internal direct product (HW 11.50).</b> In \(G=H\times K\), view \(\bar H=H\times\{e\}\) and \(\bar K=\{e\}\times K\) as subgroups of \(G\):</p>
+<ul>
+<li>every \(g\in G\) is \(hk\) with \(h\in\bar H,\ k\in\bar K\);</li>
+<li>elements of \(\bar H\) commute with elements of \(\bar K\);</li>
+<li>\(\bar H\cap\bar K=\{(e,e)\}\).</li>
+</ul>
+</div></div>
+<div class="it w"><div class="b">
+<p>Order of a tuple is the <b>lcm</b>, not the product. \(\Z_2\times\Z_2\) and \(\Z_2\times\Z_4\) are not cyclic; \(\Z_4\times\Z_2\not\cong\Z_8\). In \(\Z_n\), \(|a|=n/\gcd(a,n)\).</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-hom" data-lec="Lecture 10" data-w="1">
+<h2>Homomorphisms & normal subgroups</h2>
+<div class="it def core"><div class="b">
+<p><b>Homomorphism</b> \(\Phi:G\to G'\): a map that respects the operation, \(\Phi(ab)=\Phi(a)\Phi(b)\) (multiply then map = map then multiply).</p>
+<p><b>Trivial:</b> \(\Phi(g)=e'\) for all \(g\). <b>Isomorphism:</b> bijective homomorphism. <b>Automorphism:</b> isomorphism \(G\to G\).</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Homomorphisms:</b> sign \(S_n\to\Z_2\) (even \(\mapsto0\), odd \(\mapsto1\)); evaluation \(f\mapsto f(c)\) on \((F,+)\); \(v\mapsto Av\) from \(\R^n\to\R^m\); \(\det:GL_n(\R)\to\R^*\); \(n\mapsto rn\) on \(\Z\); reduction \(\Z\to\Z_n\); inclusion \(H\hookrightarrow G\); conjugation \(x\mapsto gxg^{-1}\).</p>
+<p><b>Not homomorphisms:</b></p>
+<ul>
+<li>\(n\mapsto n+c\) with \(c\ne0\) on \(\Z\): it sends \(0\) to \(c\ne0\), and \(\Phi(n+m)=n+m+c\) but \(\Phi(n)+\Phi(m)=n+m+2c\).</li>
+<li>\(x\mapsto x^{-1}\) on a non-abelian group (HW 13.8): \(\Phi(ab)=b^{-1}a^{-1}\) but \(\Phi(a)\Phi(b)=a^{-1}b^{-1}\). It is a homomorphism iff \(G\) is abelian.</li>
+</ul>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Image, preimage, kernel.</b> \(f[A]=\{f(a):a\in A\}\) (outputs). \(f^{-1}[B]=\{x:f(x)\in B\}\) (inputs landing in \(B\)).</p>
+<p><b>Kernel</b> \(\Ker\Phi=\{g\in G:\Phi(g)=e'\}\): everything that gets squashed to the identity.</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Properties of a homomorphism</b> \(\Phi:G\to G'\):</p>
+<ul>
+<li>\(\Phi(e)=e'\) and \(\Phi(a^{-1})=\Phi(a)^{-1}\).</li>
+<li>Subgroups map to subgroups: \(H\le G\Rightarrow\Phi[H]\le G'\). Preimages too: \(K'\le G'\Rightarrow\Phi^{-1}[K']\le G\).</li>
+<li>\(\Phi(a)^n=\Phi(a^n)\), so \(|\Phi(a)|\) divides \(|a|\). Isomorphisms preserve element orders exactly.</li>
+<li>Compositions of homomorphisms are homomorphisms (HW 13.49).</li>
+</ul>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Normal subgroup</b> \(H\nrm G\): left and right cosets agree, \(gH=Hg\) for all \(g\in G\). Equivalent: \(gHg^{-1}=H\), or \(ghg^{-1}\in H\) for all \(g\in G,\ h\in H\) (closed under conjugation).</p>
+<p><b>Automatically normal:</b> any subgroup of an abelian group; any subgroup of index 2; any kernel; \(A_n\nrm S_n\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p>\(\Ker\Phi\nrm G\). <b>Injectivity test:</b> \(\Phi\) is injective iff \(\Ker\Phi=\{e\}\) (just solve \(\Phi(g)=e'\)).</p>
+<p><b>Fibres are cosets:</b> all inputs sent to \(\Phi(a)\) form the coset \(a\Ker\Phi\).</p>
+<p class="more">\(\Phi[G]\) is abelian iff \(xyx^{-1}y^{-1}\in\Ker\Phi\) for all \(x,y\) (HW 13.50). Index 2 \(\Rightarrow\) normal.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Homomorphism proof toolkit.</b></p>
+<div class="scroll"><table>
+<tr><th>Goal</th><th>Method</th><th>Shortcut</th></tr>
+<tr><td>Prove \(\Phi\) is a homomorphism</td><td>For arbitrary \(a,b\): compute \(\Phi(ab)\), compute \(\Phi(a)\Phi(b)\), show equal.</td><td></td></tr>
+<tr><td>Disprove</td><td>One pair \(a,b\) where they differ, or \(\Phi(e)\ne e'\).</td><td></td></tr>
+<tr><td>Prove \(H\nrm G\)</td><td>Arbitrary \(g\in G,\ h\in H\): show \(ghg^{-1}\in H\).</td><td>Cite: kernel, preimage of a normal subgroup, or index 2.</td></tr>
+<tr><td>Disprove \(H\nrm G\)</td><td>Find \(g,h\) with \(ghg^{-1}\notin H\).</td><td>\(\langle(1\,2\,3)\rangle\) in \(A_4\); \(\langle(1\,2)\rangle\) in \(S_3\).</td></tr>
+<tr><td>Injective</td><td>Solve \(\Phi(g)=e'\); show \(g=e\).</td><td></td></tr>
+<tr><td>Surjective</td><td>For each \(y\in G'\), name \(x\) with \(\Phi(x)=y\).</td><td></td></tr>
+<tr><td>Kernel / image</td><td>Solve \(\Phi(g)=e'\); list the outputs.</td><td>HW 13.16: parity \(S_3\to\Z_2\) has kernel \(A_3=\{e,(1\,2\,3),(1\,3\,2)\}\).</td></tr>
+</table></div>
+</div></div>
+<div class="it w"><div class="b">
+<p>Normal does <em>not</em> mean elements of \(H\) commute with elements of \(G\). It only means conjugates stay in \(H\): \(ghg^{-1}\in H\), not \(ghg^{-1}=h\). \(gH=Hg\) is equality of <em>sets</em>. "Trivial kernel \(\Leftrightarrow\) injective" holds only for homomorphisms, not general functions.</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-quo" data-lec="Lecture 11" data-w="1">
+<h2>Quotient groups & the FHT</h2>
+<div class="it thm core"><div class="b">
+<p><b>Quotient group.</b> \(G/H=\{aH:a\in G\}\) (the set of left cosets) with \((aH)(bH)=(ab)H\). This product is well defined <b>iff \(H\nrm G\)</b>.</p>
+<p>Then \(G/H\) is a group: order \((G:H)\); identity \(H\); \((aH)^{-1}=a^{-1}H\); \((aH)^n=a^nH\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Natural map.</b> \(\gamma:G\to G/H\), \(\gamma(x)=xH\), is onto with kernel \(H\). So every normal subgroup is the kernel of some homomorphism.</p>
+<p><b>Fundamental Homomorphism Theorem (FHT).</b> If \(\Phi:G\to G'\) is a homomorphism with kernel \(H\), then \(G/\Ker\Phi\cong\Phi[G]\), via \(\mu(gH)=\Phi(g)\). Also \(\Phi=\mu\circ\gamma\).</p>
+</div></div>
+<div class="it def"><div class="b">
+<p><b>Conjugation.</b> The conjugate of \(x\) by \(g\) is \(gxg^{-1}\). The map \(\iota_g(x)=gxg^{-1}\) is an automorphism of \(G\) (inner). HW 14.27: \(H\sim K\iff gHg^{-1}=K\) for some \(g\) is an equivalence relation (reflexive \(g=e\); symmetric \(g^{-1}\); transitive \(hg\)).</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Standard quotients (all by FHT).</b></p>
+<div class="scroll"><table>
+<tr><th>Quotient</th><th>\(\cong\)</th><th>Map and kernel</th></tr>
+<tr><td>\(\Z/n\Z\)</td><td>\(\Z_n\)</td><td>\(k\mapsto k\bmod n\); kernel \(n\Z\)</td></tr>
+<tr><td>\(S_n/A_n\)</td><td>\(\Z_2\)</td><td>sign; kernel \(A_n\)</td></tr>
+<tr><td>\(GL_n(\R)/SL_n(\R)\)</td><td>\(\R^*\)</td><td>\(\det\); kernel = matrices with \(\det=1\)</td></tr>
+<tr><td>\(\R/\Z\)</td><td>unit circle \(U\)</td><td>\(x\mapsto e^{2\pi ix}\); \(e^{2\pi ix}=1\) exactly for integers \(x\)</td></tr>
+<tr><td>\(U/\langle-1\rangle\)</td><td>\(U\)</td><td>\(z\mapsto z^2\); kernel \(\{1,-1\}\)</td></tr>
+</table></div>
+<p>If \(H\nrm G\) has finite index \(m\), then \(a^m\in H\) for all \(a\in G\) (HW 14.30): in \(G/H\), \((aH)^m=H\) because \(|G/H|=m\).</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Prove \(G/H\cong K\).</b></p>
+<ol>
+<li>Define a map \(\Phi:G\to K\) and show it is a homomorphism.</li>
+<li>Show \(\Phi\) is onto \(K\).</li>
+<li>Compute \(\Ker\Phi\) and show it equals \(H\) exactly.</li>
+<li>Conclude by FHT.</li>
+</ol>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Identify an abstract finite abelian \(G/H\).</b></p>
+<ol>
+<li>Order: \(|G|/|H|\).</li>
+<li>Order of a coset \(aH\): the smallest \(n>0\) with \(a^n\in H\).</li>
+<li>If some coset has order \(|G/H|\), the quotient is cyclic. Otherwise match element orders against the candidates (e.g. \(\Z_4\) vs \(\Z_2\times\Z_2\)).</li>
+</ol>
+<details class="ex"><summary>Examples</summary><div>
+<p>HW 14.12: in \(\Z_4\times\Z_4\) with \(H=\langle(1,1)\rangle\): \((3,1)\notin H\) but \(2(3,1)=(2,2)\in H\), so \((3,1)+H\) has order 2.</p>
+<p>\(\Z_2\times\Z_4\) mod \(\langle(1,2)\rangle=\{(0,0),(1,2)\}\): order 4. For \((0,1)\): \(2(0,1)=(0,2)\notin H\), \(4(0,1)=(0,0)\in H\), so order 4. The quotient is \(\cong\Z_4\).</p>
+<p>Shortcut when \(H=\langle(1,x,y)\rangle\): a coordinate equal to 1 can be "killed" by \((a,b,c)\mapsto(b-xa,\,c-ya)\) (onto, kernel \(H\)). E.g. \((\Z_4\times\Z_4\times\Z_8)/\langle(1,2,4)\rangle\cong\Z_4\times\Z_8\).</p>
+</div></details>
+</div></div>
+<div class="it w"><div class="b">
+<p><b>Sample Q8: why \(aH\cdot bH=abH\) fails for non-normal \(H\).</b> Some \(g\in G,\ h\in H\) have \(g^{-1}hg\notin H\). Then \(hH=eH\), yet \((hH)(gH)=hgH\) while \((eH)(gH)=gH\), and \(hgH=gH\iff g^{-1}hg\in H\), which is false. The answer depends on which representative you pick, so the product is not well defined.</p>
+<p>Also: \(G/H\times H\) need not be \(\cong G\) (\(\Z_4/\langle2\rangle\times\langle2\rangle\cong\Z_2\times\Z_2\ne\Z_4\)), and two quotients of the same order can differ (\(\Z_2\times\Z_4\): \(G/\langle(1,0)\rangle\cong\Z_4\) but \(G/\langle(0,2)\rangle\cong\Z_2\times\Z_2\)).</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-simple" data-lec="Lecture 12" data-w="1">
+<h2>Simple groups, center, normalizers</h2>
+<div class="it def core"><div class="b">
+<p><b>Simple group</b> (the "atoms"): \(G\ne\{e\}\) whose only normal subgroups are \(\{e\}\) and \(G\). It cannot be broken into smaller quotients, like a prime number.</p>
+<p><b>Facts:</b> \(\Z_p\) (\(p\) prime) are the only simple abelian groups. \(A_n\) is simple for \(n\ge5\).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Maximal normal subgroup:</b> normal \(M\lt G\) with no normal \(N\) strictly between (\(M\lt N\lt G\)). <b>\(M\) is maximal normal \(\iff G/M\) is simple.</b></p>
+<p><b>Homomorphisms and normality.</b> If \(N\nrm G\), then \(\Phi[N]\nrm\Phi[G]\). If \(N'\nrm\Phi[G]\), then \(\Phi^{-1}[N']\nrm G\).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Center</b> \(Z(G)=\{z:zg=gz\ \forall g\in G\}\): the elements that commute with everything. It is a normal subgroup, and \(G\) is abelian iff \(Z(G)=G\).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Commutator</b> \([a,b]=aba^{-1}b^{-1}\) measures failure to commute: \([a,b]=e\iff ab=ba\).</p>
+<p><b>Commutator subgroup</b> \(C=\langle aba^{-1}b^{-1}\mid a,b\in G\rangle\) is normal. \(G/C\) is abelian (the <b>abelianization</b>: crush all the non-commutativity). \(G/N\) is abelian iff \(C\le N\).</p>
+<p class="more">For \(D_4\) (symmetries of a square): \(Z=C=\{e,r^2\}\), the 180° rotation.</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Normalizer</b> \(N_G(S)=\{g\in G:gSg^{-1}=S\}\): the elements that leave the set \(S\) fixed (as a whole) under conjugation. \(H\nrm G\iff N_G(H)=G\).</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Cheat sheet.</b></p>
+<div class="scroll"><table>
+<tr><th>Concept</th><th>Question it answers</th></tr>
+<tr><td>Simple group</td><td>Can this group be broken into smaller quotient pieces? (No \(\Rightarrow\) simple)</td></tr>
+<tr><td>Maximal normal</td><td>Biggest normal subgroup short of \(G\) itself?</td></tr>
+<tr><td>Center \(Z(G)\)</td><td>Which elements commute with everything?</td></tr>
+<tr><td>Commutator \(C\)</td><td>How much non-commutativity is in \(G\)?</td></tr>
+<tr><td>Abelianization \(G/C\)</td><td>What is \(G\) once we force it to be abelian?</td></tr>
+<tr><td>Normalizer \(N_G(H)\)</td><td>Which elements act nicely on \(H\) by conjugation?</td></tr>
+</table></div>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Show \(N_G(S)\le G\) (sample Q5).</b> Write \(N=N_G(S)\).</p>
+<ol>
+<li>\(eSe^{-1}=S\), so \(e\in N\).</li>
+<li>\(g,h\in N\): \((gh)S(gh)^{-1}=g(hSh^{-1})g^{-1}=gSg^{-1}=S\), so \(gh\in N\).</li>
+<li>\(g\in N\): conjugate \(gSg^{-1}=S\) by \(g^{-1}\) to get \(S=g^{-1}Sg=g^{-1}S(g^{-1})^{-1}\), so \(g^{-1}\in N\).</li>
+</ol>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Image and preimage of a normal subgroup (Section 15 templates).</b></p>
+<ul>
+<li><b>\(\Phi[N]\nrm\Phi[G]\):</b> take \(y=\Phi(g)\in\Phi[G]\), \(x=\Phi(n)\in\Phi[N]\). Then \(yxy^{-1}=\Phi(gng^{-1})\in\Phi[N]\) since \(gng^{-1}\in N\).</li>
+<li><b>\(\Phi^{-1}[N']\nrm G\):</b> take \(g\in G\) and \(h\) with \(\Phi(h)\in N'\). Then \(\Phi(ghg^{-1})=\Phi(g)\Phi(h)\Phi(g)^{-1}\in N'\) because \(N'\) is normal.</li>
+</ul>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Decide abelian / cyclic / simple (sample Q3).</b></p>
+<ul>
+<li><b>Abelian:</b> one non-commuting pair kills it; otherwise cite a known abelian group.</li>
+<li><b>Cyclic:</b> must be abelian; find a generator, or use \(\Z_m\times\Z_n\) cyclic iff \(\gcd=1\).</li>
+<li><b>Simple:</b> an abelian group is simple iff its order is prime. A non-abelian group is not simple if you find a nontrivial proper normal subgroup (index 2, a kernel, \(V_4\) in \(A_4\), \(A_n\) in \(S_n\)). \(A_n\) with \(n\ge5\) is simple.</li>
+</ul>
+<details class="ex"><summary>Sample Q3 answers</summary><div>
+<div class="scroll"><table>
+<tr><th>Group</th><th>Abelian</th><th>Cyclic</th><th>Simple</th></tr>
+<tr><td>\(\Z_{25}\)</td><td>yes</td><td>yes</td><td>no (\(\langle5\rangle\))</td></tr>
+<tr><td>\(\Z_7\)</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>\(\Z_2\times\Z_5\)</td><td>yes</td><td>yes (\(\cong\Z_{10}\))</td><td>no</td></tr>
+<tr><td>\(S_4\)</td><td>no</td><td>no</td><td>no (\(A_4\))</td></tr>
+<tr><td>\(A_4\)</td><td>no</td><td>no</td><td>no (\(V_4\))</td></tr>
+<tr><td>\(A_3\cong\Z_3\)</td><td>yes</td><td>yes</td><td>yes</td></tr>
+</table></div>
+</div></details>
+</div></div>
+<div class="it fact"><div class="b">
+<p>Index 2 \(\Rightarrow\) normal \(\Rightarrow\) not simple (when \(|G|>2\)). Conjugacy \(g\sim h\iff xgx^{-1}=h\) for some \(x\) is an equivalence relation (sample Q4a). A homomorphism preserves it: \(xgx^{-1}=h\Rightarrow\Phi(h)=\Phi(x)\Phi(g)\Phi(x)^{-1}\) (sample Q4b).</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-act" data-lec="Lecture 14" data-w="1">
+<h2>Group actions</h2>
+<div class="it def core"><div class="b">
+<p><b>Group action.</b> A rule letting \(G\) move the points of a set \(X\): \((g,x)\mapsto gx\), with</p>
+<ul>
+<li>\(ex=x\) (identity does nothing);</li>
+<li>\((g_1g_2)x=g_1(g_2x)\) (compatible with the group operation).</li>
+</ul>
+<p>\(X\) is then a <b>\(G\)-set</b>. Each \(g\) acts as a permutation \(\sigma_g(x)=gx\) of \(X\), and \(g\mapsto\sigma_g\) is a homomorphism \(G\to S_X\).</p>
+<p class="more">Examples: \(GL_n(\R)\) on \(\R^n\) (\(Av\)); \(D_n\) on the vertices of an \(n\)-gon; \(S_n\) or \(A_n\) on \(\{1,\dots,n\}\); \(G\) on itself by \(g\cdot g'=gg'\); \(G\) on \(G/H\) by \(g(aH)=(ga)H\); trivial action \(gx=x\); \(\R^*\) scaling \(\R^n\); any \(H\le S_X\) on \(X\).</p>
+</div></div>
+<div class="it def core"><div class="b">
+<p><b>Types of action.</b></p>
+<div class="scroll"><table>
+<tr><th>Term</th><th>Plain meaning</th><th>Condition</th></tr>
+<tr><td><b>Faithful</b></td><td>Different group elements do different things; only \(e\) leaves everything alone.</td><td>\(gx=x\ \forall x\Rightarrow g=e\)</td></tr>
+<tr><td><b>Transitive</b></td><td>You can get from any point to any other. One single orbit.</td><td>\(\forall x_1,x_2\ \exists g:\ gx_1=x_2\)</td></tr>
+<tr><td><b>Free</b></td><td>A non-identity element never fixes any point.</td><td>\(gx=x\) for some \(x\Rightarrow g=e\)</td></tr>
+</table></div>
+</div></div>
+<div class="it def core"><div class="b">
+<p>For \(g\in G\) and \(x\in X\):</p>
+<ul>
+<li><b>Fixed points</b> of \(g\): \(X_g=\{x:gx=x\}\subseteq X\).</li>
+<li><b>Stabilizer</b> of \(x\): \(G_x=\{g:gx=x\}\le G\) (a subgroup: \(e\) fixes \(x\); \(g,h\) fix \(x\Rightarrow gh\) does; \(g^{-1}x=g^{-1}(gx)=x\)).</li>
+<li><b>Orbit</b> of \(x\): \(Gx=\{gx:g\in G\}\subseteq X\) (everywhere \(x\) can be sent).</li>
+</ul>
+<p class="more">\(x_1\sim x_2\iff\exists g,\ gx_1=x_2\) is an equivalence relation. Its classes are the orbits, so \(X\) is a disjoint union of orbits. Conversely, a disjoint union of \(G\)-sets is a \(G\)-set (Section 16).</p>
+</div></div>
+<div class="it thm core"><div class="b">
+<p><b>Orbit–Stabilizer.</b> \(|Gx|=(G:G_x)\). For finite \(G\): \(|Gx|\cdot|G_x|=|G|\). So every orbit size divides \(|G|\).</p>
+</div></div>
+<div class="it fact"><div class="b">
+<p><b>Implications.</b> Free \(\Rightarrow\) faithful (if \(X\ne\varnothing\)): an element fixing every point fixes some point, so it is \(e\). Faithful does <em>not</em> imply free. Free means every stabilizer is trivial, so every orbit has full size \(|G|\). \(G\) acting on itself by left multiplication is free and transitive.</p>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Read an action table (sample Q12).</b> Rows are points \(x_j\), columns are group elements \(g_i\), entries are \(g_ix_j\).</p>
+<ol>
+<li><b>Stabilizer \(G_x\):</b> in row \(x\), the columns whose entry equals \(x\).</li>
+<li><b>Orbit \(Gx\):</b> the set of entries in row \(x\).</li>
+<li><b>Check</b> \(|Gx|\cdot|G_x|=|G|\) for each \(x\) you computed.</li>
+<li><b>Free:</b> every stabilizer is \(\{e\}\). <b>Transitive:</b> one orbit. <b>Faithful:</b> no column other than \(e\) fixes every row (equivalently, all columns are distinct).</li>
+<li><b>Non-abelian:</b> find \(g,h,x\) with \(g(hx)\ne h(gx)\).</li>
+<li><b>\(G\cong S_n\):</b> restrict to an orbit \(O\) of size \(n\); \(g\mapsto\sigma_g|_O\) is a homomorphism. If injective and \(|G|=n!\), it is an isomorphism.</li>
+</ol>
+</div></div>
+<div class="it m"><div class="b">
+<p><b>Give an example, or show none exists (sample Q9).</b></p>
+<ul>
+<li><b>Free and transitive:</b> \(G\) on itself by left multiplication.</li>
+<li><b>Faithful, not free:</b> \(S_3\) on \(\{1,2,3\}\) (the transposition \((1\,2)\) fixes 3).</li>
+<li><b>Free, not transitive:</b> \(\Z_2\) swapping pairs of \(\{1,2,3,4\}\) via \((1\,2)(3\,4)\).</li>
+<li><b>Free, not faithful:</b> impossible, since free implies faithful.</li>
+</ul>
+</div></div>
+<div class="it w"><div class="b">
+<p>The lecture writes both the stabilizer and the orbit as \(Gx\). Keep \(G_x\le G\) (stabilizer, a subgroup) separate from \(Gx\subseteq X\) (orbit, a subset). Burnside's lemma is not in the notes.</p>
+</div></div>
+</section>
+
+<section class="topic" id="t-drill" data-lec="Drill" data-noreview="1">
+<h2>Rapid-fire true / false</h2>
+<div class="dr-bar"><button class="btn" id="drShuffle">Shuffle</button><button class="btn" id="drReset">Reset</button><span class="dr-score" id="drScore"></span></div>
+<div class="dr-list" id="drill"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var store={get:function(k,d){try{var v=localStorage.getItem('m113.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('m113.'+k,JSON.stringify(v))}catch(e){}}};
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var root=document.documentElement;
+
+
+/* topics */
+var topics=$$('section.topic');
+var reviewed=store.get('reviewed',{});
+var chev='<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
+topics.forEach(function(sec){
+  var h2=$('h2',sec), title=h2.textContent;
+  var kids=Array.prototype.slice.call(sec.children).filter(function(c){return c!==h2});
+  var head=document.createElement('div');head.className='t-head';
+  var nh=document.createElement('h2');
+  var btn=document.createElement('button');btn.className='t-toggle';btn.setAttribute('aria-expanded','true');
+  var html='<span class="lec">'+sec.dataset.lec+'</span><span>'+title+'</span>';
+  if(sec.dataset.w) html+='<span class="wt">high weight</span>';
+  btn.innerHTML=html+chev;
+  nh.appendChild(btn);head.appendChild(nh);
+  if(!sec.dataset.noreview){
+    var lab=document.createElement('label');lab.className='rev';
+    lab.innerHTML='<input type="checkbox" aria-label="Mark '+title+' as reviewed"><span>Reviewed</span>';
+    head.appendChild(lab);
+    var cb=$('input',lab);cb.checked=!!reviewed[sec.id];
+    cb.addEventListener('change',function(){reviewed[sec.id]=cb.checked;store.set('reviewed',reviewed);progress()});
+  }
+  var body=document.createElement('div');body.className='t-body';
+  var inner=document.createElement('div');inner.className='t-inner';
+  kids.forEach(function(k){inner.appendChild(k)});
+  body.appendChild(inner);
+  sec.innerHTML='';sec.appendChild(head);sec.appendChild(body);
+  sec.dataset.title=title;
+  btn.addEventListener('click',function(){
+    var closed=sec.classList.toggle('closed');btn.setAttribute('aria-expanded',String(!closed));
+  });
+});
+function openTopic(sec){if(sec.classList.contains('closed')){sec.classList.remove('closed');$('.t-toggle',sec).setAttribute('aria-expanded','true')}}
+
+/* search index (taken before math typesets) */
+var items=$$('.it');
+items.forEach(function(it){it._t=(it.textContent||'').toLowerCase().replace(/\s+/g,' ')});
+topics.forEach(function(s){s._t=(s.dataset.title||'').toLowerCase()});
+
+/* toc */
+var toc=$('#toc');
+topics.forEach(function(sec){
+  var a=document.createElement('a');a.href='#'+sec.id;a.dataset.id=sec.id;
+  a.textContent=sec.dataset.title.replace(' & ',' & ');
+  a.addEventListener('click',function(e){
+    e.preventDefault();openTopic(sec);
+    sec.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+  });
+  toc.appendChild(a);
+});
+$$('#fgrid a').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();var t=document.getElementById(a.getAttribute('href').slice(1));
+    if(t){openTopic(t);t.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+  });
+});
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        $$('a',toc).forEach(function(a){a.classList.toggle('on',a.dataset.id===e.target.id)});
+        var on=$('a.on',toc);
+        if(on&&toc.scrollWidth>toc.clientWidth&&getComputedStyle(toc).flexDirection==='row'){toc.scrollTo({left:on.offsetLeft-16,behavior:'auto'})}
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  topics.forEach(function(s){io.observe(s)});
+}
+
+/* progress */
+function progress(){
+  var rev=topics.filter(function(s){return !s.dataset.noreview});
+  var n=rev.filter(function(s){return reviewed[s.id]}).length;
+  $('#prog').style.setProperty('--p',rev.length?n/rev.length:0);
+  $('#progTxt').textContent=n+' / '+rev.length+' reviewed';
+  $$('a',toc).forEach(function(a){a.classList.toggle('done',!!reviewed[a.dataset.id])});
+}
+progress();
+
+/* toggles */
+function setPressed(b,v){b.setAttribute('aria-pressed',String(v))}
+var bCore=$('#bCore'),bQuiz=$('#bQuiz'),bEx=$('#bEx');
+var core=store.get('core',false);
+function applyCore(){document.body.classList.toggle('core-only',core);setPressed(bCore,core)}
+bCore.addEventListener('click',function(){core=!core;store.set('core',core);applyCore()});
+applyCore();
+bQuiz.addEventListener('click',function(){
+  var on=!document.body.classList.contains('quiz');
+  document.body.classList.toggle('quiz',on);setPressed(bQuiz,on);$('#quizHint').hidden=!on;
+  if(!on)$$('.it.shown').forEach(function(i){i.classList.remove('shown')});
+});
+$('#main').addEventListener('click',function(e){
+  if(!document.body.classList.contains('quiz'))return;
+  var it=e.target.closest('.it.def,.it.thm,.it.ax,.it.fact');
+  if(it)it.classList.toggle('shown');
+});
+var exOpen=false;
+bEx.addEventListener('click',function(){
+  exOpen=!exOpen;setPressed(bEx,exOpen);
+  $$('details.ex').forEach(function(d){d.open=exOpen});
+});
+
+/* search */
+var qEl=$('#q'),cEl=$('#count');
+function runSearch(){
+  var q=qEl.value.trim().toLowerCase();
+  var terms=q.split(/\s+/).filter(Boolean);
+  document.body.classList.toggle('searching',terms.length>0);
+  var total=0;
+  topics.forEach(function(sec){
+    var secHit=0;
+    $$('.it',sec).forEach(function(it){
+      var ok=!terms.length||terms.every(function(t){return it._t.indexOf(t)>-1});
+      it.style.display=ok?'':'none';
+      if(ok&&terms.length){secHit++;total++}
+    });
+    var titleHit=terms.length&&terms.every(function(t){return sec._t.indexOf(t)>-1});
+    if(titleHit){$$('.it',sec).forEach(function(it){it.style.display=''});}
+    sec.classList.toggle('nomatch',terms.length>0&&!secHit&&!titleHit);
+  });
+  $$('.fgrid, h3.sm').forEach(function(el){el.style.display=terms.length?'none':''});
+  // cEl.textContent=terms.length?(total+' hit'+(total===1?'':'s')):'';
+}
+qEl.addEventListener('input',runSearch);
+document.addEventListener('keydown',function(e){
+  var tag=(document.activeElement&&document.activeElement.tagName)||'';
+  if(e.key==='/'&&tag!=='INPUT'&&tag!=='TEXTAREA'){e.preventDefault();qEl.focus()}
+  else if(e.key==='Escape'&&document.activeElement===qEl){qEl.value='';runSearch();qEl.blur()}
+});
+
+/* ---------- tools ---------- */
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t}return a}
+function lcm(a,b){return a/gcd(a,b)*b}
+function phi(n){var c=0;for(var k=1;k<=n;k++)if(gcd(k,n)===1)c++;return c}
+function sub(n){var s='₀₁₂₃₄₅₆₇₈₉';return String(n).split('').map(function(d){return s[+d]}).join('')}
+function row(label,val,cls){var d=document.createElement('div');if(cls)d.className=cls;d.innerHTML='<b>'+label+' </b>';d.appendChild(document.createTextNode(val));return d}
+
+function zn(){
+  var n=parseInt($('#zn').value,10),a=parseInt($('#za').value,10),o=$('#zout');o.innerHTML='';
+  if(!(n>=1&&n<=500)||isNaN(a)){o.appendChild(row('','Enter n between 1 and 500 and a whole-number a.','err'));return}
+  a=((a%n)+n)%n;
+  var g=gcd(a,n)||n; var ord=n/g;
+  var els=[];for(var i=0;i<ord&&i<24;i++)els.push((i*g)%n);
+  o.appendChild(row('order of '+a+' in ℤ'+sub(n)+':',n+'/gcd('+a+','+n+') = '+ord));
+  o.appendChild(row('⟨'+a+'⟩ =','{'+els.join(', ')+(ord>24?', …':'')+'}  (a generator iff gcd = 1: '+(gcd(a,n)===1?'yes':'no')+')'));
+  var gens=[];for(var k=1;k<=n;k++)if(gcd(k,n)===1&&gens.length<60)gens.push(k%n);
+  o.appendChild(row('generators ('+phi(n)+' = φ('+n+')):',gens.join(', ')));
+  var subs=[];for(var d=1;d<=n;d++)if(n%d===0)subs.push('⟨'+(d%n)+'⟩ order '+(n/d));
+  o.appendChild(row('subgroups (one per divisor):',subs.join('  ·  ')));
+  o.appendChild(row('automorphisms of ℤ'+sub(n)+':',phi(n)+' (1 ↦ any generator)'));
+}
+['zn','za'].forEach(function(id){$('#'+id).addEventListener('input',zn)});zn();
+
+function parts(k,max){if(k===0)return[[]];var r=[];for(var p=Math.min(k,max);p>=1;p--){parts(k-p,p).forEach(function(rest){r.push([p].concat(rest))})}return r}
+function ab(){
+  var n=parseInt($('#an').value,10),o=$('#aout');o.innerHTML='';
+  if(!(n>=2&&n<=5000)){o.appendChild(row('','Enter n between 2 and 5000.','err'));return}
+  var f=[],m=n;for(var p=2;p*p<=m;p++){if(m%p===0){var k=0;while(m%p===0){m/=p;k++}f.push([p,k])}}if(m>1)f.push([m,1]);
+  var choices=f.map(function(pk){return parts(pk[1],pk[1]).map(function(pt){return pt.map(function(e){return 'ℤ'+sub(Math.pow(pk[0],e))})})});
+  var combos=[[]];choices.forEach(function(opts){var nx=[];combos.forEach(function(c){opts.forEach(function(op){nx.push(c.concat(op))})});combos=nx});
+  o.appendChild(row('factorization:',f.map(function(pk){return pk[0]+(pk[1]>1?'^'+pk[1]:'')}).join(' · ')));
+  o.appendChild(row('number of abelian groups:',combos.length+'  ('+f.map(function(pk){return 'p('+pk[1]+')='+parts(pk[1],pk[1]).length}).join(' · ')+')'));
+  combos.slice(0,40).forEach(function(c,i){o.appendChild(row((i+1)+'.',c.join(' × ')+(c.length===f.length?'   (cyclic)':'')))});
+  if(combos.length>40)o.appendChild(row('','… '+(combos.length-40)+' more'));
+}
+$('#an').addEventListener('input',ab);ab();
+
+function permCalc(){
+  var s=$('#pp').value,k=parseInt($('#pk').value,10),o=$('#pout');o.innerHTML='';
+  var re=/\(([^)]*)\)/g,m,cycles=[];
+  while((m=re.exec(s))){
+    var nums=m[1].split(/[\s,]+/).filter(Boolean).map(Number);
+    if(nums.some(function(x){return !(x>=1)||Math.floor(x)!==x})){o.appendChild(row('','Use positive whole numbers inside each cycle.','err'));return}
+    if(new Set(nums).size!==nums.length){o.appendChild(row('','A cycle repeats an entry: '+m[0],'err'));return}
+    cycles.push(nums);
+  }
+  var stripped=s.replace(re,'').replace(/\s/g,'');
+  if(!cycles.length||stripped){o.appendChild(row('','Type cycles like (1 3)(1 4 2).','err'));return}
+  var n=Math.max.apply(null,[].concat.apply([],cycles));
+  if(n>40){o.appendChild(row('','Keep entries at 40 or below.','err'));return}
+  function app(cs,x){for(var i=cs.length-1;i>=0;i--){var c=cs[i],j=c.indexOf(x);if(j>-1)x=c[(j+1)%c.length]}return x}
+  var f={};for(var x=1;x<=n;x++)f[x]=app(cycles,x);
+  function decomp(map){var seen={},res=[];for(var x=1;x<=n;x++){if(seen[x])continue;var c=[x],y=map[x];seen[x]=1;while(y!==x){c.push(y);seen[y]=1;y=map[y]}if(c.length>1)res.push(c)}return res}
+  function show(cs){return cs.length?cs.map(function(c){return '('+c.join(' ')+')'}).join(''):'e'}
+  var d=decomp(f);
+  var order=d.reduce(function(a,c){return lcm(a,c.length)},1);
+  var par=d.reduce(function(a,c){return a+c.length-1},0)%2;
+  o.appendChild(row('disjoint cycles:',show(d)));
+  o.appendChild(row('order:',String(order)));
+  o.appendChild(row('parity:',par?'odd':'even'));
+  var inv={};for(var y=1;y<=n;y++)inv[f[y]]=y;
+  o.appendChild(row('inverse:',show(decomp(inv))));
+  if(!isNaN(k)){
+    var kk=((k%order)+order)%order,g={};for(var z=1;z<=n;z++)g[z]=z;
+    for(var t=0;t<kk;t++){var h={};for(var w=1;w<=n;w++)h[w]=f[g[w]];g=h}
+    o.appendChild(row('σ^'+k+':',show(decomp(g))));
+  }
+}
+['pp','pk'].forEach(function(id){$('#'+id).addEventListener('input',permCalc)});permCalc();
+
+/* ---------- cayley figures ---------- */
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  function mk(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e}
+  var E='e',A='(12)',B='(13)',C='(23)',R='(123)',S2='(132)';
+  function pol(cx,cy,r,deg){var t=deg*Math.PI/180;return[cx+r*Math.cos(t),cy+r*Math.sin(t)]}
+  var hex=[E,A,R,B,S2,C],P={};
+  var gA=(function(){var pos={};hex.forEach(function(v,i){pos[v]=pol(150,115,88,-90+60*i)});
+    var ed=[];for(var i=0;i<6;i++)ed.push([hex[i],hex[(i+1)%6],i%2?'e2':'e1',false]);return{pos:pos,ed:ed,cap:'(a) {(12),(23)}: a 6-cycle with alternating edge types.'}})();
+  var gB=(function(){var pos={};
+    var evens=[E,S2,R],odds=[A,C,B];
+    evens.forEach(function(v,i){pos[v]=pol(150,125,100,-90+120*i)});
+    odds.forEach(function(v,i){pos[v]=pol(150,125,42,-90+120*i)});
+    var ed=[[E,S2,'e2',true],[S2,R,'e2',true],[R,E,'e2',true],[A,B,'e2',true],[B,C,'e2',true],[C,A,'e2',true],[E,A,'e1',false],[S2,C,'e1',false],[R,B,'e1',false]];
+    return{pos:pos,ed:ed,cap:'(b) {(12),(132)}: two directed (132)-triangles joined by (12)-edges.'}})();
+  var gC=(function(){var pos={};
+    [E,R,S2].forEach(function(v,i){pos[v]=[50+i*100,50]});
+    [A,B,C].forEach(function(v,i){pos[v]=[50+i*100,190]});
+    var cl={'(12)':'e1','(23)':'e2','(13)':'e3'};
+    var lab={};lab[E]={'(12)':A,'(13)':B,'(23)':C};lab[R]={'(12)':B,'(13)':C,'(23)':A};lab[S2]={'(12)':C,'(13)':A,'(23)':B};
+    var ed=[];[E,R,S2].forEach(function(p){['(12)','(23)','(13)'].forEach(function(s){ed.push([p,lab[p][s],cl[s],false])})});
+    return{pos:pos,ed:ed,cap:'(c) {(12),(23),(13)}: every even permutation joined to every odd one (K3,3).'}})();
+  var host=$('#cay');if(!host)return;
+  var leg=$('#cayLegend');
+  leg.innerHTML='<span><svg viewBox="0 0 32 6"><line x1="0" y1="3" x2="32" y2="3" stroke="var(--accent)" stroke-width="2"/></svg>first generator</span><span><svg viewBox="0 0 32 6"><line x1="0" y1="3" x2="32" y2="3" stroke="var(--thm)" stroke-width="2" stroke-dasharray="5 3"/></svg>second</span><span><svg viewBox="0 0 32 6"><line x1="0" y1="3" x2="32" y2="3" stroke="var(--watch)" stroke-width="2" stroke-dasharray="1.5 3" stroke-linecap="round"/></svg>third</span><span>arrows only for the order-3 generator</span>';
+  [gA,gB,gC].forEach(function(g,gi){
+    var fig=document.createElement('figure');
+    var svg=mk('svg',{viewBox:'0 0 300 235',role:'img','aria-label':g.cap});
+    var id='arr'+gi;
+    var defs=mk('defs',{});var mkr=mk('marker',{id:id,viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'6',markerHeight:'6',orient:'auto-start-reverse'});
+    mkr.appendChild(mk('path',{d:'M0,0 L10,5 L0,10 z',fill:'var(--thm)'}));defs.appendChild(mkr);svg.appendChild(defs);
+    var r=17;
+    g.ed.forEach(function(e){
+      var p=g.pos[e[0]],q=g.pos[e[1]];var dx=q[0]-p[0],dy=q[1]-p[1],L=Math.sqrt(dx*dx+dy*dy);
+      var ux=dx/L,uy=dy/L;var x1=p[0]+ux*r,y1=p[1]+uy*r,x2=q[0]-ux*(r+(e[3]?2:0)),y2=q[1]-uy*(r+(e[3]?2:0));
+      var ln=mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,'class':e[2]});
+      if(e[3])ln.setAttribute('marker-end','url(#'+id+')');
+      svg.appendChild(ln);
+    });
+    Object.keys(g.pos).forEach(function(v){
+      var p=g.pos[v];svg.appendChild(mk('circle',{cx:p[0],cy:p[1],r:r,'class':'node'}));
+      var t=mk('text',{x:p[0],y:p[1]});t.textContent=v;svg.appendChild(t);
+    });
+    fig.appendChild(svg);var cap=document.createElement('figcaption');cap.textContent=g.cap;fig.appendChild(cap);host.appendChild(fig);
+  });
+})();
+
+/* ---------- drill ---------- */
+var DRILL=[
+ ['Every subgroup of an abelian group is normal.',true,'Conjugation does nothing: gHg⁻¹ = H since gh = hg.'],
+ ['If d divides |G|, then G has a subgroup of order d.',false,'Lagrange has no converse in general: A₄ has no subgroup of order 6. It is true for abelian groups.'],
+ ['Every group of prime order is cyclic.',true,'Any non-identity element generates, because ⟨x⟩ has order dividing p and above 1.'],
+ ['Every subgroup of a cyclic group is cyclic.',true,'Smallest positive exponent plus the division algorithm.'],
+ ['ℤ₂ × ℤ₄ is cyclic.',false,'The largest element order is lcm(2,4) = 4, but the group has 8 elements. gcd(2,4) ≠ 1.'],
+ ['ℤ₃ × ℤ₅ ≅ ℤ₁₅.',true,'gcd(3,5) = 1.'],
+ ['The map n ↦ n + 1 is a homomorphism ℤ → ℤ.',false,'Φ(0) = 1 ≠ 0. A homomorphism must send the identity to the identity.'],
+ ['A homomorphism Φ is injective iff Ker Φ = {e}.',true,'Standard criterion; it holds only for homomorphisms.'],
+ ['H is normal in G means every h in H commutes with every g in G.',false,'Normal means ghg⁻¹ ∈ H, not ghg⁻¹ = h.'],
+ ['S₃ is abelian.',false,'(1 2)(2 3) = (1 2 3) but (2 3)(1 2) = (1 3 2).'],
+ ['Aₙ is a normal subgroup of Sₙ.',true,'It is the kernel of the sign homomorphism, and has index 2.'],
+ ['A₄ is simple.',false,'V₄ = {e, (12)(34), (13)(24), (14)(23)} is a nontrivial proper normal subgroup.'],
+ ['A subgroup of index 2 is always normal.',true,'The only left cosets are H and G∖H, same on the right, so gH = Hg.'],
+ ['If G acts freely on a nonempty set X, the action is faithful.',true,'An element fixing every point fixes some point, so it is e.'],
+ ['The action of S₃ on {1,2,3} is free.',false,'(1 2) fixes 3 but is not the identity.'],
+ ['If G is finite and acts on X, every orbit size divides |G|.',true,'Orbit–stabilizer: |Gx| · |Gₓ| = |G|.'],
+ ['aH · bH = abH defines an operation on G/H for every subgroup H.',false,'Well-defined iff H is normal.'],
+ ['A 3-cycle is an even permutation.',true,'(a b c) = (a c)(a b): two transpositions.'],
+ ['The order of (a, b) in G × H is |a| · |b|.',false,'It is lcm(|a|, |b|).'],
+ ['G / Ker Φ ≅ Φ[G] for any homomorphism Φ.',true,'Fundamental Homomorphism Theorem.'],
+ ['The homomorphic image of an abelian group is abelian.',true,'Φ(x)Φ(y) = Φ(xy) = Φ(yx) = Φ(y)Φ(x).'],
+ ['There is an injective homomorphism from S₄ into D₁₀₀.',false,'It would need 24 | 200, which fails.'],
+ ['ℤₙ is simple iff n is prime.',true,'Subgroups of ℤₙ correspond to divisors of n, and all are normal.'],
+ ['Every element of the center Z(G) commutes with every element of G.',true,'That is the definition.']
+];
+var drEl=$('#drill'),order=DRILL.map(function(_,i){return i}),score={a:0,c:0};
+function drScore(){$('#drScore').textContent=score.a?score.c+' / '+score.a+' correct':''}
+function drRender(){
+  drEl.innerHTML='';
+  order.forEach(function(i){
+    var d=DRILL[i],card=document.createElement('div');card.className='dr';
+    card.innerHTML='<p></p><div class="row"><button class="btn" data-v="1">True</button><button class="btn" data-v="0">False</button><span class="res"></span></div><div class="why"></div>';
+    $('p',card).textContent=d[0];$('.why',card).textContent=d[2];
+    $$('button',card).forEach(function(b){
+      b.addEventListener('click',function(){
+        var ok=(b.dataset.v==='1')===d[1];
+        card.classList.add('done',ok?'ok':'no');$('.res',card).textContent=ok?'Correct':'Answer: '+(d[1]?'True':'False');
+        $$('button',card).forEach(function(x){x.disabled=true});
+        score.a++;if(ok)score.c++;drScore();
+      });
+    });
+    drEl.appendChild(card);
+  });
+}
+$('#drShuffle').addEventListener('click',function(){
+  for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t}
+  score={a:0,c:0};drScore();drRender();
+});
+$('#drReset').addEventListener('click',function(){order=DRILL.map(function(_,i){return i});score={a:0,c:0};drScore();drRender()});
+drRender();
+})();
+</script>
+<style>
+/*core-patch*/
+.it.xcore{display:none}
+.core-only .it.xcore{display:grid}
+.core-only details.ex{display:none}
+.core-only .keepmore .more{display:block}
+</style>
+<script>
+/*core-patch*/
+(function(){
+var P=function(h){return h};
+var CFG={
+ 't-equiv':{keep:[0,1,2]},
+ 't-iso':{keep:[0,3,4],add:[{after:0,m:1,h:String.raw`<p><b>Show \(*\) is a binary operation on \(S\).</b> (1) <b>Closure:</b> for arbitrary \(a,b\in S\), check \(a*b\in S\). (2) <b>Well defined:</b> exactly one unambiguous output per pair (no division by 0, no dependence on a choice of representative). Fails: \(a*b=a-b\) on \(\mathbb N\), since \(2-5\notin\mathbb N\).</p>`}]},
+ 't-groups':{keep:[0,1,2]},
+ 't-sub':{keep:[0,1,2],more:[1]},
+ 't-cyc':{keep:[0,3],add:[{after:3,m:1,h:String.raw`<p><b>Show \(G\) is cyclic.</b> Any one of:</p><ol><li>Exhibit \(g\) with \(\langle g\rangle=G\) (list the powers or multiples).</li><li>Finite \(G\): find \(g\) with \(|g|=|G|\).</li><li>\(|G|=p\) prime: every \(g\ne e\) generates (Lagrange).</li><li>Show \(G\cong\Z\) or \(G\cong\Z_n\).</li></ol>`}]},
+ 't-gen':{keep:[],add:[{after:-1,m:0,h:String.raw`<p><b>Generating sets, Cayley graphs.</b> \(\langle a,b\rangle\) is the smallest subgroup containing \(a,b\). \(\operatorname{Cay}(G,S)\) has vertices \(G\) and an edge \(x\to xs\) for each \(s\in S\).</p>`}]},
+ 't-perm':{keep:[],add:[{after:-1,m:0,h:String.raw`<p><b>Permutations.</b> Bijections \(A\to A\); \(|S_n|=n!\). Each is a unique product of disjoint cycles; order is the lcm of the cycle lengths; a \(k\)-cycle is even iff \(k\) is odd. Cayley: every group embeds in some \(S_G\).</p>`}]},
+ 't-cos':{keep:[],add:[{after:-1,m:0,h:String.raw`<p><b>Cosets and Lagrange.</b> \(aH=\{ah\}\); cosets partition \(G\); \(aH=bH\iff a^{-1}b\in H\). Lagrange: \(|H|\) divides \(|G|\), and \(|G|=(G:H)\,|H|\).</p>`}]},
+ 't-prod':{keep:[],add:[{after:-1,m:0,h:String.raw`<p><b>Direct products.</b> Componentwise operation; \(|(a,b)|=\operatorname{lcm}(|a|,|b|)\). \(\Z_m\times\Z_n\cong\Z_{mn}\iff\gcd(m,n)=1\).</p>`}]},
+ 't-hom':{keep:[4,5],add:[
+   {after:-1,m:0,h:String.raw`<p><b>Homomorphism.</b> \(\Phi(ab)=\Phi(a)\Phi(b)\), so \(\Phi(e)=e'\). \(\Ker\Phi=\{g:\Phi(g)=e'\}\); \(\Phi\) is injective iff \(\Ker\Phi=\{e\}\).</p>`},
+   {after:5,m:1,h:String.raw`<p><b>Show \(H\nrm G\).</b> Any one of:</p><ol><li>Conjugation: for arbitrary \(g\in G,\ h\in H\), show \(ghg^{-1}\in H\).</li><li>Cosets: \(gH=Hg\) for all \(g\).</li><li>\(H\) is the kernel of a homomorphism.</li><li>\(H\) has index 2, or \(G\) is abelian.</li></ol><p>Disprove: one \(g,h\) with \(ghg^{-1}\notin H\).</p>`}]},
+ 't-quo':{keep:[0,1,4]},
+ 't-simple':{keep:[0,1,2,3,4],add:[{after:4,m:1,h:String.raw`<p><b>Show \(G\) simple.</b> \(G\ne\{e\}\); take a normal \(N\ne\{e\}\) and force \(N=G\). Shortcuts: an abelian group is simple iff its order is prime; \(A_n\) is simple for \(n\ge5\). Not simple: exhibit a nontrivial proper normal subgroup (index 2, a kernel). <b>Maximal normal \(M\):</b> show \(G/M\) is simple.</p><p><b>Center:</b> show \(zg=gz\) for all \(g\). <b>Normalizer:</b> \(N_G(H)\le G\) by the three-step subgroup test.</p>`}]},
+ 't-act':{keep:[0,1,2,3],add:[{after:3,m:1,h:String.raw`<p><b>Show an action.</b> For \(g\in G,\ x\in X\): (1) \(gx\in X\); (2) \(ex=x\); (3) \((g_1g_2)x=g_1(g_2x)\).</p><p><b>Faithful:</b> \(gx=x\ \forall x\Rightarrow g=e\). <b>Transitive:</b> \(\forall x,y\ \exists g,\ gx=y\). <b>Free:</b> \(gx=x\) for some \(x\Rightarrow g=e\).</p>`}]}
+};
+Object.keys(CFG).forEach(function(id){
+  var sec=document.getElementById(id);if(!sec)return;
+  var c=CFG[id],its=Array.prototype.slice.call(sec.querySelectorAll('.it'));
+  its.forEach(function(it,i){it.classList.toggle('core',c.keep.indexOf(i)>-1)});
+  (c.more||[]).forEach(function(i){if(its[i])its[i].classList.add('keepmore')});
+  (c.add||[]).forEach(function(a){
+    var n=document.createElement('div');
+    n.className='it '+(a.m?'m':'n')+' xcore core';
+    n.innerHTML='<div class="b">'+a.h+'</div>';n._t='';
+    if(a.after<0)its[0].parentNode.insertBefore(n,its[0]);
+    else its[a.after].parentNode.insertBefore(n,its[a.after].nextSibling);
+  });
+});
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
+
+</body></html>
