@@ -405,9 +405,9 @@ h6 {
 #header.header-top .header-photo,
 #header.header-top .social-links,
 #header.header-top .intro,
-#header.header-top h1 { margin-right: auto; font-size: 28px; }
+#header.header-top h1 { margin-right: auto; font-size: 32px; }
 #header.header-top .container { position: relative; max-width: var(--page-width); padding: 0 var(--space-4); }
-#header.header-top .navbar { position: absolute; top: 50%; right: 0; transform: translateY(-50%); margin: 0; padding: 0 var(--space-4) 0 0; z-index: 10; }
+#header.header-top .navbar { position: absolute; top: 50%; right: 0; transform: translateY(-50%); margin: 0; padding: 0 var(--space-4) 0 0; z-index: 13; }
 #header.header-top .navbar ul { margin: 0; }
 @media (max-width: 991px) {
   #header.header-top .navbar { position: static; transform: none; padding: 0; }
@@ -763,7 +763,7 @@ button,
   font-size: 0.82em;
   display: block;
 }
-#header.header-top h1 .tooltips .icon { font-size: 24px; }
+#header.header-top h1 .tooltips .icon { font-size: 27px; }
 
 /* the toggles' labels open below the icons: above the nav on home, and out of the folded bar on subpages */
 #header h1 { position: relative; z-index: 12; }

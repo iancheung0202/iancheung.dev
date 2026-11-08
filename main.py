@@ -1,5 +1,3 @@
-"""Entry point. Run `make build` first (or `zola build`), then `python3 main.py`."""
-
 from server.app import app
 
 if __name__ == "__main__":

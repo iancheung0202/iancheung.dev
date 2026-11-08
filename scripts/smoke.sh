@@ -25,7 +25,6 @@ expect 200 /story/
 expect 200 /wall/
 expect 200 /class/
 expect 200 /colophon/
-expect 200 /archive/4/
 expect 200 /css/style.css
 expect 200 /api/notes
 expect 200 /api/activity

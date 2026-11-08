@@ -43,6 +43,4 @@ Pages are markdown built by [Zola](https://www.getzola.org/). A small [Flask](ht
 
 Everything runs in one Docker container on a VPS. A push to `main` builds the image, smoke-tests it and deploys it.
 
-The site before this one is kept at [/archive/4/](/archive/4/).
-
 Source: [github.com/iancheung0202/iancheung.dev](https://github.com/iancheung0202/iancheung.dev).

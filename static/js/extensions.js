@@ -39,8 +39,13 @@
             return resp.json();
         }).then(function(list) {
             if (!Array.isArray(list) || !list.length) return;
-            var idx = Math.floor(Math.random() * list.length);
-            var filename = list[idx];
+            // the same photo follows the visitor from page to page; a real reload draws a new one
+            var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+            var reloaded = nav && nav.type === 'reload';
+            var kept = null;
+            try { kept = sessionStorage.getItem('bg-photo'); } catch (e) {}
+            var filename = (!reloaded && kept && list.indexOf(kept) !== -1) ? kept : list[Math.floor(Math.random() * list.length)];
+            try { sessionStorage.setItem('bg-photo', filename); } catch (e) {}
             var url = bgPath + encodeURIComponent(filename);
             var headerPhoto = select('.header-photo');
             var filenameElem = select('#photo-filename');
