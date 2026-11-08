@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   check:
-    name: build and smoke test
+    name: build and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,9 @@ jobs:
 
       - name: zola build
         run: |
-          curl -sSL https://github.com/getzola/zola/releases/download/v0.21.0/zola-v0.21.0-x86_64-unknown-linux-gnu.tar.gz | sudo tar -xz -C /usr/local/bin zola
+          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors -o zola.tar.gz \
+            https://github.com/getzola/zola/releases/download/v0.21.0/zola-v0.21.0-x86_64-unknown-linux-gnu.tar.gz
+          sudo tar -xzf zola.tar.gz -C /usr/local/bin zola && rm zola.tar.gz
           zola build
 
       - name: docker build
@@ -44,7 +46,7 @@ jobs:
           fi
 
   deploy:
-    name: deploy to vps
+    name: deploy
     needs: check
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
