@@ -4,6 +4,7 @@
 services:
   site:
     build: .
+    image: iancheung-dev-site
     container_name: iancheung-dev
     restart: unless-stopped
     ports:

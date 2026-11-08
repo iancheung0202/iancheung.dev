@@ -1,0 +1,64 @@
+name: site
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: build and smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: pre-commit (black, isort, whitespace)
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files --show-diff-on-failure
+
+      - name: zola build
+        run: |
+          curl -sSL https://github.com/getzola/zola/releases/download/v0.21.0/zola-v0.21.0-x86_64-unknown-linux-gnu.tar.gz | sudo tar -xz -C /usr/local/bin zola
+          zola build
+
+      - name: docker build
+        run: docker build -t iancheung-dev-site:ci .
+
+      - name: run container and smoke test
+        run: |
+          mkdir -p data
+          docker run -d --name site -p 8085:8085 \
+            -e FLASK_SECRET_KEY=ci-only-not-a-secret -e PASSWORD=ci \
+            -v "$PWD/data:/app/data" iancheung-dev-site:ci
+          if ! scripts/smoke.sh http://localhost:8085; then
+            docker logs site
+            exit 1
+          fi
+
+  deploy:
+    name: deploy to vps
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: ssh and run scripts/deploy.sh
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+          HOST: ${{ secrets.VPS_HOST }}
+          USER: ${{ secrets.VPS_USER }}
+          APP_DIR: ${{ secrets.VPS_APP_DIR }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes "$USER@$HOST" "cd '$APP_DIR' && git fetch -q origin main && git merge --ff-only origin/main && scripts/deploy.sh"

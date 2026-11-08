@@ -50,26 +50,52 @@ pre-commit install                  # formats python and fixes whitespace on com
    git push
    ```
 
-### Deploy (on the VPS, Docker)
+### Workflow: patch, preview, push, auto-deploy
+
+1. Apply a patch: `git am --keep-cr slice.patch`.
+2. Preview it exactly as the VPS will run it: `docker compose up --build`
+   (then <http://localhost:8085>; Ctrl-C stops it). `.env` needs
+   `FLASK_SECRET_KEY` and `PASSWORD`; `data/` holds your local wall notes.
+3. Happy: `git push`. GitHub Actions (`.github/workflows/site.yml`) then
+   - runs pre-commit (black, isort, whitespace), `zola build`, `docker build`,
+   - starts the image and runs `scripts/smoke.sh` against it (home, story,
+     wall, class, colophon, archive, css, `/api/notes`, `/api/activity`, a 404,
+     and the home `<title>`),
+   - on `main` only, SSHes into the VPS and runs `scripts/deploy.sh`.
+4. `scripts/deploy.sh` on the VPS: fast-forwards `main`, `docker compose up -d --build`,
+   runs the same smoke test against the live container, and if that fails
+   puts the previous image back and exits non-zero (the Actions run goes red).
+
+Branches and pull requests get the checks without the deploy.
+
+### VPS setup (once)
 
 ```
-cd iancheung.dev
-git pull
-docker compose up -d --build        # builds the image, restarts the container
-docker compose logs -f              # watch it come up, ctrl-c to leave
-```
-
-That is the whole deploy. The image contains zola and runs `zola build` at
-build time; `content/` and `data/` are mounted from the checkout.
-
-First deploy only:
-
-```
-cp .env.example .env                # or copy your existing .env
-mkdir -p data && mv notes data/notes && mv templates/todos.json data/ && mv .flask_secret data/
-# stop the old screen session (it holds port 8085), then:
+# as root on the VPS
+apt-get install -y docker.io docker-compose-v2 git
+cd ~ && git clone https://github.com/iancheung0202/iancheung.dev.git && cd iancheung.dev
+cp .env.example .env && nano .env            # FLASK_SECRET_KEY, PASSWORD, Discord values
+mkdir -p data                                # wall notes live in data/notes
+# a key GitHub will log in with (no passphrase)
+ssh-keygen -t ed25519 -N "" -f ~/.ssh/github-deploy -C github-deploy
+cat ~/.ssh/github-deploy.pub >> ~/.ssh/authorized_keys
 docker compose up -d --build
 ```
+
+Repository secrets (GitHub → Settings → Secrets and variables → Actions):
+
+| secret            | value                                              |
+|-------------------|----------------------------------------------------|
+| `VPS_HOST`        | the VPS IP or hostname                             |
+| `VPS_USER`        | `root` (or the user that owns the checkout)        |
+| `VPS_APP_DIR`     | `/root/iancheung.dev`                              |
+| `VPS_SSH_KEY`     | contents of `~/.ssh/github-deploy` (private key)   |
+| `VPS_KNOWN_HOSTS` | output of `ssh-keyscan -t ed25519 <host>` run locally |
+
+Also create an environment named `production` (Settings → Environments); the
+deploy job runs in it, so you can add required reviewers there later.
+
+Deploy by hand if ever needed: `ssh root@<host> 'cd iancheung.dev && scripts/deploy.sh'`.
 
 ### Story pages written in the browser
 
@@ -87,7 +113,7 @@ story writing to one place at a time.
 
 ### Without Docker
 
-`zola` and Python on the box, in a screen session: `git pull`, then
+`zola` and Python on the box: `git pull`, then
 `zola build && python3 main.py`. If `public/` is missing the server builds it
 on start, and the editor rebuilds it on every save, so `zola` must be on PATH.
 
