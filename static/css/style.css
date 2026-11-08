@@ -944,7 +944,7 @@ button,
 .now-message-done { display: none; flex: none; line-height: 0; font-size: 16px; color: var(--accent); }
 .now-message.sent .now-message-done { display: block; }
 .now-message.sent .now-message-mark { display: none; }
-.now-message-who { cursor: pointer; }
+.now-message-who { position: relative; cursor: pointer; }
 .now-message-who img { width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 0 1px var(--line); }
 .now-message-who:hover img { opacity: 0.7; }
 .now-message-note { flex-basis: 100%; margin-top: -6px; padding-bottom: 8px; font-size: 11.5px; color: var(--ink-muted); }

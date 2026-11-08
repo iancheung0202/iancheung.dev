@@ -184,7 +184,6 @@
             msgForm.classList.toggle('signed-in', !!dmUser);
             if (dmUser) {
                 msgWho.querySelector('img').src = dmUser.avatar;
-                msgWho.title = `Signed in as ${dmUser.name}. Click to sign out.`;
             }
         };
         const send = async text => {

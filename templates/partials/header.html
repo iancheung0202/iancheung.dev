@@ -70,7 +70,7 @@
               {% for r in section.extra.roles %}<li class="now-role" style="--role: {{ r.color }}">{{ r.name }}</li>{% endfor %}
             </ul>
             <form class="now-message" id="now-message" autocomplete="off" hidden>
-              <button class="now-message-who" id="now-message-who" type="button" hidden title="Signed in with Discord. Click to sign out." aria-label="Sign out of Discord"><img src="" alt=""></button>
+              <button class="now-message-who" id="now-message-who" type="button" hidden data-tip="Log out" aria-label="Log out"><img src="" alt=""></button>
               <input class="now-message-input" id="now-message-input" type="text" maxlength="500" placeholder="Message @iancheung.dev" aria-label="Message Ian on Discord" enterkeyhint="send">
               <span class="now-message-mark" aria-hidden="true">{{ ui::icon(name="discord-logo") }}</span>
               <button class="now-message-send" type="submit" aria-label="Send">{{ ui::icon(name="paper-plane-right") }}</button>

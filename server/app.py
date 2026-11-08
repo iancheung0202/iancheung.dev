@@ -145,6 +145,9 @@ PASSWORD = os.getenv("PASSWORD")
 DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID", "1525674572102238248")
 DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET", "")
 MESSAGE_WEBHOOK_URL = os.getenv("MESSAGE_WEBHOOK_URL", "")
+MESSAGE_MENTION_ID = os.environ.get(
+    "MESSAGE_MENTION_ID", "692254240290242601"
+)  # who gets pinged: Ian
 MESSAGE_MAX_CHARS = 500
 MESSAGE_WINDOW = 10 * 60
 MESSAGE_MAX_PER_USER = 20
@@ -1105,6 +1108,84 @@ def message_logout():
     return jsonify(ok=True)
 
 
+def device_of(agent: str) -> str:
+    """'Safari on iPhone' from a user agent; the raw string is kept alongside."""
+    ua = agent or ""
+    browser = next(
+        (
+            name
+            for probe, name in (
+                ("Edg/", "Edge"),
+                ("OPR/", "Opera"),
+                ("SamsungBrowser", "Samsung Internet"),
+                ("Firefox/", "Firefox"),
+                ("Chrome/", "Chrome"),
+                ("CriOS/", "Chrome"),
+                ("Safari/", "Safari"),
+            )
+            if probe in ua
+        ),
+        "Unknown browser",
+    )
+    system = next(
+        (
+            name
+            for probe, name in (
+                ("iPhone", "iPhone"),
+                ("iPad", "iPad"),
+                ("Android", "Android"),
+                ("Windows", "Windows"),
+                ("Mac OS X", "Mac"),
+                ("CrOS", "ChromeOS"),
+                ("Linux", "Linux"),
+            )
+            if probe in ua
+        ),
+        "unknown device",
+    )
+    return f"{browser} on {system}"
+
+
+def discord_created(uid: str) -> int:
+    """Unix seconds the account was made, read off the snowflake."""
+    return ((int(uid) >> 22) + 1_420_070_400_000) // 1000
+
+
+def message_payload(user: dict, text: str, ip: str, agent: str) -> dict:
+    """The webhook post: the sender's name and avatar, the text as typed, a quiet
+    ping for Ian under it, and one embed field per detail about the sender."""
+    created = discord_created(user["id"])
+    agent = clean_text(agent, 300) or "unknown"
+    return {
+        "username": user["name"],
+        "avatar_url": user["avatar"],
+        "content": f"{text}\n-# <@{MESSAGE_MENTION_ID}>",
+        "allowed_mentions": {"users": [MESSAGE_MENTION_ID]},
+        "embeds": [
+            {
+                "color": 0x043A74,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "fields": [
+                    {"name": "Display name", "value": user["name"], "inline": True},
+                    {"name": "Username", "value": user["handle"], "inline": True},
+                    {"name": "User ID", "value": user["id"], "inline": True},
+                    {
+                        "name": "Account created",
+                        "value": f"<t:{created}:D> (<t:{created}:R>)",
+                        "inline": True,
+                    },
+                    {"name": "IP address", "value": ip or "unknown", "inline": True},
+                    {
+                        "name": "Device",
+                        "value": f"{device_of(agent)}\n`{agent}`",
+                        "inline": False,
+                    },
+                ],
+            }
+        ],
+    }
+
+
 @app.route("/api/message", methods=["POST"])
 def message_send():
     if not message_enabled():
@@ -1134,12 +1215,7 @@ def message_send():
                 )
         message_sent[f"u:{user['id']}"].append(now)
         message_sent[f"ip:{ip}"].append(now)
-    payload = {
-        "username": f"{user['name']} (@{user['handle']})",
-        "avatar_url": user["avatar"],
-        "content": f"{text}\n-# via iancheung.dev · <@{user['id']}> · `{user['id']}`",
-        "allowed_mentions": {"parse": []},
-    }
+    payload = message_payload(user, text, ip, request.headers.get("User-Agent", ""))
     try:
         discord_json(
             urllib.request.Request(
