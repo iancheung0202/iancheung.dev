@@ -24,13 +24,6 @@ jobs:
           pip install pre-commit
           pre-commit run --all-files --show-diff-on-failure
 
-      - name: zola build
-        run: |
-          curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors -o zola.tar.gz \
-            https://github.com/getzola/zola/releases/download/v0.21.0/zola-v0.21.0-x86_64-unknown-linux-gnu.tar.gz
-          sudo tar -xzf zola.tar.gz -C /usr/local/bin zola && rm zola.tar.gz
-          zola build
-
       - name: docker build
         run: docker build -t iancheung-dev-site:ci .
 
