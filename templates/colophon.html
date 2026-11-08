@@ -18,17 +18,6 @@
     fill();
     new MutationObserver(fill).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-    // dark green candidates: clicking one previews it across this page (dark mode only)
-    var root = document.documentElement;
-    document.querySelectorAll('#green-candidates .candidate').forEach(function (b) {
-      b.addEventListener('click', function () {
-        if (root.getAttribute('data-theme') !== 'dark') { root.setAttribute('data-theme', 'dark'); }
-        root.style.setProperty('--green', b.dataset.green);
-        root.style.setProperty('--green-ink', b.dataset.ink);
-        document.querySelectorAll('#green-candidates .candidate').forEach(function (o) { o.setAttribute('aria-pressed', o === b); });
-        fill();
-      });
-    });
   })();
 </script>
 {% endblock scripts %}

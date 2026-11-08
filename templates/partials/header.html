@@ -60,10 +60,11 @@
           </div>
           <div class="now-body">
             <div class="now-name">ian.
-              <a class="now-badge" href="https://discord.gg/mysticraft" target="_blank" rel="noopener" title="MysticRaft"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" alt="">MYST</a>
-              <button class="now-copy" id="now-copy" type="button" title="Copy user ID" aria-label="Copy Discord user ID">{{ ui::icon(name="copy") }}</button>
+              <button class="now-copy" id="now-copy" type="button" data-tip="Copy user ID" aria-label="Copy Discord user ID">{{ ui::icon(name="copy") }}</button>
             </div>
-            <div class="now-handle">iancheung.dev <span aria-hidden="true">·</span> he/him</div>
+            <div class="now-handle">iancheung.dev <span aria-hidden="true">&bull;</span> he/him
+              <a class="now-badge" href="https://discord.gg/mysticraft" target="_blank" rel="noopener" title="MysticRaft"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" alt="">MYST</a>
+            </div>
             <div class="now-feed" id="now-feed" hidden></div>
             <ul class="now-roles" aria-label="Roles">
               {% for r in section.extra.roles %}<li class="now-role" style="--role: {{ r.color }}">{{ r.name }}</li>{% endfor %}

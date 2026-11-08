@@ -20,7 +20,7 @@
   </aside>
   <article class="explorer-page" id="page" data-folder="{{ first_folder.components | last }}" data-slug="{{ page.slug }}">
     {% if page %}
-    {{ explorer::page_head(folder=first_folder, page=page) }}
+    {{ explorer::page_head(folder=first_folder, page=page, kind="story") }}
     <div class="prose" id="page-content">{{ page.content | safe }}</div>
     {{ explorer::page_foot(page=page) }}
     {% else %}

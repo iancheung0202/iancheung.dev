@@ -14,7 +14,7 @@
     {{ explorer::tree(root=root, current=page.path, kind="class") }}
   </aside>
   <article class="explorer-page" id="page">
-    {{ explorer::page_head(folder=folder, page=page) }}
+    {{ explorer::page_head(folder=folder, page=page, kind="class") }}
     <div class="prose" id="page-content">{{ page.content | safe }}</div>
     {{ explorer::page_foot(page=page) }}
   </article>

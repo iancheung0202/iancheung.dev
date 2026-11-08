@@ -1,5 +1,5 @@
 +++
-title = "berkeley"
+title = "Berkeley"
 weight = 1
 sort_by = "weight"
 template = "story.html"

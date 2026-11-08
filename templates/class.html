@@ -25,7 +25,7 @@
     </div>
     <div id="page-view">
     {% if page %}
-      {{ explorer::page_head(folder=folder, page=page) }}
+      {{ explorer::page_head(folder=folder, page=page, kind="class") }}
       <div class="prose" id="page-content">{{ page.content | safe }}</div>
       {{ explorer::page_foot(page=page) }}
     {% else %}
@@ -42,7 +42,10 @@
     var f = new URLSearchParams(location.search).get('f');
     if (!f || f.indexOf('/') !== -1) return;
     var url = location.pathname + f;
-    document.getElementById('file-name').textContent = f;
+    var dot = f.lastIndexOf('.');
+    var nameEl = document.getElementById('file-name');
+    nameEl.textContent = dot > 0 ? f.slice(0, dot) : f;
+    if (dot > 0) { var ext = document.createElement('span'); ext.className = 'page-title-ext'; ext.textContent = f.slice(dot); nameEl.appendChild(ext); }
     document.getElementById('file-link').href = url;
     document.getElementById('file-frame').src = url;
     document.getElementById('page-view').hidden = true;

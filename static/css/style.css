@@ -171,6 +171,7 @@ h6 {
 
 #header .intro {
   max-width: 720px;
+  padding-top: 22px;
   word-break: break-word;
 }
 
@@ -239,8 +240,9 @@ h6 {
   transform: translate(-50%, 4px);
   padding: 3px 8px;
   border-radius: 4px;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
   font-family: var(--font-display);
   font-size: 11px;
   font-weight: 500;
@@ -758,9 +760,14 @@ button,
 #header h1 .h1-tools .tooltips:first-child { margin-left: 0; }
 
 #header h1 .tooltips .icon {
-  font-size: 0.72em;
+  font-size: 0.82em;
   display: block;
 }
+#header.header-top h1 .tooltips .icon { font-size: 24px; }
+
+/* the toggles' labels open below the icons: above the nav on home, and out of the folded bar on subpages */
+#header h1 { position: relative; z-index: 12; }
+#header.header-top:not(.leaving) { overflow: visible; }
 
 #header h1 .tooltips:hover a {
   color: var(--green);
@@ -793,12 +800,27 @@ button,
   box-shadow: var(--shadow);
   opacity: 0;
   pointer-events: none;
+  z-index: 20;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 [data-tip]:hover::after,
 [data-tip]:focus-visible::after {
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* the three toggles and the copy button sit at the top of the screen, so their labels open downward */
+#header h1 [data-tip]::after,
+.now-copy[data-tip]::after {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+#header h1 [data-tip]:hover::after,
+#header h1 [data-tip]:focus-visible::after,
+.now-copy[data-tip]:hover::after,
+.now-copy[data-tip]:focus-visible::after {
   transform: translateX(-50%) translateY(0);
 }
 
@@ -857,25 +879,31 @@ button,
 .now-status[data-status="idle"] { background: rgb(240, 178, 50); box-shadow: inset 3px -2px 0 0 var(--surface); }
 .now-status[data-status="dnd"] { background: rgb(242, 63, 67); }
 .now-status[data-status="dnd"]::after { width: 7px; height: 2px; border-radius: 2px; background: var(--surface); }
-.now-custom { position: absolute; left: 100px; right: 12px; top: -16px; z-index: 2; }
+/* custom status: Discord's speech bubble, measured from the real one. body with a
+   deep radius, a 14px bubble merged into its top-left corner, a 7px bubble drifting
+   toward the avatar. sits a hair lighter than the card so it reads as its own layer. */
+.now-custom { position: absolute; left: 92px; right: 12px; top: -7px; z-index: 2; }
 .now-custom:empty { display: none; }
-.now-custom-box { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 6px 10px; border-radius: 10px; background: var(--paper); box-shadow: 0 0 0 1px var(--line); font-size: 12.5px; line-height: 1.25; }
-.now-custom-box::before { content: ""; position: absolute; left: -5px; bottom: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--paper); box-shadow: 0 0 0 1px var(--line); }
-.now-custom-box span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-.now-custom:hover .now-custom-box span, .now-custom:focus-within .now-custom-box span { -webkit-line-clamp: 12; }
-.now-custom:hover .now-custom-box { box-shadow: 0 0 0 1px var(--line), 0 10px 24px -10px rgba(0, 0, 0, 0.45); }
-.now-custom-box { transition: box-shadow 0.15s ease; }
+.now-custom-box { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 7px 12px; border-radius: 12px; background: var(--bubble); box-shadow: var(--bubble-shadow); font-size: 13px; line-height: 1.35; transition: box-shadow 0.15s ease; }
+.now-custom-box::before, .now-custom-box::after { content: ""; position: absolute; border-radius: 50%; background: var(--bubble); box-shadow: var(--bubble-shadow); }
+.now-custom-box::before { left: 6px; top: -7px; width: 14px; height: 14px; box-shadow: none; }
+.now-custom-box::after { left: -1px; top: -12px; width: 7px; height: 7px; }
+.now-custom-box > span:last-child { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.now-custom:hover .now-custom-box > span:last-child, .now-custom:focus-within .now-custom-box > span:last-child { display: block; -webkit-line-clamp: unset; }
+.now-custom:hover .now-custom-box { box-shadow: var(--bubble-shadow), 0 10px 24px -10px rgba(0, 0, 0, 0.45); }
+.now-card { --bubble: color-mix(in srgb, var(--surface), var(--ink) 4%); --bubble-shadow: 0 1px 3px rgba(0, 0, 0, 0.10); }
+:root[data-theme="dark"] .now-card { --bubble: color-mix(in srgb, var(--surface), var(--ink) 7%); --bubble-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); }
 .now-custom-emoji { width: 16px; height: 16px; flex: none; }
 .now-body { padding: 0 16px 14px; }
-.now-name { display: flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.2; }
+.now-name { display: flex; align-items: center; gap: 2px; font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.2; }
 .now-badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; border-radius: 4px; box-shadow: 0 0 0 1px var(--line); font-family: var(--font-display); font-size: 10.5px; font-weight: 600; letter-spacing: 0.6px; color: var(--ink-muted); text-decoration: none; line-height: 1.5; }
 .now-badge:hover { color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 .now-badge img { width: 12px; height: 12px; }
-.now-copy { margin-left: auto; border: 0; background: none; color: var(--ink-faint); cursor: pointer; font-size: 14px; padding: 4px; line-height: 0; border-radius: 4px; transition: color 0.15s ease; }
+.now-copy { position: relative; border: 0; background: none; color: var(--ink-faint); cursor: pointer; font-size: 14px; padding: 4px; line-height: 0; border-radius: 4px; transition: color 0.15s ease; }
 .now-copy:hover, .now-copy:focus-visible { color: var(--ink-muted); }
 .now-copy.copied { color: var(--green-ink); }
-.now-handle { color: var(--ink-muted); font-size: 12.5px; margin-top: 3px; }
-.now-handle span { margin: 0 2px; opacity: 0.6; }
+.now-handle { display: flex; align-items: center; gap: 6px; color: var(--ink-muted); font-size: 12.5px; margin-top: 3px; }
+.now-handle > span { opacity: 0.6; }
 .now-label { font-family: var(--font-display); font-size: 10.5px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-muted); }
 .now-feed, .now-roles { margin: 12px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line); }
 .now-activity + .now-activity { margin-top: 10px; }

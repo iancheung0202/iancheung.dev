@@ -22,13 +22,14 @@
     <ul class="tree-pages">
     {%- for p in folder.pages %}
       <li class="tree-page" data-slug="{{ p.slug }}">
-        <a class="tree-link {% if kind == "class" %}tree-file{% endif %} {% if p.path == current %}is-active{% endif %}" href="{{ p.path | safe }}">{% if p.extra.icon %}<span class="tree-icon">{{ ui::icon(name=p.extra.icon) }}</span>{% elif kind == "class" %}<span class="tree-icon">{{ ui::icon(name="file-md") }}</span>{% endif %}{{ p.title }}{% if kind == "class" %}.md{% endif %}</a>
+        <a class="tree-link {% if kind == "class" %}tree-file{% endif %} {% if p.path == current %}is-active{% endif %}" href="{{ p.path | safe }}">{% if p.extra.icon %}<span class="tree-icon">{{ ui::icon(name=p.extra.icon) }}</span>{% elif kind == "class" %}<span class="tree-icon">{{ ui::icon(name="file-md") }}</span>{% endif %}<span class="tree-text">{{ p.title }}{% if kind == "class" %}<span class="tree-ext">.md</span>{% endif %}</span></a>
       </li>
     {%- endfor %}
     {%- if kind == "class" %}{% for a in folder.assets | sort %}
       {%- set name = a | split(pat="/") | last %}
       <li class="tree-page">
-        {%- set ext = name | split(pat=".") | last | lower %}
+        {%- set rawext = name | split(pat=".") | last %}
+        {%- set ext = rawext | lower %}
         {%- if ext == "pdf" %}{% set fi = "file-pdf" %}
         {%- elif ext == "html" or ext == "htm" %}{% set fi = "file-html" %}
         {%- elif ext == "md" %}{% set fi = "file-md" %}
@@ -51,7 +52,7 @@
         {%- elif ext == "zip" or ext == "tar" or ext == "gz" %}{% set fi = "file-zip" %}
         {%- elif ext == "tex" or ext == "json" or ext == "toml" or ext == "yaml" or ext == "yml" or ext == "sh" %}{% set fi = "file-code" %}
         {%- else %}{% set fi = "file" %}{% endif %}
-        <a class="tree-link tree-file {% if current == folder.path ~ '?' ~ name %}is-active{% endif %}" href="{{ folder.path | safe }}?f={{ name }}"><span class="tree-icon">{{ ui::icon(name=fi) }}</span>{{ name }}</a>
+        <a class="tree-link tree-file {% if current == folder.path ~ '?' ~ name %}is-active{% endif %}" href="{{ folder.path | safe }}?f={{ name }}"><span class="tree-icon">{{ ui::icon(name=fi) }}</span><span class="tree-text">{{ name | trim_end_matches(pat="." ~ rawext) }}<span class="tree-ext">.{{ rawext }}</span></span></a>
       </li>
     {%- endfor %}{% endif %}
     </ul>
@@ -61,9 +62,9 @@
 {% endmacro tree %}
 
 {#- Breadcrumb, title and last-updated line for a page inside a folder -#}
-{% macro page_head(folder, page) %}
+{% macro page_head(folder, page, kind) %}
 <p class="page-crumb">{{ folder.title }} /</p>
-<h1 class="page-title">{% if page.extra.icon %}{{ ui::icon(name=page.extra.icon) }} {% endif %}{{ page.title }}</h1>
+<h1 class="page-title">{% if page.extra.icon %}{{ ui::icon(name=page.extra.icon) }} {% endif %}{{ page.title }}{% if kind == "class" %}<span class="page-title-ext">.md</span>{% endif %}</h1>
 {% endmacro page_head %}
 
 {% macro page_foot(page) %}
