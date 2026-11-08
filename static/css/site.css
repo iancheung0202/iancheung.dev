@@ -58,8 +58,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   flex-wrap: wrap;
 }
 .site-nav a { text-decoration: none; padding-bottom: 2px; border-bottom: 2px solid transparent; }
-.site-nav a:hover { border-bottom-color: var(--green); color: inherit; }
-.site-nav a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--green); }
+.site-nav a:hover { border-bottom-color: var(--accent-bright); color: inherit; }
+.site-nav a[aria-current="page"] { color: var(--accent-bright); border-bottom-color: var(--accent-bright); }
 .nav-sep { color: var(--ink-faint); user-select: none; }
 .site-tools { margin-left: auto; display: flex; gap: var(--space-2); align-self: center; }
 .tool {
@@ -106,7 +106,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .prose code { font-family: var(--font-mono); font-size: 0.9em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: var(--radius-s); }
 .prose pre { background: var(--code-bg); padding: var(--space-3); border-radius: var(--radius-m); overflow-x: auto; }
 .prose pre code { background: none; padding: 0; }
-.prose blockquote { margin: 0 0 1em; padding-left: var(--space-3); border-left: 3px solid var(--green); color: var(--ink-muted); }
+.prose blockquote { margin: 0 0 1em; padding-left: var(--space-3); border-left: 3px solid var(--accent); color: var(--ink-muted); }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: var(--space-5) 0; }
 .prose table { border-collapse: collapse; width: 100%; font-size: 15px; }
 .prose th, .prose td { text-align: left; padding: var(--space-2) var(--space-3) var(--space-2) 0; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -270,7 +270,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .page-title .icon { color: var(--accent); font-size: 0.9em; }
 .page-meta { margin: var(--space-5) 0 0; padding-top: var(--space-3); border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-muted); }
 .page-meta-trigger { color: inherit; }
-.page-meta-trigger:focus-visible { outline: 2px solid var(--green); border-radius: 2px; }
+.page-meta-trigger:focus-visible { outline: 2px solid var(--accent); border-radius: 2px; }
 
 .prose img { max-width: 100%; height: auto; border-radius: var(--radius-m); }
 .prose video { max-width: 100%; border-radius: var(--radius-m); }
@@ -315,7 +315,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .term-bar { display: flex; gap: 6px; margin-bottom: 10px; }
 .term-bar i { width: 10px; height: 10px; border-radius: 50%; background: #444; }
 .term-line { white-space: pre-wrap; overflow-wrap: anywhere; }
-.term-user { color: var(--green); }
+.term-user { color: var(--accent-bright); }
 .term-dim { color: #8a8a8a; }
 .term-prompt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
 .term-input {
@@ -328,7 +328,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   font: inherit;
   letter-spacing: 3px;
   outline: 0;
-  caret-color: var(--green);
+  caret-color: var(--accent-bright);
 }
 .term-input:disabled { opacity: 0.6; }
 .term-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #0b0c0b inset; -webkit-text-fill-color: #e6e6e6; }
@@ -348,10 +348,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   font: 500 13px var(--font-display);
   cursor: pointer;
 }
-.btn:hover:not(:disabled), .admin-dialog-btn:hover:not(:disabled) { border-color: var(--green); color: var(--accent); }
+.btn:hover:not(:disabled), .admin-dialog-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .btn:disabled, .admin-dialog-btn:disabled { opacity: 0.5; cursor: default; }
-.btn-primary, .admin-dialog-go { background: var(--green); border-color: var(--green); color: rgb(4, 33, 15); }
-.btn-primary:hover:not(:disabled), .admin-dialog-go:hover:not(:disabled) { color: rgb(4, 33, 15); filter: brightness(1.05); }
+.btn-primary, .admin-dialog-go { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); }
+.btn-primary:hover:not(:disabled), .admin-dialog-go:hover:not(:disabled) { color: var(--on-accent); filter: brightness(1.12); }
 .btn-danger:hover:not(:disabled) { border-color: rgb(200, 60, 60); color: rgb(200, 60, 60); }
 
 /* admin: tree tools and the page editor (editor.js) */
@@ -386,7 +386,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   font: 13px/1.6 var(--font-mono);
   tab-size: 2;
 }
-.editor-source:focus { outline: 2px solid var(--green); outline-offset: 1px; }
+.editor-source:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .editor-preview {
   padding: var(--space-3) var(--space-4);
   border: 1px dashed var(--line);

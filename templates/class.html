@@ -17,7 +17,7 @@
     <p class="section-blurb">My course notes, review sheets, and other miscellaneous materials.</p>
     {{ explorer::tree(root=root, current=page.path | default(value=folder.path), kind="class") }}
   </aside>
-  <article class="explorer-page" id="page" data-folder-path="{{ folder.path }}" data-folder-title="{{ folder.title }}">
+  <article class="explorer-page" id="page" data-folder="{{ folder.components | last }}"{% if page %} data-slug="{{ page.slug }}"{% endif %}>
     <div id="file-view" hidden>
       <p class="page-crumb">{{ folder.title }} /</p>
       <h1 class="page-title"><a class="file-link" id="file-link" href="#" target="_blank" rel="noopener noreferrer"><span id="file-name"></span> {{ ui::icon(name="arrow-square-out") }}</a></h1>
@@ -46,6 +46,7 @@
     var nameEl = document.getElementById('file-name');
     nameEl.textContent = dot > 0 ? f.slice(0, dot) : f;
     if (dot > 0) { var ext = document.createElement('span'); ext.className = 'page-title-ext'; ext.textContent = f.slice(dot); nameEl.appendChild(ext); }
+    document.getElementById('page').dataset.file = f;
     document.getElementById('file-link').href = url;
     document.getElementById('file-frame').src = url;
     document.getElementById('page-view').hidden = true;
@@ -55,4 +56,5 @@
     });
   })();
 </script>
+<script src="/js/editor.js"></script>
 {% endblock scripts %}

@@ -1,7 +1,9 @@
 +++
-title = "welcome to my story 📒"
+title = "Welcome to my story 📒"
 weight = 0
 updated = 2026-11-07T21:09:11Z
+[extra]
+icon = "hand-waving"
 +++
 
 Hey. You have landed on my story section, welcome!

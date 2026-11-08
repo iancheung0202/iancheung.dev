@@ -13,10 +13,11 @@
     <p class="section-blurb">My course notes, review sheets, and other miscellaneous materials.</p>
     {{ explorer::tree(root=root, current=page.path, kind="class") }}
   </aside>
-  <article class="explorer-page" id="page">
+  <article class="explorer-page" id="page" data-folder="{{ folder.components | last }}" data-slug="{{ page.slug }}">
     {{ explorer::page_head(folder=folder, page=page, kind="class") }}
-    <div class="prose" id="page-content">{{ page.content | safe }}</div>
+    <div class="prose" id="page-content"><!--content-start-->{{ page.content | safe }}<!--content-end--></div>
     {{ explorer::page_foot(page=page) }}
   </article>
 </div>
 {% endblock content %}
+{% block scripts %}<script src="/js/editor.js"></script>{% endblock scripts %}

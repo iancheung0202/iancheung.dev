@@ -22,10 +22,11 @@ Poppins, Open Sans, Caveat and Doto come from Google Fonts; Crowd Pleaser and At
 
 ## colour
 
-{{ swatches(tokens="accent, green, green-ink, paper, surface, ink, ink-muted, ink-faint, line") }}
+{{ swatches(tokens="accent, accent-bright, accent-fill, on-accent, paper, surface, ink, ink-muted, ink-faint, line") }}
 
-- `accent` is navy in light mode and green in dark mode. It marks the active nav link, section labels, links and the explorer marker.
-- `green` is the colour of the hero on every page and of the three toggles in the top bar, in both modes. In dark mode it is the same hue with less saturation, so it does not glow on black.
+- `accent` is navy in light mode and green in dark mode. It marks section labels, links, the explorer marker, focus rings and anything selected. There is no second colour: light mode is blue, dark mode is green.
+- `accent-bright` is the same colour with the lights on, for things that sit over the header photo (the active nav link, the three toggles) and the terminal prompt. In dark mode it is the green itself, less saturated so it does not glow on black.
+- `accent-fill` with `on-accent` is the one filled button (Stick it on the wall, the login): navy with white text in light mode, green with dark text in dark mode.
 - `paper` is the page. `surface` is anything sitting on it: the activity card, the dialogs, the editor.
 - Light mode and dark mode are the same site with these values swapped. The choice is remembered, as are nerd mode and music.
 

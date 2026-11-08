@@ -1,5 +1,6 @@
 +++
 title = "week02"
+weight = 4
 updated = 2026-11-07T21:33:03Z
 +++
 

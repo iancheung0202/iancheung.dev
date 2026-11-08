@@ -20,7 +20,11 @@
     const res = await fetch(url, {
       credentials: "same-origin",
       ...opts,
-      headers: { "Content-Type": "application/json", "X-Requested-With": "fetch", ...(opts.headers || {}) },
+      headers: {
+        ...(opts.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+        "X-Requested-With": "fetch",
+        ...(opts.headers || {}),
+      },
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {

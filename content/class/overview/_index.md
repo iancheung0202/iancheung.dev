@@ -1,7 +1,7 @@
 +++
 title = "Overview"
 weight = 0
-sort_by = "title"
+sort_by = "weight"
 template = "class.html"
 [extra]
 icon = "compass"

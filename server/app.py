@@ -344,7 +344,7 @@ def home():
 
 # ---------------------------------------------------------------------------
 # Site build. Zola renders content/ into public/; the editor below changes
-# files under content/story and rebuilds, so saving a page publishes it.
+# files under content/story and content/class and rebuilds, so saving publishes.
 # ---------------------------------------------------------------------------
 
 BUILD_LOCK = threading.Lock()
@@ -380,12 +380,29 @@ def build_failed(error):
 
 
 # ---------------------------------------------------------------------------
-# Story: markdown pages with TOML front matter, the format zola reads.
-#   content/story/<folder>/_index.md   title, weight, [extra] icon
-#   content/story/<folder>/<slug>.md   title, weight, updated, [extra] icon
+# Story and class: markdown pages with TOML front matter, the format zola reads.
+#   content/<section>/<folder>/_index.md   title, weight, [extra] icon
+#   content/<section>/<folder>/<slug>.md   title, weight, updated, [extra] icon
+#   content/<section>/<folder>/<file>      any other file, listed in the class tree
+# One editor serves both sections; the routes take the section name first.
 # ---------------------------------------------------------------------------
 
-STORY_DIR = os.path.join(CONTENT_DIR, "story")
+SECTIONS = {"story": "story.html", "class": "class.html"}  # folder template
+SECTION_RULE = "<any(story, class):section>"
+MAX_FILE_BYTES = 64 * 1024 * 1024
+FILE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,110}\.[A-Za-z0-9]{1,8}$")
+app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_BYTES + 1024 * 1024
+
+
+@app.errorhandler(413)
+def too_large(_error):
+    return jsonify(error="That file is too big (64 MB max)."), 413
+
+
+def section_dir(section: str) -> str:
+    return os.path.join(CONTENT_DIR, section)
+
+
 FRONT_RE = re.compile(
     r"\A\ufeff?\+\+\+[ \t]*\r?\n(.*?)\r?\n\+\+\+[ \t]*(?:\r?\n|\Z)", re.S
 )
@@ -490,15 +507,27 @@ def icon_name(value: object) -> str:
     return name if re.fullmatch(r"[a-z0-9-]*", name) else ""
 
 
-def page_url(folder: str, slug: str) -> str:
-    return f"/story/{quote(folder)}/{quote(slug)}/"
+def page_url(section: str, folder: str, slug: str) -> str:
+    return f"/{section}/{quote(folder)}/{quote(slug)}/"
 
 
-def folder_dir(folder: object) -> str | None:
+def file_url(section: str, folder: str, name: str) -> str:
+    return f"/{section}/{quote(folder)}/?f={quote(name)}"
+
+
+def folder_dir(section: str, folder: object) -> str | None:
     if not safe_name(folder):
         return None
-    path = os.path.join(STORY_DIR, folder)
+    path = os.path.join(section_dir(section), folder)
     return path if os.path.isdir(path) else None
+
+
+def file_path(folder_path: str | None, name: object) -> str | None:
+    """A file kept next to a folder's pages: anything that is not markdown."""
+    if not folder_path or not safe_name(name) or name.lower().endswith(".md"):
+        return None
+    path = os.path.join(folder_path, name)
+    return path if os.path.isfile(path) else None
 
 
 def page_path(folder_path: str | None, slug: object) -> str | None:
@@ -513,11 +542,12 @@ def weight_of(meta: dict) -> int:
     return value if isinstance(value, int) else 9999
 
 
-def sorted_folders() -> list[tuple[str, dict, str]]:
+def sorted_folders(section: str) -> list[tuple[str, dict, str]]:
     """(path to _index.md, meta, folder name) ordered like the tree."""
+    root = section_dir(section)
     items = []
-    for name in os.listdir(STORY_DIR) if os.path.isdir(STORY_DIR) else []:
-        path = os.path.join(STORY_DIR, name, "_index.md")
+    for name in os.listdir(root) if os.path.isdir(root) else []:
+        path = os.path.join(root, name, "_index.md")
         if not name.startswith((".", "_")) and os.path.isfile(path):
             items.append((path, split_markdown(path)[0], name))
     items.sort(key=lambda t: (weight_of(t[1]), str(t[1].get("title", t[2])).lower()))
@@ -562,43 +592,47 @@ def next_slug(folder_path: str, base: str) -> str:
     return slug
 
 
-def folder_meta(label: str, weight: int, icon: str = "") -> dict:
+def folder_meta(section: str, label: str, weight: int, icon: str = "") -> dict:
     return {
         "title": label,
         "weight": weight,
         "sort_by": "weight",
-        "template": "story.html",
+        "template": SECTIONS[section],
         "extra": {"icon": icon},
     }
 
 
-@app.route("/api/story/folders", methods=["POST"])
+@app.route(f"/api/{SECTION_RULE}/folders", methods=["POST"])
 @admin_required
-def story_create_folder():
+def create_folder(section):
     data = request.get_json(silent=True) or {}
     label = clean_text(data.get("label"), 60)
     if not label:
         return jsonify(error="Folder needs a name."), 400
-    base = slugify(label, fallback="folder")
+    # class folders go by course number (61a, c100) and keep the label in _index.md
+    wanted = clean_text(data.get("id"), 40)
+    base = slugify(wanted) if wanted else slugify(label, fallback="folder")
     folder, n = base, 2
-    while os.path.exists(os.path.join(STORY_DIR, folder)):
+    while os.path.exists(os.path.join(section_dir(section), folder)):
         folder = f"{base}-{n}"
         n += 1
-    folder_path = os.path.join(STORY_DIR, folder)
+    folder_path = os.path.join(section_dir(section), folder)
     os.makedirs(folder_path, exist_ok=True)
     write_markdown(
         os.path.join(folder_path, "_index.md"),
-        folder_meta(label, len(sorted_folders()), icon_name(data.get("icon"))),
+        folder_meta(
+            section, label, len(sorted_folders(section)), icon_name(data.get("icon"))
+        ),
         "",
     )
     rebuild()
     return jsonify(ok=True, id=folder), 201
 
 
-@app.route("/api/story/folders/<folder>", methods=["PUT"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>", methods=["PUT"])
 @admin_required
-def story_update_folder(folder):
-    folder_path = folder_dir(folder)
+def update_folder(section, folder):
+    folder_path = folder_dir(section, folder)
     if not folder_path:
         abort(404)
     data = request.get_json(silent=True) or {}
@@ -616,32 +650,32 @@ def story_update_folder(folder):
     return jsonify(ok=True)
 
 
-@app.route("/api/story/folders/<folder>/move", methods=["POST"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/move", methods=["POST"])
 @admin_required
-def story_move_folder(folder):
+def move_folder(section, folder):
     direction = (request.get_json(silent=True) or {}).get("direction")
-    if not move_item(sorted_folders(), folder, direction):
+    if not move_item(sorted_folders(section), folder, direction):
         abort(404)
     rebuild()
     return jsonify(ok=True)
 
 
-@app.route("/api/story/folders/<folder>", methods=["DELETE"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>", methods=["DELETE"])
 @admin_required
-def story_delete_folder(folder):
-    folder_path = folder_dir(folder)
+def delete_folder(section, folder):
+    folder_path = folder_dir(section, folder)
     if not folder_path:
         abort(404)
     shutil.rmtree(folder_path, ignore_errors=True)
-    renumber(sorted_folders())
+    renumber(sorted_folders(section))
     rebuild()
     return jsonify(ok=True)
 
 
-@app.route("/api/story/folders/<folder>/pages", methods=["POST"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/pages", methods=["POST"])
 @admin_required
-def story_create_page(folder):
-    folder_path = folder_dir(folder)
+def create_page(section, folder):
+    folder_path = folder_dir(section, folder)
     if not folder_path:
         abort(404)
     data = request.get_json(silent=True) or {}
@@ -663,13 +697,13 @@ def story_create_page(folder):
         content,
     )
     rebuild()
-    return jsonify(ok=True, url=page_url(folder, slug)), 201
+    return jsonify(ok=True, url=page_url(section, folder, slug)), 201
 
 
-@app.route("/api/story/folders/<folder>/pages/<slug>")
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/pages/<slug>")
 @admin_required
-def story_get_page(folder, slug):
-    path = page_path(folder_dir(folder), slug)
+def get_page(section, folder, slug):
+    path = page_path(folder_dir(section, folder), slug)
     if not path:
         abort(404)
     meta, body = split_markdown(path)
@@ -677,14 +711,14 @@ def story_get_page(folder, slug):
         title=meta.get("title") or slug.replace("-", " "),
         content=body,
         icon=(meta.get("extra") or {}).get("icon", ""),
-        url=page_url(folder, slug),
+        url=page_url(section, folder, slug),
     )
 
 
-@app.route("/api/story/folders/<folder>/pages/<slug>", methods=["PUT"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/pages/<slug>", methods=["PUT"])
 @admin_required
-def story_update_page(folder, slug):
-    path = page_path(folder_dir(folder), slug)
+def update_page(section, folder, slug):
+    path = page_path(folder_dir(section, folder), slug)
     if not path:
         abort(404)
     data = request.get_json(silent=True) or {}
@@ -703,13 +737,13 @@ def story_update_page(folder, slug):
     meta["updated"] = now_stamp()
     write_markdown(path, meta, body)
     rebuild()
-    return jsonify(ok=True, url=page_url(folder, slug))
+    return jsonify(ok=True, url=page_url(section, folder, slug))
 
 
-@app.route("/api/story/folders/<folder>/pages/<slug>", methods=["DELETE"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/pages/<slug>", methods=["DELETE"])
 @admin_required
-def story_delete_page(folder, slug):
-    folder_path = folder_dir(folder)
+def delete_page(section, folder, slug):
+    folder_path = folder_dir(section, folder)
     path = page_path(folder_path, slug)
     if not path:
         abort(404)
@@ -719,10 +753,10 @@ def story_delete_page(folder, slug):
     return jsonify(ok=True)
 
 
-@app.route("/api/story/folders/<folder>/pages/<slug>/move", methods=["POST"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/pages/<slug>/move", methods=["POST"])
 @admin_required
-def story_move_page(folder, slug):
-    folder_path = folder_dir(folder)
+def move_page(section, folder, slug):
+    folder_path = folder_dir(section, folder)
     if not folder_path:
         abort(404)
     direction = (request.get_json(silent=True) or {}).get("direction")
@@ -732,17 +766,19 @@ def story_move_page(folder, slug):
     return jsonify(ok=True)
 
 
-@app.route("/api/story/folders/<folder>/pages/<slug>/relocate", methods=["POST"])
+@app.route(
+    f"/api/{SECTION_RULE}/folders/<folder>/pages/<slug>/relocate", methods=["POST"]
+)
 @admin_required
-def story_relocate_page(folder, slug):
-    src_dir = folder_dir(folder)
+def relocate_page(section, folder, slug):
+    src_dir = folder_dir(section, folder)
     src = page_path(src_dir, slug)
     target = (request.get_json(silent=True) or {}).get("folder")
-    dst_dir = folder_dir(target)
+    dst_dir = folder_dir(section, target)
     if not src or not dst_dir:
         abort(404)
     if os.path.samefile(src_dir, dst_dir):
-        return jsonify(ok=True, url=page_url(folder, slug))
+        return jsonify(ok=True, url=page_url(section, folder, slug))
     new_slug = next_slug(dst_dir, slug)
     position = len(sorted_pages(dst_dir))
     dst = os.path.join(dst_dir, new_slug + ".md")
@@ -752,12 +788,58 @@ def story_relocate_page(folder, slug):
     rewrite_meta(dst, meta)
     renumber(sorted_pages(src_dir))
     rebuild()
-    return jsonify(ok=True, url=page_url(target, new_slug))
+    return jsonify(ok=True, url=page_url(section, target, new_slug))
 
 
-@app.route("/api/story/preview", methods=["POST"])
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/files", methods=["POST"])
 @admin_required
-def story_preview():
+def upload_file(section, folder):
+    """A file kept next to a folder's pages (pdf, html, mp4...). Uploading a
+    name that already exists replaces that file."""
+    folder_path = folder_dir(section, folder)
+    if not folder_path:
+        abort(404)
+    upload = request.files.get("file")
+    if not upload or not upload.filename:
+        return jsonify(error="Pick a file first."), 400
+    name = clean_text(request.form.get("name") or upload.filename, 120)
+    name = re.sub(r"\s+", "-", os.path.basename(name.replace("\\", "/")))
+    if (
+        not safe_name(name)
+        or not FILE_NAME_RE.match(name)
+        or name.lower().endswith(".md")
+    ):
+        return (
+            jsonify(
+                error="Name it with letters, digits, dots or dashes, plus an extension."
+            ),
+            400,
+        )
+    path = os.path.join(folder_path, name)
+    tmp = path + ".tmp"
+    upload.save(tmp)
+    if os.path.getsize(tmp) > MAX_FILE_BYTES:
+        os.remove(tmp)
+        return jsonify(error="That file is too big (64 MB max)."), 413
+    os.replace(tmp, path)
+    rebuild()
+    return jsonify(ok=True, name=name, url=file_url(section, folder, name)), 201
+
+
+@app.route(f"/api/{SECTION_RULE}/folders/<folder>/files/<name>", methods=["DELETE"])
+@admin_required
+def delete_file(section, folder, name):
+    path = file_path(folder_dir(section, folder), name)
+    if not path:
+        abort(404)
+    os.remove(path)
+    rebuild()
+    return jsonify(ok=True)
+
+
+@app.route(f"/api/{SECTION_RULE}/preview", methods=["POST"])
+@admin_required
+def preview_page(section):
     """Render a draft with zola itself, in a scratch copy of the site that
     holds only this one page, and return the page body."""
     content = str((request.get_json(silent=True) or {}).get("content") or "")
@@ -766,7 +848,7 @@ def story_preview():
     scratch = PREVIEW_DIR
     with BUILD_LOCK:
         shutil.rmtree(os.path.join(scratch, "content"), ignore_errors=True)
-        draft_dir = os.path.join(scratch, "content", "story", "preview")
+        draft_dir = os.path.join(scratch, "content", section, "preview")
         os.makedirs(draft_dir, exist_ok=True)
         shutil.copy(os.path.join(ROOT_DIR, "config.toml"), scratch)
         shutil.copytree(
@@ -779,9 +861,11 @@ def story_preview():
             os.path.join(ROOT_DIR, "static", "icons", "phosphor-regular.json"),
             os.path.join(scratch, "static", "icons"),
         )
-        shutil.copy(os.path.join(STORY_DIR, "_index.md"), os.path.dirname(draft_dir))
+        shutil.copy(
+            os.path.join(section_dir(section), "_index.md"), os.path.dirname(draft_dir)
+        )
         write_markdown(
-            os.path.join(draft_dir, "_index.md"), folder_meta("preview", 0), ""
+            os.path.join(draft_dir, "_index.md"), folder_meta(section, "preview", 0), ""
         )
         write_markdown(
             os.path.join(draft_dir, "draft.md"),
@@ -790,7 +874,7 @@ def story_preview():
         )
         zola(["build"], scratch)
         with open(
-            os.path.join(scratch, "public", "story", "preview", "draft", "index.html"),
+            os.path.join(scratch, "public", section, "preview", "draft", "index.html"),
             encoding="utf-8",
         ) as f:
             html = f.read()

@@ -12,11 +12,11 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code, nerd mode */
 
   /* colour: light */
-  --green: rgb(24, 210, 110);                 /* the accent, unchanged */
-  --green-ink: rgb(23, 130, 73);              /* accent as text on paper */
-  --green-tint: rgba(24, 210, 110, 0.16);     /* highlights, selection, hover fills */
-  --accent: rgb(4, 58, 116);                  /* labels, active nav, links: navy on paper */
-  --accent-tint: rgba(4, 58, 116, 0.10);
+  --accent: rgb(4, 58, 116);                  /* navy: labels, active links, selection, anything on paper */
+  --accent-bright: rgb(99, 179, 255);         /* the same blue with the lights on: over the header photo, the terminal */
+  --accent-fill: var(--accent);               /* the one filled button */
+  --on-accent: rgb(255, 255, 255);            /* text on that button */
+  --accent-tint: rgba(4, 58, 116, 0.10);      /* highlights, selection, hover fills */
   --paper: rgb(246, 245, 240);                /* page background */
   --surface: rgb(255, 255, 255);              /* cards, dialogs, editor panes */
   --ink: rgb(0, 0, 0);                        /* primary text */
@@ -42,11 +42,11 @@
 }
 
 :root[data-theme="dark"] {
-  --green: rgb(89, 197, 139);                 /* same hue, less saturation and glare */
-  --green-ink: rgb(121, 205, 158);
-  --green-tint: rgba(89, 197, 139, 0.18);
-  --accent: var(--green);                     /* dark mode: the green takes over */
-  --accent-tint: var(--green-tint);
+  --accent: rgb(89, 197, 139);                /* dark mode: green, less saturation so it does not glow on black */
+  --accent-bright: var(--accent);
+  --accent-fill: var(--accent);
+  --on-accent: rgb(4, 33, 15);
+  --accent-tint: rgba(89, 197, 139, 0.18);
   --paper: rgb(0, 0, 0);
   --surface: rgb(20, 21, 20);
   --ink: rgb(246, 245, 240);
@@ -68,7 +68,7 @@
 /* Names the older stylesheet (style.css) still uses. They shrink as pages
    move onto the tokens above and disappear when style.css does. */
 :root {
-  --accent-green: var(--green);
+  --accent-green: var(--accent-bright);
   --background-color: var(--paper);
   --text-color: var(--ink);
   --fade-text-color: var(--ink-muted);

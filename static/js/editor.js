@@ -1,10 +1,11 @@
 /*
- * Story editor. Only does anything once SiteAdmin says you are logged in.
- * Clicking "Last updated:" under a page opens the login.
+ * Story and class editor. Only does anything once SiteAdmin says you are
+ * logged in. Clicking "Last updated:" under a page opens the login.
  *
  * Tree tools: move folders and pages, rename a folder and pick its icon,
- * add or delete folders, add pages. Page editor: markdown on the left,
- * the real rendered page on the right (built by zola on the server),
+ * add or delete folders, add pages. Class folders also take files (pdf,
+ * html, mp4...): upload, replace, delete. Page editor: markdown on the
+ * left, the real rendered page on the right (built by zola on the server),
  * Ctrl/Cmd+S saves, Esc cancels, Tab indents.
  */
 (function () {
@@ -12,9 +13,12 @@
   const Admin = window.SiteAdmin;
   const tree = document.getElementById('tree');
   const article = document.getElementById('page');
-  if (!Admin || !tree || !article || tree.dataset.kind !== 'story') return;
+  const kind = tree && tree.dataset.kind;
+  if (!Admin || !tree || !article || !['story', 'class'].includes(kind)) return;
 
-  const API = '/api/story';
+  const API = '/api/' + kind;
+  const ROOT = '/' + kind + '/';
+  const hasFiles = kind === 'class';
   const el = (tag, cls, text) => {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -60,7 +64,30 @@
   const folders = () => [...tree.querySelectorAll('.tree-folder')].map((li) => ({
     id: li.dataset.folder, label: li.dataset.label, icon: li.dataset.icon, el: li,
     pages: [...li.querySelectorAll('.tree-page[data-slug]')].map((p) => ({ slug: p.dataset.slug, el: p, href: p.querySelector('a').getAttribute('href') })),
+    files: [...li.querySelectorAll('.tree-page[data-file]')].map((p) => ({ name: p.dataset.file, el: p })),
   }));
+
+  // files next to a folder's pages (class): a hidden picker, then a multipart upload
+  const pickFile = () => new Promise((resolve) => {
+    const input = el('input'); input.type = 'file'; input.hidden = true;
+    input.addEventListener('change', () => { resolve(input.files[0] || null); input.remove(); });
+    document.body.append(input); input.click();
+  });
+  async function uploadFile(folderId, replaceName = null) {
+    const file = await pickFile();
+    if (!file) return;
+    if (replaceName && !confirm(`Replace "${replaceName}" with "${file.name}"?`)) return;
+    const body = new FormData();
+    body.append('file', file);
+    if (replaceName) body.append('name', replaceName);
+    const r = await Admin.api(`${folderApi(folderId)}/files`, { method: 'POST', body });
+    go(r.url);
+  }
+  async function deleteFile(folderId, name) {
+    if (!confirm(`Delete the file "${name}"?\n\nThis cannot be undone.`)) return;
+    await call(`${folderApi(folderId)}/files/${enc(name)}`, 'DELETE');
+    go(`${ROOT}${enc(folderId)}/`);
+  }
 
   // small inline form for a folder's name and icon; replaces the row until saved or cancelled
   function folderForm(host, folder, onSave) {
@@ -68,7 +95,10 @@
     const hidden = [...host.children];
     hidden.forEach((c) => (c.hidden = true));
     const form = el('form', 'folder-form');
-    const name = el('input', 'field'); name.type = 'text'; name.maxLength = 60; name.placeholder = 'folder name'; name.value = folder.label; name.required = true;
+    const name = el('input', 'field'); name.type = 'text'; name.maxLength = 60; name.placeholder = hasFiles ? 'course, e.g. CS 61A' : 'folder name'; name.value = folder.label; name.required = true;
+    // the directory is the course number (61a, c100); the label above is what the tree shows
+    const idIn = hasFiles && !folder.id ? el('input', 'field') : null;
+    if (idIn) { idIn.type = 'text'; idIn.maxLength = 40; idIn.placeholder = 'folder id, e.g. 61a'; idIn.pattern = '[A-Za-z0-9-]+'; idIn.autocapitalize = 'off'; idIn.spellcheck = false; }
     const iconWrap = el('div', 'editor-icon');
     let glyph = svg(folder.icon || 'folder');
     const icon = el('input', 'field'); icon.type = 'text'; icon.placeholder = 'icon, e.g. map-pin'; icon.value = folder.icon || ''; icon.title = 'Phosphor icon name (phosphoricons.com)';
@@ -79,15 +109,17 @@
     const cancel = textBtn('Cancel', () => { form.remove(); hidden.forEach((c) => (c.hidden = false)); });
     const error = el('p', 'editor-error');
     row.append(save, cancel);
-    form.append(name, iconWrap, row, error);
+    form.append(name, ...(idIn ? [idIn] : []), iconWrap, row, error);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const label = name.value.trim();
       const ic = icon.value.trim().toLowerCase().replace(/^ph-/, '');
+      const id = idIn ? idIn.value.trim().toLowerCase() : '';
       if (!label) { error.textContent = 'Give the folder a name.'; return; }
+      if (idIn && !/^[a-z0-9-]+$/.test(id)) { error.textContent = 'Give the folder an id: the course number, like 61a or c100.'; return; }
       if (ic && icons && !icons[ic]) { error.textContent = `No Phosphor icon called "${ic}".`; return; }
       save.disabled = true;
-      try { await onSave({ label, icon: ic }); } catch (err) { error.textContent = err.message; save.disabled = false; }
+      try { await onSave(idIn ? { label, icon: ic, id } : { label, icon: ic }); } catch (err) { error.textContent = err.message; save.disabled = false; }
     });
     form.addEventListener('keydown', (e) => { if (e.key === 'Escape') cancel.click(); });
     host.append(form);
@@ -106,10 +138,12 @@
           await call(folderApi(folder.id), 'PUT', v); go();
         })),
         iconBtn('plus', 'New page in this folder', () => openEditor({ folderId: folder.id })),
+        ...(hasFiles ? [iconBtn('upload-simple', 'Upload a file to this folder', () => uploadFile(folder.id))] : []),
         iconBtn('trash', 'Delete folder', async () => {
-          const n = folder.pages.length;
-          if (!confirm(`Delete the folder "${folder.label}"${n ? ` and its ${n} page${n === 1 ? '' : 's'}` : ''}?\n\nThis cannot be undone.`)) return;
-          await call(folderApi(folder.id), 'DELETE'); go('/story/');
+          const count = (n, word) => (n ? `${n} ${word}${n === 1 ? '' : 's'}` : '');
+          const inside = [count(folder.pages.length, 'page'), count(folder.files.length, 'file')].filter(Boolean).join(' and ');
+          if (!confirm(`Delete the folder "${folder.label}"${inside ? ` and its ${inside}` : ''}?\n\nThis cannot be undone.`)) return;
+          await call(folderApi(folder.id), 'DELETE'); go(ROOT);
         }, { cls: 'tool-danger' }),
       );
       folder.el.querySelector('.tree-folder-row').append(tools);
@@ -122,6 +156,14 @@
         );
         page.el.append(t);
       });
+      folder.files.forEach((file) => {
+        const t = el('span', 'tree-tools');
+        t.append(
+          iconBtn('swap', 'Replace this file', () => uploadFile(folder.id, file.name)),
+          iconBtn('trash', 'Delete this file', () => deleteFile(folder.id, file.name), { cls: 'tool-danger' }),
+        );
+        file.el.append(t);
+      });
     });
     const li = el('li', 'tree-add-row');
     const add = textBtn('+ New folder', () => folderForm(li, { label: '', icon: '' }, async (v) => {
@@ -132,10 +174,13 @@
 
   function decoratePage() {
     article.querySelectorAll('.page-tools').forEach((n) => n.remove());
-    const { folder, slug } = article.dataset;
-    if (!folder || !slug) return;
+    const { folder, slug, file } = article.dataset;
     const bar = el('div', 'page-tools');
-    bar.append(textBtn('Edit page', () => openEditor({ folderId: folder, slug })));
+    if (folder && file) {
+      bar.append(textBtn('Replace file', () => uploadFile(folder, file)), textBtn('Delete file', () => deleteFile(folder, file), 'btn-danger'));
+    } else if (folder && slug) {
+      bar.append(textBtn('Edit page', () => openEditor({ folderId: folder, slug })));
+    } else return;
     article.prepend(bar);
   }
 
@@ -162,7 +207,7 @@
     head.append(titleIn, folderSel, iconWrap);
 
     const panes = el('div', 'editor-panes');
-    const src = el('textarea', 'editor-source'); src.value = data.content; src.spellcheck = false; src.placeholder = 'Write markdown here. Images: ![](/story/' + folderId + '/photo.jpg)';
+    const src = el('textarea', 'editor-source'); src.value = data.content; src.spellcheck = false; src.placeholder = 'Write markdown here. Images: ![](' + ROOT + folderId + '/photo.jpg)';
     const preview = el('div', 'editor-preview');
     const pvTitle = el('h1', 'page-title', titleIn.value || 'Untitled');
     const pvBody = el('div', 'prose');
@@ -241,7 +286,7 @@
       if (!confirm(`Delete the page "${data.title}"?\n\nThis cannot be undone.`)) return;
       await call(pageApi(folderId, slug), 'DELETE');
       dirty = () => false;
-      go(`/story/${enc(folderId)}/`);
+      go(`${ROOT}${enc(folderId)}/`);
     };
 
     article.replaceChildren(form);

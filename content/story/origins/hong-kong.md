@@ -1,7 +1,9 @@
 +++
-title = "growing up in hong kong 🇭🇰"
+title = "Growing up in Hong Kong"
 weight = 1
 updated = 2026-11-07T21:09:11Z
+[extra]
+icon = "globe-hemisphere-east"
 +++
 
 ![](/story/origins/ocean.jpg)

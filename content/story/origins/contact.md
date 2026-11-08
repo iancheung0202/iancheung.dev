@@ -1,7 +1,9 @@
 +++
-title = "contact me"
+title = "Contact me"
 weight = 2
 updated = 2026-11-07T21:09:11Z
+[extra]
+icon = "envelope-open"
 +++
 
 There is this popular belief that most students don't check their emails or don't read them thoroughly, specially in middle/high school. There is always this pre-conceived notion that there needs to be an extra way to deliver the same message (through a different platform or in real life) in order to have it reach us properly.

@@ -228,7 +228,7 @@ h6 {
 #header .social-links > .social-dropdown > a:focus-visible,
 #header .social-links > .social-dropdown.open > a {
   background: var(--paper);
-  color: var(--green-ink) !important;
+  color: var(--accent) !important;
   outline: 0;
 }
 
@@ -282,7 +282,7 @@ h6 {
 #header .social-links .social-caret .icon { font-size: 10px; }
 #header .social-links .social-dropdown > a:hover .social-caret,
 #header .social-links .social-dropdown.open > a .social-caret {
-  background: var(--green-ink);
+  background: var(--accent);
   color: var(--paper);
 }
 #header .social-links .social-dropdown.open .social-caret { transform: rotate(180deg); }
@@ -416,6 +416,11 @@ h6 {
 #header.header-top .navbar ul { margin: 0; }
 @media (max-width: 991px) {
   #header.header-top .navbar { position: static; transform: none; padding: 0; }
+}
+#header.header-top h1 { display: flex; align-items: center; } /* toggles centred on the name */
+@media (max-width: 992px) {
+  /* subpages: the name and toggles sit on the content's left edge (the home hero stays centred) */
+  #header.header-top .container { align-items: flex-start; }
 }
 @media (max-width: 768px) {
   #header.header-top { height: 60px; }
@@ -769,17 +774,18 @@ button,
   display: block;
 }
 #header.header-top h1 .tooltips .icon { font-size: 27px; }
+#header.header-top h1 .tooltips > a { display: block; line-height: 0; } /* no line box under the icon, so it centres on the name */
 
 /* the toggles' labels open below the icons: above the nav on home, and out of the folded bar on subpages */
 #header h1 { position: relative; z-index: 12; }
 #header.header-top:not(.leaving) { overflow: visible; }
 
 #header h1 .tooltips:hover a {
-  color: var(--green);
+  color: var(--accent-bright);
 }
 
 #header h1 .tooltips.a-active a {
-  color: var(--green);
+  color: var(--accent-bright);
 }
 
 .icon { display: inline-block; fill: currentColor; vertical-align: -0.15em; }
@@ -906,7 +912,7 @@ button,
 .now-badge img { width: 12px; height: 12px; }
 .now-copy { position: relative; border: 0; background: none; color: var(--ink-faint); cursor: pointer; font-size: 14px; padding: 4px; line-height: 0; border-radius: 4px; transition: color 0.15s ease; }
 .now-copy:hover, .now-copy:focus-visible { color: var(--ink-muted); }
-.now-copy.copied { color: var(--green-ink); }
+.now-copy.copied { color: var(--accent); }
 .now-handle { display: flex; align-items: center; gap: 6px; color: var(--ink-muted); font-size: 12.5px; margin-top: 3px; }
 .now-handle > span { opacity: 0.6; }
 .now-label { font-family: var(--font-display); font-size: 10.5px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-muted); }
@@ -935,7 +941,7 @@ button,
 .now-message-send:hover, .now-message-send:focus-visible { transform: translateX(2px); }
 .now-message.has-text .now-message-send { display: block; }
 .now-message.has-text .now-message-mark, .now-message.signed-in .now-message-mark { display: none; }
-.now-message-done { display: none; flex: none; line-height: 0; font-size: 16px; color: var(--green-ink); }
+.now-message-done { display: none; flex: none; line-height: 0; font-size: 16px; color: var(--accent); }
 .now-message.sent .now-message-done { display: block; }
 .now-message.sent .now-message-mark { display: none; }
 .now-message-who { cursor: pointer; }
@@ -943,6 +949,6 @@ button,
 .now-message-who:hover img { opacity: 0.7; }
 .now-message-note { flex-basis: 100%; margin-top: -6px; padding-bottom: 8px; font-size: 11.5px; color: var(--ink-muted); }
 .now-message-note:empty { display: none; }
-.now-message-note[data-kind="ok"] { color: var(--green-ink); }
+.now-message-note[data-kind="ok"] { color: var(--accent); }
 .now-message-note[data-kind="err"] { color: rgb(206, 62, 62); }
 .now-role::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--role); flex: none; }

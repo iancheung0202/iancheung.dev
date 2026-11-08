@@ -27,7 +27,7 @@
     {%- endfor %}
     {%- if kind == "class" %}{% for a in folder.assets | sort %}
       {%- set name = a | split(pat="/") | last %}
-      <li class="tree-page">
+      <li class="tree-page" data-file="{{ name }}">
         {%- set rawext = name | split(pat=".") | last %}
         {%- set ext = rawext | lower %}
         {%- if ext == "pdf" %}{% set fi = "file-pdf" %}
