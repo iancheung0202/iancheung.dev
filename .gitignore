@@ -6,7 +6,7 @@ data/
 # zola build output
 public/
 
-# old locations, kept so a stale checkout does not commit them
+# old locations
 todos.json
 .well-known/
 notes/

@@ -1,6 +1,4 @@
 # docker compose up -d --build
-# content/ is mounted so pages saved through the story editor land in the
-# repo checkout (commit them afterwards); data/ holds wall notes and todos.
 services:
   site:
     build: .

@@ -1,5 +1,3 @@
-# Zola builds every public page into public/. Flask (server/app.py) serves
-# that folder and adds the dynamic parts: wall, codes, admin, story editor.
 base_url = "https://iancheung.dev"
 title = "Ian Cheung"
 compile_sass = false

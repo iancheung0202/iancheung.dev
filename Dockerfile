@@ -1,9 +1,6 @@
-# One container: zola builds public/, flask serves it on :8085.
-# Runtime state (wall notes, todos, secret) lives in /app/data, mount it.
 FROM python:3.12-slim
 
 ARG ZOLA_VERSION=0.21.0
-# TARGETARCH is amd64 on the VPS and arm64 on an Apple-silicon Mac; zola ships both.
 ARG TARGETARCH
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
  && case "$TARGETARCH" in arm64) arch=aarch64 ;; *) arch=x86_64 ;; esac \
