@@ -78,6 +78,7 @@
 .note:hover, .note:focus-visible { z-index: 3; transform: rotate(var(--rot)) translate(var(--dx), calc(var(--dy) - 6px)) scale(calc(var(--scale) * 1.03)); }
 .note-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.65s cubic-bezier(0.3, 0.7, 0.2, 1); }
 .note.flipped .note-inner { transform: rotateY(180deg); }
+.note.snap .note-inner { transition: none; }
 .note-face {
   position: absolute;
   inset: 0;
@@ -128,12 +129,25 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 16px;
+  padding: 16px 14px;
   text-align: center;
   filter: brightness(0.96);
 }
-.note-from { font: 700 26px/1.1 var(--font-hand); }
-.note-when { font: 500 18px/1 var(--font-hand); opacity: 0.7; }
+.note-back > * { flex-shrink: 0; }
+.note-from {
+  font: 700 26px/1.1 var(--font-hand);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.note-from.long { font-size: 21px; line-height: 1.05; }
+a.note-from { position: relative; color: inherit; text-decoration: none; border-bottom: 2px solid rgba(0, 0, 0, 0.35); }
+a.note-from:hover, a.note-from:focus-visible { border-bottom-color: var(--note-ink); outline: 0; }
+.note-when { font: 500 16px/1 var(--font-hand); opacity: 0.65; }
+.note-www { font: 500 14px/1 var(--font-hand); opacity: 0.65; margin-top: -2px; overflow-wrap: anywhere; }
 .note-del { margin-top: 10px; font: 500 12px var(--font-display); padding: 3px 10px; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: var(--radius-s); background: rgba(255, 255, 255, 0.4); color: var(--note-ink); }
 .note-del:hover { background: var(--note-ink); color: #fff; }
 
@@ -154,8 +168,8 @@
   right: 34px;
   bottom: 26px;
   z-index: 2;
-  width: 124px;
-  height: 124px;
+  width: 150px;
+  height: 150px;
   padding: 0;
   cursor: pointer;
   outline-offset: 6px;
@@ -174,7 +188,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 500 22px/1.1 var(--font-hand);
+  font: 500 25px/1.1 var(--font-hand);
   color: var(--note-ink);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -183,9 +197,11 @@
   content: "";
   position: absolute;
   right: 0; bottom: 0;
-  width: 18px; height: 18px;
+  width: 21px; height: 21px;
   background: linear-gradient(315deg, var(--paper-0) 0 48%, rgba(0, 0, 0, 0.12) 50%, rgba(255, 255, 255, 0.6) 62%, var(--paper-0) 80%);
 }
+
+.pad.peeled .pad-top { visibility: hidden; }
 
 .board-foot { margin: var(--space-4) 0 0; font-size: 13px; color: var(--ink-muted); }
 .linkish { color: var(--green-ink); text-decoration: underline; text-underline-offset: 3px; font: inherit; }
@@ -198,28 +214,78 @@
 .dialog { padding: 0; border: 0; border-radius: var(--radius-m); background: transparent; color: var(--ink); max-width: 96vw; }
 .dialog::backdrop { background: rgba(20, 14, 6, 0.55); backdrop-filter: blur(2px); }
 
-.access-dialog { width: min(440px, 94vw); overflow: visible; }
-.access-boxes { display: flex; gap: 8px; margin-top: 4px; }
-.access-box {
-  width: 38px; height: 48px;
-  border: 0; border-bottom: 2px solid var(--tk-muted);
-  background: transparent; color: var(--tk-ink);
-  font: 700 26px var(--font-stamp); text-align: center;
+.dialog::backdrop { transition: opacity 0.35s ease; }
+/* while the paper is in flight the dialog's chrome (backdrop, wood, buttons) is away; the paper itself is never faded */
+.dialog.bare::backdrop { opacity: 0; }
+.dialog.flying { overflow: visible !important; pointer-events: none; }
+.dialog.flying .gate, .dialog.flying .sheet { transition: transform 0.62s cubic-bezier(0.22, 0.75, 0.2, 1), box-shadow 0.62s ease; will-change: transform; }
+
+/* the gate: a sheet off the pad asking for the code */
+.gate-dialog { width: min(340px, 92vw); overflow: visible; }
+.gate {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 26px 18px;
+  background-color: var(--paper-0);
+  background-image: var(--paper-grain);
+  color: var(--note-ink);
+  box-shadow: 3px 12px 26px rgba(0, 0, 0, 0.4);
+  transform: rotate(-1.5deg);
+}
+.gate::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 22px; background: linear-gradient(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0)); pointer-events: none; }
+.gate::after {
+  content: "";
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 40px; height: 40px;
+  background: linear-gradient(315deg, var(--paper-0) 0 48%, rgba(0, 0, 0, 0.12) 50%, rgba(255, 255, 255, 0.6) 62%, var(--paper-0) 80%);
+  pointer-events: none;
+}
+.gate-title { margin: 0 0 4px; font: 700 30px/1.1 var(--font-hand); color: inherit; }
+.gate-sub { margin: 0 0 auto; font: 500 17px/1.3 var(--font-hand); opacity: 0.68; }
+.gate-boxes { display: flex; justify-content: space-between; gap: 6px; margin-top: 10px; }
+.gate-box {
+  width: 36px; height: 48px;
+  border: 0; border-bottom: 2px dashed rgba(0, 0, 0, 0.35);
+  background: transparent; color: var(--note-ink);
+  font: 700 32px var(--font-hand); text-align: center;
   outline: 0;
   transition: border-color 0.15s ease;
 }
-.access-box:focus { border-bottom-color: var(--tk-accent); }
-.access-box:disabled { opacity: 0.5; }
-.access-boxes.shake { animation: access-shake 0.4s; }
-@keyframes access-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.gate-box:focus { border-bottom-style: solid; border-bottom-color: var(--note-ink); }
+.gate-box:disabled { opacity: 0.5; }
+.gate-boxes.shake { animation: gate-shake 0.4s; }
+.gate-boxes.shake .gate-box { border-bottom-color: #b5311f; }
+.gate-boxes.shake .gate-box:focus { border-bottom-color: #b5311f; }
+@keyframes gate-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.gate-error { min-height: 1.3em; margin: 8px 0 0; font: 600 16px/1.3 var(--font-hand); color: #b5311f; }
+.gate-foot { display: flex; justify-content: flex-start; margin-top: 4px; padding-right: 36px; }
+.gate-nvm { padding: 0; border: 0; background: none; font: 500 15px var(--font-hand); color: inherit; opacity: 0.6; text-decoration: underline dashed; text-underline-offset: 3px; cursor: pointer; }
+.gate-nvm:hover, .gate-nvm:focus-visible { opacity: 1; outline: 0; }
 
-.composer { width: min(820px, 96vw); }
+/* the composer is a non-modal dialog (see board.js) placed and shaded like a modal one */
+.composer { width: min(484px, 96vw); overflow-x: hidden; }
+
+.composer[open] { position: fixed; inset: 0; margin: auto; max-height: 100vh; max-height: 100dvh; overflow-y: auto; z-index: 1200; }
+.composer-shade { position: fixed; inset: 0; z-index: 1199; background: rgba(20, 14, 6, 0.55); backdrop-filter: blur(2px); transition: opacity 0.35s ease; }
+.composer-shade.bare { opacity: 0; }
+.composer-shade[hidden] { display: none; }
+#clr-picker { z-index: 1301; font-family: var(--font-display); }
 .composer-body {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--space-4);
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
   padding: var(--space-4);
+}
+.composer-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   border-radius: 10px;
   background-color: var(--wood-base);
   background-image:
@@ -227,8 +293,12 @@
     repeating-linear-gradient(90deg, var(--wood-line) 0 1px, transparent 1px 7px, var(--wood-line) 7px 8px, transparent 8px 17px),
     linear-gradient(90deg, var(--wood-light), var(--wood-base) 40%, var(--wood-dark));
   box-shadow: inset 0 0 0 6px var(--wood-edge), 0 24px 50px -20px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.45s ease;
 }
-.composer-left { flex: 0 0 360px; max-width: 100%; display: flex; flex-direction: column; gap: var(--space-2); }
+.composer-body > * { position: relative; z-index: 1; }
+.composer-left { display: flex; flex-direction: column; gap: var(--space-2); }
+.composer-error, .tray { transition: opacity 0.45s ease; }
+.composer.bare .composer-body::before, .composer.bare .tray, .composer.bare .composer-error { opacity: 0; }
 .sheet {
   --paper: var(--paper-0);
   position: relative;
@@ -245,41 +315,160 @@
   transition: background-color 0.2s ease;
 }
 .sheet::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 18px; background: linear-gradient(rgba(0, 0, 0, 0.055), rgba(0, 0, 0, 0)); pointer-events: none; }
-#notes-canvas { display: block; width: 100%; flex: 1 1 0; min-height: 0; touch-action: none; cursor: crosshair; background: transparent; }
-.sheet-text, .sheet-name {
+.sheet-draw { position: relative; width: 100%; margin: -8px 0 0; }
+/* the room the editor will take (strip + square), held before js-draw has mounted so the inputs do not jump */
+.sheet-draw:empty::before { content: ""; display: block; padding-top: calc(100% + 52px); }
+.sheet-draw.failed { min-height: 120px; }
+.sheet-draw .imageEditorContainer {
+  --background-color-1: transparent;
+  --foreground-color-1: var(--note-ink);
+  --background-color-2: var(--surface);
+  --foreground-color-2: var(--ink);
+  --background-color-3: var(--surface);
+  --foreground-color-3: var(--ink);
+  --background-color-transparent: rgba(0, 0, 0, 0.04);
+  --icon-color: var(--note-ink);
+  --primary-action-foreground-color: var(--green-ink);
+  --selection-background-color: var(--green-tint);
+  --selection-foreground-color: var(--green-ink);
+  --color-selection-in-progress: var(--green-tint);
+  --shadow-color: rgba(0, 0, 0, 0.25);
+  --toolbar-button-size: 36px;
+  font-family: var(--font-display);
+  color: var(--note-ink);
+}
+.sheet-draw .imageEditorContainer { height: auto; min-height: 0; background: transparent; }
+.sheet-draw .imageEditorRenderArea { flex: none; height: auto; min-height: 0; aspect-ratio: 1; cursor: crosshair; touch-action: none; }
+.sheet-draw .toolbar-root.toolbar-edge-toolbar { position: relative; z-index: 10; background: rgba(0, 0, 0, 0.05); box-shadow: none; border-radius: var(--radius-s); flex-wrap: nowrap !important; --toolbar-button-height: 44px; }
+.sheet-draw .toolbar-edge-toolbar > div.toolbar-element.toolbar-action-row, .sheet-draw .toolbar-root .toolbar-element { background: transparent; color: var(--note-ink); --icon-color: var(--note-ink); }
+.sheet-draw .toolbar-edge-toolbar > .toolbar-action-row { max-width: none; }
+.sheet-draw .toolbar-root .toolbar-tool-row, .sheet-draw .toolbar-root .toolbar-action-row { background: transparent; }
+.sheet-draw .toolbar-root .toolbar-button .toolbar-icon { color: var(--note-ink); }
+.sheet-draw .toolbar-root .toolbar-button:not(.selected), .sheet-draw .toolbar-root .toolbar-toolContainer { background: transparent; }
+.sheet-draw .toolbar-root .toolbar-tool-row, .sheet-draw .toolbar-root .toolbar-tool-row.has-scroll { overflow: visible !important; justify-content: center; }
+.sheet-draw .toolbar-button { position: relative; border-radius: var(--radius-s); }
+/* tool labels open below the strip, over the paper, so the wood above never clips them */
+.sheet-draw .toolbar-button[data-tip]::after { bottom: auto; top: calc(100% + 6px); transform: translateX(-50%) translateY(-4px); }
+.sheet-draw .toolbar-button[data-tip]:hover::after, .sheet-draw .toolbar-button[data-tip]:focus-visible::after { transform: translateX(-50%) translateY(0); }
+.sheet-draw .toolbar-button > label { display: none; }
+.sheet-draw .toolbar-internalWidgetId--hand-tool-widget { display: none; }
+.sheet-draw .ScrollbarTool-overlay, .sheet-draw .js-draw-sound-ui-toggle { display: none !important; }
+.sheet-draw .toolbar-edgemenu-container, .sheet-draw .toolbar-edgemenu-container * { font-family: var(--font-display); }
+/* an open tool menu sits above the strip, so its top rows are clickable, and stays inside the editor (js-draw sizes
+   the menu layer from its own height, which would run past the sheet and scroll the composer when the menu takes focus) */
+.sheet-draw .imageEditorContainer { position: relative; }
+.sheet-draw .toolbar-edgemenu-container { z-index: 11; top: 0; bottom: 0; height: auto !important; }
+/* a menu taller than the sheet scrolls inside it instead of running off the top */
+.sheet-draw .toolbar-edgemenu-container .toolbar-edgemenu { max-height: 100%; overflow-y: auto; overflow-x: hidden; }
+.sheet-draw .toolbar-edgemenu input[type="range"] { max-width: 100%; min-width: 0; }
+/* native controls inside the menus (the text tool's font list) follow the site theme, as does js-draw's colour picker */
+[data-theme="dark"] .sheet-draw .toolbar-edgemenu { color-scheme: dark; }
+/* js-draw's colour picker (Coloris) follows the OS theme; here it follows the site's toggle */
+[data-theme="dark"] #clr-picker { background-color: var(--surface); border: 1px solid var(--line); }
+[data-theme="dark"] #clr-picker .clr-segmented { border-color: var(--line); color: var(--ink); }
+[data-theme="dark"] #clr-picker .clr-segmented input + label { color: var(--ink); }
+[data-theme="dark"] #clr-picker .clr-segmented input:checked + label { background: var(--green-tint); color: var(--green-ink); }
+[data-theme="dark"] #clr-picker .clr-swatches button::after { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); }
+[data-theme="dark"] #clr-picker input.clr-color { color: var(--ink); border-color: var(--line); background-color: var(--paper); }
+[data-theme="dark"] #clr-picker input.clr-color:focus { border-color: var(--green); }
+[data-theme="dark"] #clr-picker .clr-preview::after, [data-theme="dark"] #clr-picker .clr-clear, [data-theme="dark"] #clr-picker .clr-close { color: var(--ink); }
+/* the menus are cards in the site's surface, in the site's type */
+.sheet-draw .toolbar-edgemenu-container {
+  --background-color-1: var(--surface);
+  --foreground-color-1: var(--ink);
+  --background-color-2: var(--surface);
+  --foreground-color-2: var(--ink);
+  --icon-color: var(--ink);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  opacity: 1;
+  color: var(--ink);
+}
+.sheet-draw .toolbar-edgemenu-container .toolbar-edgemenu {
+  box-sizing: border-box;
+  width: calc(100% - 12px);
+  margin: 0 6px 6px;
+  padding: 2px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.55);
+  font-size: 13px;
+}
+.sheet-draw .toolbar-edgemenu > button.drag-elem { margin-top: -10px; margin-bottom: 4px; }
+.sheet-draw .toolbar-edgemenu > button.drag-elem::before { background-color: var(--ink); opacity: 0.25; }
+.sheet-draw .toolbar-edgemenu .toolbar-nonbutton-controls-main-list { padding: 0; }
+.sheet-draw .toolbar-edgemenu .toolbar-spacedList > div { min-height: 32px; margin-top: 4px; }
+.sheet-draw .toolbar-edgemenu .toolbar-spacedList > div > label { min-width: 88px; padding-right: 10px; font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--ink-muted); }
+.sheet-draw .toolbar-edgemenu input[type="range"] { accent-color: var(--green); }
+.sheet-draw .toolbar-edgemenu input[type="checkbox"] { accent-color: var(--green); }
+.sheet-draw .toolbar-edgemenu .toolbar-grid-selector > div { --button-size: 40px; gap: 6px; max-width: none; }
+.sheet-draw .toolbar-edgemenu .toolbar-grid-selector .choice-button { margin: 0; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--surface); }
+.sheet-draw .toolbar-edgemenu .toolbar-grid-selector .choice-button:hover { border-color: var(--green); }
+.sheet-draw .toolbar-edgemenu .toolbar-grid-selector .choice-button.checked { background: var(--green-tint); border-color: var(--green); }
+.sheet-draw .toolbar-edgemenu .toolbar-grid-selector .choice-button label { padding: 5px; }
+.sheet-draw .toolbar-edgemenu-container button { font-family: var(--font-display); }
+.sheet-draw .toolbar-edgemenu button.toolbar--toggle-button { padding: 5px 10px 5px 6px; border-radius: var(--radius-s); font: 500 13px var(--font-display); color: var(--ink); }
+.sheet-draw .toolbar-edgemenu button.toolbar--toggle-button[aria-checked="true"] { background: var(--green-tint); color: var(--green-ink); --icon-color: var(--green-ink); }
+.sheet-draw .toolbar-edgemenu button.toolbar--toggle-button:disabled { color: var(--ink-muted); }
+.sheet-draw .toolbar-edgemenu .toolbar-help-overlay-button > .button { color: var(--ink-muted); opacity: 0.8; }
+.sheet-draw .toolbar-edgemenu .toolbar-toolContainer .toolbar-button { border-radius: var(--radius-s); }
+.sheet-draw .toolbar-edgemenu .toolbar-toolContainer .toolbar-button > label { display: inline; font: 500 13px var(--font-display); color: var(--ink); }
+.sheet-draw .has-tip { position: relative; }
+.sheet-draw .toolbar-edgemenu-container .has-tip[data-tip]::after { bottom: auto; top: calc(100% + 4px); transform: translateX(-50%) translateY(-4px); }
+.sheet-draw .toolbar-edgemenu-container .has-tip[data-tip]:hover::after, .sheet-draw .toolbar-edgemenu-container .has-tip[data-tip]:focus-visible::after { transform: translateX(-50%) translateY(0); }
+.sheet-text, .sheet-name, .sheet-url {
   width: 100%; border: 0; border-bottom: 1px dashed rgba(0, 0, 0, 0.3); outline: 0;
   background: transparent; color: var(--note-ink); text-align: center; font-family: var(--font-hand);
 }
 .sheet-text { font-size: 26px; font-weight: 500; }
 .sheet-name { font-size: 19px; margin-top: 4px; }
-.sheet-text::placeholder, .sheet-name::placeholder { color: rgba(0, 0, 0, 0.35); }
+.sheet-url { font-size: 15px; margin-top: 4px; border-bottom-style: dotted; opacity: 0.85; }
+.sheet-text::placeholder, .sheet-name::placeholder, .sheet-url::placeholder { color: rgba(0, 0, 0, 0.35); }
 .composer-error { min-height: 1.2em; margin: 0; font: 500 17px var(--font-hand); text-align: center; color: #fff3d6; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 
-.tray { flex: 1 1 240px; min-width: 220px; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3) var(--space-3) var(--space-3); background: var(--surface); border-radius: var(--radius-s); box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 6px 18px -8px rgba(0, 0, 0, 0.45); }
-.tray-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
-.tray-label { width: 100%; font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--ink-muted); }
-.tray-group { display: inline-flex; flex-wrap: wrap; gap: 8px; }
-.tray-sw { width: 28px; height: 28px; padding: 0; border: 2px solid var(--line); border-radius: 50%; cursor: pointer; }
+/* one row under the note, as wide as the note: paper, clear, stick it, never mind */
+.tray { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 0 2px; }
+.tray-papers { display: inline-flex; gap: 7px; margin-right: auto; padding-left: 2px; }
+.tray-sw { position: relative; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 3px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); cursor: pointer; }
 .tray-sw.on { outline: 2px solid var(--green); outline-offset: 2px; }
-.tray-paper { border-radius: 3px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); border: 0; }
-.tray-tool { width: 34px; height: 34px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: var(--radius-s); color: var(--ink-muted); font-size: 18px; }
-.tray-tool.on, .tray-tool:hover { border-color: var(--green); color: var(--green-ink); background: var(--green-tint); }
-.tray-stamp { padding: 2px 5px; border: 0; border-radius: var(--radius-s); background: none; font-size: 22px; cursor: pointer; }
-.tray-stamp.on { background: var(--green-tint); outline: 1px solid var(--green); }
-#notes-size { accent-color: var(--green); }
-.tray-submit { margin-top: auto; }
+.tray .btn { position: relative; font-size: 13.5px; padding: 7px 13px; }
+.tray-clear { padding: 0; width: 34px; height: 34px; justify-content: center; color: #f3ead9; border-color: rgba(255, 255, 255, 0.35); background: rgba(0, 0, 0, 0.22); }
+.tray-clear:hover:not(:disabled) { color: #fff; border-color: rgba(255, 255, 255, 0.7); }
+.tray-clear .icon { flex: none; width: 18px; height: 18px; font-size: 18px; }
+.tray .linkish { font-size: 14px; color: #f3ead9; text-decoration-color: rgba(255, 255, 255, 0.5); }
+.tray .linkish:hover { color: #fff; }
+/* a short window (720p laptop, landscape phone): smaller sheet and a tighter row so the composer fits without scrolling */
+@media (max-height: 760px) {
+  .composer { width: min(440px, 96vw); }
+  .composer-body { padding: 18px; }
+  .tray { gap: 8px; }
+  .tray-papers { gap: 6px; }
+  .tray-sw { width: 23px; height: 23px; }
+  .tray .btn { font-size: 13px; padding: 6px 10px; }
+  .tray-clear { width: 31px; height: 31px; }
+  .tray .linkish { font-size: 13px; }
+}
 
 @media (max-width: 640px) {
   .board { padding: 28px 18px 24px; }
   .board-notes { justify-content: center; gap: 26px 18px; }
   .note { width: 150px; height: 150px; }
   .note-text { font-size: 17px; }
+  .note-back { gap: 3px; padding: 14px 10px; }
+  .note-from { font-size: 21px; }
+  .note-from.long { font-size: 17px; }
+  .note-when { font-size: 14px; }
+  .note-www { font-size: 12px; }
+  .note-del { margin-top: 6px; }
+  .sheet-draw .toolbar-root.toolbar-edge-toolbar { --toolbar-button-height: 34px; }
+  .sheet-draw .toolbar-root .toolbar-button { min-width: 30px; padding-left: 1px; padding-right: 1px; }
   .pad { position: relative; display: block; right: auto; bottom: auto; width: 96px; height: 96px; margin: 28px 6px 0 auto; }
   .pad-top { font-size: 18px; }
-  .composer-left { flex-basis: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .note, .note-inner, .pad-top { transition: none; }
-  .note.fresh, .note.peeling, .access-boxes.shake { animation: none; }
+  .note.fresh, .note.peeling, .gate-boxes.shake { animation: none; }
+  .dialog::backdrop, .composer-shade, .composer-body::before, .tray { transition: none; }
 }

@@ -70,20 +70,14 @@
     d.className = "dialog admin-dialog";
     d.setAttribute("aria-label", "Admin login");
     d.innerHTML =
-      '<div class="ticket ticket-dark">' +
-      '<div class="ticket-main">' +
-      '<p class="ticket-kicker">Ian&rsquo;s Site <span>·</span> Stage Door</p>' +
-      '<h2 class="ticket-title">Backstage</h2>' +
-      '<label class="ticket-label" for="admin-pw">Password</label>' +
-      '<input id="admin-pw" class="ticket-input admin-dialog-input" type="password" autocomplete="current-password" spellcheck="false">' +
-      '<p class="ticket-error admin-dialog-error" role="alert"></p>' +
-      '<div class="ticket-actions">' +
-      '<button type="button" class="btn btn-primary admin-dialog-go">Let me in</button>' +
-      '</div></div>' +
-      '<div class="ticket-stub"><span class="ticket-stub-text">All Access</span>' +
-      '<button type="button" class="ticket-close admin-dialog-cancel" aria-label="Close">' +
-      '<svg class="icon" viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>' +
-      '</button></div></div>';
+      '<div class="term">' +
+      '<div class="term-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
+      '<div class="term-line"><span class="term-user">ian@iancheung.dev</span><span class="term-dim">:~$</span> sudo unlock</div>' +
+      '<div class="term-line term-prompt"><label class="term-dim" for="admin-pw">[sudo] password for ian:</label>' +
+      '<input id="admin-pw" class="term-input admin-dialog-input" type="password" autocomplete="current-password" spellcheck="false" enterkeyhint="go">' +
+      '</div>' +
+      '<div class="term-out admin-dialog-error" role="alert"></div>' +
+      '</div>';
     document.body.append(d);
     return d;
   }
@@ -93,44 +87,47 @@
     dialog = dialog || buildDialog();
     const input = dialog.querySelector(".admin-dialog-input");
     const error = dialog.querySelector(".admin-dialog-error");
-    const go = dialog.querySelector(".admin-dialog-go");
-    const cancel = dialog.querySelector(".admin-dialog-cancel");
     input.value = "";
+    input.disabled = false;
     error.textContent = "";
+    error.classList.remove("err");
 
     return new Promise((resolve) => {
       let done = false;
       const finish = (ok) => {
         if (done) return;
         done = true;
-        go.removeEventListener("click", submit);
-        cancel.removeEventListener("click", onCancel);
         input.removeEventListener("keydown", onKey);
         dialog.removeEventListener("close", onCancel);
         dialog.removeEventListener("click", onBackdrop);
         input.value = "";
+        input.disabled = false;
         if (dialog.open) dialog.close();
         resolve(ok);
       };
       const onCancel = () => finish(false);
       const onKey = (e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } };
       const onBackdrop = (e) => { if (e.target === dialog) finish(false); };
+      let busy = false;
       const submit = async () => {
-        if (!input.value) return;
-        go.disabled = true;
-        error.textContent = "";
+        if (!input.value || busy) return;
+        busy = true;
+        input.disabled = true;
         try {
           await login(input.value);
           finish(true);
         } catch (e) {
-          error.textContent = e.message;
-          input.select();
+          // sudo's own words for a wrong password; anything else as the server said it
+          error.textContent = e.status === 401 || e.status === 403 ? "Sorry, try again." : e.message;
+          error.classList.add("err");
+          input.disabled = false;
+          input.value = "";
+          input.focus();
         } finally {
-          go.disabled = false;
+          busy = false;
+          if (!done) input.disabled = false;
         }
       };
-      go.addEventListener("click", submit);
-      cancel.addEventListener("click", onCancel);
       input.addEventListener("keydown", onKey);
       dialog.addEventListener("close", onCancel);
       dialog.addEventListener("click", onBackdrop);

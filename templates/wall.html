@@ -16,30 +16,24 @@
   </button>
 </div>
 
-<p class="board-foot"><button type="button" class="linkish" id="notes-admin">Hint</button>: flip a note over to see who left it.</p>
+<p class="board-foot"><button type="button" class="page-meta-trigger" id="notes-admin">Hint</button>: flip a note over to see who left it.</p>
 <p class="board-code" id="notes-admin-code" hidden></p>
 <button type="button" class="btn" id="notes-admin-regen" hidden>Regenerate code</button>
 
-<dialog class="dialog access-dialog" id="access-dialog" aria-label="Enter the access code">
-  <div class="ticket">
-    <div class="ticket-main">
-      <p class="ticket-kicker">Ian&rsquo;s Wall <span>·</span> Admit One</p>
-      <h2 class="ticket-title">Friends Only</h2>
-      <p class="ticket-sub">If you know me, ask me for the six-digit code. It changes every minute and only works once.</p>
-      <div class="access-boxes" id="access-boxes">
-        <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
-        <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2">
-        <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3">
-        <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4">
-        <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5">
-        <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6">
-      </div>
-      <p class="ticket-error access-error" id="access-error" role="alert"></p>
+<dialog class="dialog gate-dialog" id="access-dialog" aria-label="Enter the one-time code">
+  <div class="gate" id="gate">
+    <h2 class="gate-title">psst, friends only.</h2>
+    <p class="gate-sub">if you know me, ask me for the six-digit code. it changes every minute and only works once.</p>
+    <div class="gate-boxes" id="access-boxes">
+      <input class="gate-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+      <input class="gate-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2">
+      <input class="gate-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3">
+      <input class="gate-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4">
+      <input class="gate-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5">
+      <input class="gate-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6">
     </div>
-    <div class="ticket-stub">
-      <span class="ticket-stub-text">Admit One</span>
-      <button type="button" class="ticket-close" id="access-cancel" aria-label="Close">{{ ui::icon(name="x") }}</button>
-    </div>
+    <p class="gate-error" id="access-error" role="alert"></p>
+    <div class="gate-foot"><button type="button" class="gate-nvm" id="access-cancel">never mind, put it back</button></div>
   </div>
 </dialog>
 
@@ -47,34 +41,20 @@
   <div class="composer-body">
     <div class="composer-left">
       <div class="sheet" id="sheet">
-        <canvas id="notes-canvas" aria-label="Drawing area"></canvas>
+        <div class="sheet-draw" id="notes-editor" aria-label="Drawing area"></div>
         <input class="sheet-text" id="notes-text" maxlength="44" placeholder="Write something" autocomplete="off">
         <input class="sheet-name" id="notes-name" maxlength="24" placeholder="Your name" autocomplete="off">
+        <input class="sheet-url" id="notes-url" maxlength="200" placeholder="Your website (optional)" autocomplete="url" inputmode="url" spellcheck="false">
       </div>
       <p class="composer-error" id="notes-error" role="alert"></p>
     </div>
     <div class="tray">
-      <div class="tray-row"><span class="tray-label">Paper</span><span class="tray-group" id="notes-papers"></span></div>
-      <div class="tray-row"><span class="tray-label">Ink</span><span class="tray-group" id="notes-inks"></span></div>
-      <div class="tray-row"><span class="tray-label">Tool</span>
-        <span class="tray-group">
-          <button type="button" class="tray-tool" data-k="tool" data-v="pen" title="Pen">{{ ui::icon(name="pencil-simple-line") }}</button>
-          <button type="button" class="tray-tool" data-k="tool" data-v="eraser" title="Eraser">{{ ui::icon(name="eraser") }}</button>
-          <button type="button" class="tray-tool" data-k="tool" data-v="stamp" title="Stamp">{{ ui::icon(name="sticker") }}</button>
-        </span>
-      </div>
-      <div class="tray-row"><span class="tray-label">Stamp</span><span class="tray-group" id="notes-stamps"></span></div>
-      <div class="tray-row"><span class="tray-label">Size</span><input type="range" id="notes-size" min="2" max="24" value="6" aria-label="Brush size"></div>
-      <div class="tray-row">
-        <button type="button" class="btn" id="notes-undo">{{ ui::icon(name="arrow-counter-clockwise") }} Undo</button>
-        <button type="button" class="btn" id="notes-clear">{{ ui::icon(name="trash") }} Clear</button>
-      </div>
-      <div class="tray-row tray-submit">
-        <button type="button" class="btn btn-primary" id="notes-submit">Stick it on the wall</button>
-        <button type="button" class="linkish" id="notes-cancel">Never mind</button>
-      </div>
+      <span class="tray-papers" id="notes-papers" role="group" aria-label="Paper colour"></span>
+      <button type="button" class="btn tray-clear" id="notes-clear" data-tip="Start over" aria-label="Start over">{{ ui::icon(name="trash") }}</button>
+      <button type="button" class="btn btn-primary" id="notes-submit">Stick it on the wall</button>
+      <button type="button" class="linkish" id="notes-cancel">Never mind</button>
     </div>
   </div>
 </dialog>
 {% endblock content %}
-{% block scripts %}<script src="/js/board.js"></script>{% endblock scripts %}
+{% block scripts %}<script src="/js/paperflip.js"></script><script src="/js/board.js"></script>{% endblock scripts %}

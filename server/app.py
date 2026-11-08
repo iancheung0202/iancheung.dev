@@ -87,6 +87,20 @@ def clean_text(value: object, limit: int) -> str:
     return re.sub(r"\s+", " ", value).strip()[:limit]
 
 
+def clean_url(value: object) -> str:
+    """An optional website for a note: http(s) only, with a real host, or empty."""
+    raw = clean_text(value, 200)
+    if not raw:
+        return ""
+    if not re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", raw):
+        raw = "https://" + raw
+    parts = urllib.parse.urlsplit(raw)
+    host = parts.hostname or ""
+    if parts.scheme not in ("http", "https") or "." not in host or " " in raw:
+        return ""
+    return urllib.parse.urlunsplit(parts)
+
+
 def decode_base64(value: object) -> bytes | None:
     try:
         return base64.b64decode(str(value).split(",", 1)[-1], validate=True)
@@ -318,7 +332,9 @@ def public_file(path: str):
     target = os.path.normpath(os.path.join(PUBLIC_DIR, path))
     if os.path.isdir(target):
         path = os.path.join(path, "index.html")
-    return send_from_directory(PUBLIC_DIR, path)
+    # the hero photos never change under a name; cached, the one carried from page to page paints at once
+    max_age = 7 * 86400 if path.startswith("img/bg/") else None
+    return send_from_directory(PUBLIC_DIR, path, max_age=max_age)
 
 
 @app.route("/")
@@ -860,6 +876,7 @@ def public_note(note: dict) -> dict:
         "created": note["created"],
         "img": f"/api/notes/{note['id']}.png" if note.get("img") else None,
         "paper": note.get("paper", 0),
+        "url": note.get("url") or None,
     }
 
 
@@ -1089,6 +1106,9 @@ def notes_create():
         return jsonify(error="Write a caption first."), 400
     if not name:
         return jsonify(error="Sign the note with your name."), 400
+    url = clean_url(data.get("url"))
+    if clean_text(data.get("url"), 200) and not url:
+        return jsonify(error="That website link doesn't look right."), 400
     png = None
     if data.get("image"):
         png = decode_base64(data["image"])
@@ -1110,6 +1130,7 @@ def notes_create():
             "name": name,
             "img": bool(png),
             "paper": paper,
+            "url": url,
             "created": datetime.now(timezone.utc).isoformat(),
         }
         db["notes"].append(note)

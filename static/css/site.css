@@ -300,132 +300,42 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .page-title { font-size: 26px; }
 }
 
-/* admin: login dialog (built by admin.js) */
-.admin-dialog { width: min(420px, 94vw); padding: 0; border: 0; background: transparent; color: var(--ink); overflow: visible; }
+/* admin: the login is a terminal (built by admin.js) */
+.admin-dialog { width: min(460px, 94vw); padding: 0; border: 0; background: transparent; color: var(--ink); overflow: visible; }
 .admin-dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
-
-/* a ticket: the one object every "may I come in" moment on the site uses */
-.ticket {
-  --tk-paper: #f7f0dc;
-  --tk-ink: #2a2318;
-  --tk-muted: rgba(42, 35, 24, 0.62);
-  --tk-accent: #b5472f;
-  --tk-error: #b5472f;
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px;
-  color: var(--tk-ink);
-  transform: rotate(-1.2deg);
-  border-radius: 10px;
-  box-shadow: 2px 12px 28px rgba(0, 0, 0, 0.38);
+.term {
+  padding: 14px 16px 16px;
+  border: 1px solid #2a2c2a;
+  border-radius: var(--radius-m);
+  background: #0b0c0b;
+  color: #e6e6e6;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  font: 14px/1.7 var(--font-mono);
 }
-.ticket-dark { --tk-paper: #2b2d33; --tk-ink: #f1ecdf; --tk-muted: rgba(241, 236, 223, 0.6); --tk-accent: var(--green); --tk-error: #ef7a63; }
-.ticket-main, .ticket-stub {
-  background-color: var(--tk-paper);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)'/%3E%3C/svg%3E");
-}
-.ticket-main {
-  padding: 26px 26px 22px;
-  border-radius: 10px 0 0 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  /* perforation: notches top and bottom, dots down the edge */
-  -webkit-mask: radial-gradient(circle 9px at 100% 0, transparent 98%, #000) top right / 100% 51% no-repeat,
-                radial-gradient(circle 9px at 100% 100%, transparent 98%, #000) bottom right / 100% 51% no-repeat;
-          mask: radial-gradient(circle 9px at 100% 0, transparent 98%, #000) top right / 100% 51% no-repeat,
-                radial-gradient(circle 9px at 100% 100%, transparent 98%, #000) bottom right / 100% 51% no-repeat;
-}
-.ticket-main::after {
-  content: "";
-  position: absolute;
-  top: 14px; bottom: 14px; right: 72px;
-  border-right: 2px dashed var(--tk-muted);
-  opacity: 0.55;
-}
-.ticket-stub {
-  position: relative;
-  border-radius: 0 10px 10px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 14px 0;
-  -webkit-mask: radial-gradient(circle 9px at 0 0, transparent 98%, #000) top left / 100% 51% no-repeat,
-                radial-gradient(circle 9px at 0 100%, transparent 98%, #000) bottom left / 100% 51% no-repeat;
-          mask: radial-gradient(circle 9px at 0 0, transparent 98%, #000) top left / 100% 51% no-repeat,
-                radial-gradient(circle 9px at 0 100%, transparent 98%, #000) bottom left / 100% 51% no-repeat;
-}
-.ticket-stub-text {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--font-stamp);
-  font-weight: 700;
-  font-size: 15px;
+.term-bar { display: flex; gap: 6px; margin-bottom: 10px; }
+.term-bar i { width: 10px; height: 10px; border-radius: 50%; background: #444; }
+.term-line { white-space: pre-wrap; overflow-wrap: anywhere; }
+.term-user { color: var(--green); }
+.term-dim { color: #8a8a8a; }
+.term-prompt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
+.term-input {
+  flex: 1 1 120px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #e6e6e6;
+  font: inherit;
   letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--tk-accent);
-}
-.ticket-close {
-  width: 30px; height: 30px;
-  display: grid; place-items: center;
-  border: 1px solid var(--tk-muted); border-radius: 50%;
-  background: transparent; color: var(--tk-ink);
-  font-size: 14px; cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.15s ease, transform 0.2s ease;
-}
-.ticket-close:hover, .ticket-close:focus-visible { opacity: 1; transform: rotate(90deg); outline: 0; }
-.ticket-kicker {
-  margin: 0;
-  font-family: var(--font-stamp);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--tk-muted);
-}
-.ticket-kicker span { color: var(--tk-accent); margin: 0 2px; }
-.ticket-title {
-  margin: -4px 0 0;
-  font-family: var(--font-section);
-  font-weight: 400;
-  font-size: 44px;
-  line-height: 1;
-  letter-spacing: 0.5px;
-  color: var(--tk-ink);
-}
-.ticket-sub { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--tk-muted); }
-.ticket-label {
-  margin: 4px 0 -6px;
-  font-family: var(--font-display);
-  font-size: 11px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase;
-  color: var(--tk-muted);
-}
-.ticket-input {
-  width: 100%;
-  padding: 2px 0 4px;
-  border: 0; border-bottom: 2px solid var(--tk-muted);
-  background: transparent; color: var(--tk-ink);
-  font: 700 22px/1.2 var(--font-stamp); letter-spacing: 4px;
   outline: 0;
-  transition: border-color 0.15s ease;
+  caret-color: var(--green);
 }
-.ticket-input:focus { border-bottom-color: var(--tk-accent); }
-.ticket-input[type="password"] { font-family: var(--font-display); font-size: 20px; letter-spacing: 3px; }
-.ticket-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--tk-paper) inset; -webkit-text-fill-color: var(--tk-ink); }
-.ticket-error { margin: 0; font-size: 13px; line-height: 1.3; color: var(--tk-error); }
-.ticket-error:empty { display: none; }
-.ticket-actions { display: flex; gap: var(--space-2); margin-top: 2px; }
-.ticket .btn-primary { background: var(--tk-accent); border-color: var(--tk-accent); color: var(--tk-paper); }
-.ticket .btn-primary:hover:not(:disabled) { color: var(--tk-paper); }
-.ticket-dark .btn-primary { color: rgb(4, 33, 15); }
-.ticket-dark .btn-primary:hover:not(:disabled) { color: rgb(4, 33, 15); }
-@media (max-width: 480px) {
-  .ticket { transform: none; }
-  .ticket-title { font-size: 36px; }
-}
+.term-input:disabled { opacity: 0.6; }
+.term-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #0b0c0b inset; -webkit-text-fill-color: #e6e6e6; }
+.term-out { white-space: pre-wrap; }
+.term-out:empty { display: none; }
+.term-out.err { color: #ef7a63; }
+
 .btn, .admin-dialog-btn {
   display: inline-flex;
   align-items: center;

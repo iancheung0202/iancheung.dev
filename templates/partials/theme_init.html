@@ -5,6 +5,19 @@
       document.documentElement.setAttribute('data-theme', theme);
       var nerd = localStorage.getItem('nerd');
       if (nerd) document.documentElement.setAttribute('data-nerd', nerd);
+      // the hero photo follows the visitor from page to page (extensions.js picks it); applied here, before the
+      // first paint, so it is simply there on the next page. A real reload draws a new one, which fades in.
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      var kept = nav && nav.type === 'reload' ? null : sessionStorage.getItem('bg-photo');
+      if (kept) {
+        var url = '/img/bg/' + encodeURIComponent(kept);
+        document.documentElement.setAttribute('data-photo', kept);
+        var pre = document.createElement('link');
+        pre.rel = 'preload'; pre.as = 'image'; pre.href = url;
+        var css = document.createElement('style');
+        css.textContent = 'html[data-photo] #header .header-photo{background-image:url("' + url + '");opacity:1;transition:none}';
+        document.head.append(pre, css);
+      }
     } catch (e) {}
   })();
 </script>

@@ -37,27 +37,17 @@
         var headerPhoto = select('.header-photo');
         var filenameElem = select('#photo-filename');
         var footerElem = select('.footer');
-        function show(filename, instant) {
-            var url = bgPath + encodeURIComponent(filename);
-            var img = new Image();
-            img.onload = function() {
-                if (headerPhoto) headerPhoto.style.backgroundImage = "url('" + url + "')";
-                if (filenameElem) filenameElem.innerHTML = filename.replace(/\.[^/.]+$/, "") + " \uD83D\uDCF8";
-                [headerPhoto, footerElem].forEach(function(el) {
-                    if (!el) return;
-                    if (instant) el.classList.add('is-instant');
-                    el.classList.add('is-visible');
-                });
-            };
-            img.src = url;
+        var caption = function(filename) {
+            if (filenameElem) filenameElem.innerHTML = filename.replace(/\.[^/.]+$/, "") + " 📸";
+        };
+        // the photo carried over from the last page was applied in <head> (theme_init), before the first paint
+        var kept = document.documentElement.getAttribute('data-photo');
+        if (kept) {
+            caption(kept);
+            [headerPhoto, footerElem].forEach(function(el) { if (el) el.classList.add('is-instant', 'is-visible'); });
+            return;
         }
-        // the same photo follows the visitor from page to page and reappears without the fade,
-        // which is only for a fresh pick: first visit or a real reload
-        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
-        var reloaded = nav && nav.type === 'reload';
-        var kept = null;
-        try { kept = sessionStorage.getItem('bg-photo'); } catch (e) {}
-        if (!reloaded && kept) { show(kept, true); return; }
+        // first visit or a real reload: pick one and fade it in once it has loaded
         fetch(bgPath + 'manifest.json').then(function(resp) {
             if (!resp.ok) return;
             return resp.json();
@@ -65,7 +55,17 @@
             if (!Array.isArray(list) || !list.length) return;
             var filename = list[Math.floor(Math.random() * list.length)];
             try { sessionStorage.setItem('bg-photo', filename); } catch (e) {}
-            show(filename, false);
+            var url = bgPath + encodeURIComponent(filename);
+            var preloadImg = new Image();
+            preloadImg.onload = function() {
+                if (headerPhoto) headerPhoto.style.backgroundImage = "url('" + url + "')";
+                caption(filename);
+                requestAnimationFrame(function() {
+                    if (headerPhoto) headerPhoto.classList.add('is-visible');
+                    if (footerElem) footerElem.classList.add('is-visible');
+                });
+            };
+            preloadImg.src = url;
         });
     })();
 
