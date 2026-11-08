@@ -140,6 +140,11 @@ h6 {
   opacity: 1;
 }
 
+#header .header-photo.is-instant,
+.footer.is-instant {
+  transition: none;
+}
+
 #header::before {
   content: "";
   position: absolute;
