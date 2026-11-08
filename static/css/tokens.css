@@ -1,0 +1,78 @@
+/* Design tokens. Every colour, font and spacing value on the site comes from
+   here; page styles only reference these names. See /colophon for the rules. */
+
+:root {
+  /* type: one job per family */
+  --font-display: "Poppins", sans-serif;              /* name, nav, page titles, headings */
+  --font-section: "Crowd Pleaser", sans-serif;        /* big section titles ("ABOUT ME") only */
+  --font-body: "Open Sans", sans-serif;               /* paragraphs, lists, tables, buttons */
+  --font-tree: "Atkinson Hyperlegible Next VF", var(--font-body); /* explorer page names */
+  --font-hand: "Caveat", cursive;                     /* anything handwritten: sticky notes */
+  --font-stamp: "Doto", "Courier New", monospace;     /* timestamps, photo captions, codes */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code, nerd mode */
+
+  /* colour: light */
+  --green: rgb(24, 210, 110);                 /* the accent, unchanged */
+  --green-ink: rgb(23, 130, 73);              /* accent as text on paper */
+  --green-tint: rgba(24, 210, 110, 0.16);     /* highlights, selection, hover fills */
+  --paper: rgb(246, 245, 240);                /* page background */
+  --surface: rgb(255, 255, 255);              /* cards, dialogs, editor panes */
+  --ink: rgb(0, 0, 0);                        /* primary text */
+  --ink-muted: rgb(40, 39, 39);               /* secondary text */
+  --ink-faint: rgba(0, 0, 0, 0.2);            /* placeholders, disabled */
+  --line: rgba(0, 0, 0, 0.12);                /* borders, rules */
+  --code-bg: rgba(0, 0, 0, 0.06);             /* inline and block code */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* rhythm */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+  --space-6: 64px;
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --measure: 68ch;        /* max line length for prose */
+  --page-width: 1100px;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --green: rgb(89, 197, 139);                 /* same hue, less saturation and glare */
+  --green-ink: rgb(121, 205, 158);
+  --green-tint: rgba(89, 197, 139, 0.18);
+  --paper: rgb(0, 0, 0);
+  --surface: rgb(20, 21, 20);
+  --ink: rgb(246, 245, 240);
+  --ink-muted: rgb(223, 223, 223);
+  --ink-faint: rgba(255, 255, 255, 0.2);
+  --line: rgba(255, 255, 255, 0.14);
+  --code-bg: rgba(255, 255, 255, 0.09);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+/* Nerd mode: body text goes monospace. Headings, nav and section titles do
+   not change, which is why they never reference --font-body. */
+:root[data-nerd="on"] {
+  --font-body: var(--font-mono);
+}
+
+/* Names the older stylesheet (style.css) still uses. They shrink as pages
+   move onto the tokens above and disappear when style.css does. */
+:root {
+  --accent-green: var(--green);
+  --background-color: var(--paper);
+  --text-color: var(--ink);
+  --fade-text-color: var(--ink-muted);
+  --very-fade-text-color: var(--ink-faint);
+  --ui-font: var(--font-body);
+  --handwriting-font: var(--font-hand);
+  --datestamp-font: var(--font-stamp);
+  --folder-name-font: var(--font-display);
+  --file-name-font: var(--font-tree);
+  --story-code-bg: var(--code-bg);
+}

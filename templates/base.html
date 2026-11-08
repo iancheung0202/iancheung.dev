@@ -1,0 +1,48 @@
+{% import "macros/ui.html" as ui %}
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include "partials/theme_init.html" %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% if page.title %}{{ page.title }} / {% endif %}{{ config.title }}{% endblock title %}</title>
+    <meta name="author" content="Ian Cheung">
+    {% block meta %}{% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}{% endblock meta %}
+    <link rel="icon" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Caveat:wght@500;700&family=Doto:wght@700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/site.css">
+    {% block head %}{% endblock head %}
+  </head>
+  <body class="{% block body_class %}{% endblock body_class %}">
+    <header class="site-header">
+      <a class="site-name" href="/">Ian Cheung</a>
+      <nav class="site-nav" aria-label="Site">
+        <a href="/" {% if current_path is defined and current_path == "/" %}aria-current="page"{% endif %}>home</a><span class="nav-sep">/</span>
+        <a href="/story/" {% if current_path is defined and current_path is starting_with("/story/") %}aria-current="page"{% endif %}>story</a><span class="nav-sep">/</span>
+        <a href="/wall/" {% if current_path is defined and current_path is starting_with("/wall/") %}aria-current="page"{% endif %}>wall</a><span class="nav-sep">/</span>
+        <a href="/class/" {% if current_path is defined and current_path is starting_with("/class/") %}aria-current="page"{% endif %}>class</a><span class="nav-sep">/</span>
+        <a href="/resume.pdf">resume</a>
+      </nav>
+      <div class="site-tools">
+        <button class="tool" id="nerd-toggle" type="button" title="Nerd mode" aria-pressed="false">{{ ui::icon(name="code") }}</button>
+        <button class="tool" id="theme-toggle" type="button" title="Dark mode">{{ ui::icon(name="sun", class="when-light") }}{{ ui::icon(name="moon", class="when-dark") }}</button>
+      </div>
+    </header>
+    <main class="site-main {% block main_class %}{% endblock main_class %}">
+      {% block content %}{% endblock content %}
+    </main>
+    <footer class="site-footer">
+      <span class="stamp">ian cheung</span>
+      <span class="nav-sep">/</span>
+      <a href="/colophon/">colophon</a>
+      <span class="nav-sep">/</span>
+      <a href="https://github.com/iancheung0202/iancheung.dev">source</a>
+    </footer>
+    <script src="/js/site.js"></script>
+    {% block scripts %}{% endblock scripts %}
+  </body>
+</html>

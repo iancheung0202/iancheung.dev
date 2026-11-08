@@ -1,0 +1,14 @@
+# docker compose up -d --build
+# content/ is mounted so pages saved through the story editor land in the
+# repo checkout (commit them afterwards); data/ holds wall notes and todos.
+services:
+  site:
+    build: .
+    container_name: iancheung-dev
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    env_file: .env
+    volumes:
+      - ./content:/app/content
+      - ./data:/app/data

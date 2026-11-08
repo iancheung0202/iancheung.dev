@@ -1,5 +1,14 @@
 .env
+
+# runtime state written by the server
+data/
+
+# zola build output
+public/
+
+# old locations, kept so a stale checkout does not commit them
 todos.json
 .well-known/
 notes/
 .flask_secret
+__pycache__/

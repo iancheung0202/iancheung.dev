@@ -1,0 +1,48 @@
+{% import "macros/ui.html" as ui %}
+
+{#- Folder tree shared by story and class. root is a section object,
+    current is the path of the page being shown, kind is "story" or "class". -#}
+{% macro tree(root, current, kind) %}
+{%- set_global folders = [] -%}
+{%- for path in root.subsections -%}
+  {%- set_global folders = folders | concat(with=get_section(path=path)) -%}
+{%- endfor -%}
+<ul class="tree" id="tree" data-kind="{{ kind }}">
+{%- for folder in folders %}
+  {%- set_global has_current = folder.path == current -%}
+  {%- for p in folder.pages %}{% if p.path == current %}{% set_global has_current = true %}{% endif %}{% endfor -%}
+  <li class="tree-folder {% if has_current or loop.first and not current %}is-open{% endif %}" data-folder="{{ folder.components | last }}" data-label="{{ folder.title }}" data-icon="{{ folder.extra.icon | default(value="") }}">
+    <div class="tree-folder-row">
+      <button class="tree-folder-label" type="button" aria-expanded="{{ has_current }}">
+        <span class="tree-arrow">{{ ui::icon(name="caret-right") }}</span>
+        <span class="tree-icon">{{ ui::icon(name=folder.extra.icon | default(value="folder")) }}</span>
+        <span class="tree-name">{{ folder.title }}</span>
+      </button>
+    </div>
+    <ul class="tree-pages">
+    {%- for p in folder.pages %}
+      <li class="tree-page" data-slug="{{ p.slug }}">
+        <a class="tree-link {% if p.path == current %}is-active{% endif %}" href="{{ p.permalink | safe }}">{% if p.extra.icon %}<span class="tree-icon">{{ ui::icon(name=p.extra.icon) }}</span>{% endif %}{{ p.title }}</a>
+      </li>
+    {%- endfor %}
+    {%- if kind == "class" %}{% for a in folder.assets | sort %}
+      {%- set name = a | split(pat="/") | last %}
+      <li class="tree-page">
+        <a class="tree-link {% if current == folder.path ~ '?' ~ name %}is-active{% endif %}" href="{{ folder.permalink | safe }}?f={{ name }}">{{ name }}</a>
+      </li>
+    {%- endfor %}{% endif %}
+    </ul>
+  </li>
+{%- endfor %}
+</ul>
+{% endmacro tree %}
+
+{#- Breadcrumb, title and last-updated line for a page inside a folder -#}
+{% macro page_head(folder, page) %}
+<p class="page-crumb">{{ folder.title }} /</p>
+<h1 class="page-title">{% if page.extra.icon %}{{ ui::icon(name=page.extra.icon) }} {% endif %}{{ page.title }}</h1>
+{% endmacro page_head %}
+
+{% macro page_foot(page) %}
+<p class="page-meta"><button type="button" class="page-meta-trigger" id="admin-trigger">Last updated:</button> {% if page.updated %}<time datetime="{{ page.updated }}">{{ page.updated | date(format="%B %-d, %Y") }}</time>{% else %}never{% endif %}</p>
+{% endmacro page_foot %}

@@ -1,62 +1,55 @@
-<!doctype html>
-<html lang="en" data-bs-theme="light">
-  <head>
-    <script>
-      (function() {
-        try {
-          var stored = localStorage.getItem('theme');
-          var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-          document.documentElement.setAttribute('data-theme', theme);
-        } catch (e) {}
-      })();
-    </script>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta name="robots" content="noindex">
-    <title>Ian Cheung - Notes</title>
-    <link href="/assets/img/favicon.png" rel="icon">
-    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"></noscript>
-    <link href="/assets/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
-  </head>
-  <body>
-    <div class="class-shell">
-      <div class="container">
-        <div class="class-topbar">
-          <a class="class-back" href="/"><i class="bi bi-house"></i> Back to Home</a>
-          <button type="button" class="class-theme-toggle" id="class-theme-toggle" title="Enable Dark Mode" aria-label="Enable Dark Mode">
-            <i class="bi bi-sun-fill"></i>
-          </button>
-        </div>
-
-        <div class="section-title">
-          <h2>class</h2>
-          <p>my notes</p>
-        </div>
-        <p class="paragraph">My course notes, review sheets, and other miscellaneous materials.</p>
-
-        <div class="story-wrap">
-          <aside class="story-sidebar">
-            <ul class="story-tree" id="class-tree">
-              <li class="story-status">Loading academic trauma&hellip;</li>
-            </ul>
-          </aside>
-
-          <div class="story-page" id="class-page">
-            <div class="story-status">Downloading existential crisis&hellip;</div>
-          </div>
-        </div>
-      </div>
+{% extends "base.html" %}
+{% import "macros/explorer.html" as explorer %}
+{% block title %}class / {{ config.title }}{% endblock title %}
+{% block body_class %}has-explorer{% endblock body_class %}
+{% block content %}
+{%- set root = get_section(path="class/_index.md") -%}
+{%- if section.path == root.path -%}
+  {%- set folder = get_section(path=root.subsections | first) -%}
+{%- else -%}
+  {%- set folder = section -%}
+{%- endif -%}
+{%- set page = folder.pages | first -%}
+<div class="explorer">
+  <aside class="explorer-side">
+    <p class="section-label">class</p>
+    <h2 class="section-heading">my notes</h2>
+    <p class="section-blurb">My course notes, review sheets, and other miscellaneous materials.</p>
+    {{ explorer::tree(root=root, current=page.path | default(value=folder.path), kind="class") }}
+  </aside>
+  <article class="explorer-page" id="page" data-folder-path="{{ folder.path }}" data-folder-title="{{ folder.title }}">
+    <div id="file-view" hidden>
+      <p class="page-crumb">{{ folder.title }} /</p>
+      <h1 class="page-title"><a class="file-link" id="file-link" href="#" target="_blank" rel="noopener noreferrer"><span id="file-name"></span> {{ ui::icon(name="arrow-square-out") }}</a></h1>
+      <iframe class="file-frame" id="file-frame" title="file" loading="lazy"></iframe>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/marked@18.0.13/lib/marked.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked-katex-extension@5.1.2/lib/index.umd.js"></script>
-    <script src="/assets/js/class.js" defer></script>
-  </body>
-</html>
+    <div id="page-view">
+    {% if page %}
+      {{ explorer::page_head(folder=folder, page=page) }}
+      <div class="prose" id="page-content">{{ page.content | safe }}</div>
+      {{ explorer::page_foot(page=page) }}
+    {% else %}
+      <p class="section-blurb">pick a file on the left.</p>
+    {% endif %}
+    </div>
+  </article>
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+  // /class/<folder>/?f=<file> shows that file inside the explorer
+  (function () {
+    var f = new URLSearchParams(location.search).get('f');
+    if (!f || f.indexOf('/') !== -1) return;
+    var url = location.pathname + f;
+    document.getElementById('file-name').textContent = f;
+    document.getElementById('file-link').href = url;
+    document.getElementById('file-frame').src = url;
+    document.getElementById('page-view').hidden = true;
+    document.getElementById('file-view').hidden = false;
+    document.querySelectorAll('.tree-link').forEach(function (a) {
+      a.classList.toggle('is-active', a.getAttribute('href') === location.pathname + '?f=' + f);
+    });
+  })();
+</script>
+{% endblock scripts %}

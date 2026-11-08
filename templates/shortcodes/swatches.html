@@ -1,0 +1,9 @@
+<div class="swatches">
+{% for t in tokens | split(pat=",") %}{% set tok = t | trim %}
+  <div class="swatch">
+    <div class="swatch-chip" style="background: var(--{{ tok }})"></div>
+    <b>{{ tok }}</b>
+    <code data-token="{{ tok }}"></code>
+  </div>
+{% endfor %}
+</div>

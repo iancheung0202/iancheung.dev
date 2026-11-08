@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import "macros/explorer.html" as explorer %}
+{% block title %}story / {{ config.title }}{% endblock title %}
+{% block body_class %}has-explorer{% endblock body_class %}
+{% block content %}
+{%- set root = get_section(path="story/_index.md") -%}
+{#- the root or a folder url shows that folder's first page -#}
+{%- if section.path == root.path -%}
+  {%- set first_folder = get_section(path=root.subsections | first) -%}
+{%- else -%}
+  {%- set first_folder = section -%}
+{%- endif -%}
+{%- set page = first_folder.pages | first -%}
+<div class="explorer">
+  <aside class="explorer-side">
+    <p class="section-label">story</p>
+    <h2 class="section-heading">about me</h2>
+    <p class="section-blurb">A small collection of pages about how I got here.</p>
+    {{ explorer::tree(root=root, current=page.path, kind="story") }}
+  </aside>
+  <article class="explorer-page" id="page" data-folder="{{ first_folder.components | last }}" data-slug="{{ page.slug }}">
+    {% if page %}
+    {{ explorer::page_head(folder=first_folder, page=page) }}
+    <div class="prose" id="page-content">{{ page.content | safe }}</div>
+    {{ explorer::page_foot(page=page) }}
+    {% else %}
+    <p class="section-blurb">nothing here yet.</p>
+    {% endif %}
+  </article>
+</div>
+{% endblock content %}
+{% block scripts %}<script src="/js/admin.js"></script><script src="/js/editor.js"></script>{% endblock scripts %}

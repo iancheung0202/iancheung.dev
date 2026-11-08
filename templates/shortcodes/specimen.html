@@ -1,0 +1,4 @@
+<div class="specimen">
+  <div class="specimen-meta"><b>{{ name }}</b>{{ role }}<br><code>--font-{{ token }}</code></div>
+  <div class="specimen-sample {{ token }} {{ class | default(value="") }}">{{ body | safe }}</div>
+</div>

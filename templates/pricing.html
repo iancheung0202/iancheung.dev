@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% import "macros/ui.html" as ui %}
+{% block title %}{{ page.title }} / {{ config.title }}{% endblock title %}
+{% block meta %}
+<meta name="description" content="{{ page.description }}">
+<meta name="keywords" content="Ian Cheung, Discord Bot, Custom Bot, Bot Development, Python, JavaScript, Moderation, Economy, Leveling">
+<meta property="og:url" content="https://www.iancheung.dev/pricing">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description }}">
+<meta property="og:image" content="https://www.iancheung.dev/img/favicon.png">
+{% endblock meta %}
+{% block head %}<link rel="stylesheet" href="/css/pricing.css">{% endblock head %}
+{% block content %}
+<p class="section-label">pricing</p>
+<h2 class="section-heading">custom discord bots</h2>
+
+<div class="pricing-grid">
+  <section class="price-hero">
+    <h1 class="price-title">One bot.<br><span class="price-accent">Unlimited possibilities.</span></h1>
+    <p class="price-sub">Stop paying for generic public bots. Get a fully custom Discord bot tailored specifically to your community's needs, hosted 24/7.</p>
+    <a class="btn" href="https://discord.com/users/692254240290242601" target="_blank" rel="noopener noreferrer">{{ ui::icon(name="chat-circle-dots") }} Message for Free Consultation</a>
+
+    <div class="mini-cards">
+      <div class="mini-card mini-offer">
+        <span class="mini-icon">{{ ui::icon(name="star") }}</span>
+        <div><h4>Own a Server with 10k+ Members?</h4><p>I offer <b>free custom bot development</b> for established communities to help them grow. <em>(Payments still gratefully accepted)</em></p></div>
+      </div>
+      <div class="mini-card">
+        <span class="mini-icon">{{ ui::icon(name="arrows-clockwise") }}</span>
+        <div><h4>Switching from another bot?</h4><p>I can seamlessly replace old systems and transfer your existing ranks, currency, and data so no one loses progress.</p></div>
+      </div>
+      <div class="mini-card">
+        <span class="mini-icon">{{ ui::icon(name="lock") }}</span>
+        <div><h4>Secure Payments</h4><p>Payments are processed securely via PayPal. Development begins immediately after payment. <a href="https://discord.com/users/692254240290242601">Contact me on Discord</a> before purchasing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="price-features">
+    <div class="price-head"><h2>Everything You Need</h2><p>Unlimited features included. Self-hosting available.</p></div>
+    <div class="feature-grid">
+      {% for f in page.extra.features %}
+      <div class="feature">
+        <div class="feature-head"><span class="feature-icon">{{ ui::icon(name=f.icon) }}</span><h3>{{ f.title }}</h3></div>
+        <p>{{ f.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="price-plans" id="pricing">
+    <div class="price-head"><h2>Simple, Transparent Pricing</h2><p>All plans include 24/7 hosting. Listed in USD.</p></div>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">Monthly</div>
+        <div class="plan-desc">Great for short-term projects.</div>
+        <div class="plan-price">$9.99<span>/mo</span></div>
+        <div class="plan-billing">Billed $9.99 monthly</div>
+        <ul class="plan-features">
+          <li>{{ ui::icon(name="check") }} Unlimited Features &amp; Commands</li>
+          <li>{{ ui::icon(name="check") }} 24/7 Cloud Hosting</li>
+          <li>{{ ui::icon(name="check") }} Standard Support</li>
+        </ul>
+        <div id="paypal-button-container-P-04987991F38734811NFQF5KI" class="paypal"></div>
+      </div>
+      <div class="plan plan-featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Yearly</div>
+        <div class="plan-desc">Save 25% compared to monthly.</div>
+        <div class="plan-price">$7.50<span>/mo</span></div>
+        <div class="plan-billing">Billed $90 yearly</div>
+        <ul class="plan-features">
+          <li>{{ ui::icon(name="check") }} <strong>Everything in Monthly</strong></li>
+          <li>{{ ui::icon(name="check") }} Priority Support</li>
+          <li>{{ ui::icon(name="check") }} Free Feature Updates</li>
+        </ul>
+        <div id="paypal-button-container-P-4PH659821A279584HNFQF6HI" class="paypal"></div>
+      </div>
+      <div class="plan">
+        <div class="plan-badge">Biggest Savings</div>
+        <div class="plan-name">Lifetime</div>
+        <div class="plan-desc">Pay once, own it forever.</div>
+        <div class="plan-price">$199.99</div>
+        <div class="plan-billing">Billed $199.99 one-time</div>
+        <ul class="plan-features">
+          <li>{{ ui::icon(name="check") }} <strong>Everything in Yearly</strong></li>
+          <li>{{ ui::icon(name="check") }} <span class="dotted" title="I can guarantee at least 5-10 years but depends on whether I'm alive.">Lifetime</span> Hosting</li>
+          <li>{{ ui::icon(name="check") }} Full Source Code Ownership</li>
+        </ul>
+        <div id="paypal-container-FQ6SDQBQX7Y58" class="paypal paypal-center"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="trusted">
+  <div class="price-head"><h2>Trusted by 300+ Communities</h2><p>Popular servers using my public &amp; custom bots</p></div>
+  <div id="server-grid"><p class="trusted-loading">Loading servers</p></div>
+</section>
+<p class="price-foot">Not affiliated with Discord Inc.</p>
+{% endblock content %}
+{% block scripts %}
+<script src="https://www.paypal.com/sdk/js?client-id=AZwvXo4kUCGeqEyEE2kvXCrK0Co5bigwFxRqE_o07fftmliE0OitqQdvNiFptr45vgS85nuLscgrJDvy&vault=true&intent=subscription" data-sdk-integration-source="button-factory" data-namespace="paypalSub"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=BAAdNp3n05n3R6dVeyGw-qqtf-9YGH2eDK7O3jV2S24iGItFfzdBW1c48OKGhomU8HAfvAnsIokHG9UCkw&components=hosted-buttons&enable-funding=venmo&currency=USD" data-namespace="paypalLifetime"></script>
+<script>
+  (function () {
+    var subStyle = { shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe', height: 40 };
+    function subscription(planId) {
+      if (typeof paypalSub === 'undefined') return;
+      paypalSub.Buttons({
+        style: subStyle,
+        createSubscription: function (data, actions) { return actions.subscription.create({ plan_id: planId }); },
+        onApprove: function (data) { alert(data.subscriptionID); }
+      }).render('#paypal-button-container-' + planId);
+    }
+    subscription('P-04987991F38734811NFQF5KI');
+    subscription('P-4PH659821A279584HNFQF6HI');
+
+    if (typeof paypalLifetime !== 'undefined') {
+      paypalLifetime.HostedButtons({ hostedButtonId: 'FQ6SDQBQX7Y58', style: { height: 40 } })
+        .render('#paypal-container-FQ6SDQBQX7Y58')
+        .then(function () {
+          var container = document.getElementById('paypal-container-FQ6SDQBQX7Y58');
+          var hide = function (el) { if (el) el.style.display = 'none'; };
+          var input = container.querySelector("input[type='number']#amount");
+          if (input) {
+            input.value = '199.99';
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            hide(input);
+            if (input.parentElement) hide(input.parentElement);
+          }
+          hide(container.querySelector('.amount-container'));
+          hide(container.querySelector('.item-description'));
+          var img = container.querySelector('.css-au42bs');
+          if (img) img.style.width = '100px';
+          container.querySelectorAll('#desc-label, label, br').forEach(function (n) { n.remove(); });
+          var el = document.querySelector('.css-1b6cd97');
+          if (el) { el.style.marginTop = '-2em'; el.style.marginBottom = '0em'; }
+        });
+    }
+
+    // servers that run my bots, straight from Discord's invite api
+    var inviteCodes = ["mysticraft", "4gkW32U5EZ", "yj7rYCYxxS", "liyue", "celestial", "kaW5pjvEcP", "EJ8zxxBauz", "liyuepavilion", "ABMNKauUgG", "visionholders", "AG4CwUQCyh", "JeNEfH6Mc7"];
+    var grid = document.getElementById('server-grid');
+    Promise.all(inviteCodes.map(function (code) {
+      return fetch('https://discord.com/api/v9/invites/' + code + '?with_counts=true')
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (data) { return { code: code, data: data }; })
+        .catch(function () { return { code: code, data: null }; });
+    })).then(function (results) {
+      if (!results.some(function (r) { return r.data; })) { grid.innerHTML = '<p class="trusted-loading">Could not reach Discord to list servers.</p>'; return; }
+      grid.innerHTML = '';
+      var cards = [], shown = 0;
+      results.forEach(function (r) {
+        if (!r.data || !r.data.guild) return;
+        shown++;
+        var guild = r.data.guild;
+        var icon = guild.icon ? 'https://cdn.discordapp.com/icons/' + guild.id + '/' + guild.icon + '.png' : 'https://cdn.discordapp.com/embed/avatars/0.png';
+        var words = guild.name.trim().split(/\s+/);
+        var limit = (words[0].toLowerCase() === 'the' || words[0] === '🏮') ? 3 : 2;
+        var name = words.length > limit ? words.slice(0, limit).join(' ') : guild.name;
+        var a = document.createElement('a');
+        a.href = 'https://discord.gg/' + r.code; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.className = 'server' + (shown <= 3 ? ' server-main' : '');
+        var img = document.createElement('img'); img.src = icon; img.alt = '';
+        var text = document.createElement('div');
+        var n = document.createElement('div'); n.className = 'server-name'; n.textContent = name;
+        var m = document.createElement('div'); m.className = 'server-count'; m.textContent = (r.data.approximate_member_count || 0).toLocaleString() + ' members';
+        text.append(n, m);
+        a.append(img, text);
+        if (shown <= 3) { var tag = document.createElement('span'); tag.className = 'server-tag'; tag.textContent = 'main bot'; a.append(tag); }
+        cards.push(a);
+      });
+      var mid = Math.ceil(cards.length / 2);
+      [[cards.slice(0, mid), 'marquee-left'], [cards.slice(mid), 'marquee-right']].forEach(function (pair) {
+        var track = document.createElement('div');
+        track.className = 'marquee ' + pair[1];
+        pair[0].forEach(function (c) { track.appendChild(c); });
+        pair[0].forEach(function (c) { track.appendChild(c.cloneNode(true)); });
+        grid.appendChild(track);
+      });
+    });
+  })();
+</script>
+{% endblock scripts %}

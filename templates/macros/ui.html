@@ -1,0 +1,2 @@
+{#- Inline Phosphor icon (regular weight) by name, e.g. ui::icon(name="map-pin") -#}
+{% macro icon(name, class="") %}{% set icons = load_data(path="static/icons/phosphor-regular.json") %}<svg class="icon {{ class }}" aria-hidden="true" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">{{ icons[name] | default(value=icons["question"]) | safe }}</svg>{% endmacro icon %}
