@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+  <head>
+    <script>
+      (function() {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="google-site-verification" content="e4J0Puet18Z4EBwksu6zRnj__1AAaGoDSFUWLWtPQXs" />
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="content-type" content="text/html">
+    <title>Ian Cheung - Portfolio</title>
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://activity.fischl.app">
+    <link rel="dns-prefetch" href="https://api.rss2json.com">
+    <link rel="dns-prefetch" href="https://www.googleapis.com">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Doto:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Doto:wght@700&display=swap" rel="stylesheet"></noscript>
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <script src="assets/vendor/jquery/jquery.min.js" defer></script>
+    <script src="assets/vendor/tone/tone.js"></script>
+    <link href="assets/css/style.css" rel="stylesheet">
+
+    <meta name="keywords" content="Ian Cheung, Music, Violin, Composition, Composer, Web Developer, Discord Bot Developer, Full Stack Developer, Python, Berkeley">
+    <meta name="author" content="Ian Cheung">
+    <meta property="og:url" content="https://www.iancheung.dev">
+    <meta property="og:site_name" content="Ian Cheung">
+    <meta property="og:description" content="Ian Cheung is a sophomore at UC Berkeley, currently studying Applied Mathematics and Data Science. He is interested in data analysis, programming, music, and community leadership.">
+    <meta name="description" content="Ian Cheung is a sophomore at UC Berkeley, currently studying Applied Mathematics and Data Science. He is interested in data analysis, programming, music, and community leadership. ">
+    <meta property="og:title" content="Ian Cheung - Portfolio">
+    <meta property="og:image" content="">
+    <meta name="theme-color" content="#1e90ff">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5WDTF28C37"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag() {dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5WDTF28C37');</script>
+  </head>
+  <body style="cursor: url('assets/img/custom-purple-cursor.png'), auto;">
+    <audio id="audio" src="assets/audio/The Circadian Rhythm - Ian Cheung.m4a"></audio>
+    <header id="header">
+      <div class="header-photo"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-12 d-flex flex-column">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-12 col-md-12">
+                  <h1>
+                    <a>Ian Cheung</a>
+                    <span class="tooltips" id="btn-code" data-toggle="tooltip" data-placement="top" title="Toggle Nerd Mode">
+                      <a>
+                        <i class="bx bx-code"></i>
+                      </a>
+                    </span>
+                    <span class="tooltips" id="btn-play" data-toggle="tooltip" data-placement="top" title="Toggle Music & Confetti">
+                      <a>
+                        <i class="bx bx-music"></i>
+                      </a>
+                    </span>
+                    <span class="tooltips" data-toggle="tooltip" data-placement="top" id="toggle-button" title="Enable Dark Mode">
+                      <a>
+                        <i class="bx bx-sun"></i>
+                      </a>
+                    </span>
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <nav id="navbar" class="navbar">
+              <ul>
+                <li>
+                  <a class="nav-link active" href="#header" id="home" data-pitch="C4">home</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="nav-link page" href="#story" id="nav-story" data-pitch="E4">story</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="nav-link page" href="#wall" id="nav-notes" data-pitch="G4">wall</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="nav-link page" href="./class" id="nav-class" data-pitch="Bb4">class</a>
+                </li>
+                <li class="nav-divider page">/</li>
+                <li>
+                  <a class="non-nav-link page" href="resume.pdf" data-pitch="C5" id="resume-nav-link">resume</a>
+                </li>
+              </ul>
+              <i class="bi bi-list mobile-nav-toggle" id="mobile-nav-toggle"></i>
+            </nav>
+            <div class="container">
+              <div class="row clearfix">
+                <div class="col-lg-11 col-md-11" style="word-break: break-word;">
+                  <h2 class="subtitle">Hi! I'm a <span id="fullstack-text" tabindex="0">full-stack developer</span>, data engineer, and <span id="social-media-manager-text" tabindex="0">social media manager</span> from Hong Kong. I'm currently studying <span id="applied-math-text" tabindex="0">Applied Mathematics and Data Science at the University of California, Berkeley</span>.</h2>
+                  <h2 class="subtitle">My goal is to build systems that I or people can actually use. I've worked on <span id="discord-bots-text" tabindex="0">Discord</span> bots, data analysis, personal and client websites like this one. Automating tasks is my cup of tea! 🍵</h2>
+                  <h2 class="subtitle">Interested in checking out my work or hiring me? Feel free to visit my <span id="github-easter-egg-text" tabindex="0">Github</span> or my <span id="resume-easter-egg-text" tabindex="0">resume</span>. Definitely <span id="reach-out-text" tabindex="0">reach out</span> if you would like to collaborate! 🐳</h2>
+                </div>
+              </div>
+            </div>
+            <div class="social-links">
+              <a href="mailto:ian@iancheung.dev" class="email" id="email-icon-link">
+                <i class="bi bi-envelope-fill"></i>
+              </a>
+              <a href="https://github.com/iancheung0202" class="github" target="_blank" id="github-icon-link">
+                <i class="bi bi-github"></i>
+              </a>
+              <a href="https://www.linkedin.com/in/iancheung0202" class="linkedin" target="_blank" id="linkedin-icon-link">
+                <i class="bi bi-linkedin"></i>
+              </a>
+              <div class="dropdown social-dropdown">
+                <a href="#" class="discord dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-label="Discord" id="discord-icon-link">
+                  <i class="bi bi-discord"></i>
+                </a>
+                <ul class="dropdown-menu social-dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="https://discord.com/users/692254240290242601" target="_blank" rel="noopener noreferrer">Personal Profile</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/ucberkeley" target="_blank" rel="noopener noreferrer">School Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/BXkc8CC4uJ" target="_blank" rel="noopener noreferrer">Coding Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/4gkW32U5EZ" target="_blank" rel="noopener noreferrer">Brawl Stars Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/mysticraft" target="_blank" rel="noopener noreferrer">Minecraft Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://discord.gg/celestial" target="_blank" rel="noopener noreferrer">Genshin Server</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://fischl.app" target="_blank" rel="noopener noreferrer">Fischl Bot</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://subscriber.iancheung.dev" target="_blank" rel="noopener noreferrer">Subscriber Role Bot</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown social-dropdown">
+                <a href="#" class="instagram dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-label="Instagram" id="instagram-icon-link">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <ul class="dropdown-menu social-dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="https://instagram.com/iancheung0202" target="_blank" rel="noopener noreferrer">Personal Account</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://instagram.com/ianbrawlstarsyt" target="_blank" rel="noopener noreferrer">Gaming Account</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown social-dropdown">
+                <a href="#" class="youtube dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" aria-label="YouTube" id="youtube-icon-link">
+                  <i class="bi bi-youtube"></i>
+                </a>
+                <ul class="dropdown-menu social-dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="https://www.youtube.com/@iancheung0202" target="_blank" rel="noopener noreferrer">Official Music Artist Channel</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="https://www.youtube.com/@ianbrawlstars" target="_blank" rel="noopener noreferrer">Partnered Gaming Channel</a>
+                  </li>
+                </ul>
+              </div>
+              <a href="https://www.strava.com/athletes/126909167" class="strava" target="_blank">
+                <i class="bi bi-strava"></i>
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12 d-flex align-items-stretch">
+            <div class="window-div discord-pending w-100" style="height:auto; align-self:flex-start; max-height:calc(100vh - 220px); overflow-y:auto;">
+              <div class="window-bar">
+                <div class="window-button red"></div>
+                <div class="window-button yellow"></div>
+                <div class="window-button green"></div>
+              </div>
+              <div id="window-body-wrapper">
+                <div id="curious-section">
+                  <div class="discord-about-me p-0">
+                    <div id="discord-profile-card">
+                      <div class="discord-banner" id="discord-banner"></div>
+                      <div class="discord-header-row">
+                        <div class="discord-avatar-container">
+                          <div class="discord-avatar-ring">
+                            <img class="discord-avatar-img" id="discord-avatar" src="https://cdn.discordapp.com/avatars/692254240290242601/f2629db9da31f30fb3b8738b39e7346f.png?size=1024" alt="ian.">
+                          </div>
+                          <span class="discord-status-badge" id="discord-status-badge" data-status="offline" title="Offline"><div class="discord-status-symbol discord-status-offline-symbol"></div></span>
+                        </div>
+                        <div id="discord-custom-status-area"></div>
+                      </div>
+                      <div class="discord-profile-body">
+                        <div class="discord-name-block mb-2">
+                          <div class="discord-display-name d-flex align-items-center flex-wrap">ian.
+                            <a href="https://discord.gg/mysticraft" target="_blank"><span class="discord-badge"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" class="discord-badge-img" alt="">MYST</span></a>
+                            <button class="discord-copy-btn" id="discord-copy-btn" title="Copy User ID"><i class="bi bi-copy"></i></button>
+                          </div>
+                          <div class="discord-username-pronouns d-flex align-items-center gap-1">
+                            <span class="discord-username">iancheung.dev</span>
+                            <span class="discord-dot-sep">•</span>
+                            <span class="discord-pronouns">he/him</span>
+                          </div>
+                        </div>
+                        <hr class="discord-divider">
+                        <div class="discord-section-block discord-section-inline d-flex align-items-center gap-2 mb-1">
+                          <span class="discord-section-label">GAME COLLECTION</span>
+                          <div class="discord-games-row d-flex gap-1">
+                            <img class="discord-game-logo" src="assets/img/brawl.png" title="Brawl Stars" alt="Brawl Stars" onerror="this.style.display='none'">
+                            <img class="discord-game-logo" src="assets/img/clash.png" title="Clash Royale" alt="Clash Royale" onerror="this.style.display='none'">
+                            <img class="discord-game-logo" src="assets/img/minecraft.png" title="Minecraft" alt="Minecraft" onerror="this.style.display='none'">
+                          </div>
+                        </div>
+                        <hr class="discord-divider">
+                        <div id="discord-activity-feed">
+                          <div class="discord-no-activity">
+                            <span>loading...</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="story">
+      <div class="container">
+        <div class="section-title">
+          <h2>story</h2>
+          <p>about me</p>
+        </div>
+        <p class="paragraph">A small collection of pages about how I got here.</p>
+
+        <div class="story-wrap">
+          <aside class="story-sidebar">
+            <ul class="story-tree" id="story-tree">
+              <li class="story-status">loading…</li>
+            </ul>
+          </aside>
+
+          <div class="story-page" id="story-page">
+            <div class="story-status">loading…</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="wall">
+      <div class="container">
+        <div class="section-title">
+          <h2>wall</h2>
+          <p>friends board</p>
+        </div>
+        <p class="paragraph">Every sticky note here is from someone I know. Leave your own note for the world to see.</p>
+        <div class="notes-wall" id="notes-wall"><p class="notes-msg">loading...</p></div>
+        <p class="notes-foot"><button type="button" id="notes-admin">Hint</button>: flip a note over to see who posted it</p>
+        <p class="notes-admin-code" id="notes-admin-code" hidden></p>
+        <button type="button" class="notes-btn" id="notes-admin-regen" hidden>Regenerate code</button>
+      </div>
+    </section>
+
+    <dialog class="access-dialog" id="access-dialog" aria-label="Enter access code">
+      <div class="access-body">
+        <div class="access-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <p class="access-title">Welcome to the club!</p>
+        <p class="access-sub">If you know me, ask me for the 6-digit passcode to post your own sticky note. It changes every minute, and only works once.</p>
+        <div class="access-boxes" id="access-boxes">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5">
+          <input class="access-box" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6">
+        </div>
+        <p class="access-error" id="access-error" role="alert"></p>
+        <button type="button" class="notes-btn" id="access-cancel">Cancel</button>
+      </div>
+    </dialog>
+
+    <dialog class="notes-dialog" id="notes-dialog" aria-label="Leave a message">
+      <div class="notes-body">
+        <div class="notes-left">
+          <div class="notes-polaroid">
+            <canvas id="notes-canvas" aria-label="Drawing area"></canvas>
+            <input class="notes-caption" id="notes-text" maxlength="44" placeholder="write something…" autocomplete="off">
+            <input class="notes-name" id="notes-name" maxlength="24" placeholder="your name (optional)" autocomplete="off">
+          </div>
+          <p class="notes-error" id="notes-error" role="alert"></p>
+          <div class="notes-row notes-row-submit">
+            <button type="button" class="notes-btn notes-go" id="notes-submit">Publish</button>
+            <button type="button" class="notes-btn" id="notes-cancel">Cancel</button>
+          </div>
+        </div>
+        <div class="notes-tools">
+          <div class="notes-row"><span class="notes-label">tool</span>
+            <button type="button" class="notes-btn" data-k="tool" data-v="pen">Pen</button>
+            <button type="button" class="notes-btn" data-k="tool" data-v="eraser">Eraser</button>
+            <button type="button" class="notes-btn" data-k="tool" data-v="stamp">Stamp</button>
+          </div>
+          <div class="notes-row" id="notes-stamps"><span class="notes-label">stamp</span></div>
+          <div class="notes-row" id="notes-inks"><span class="notes-label">ink</span></div>
+          <div class="notes-row" id="notes-papers"><span class="notes-label">paper</span></div>
+          <div class="notes-row"><span class="notes-label">size</span><input type="range" id="notes-size" min="2" max="24" value="6" aria-label="Brush size"></div>
+          <div class="notes-row">
+            <button type="button" class="notes-btn" id="notes-undo">Undo</button>
+            <button type="button" class="notes-btn" id="notes-clear">Clear</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="footer">
+      <span id="photo-filename"></span>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked@18.0.13/lib/marked.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked-katex-extension@5.1.2/lib/index.umd.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <script src="assets/js/extensions.js"></script>
+    <script src="https://widget.tagembed.com/embed.min.js"></script>
+    <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/board.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

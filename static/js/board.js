@@ -82,9 +82,9 @@
 
     const back = h("div", "note-face note-back");
     back.inert = true;
-    back.append(h("div", "note-from", n.name || "anonymous"), h("div", "note-when", when(n.created)));
+    back.append(h("div", "note-from", n.name || "Anonymous"), h("div", "note-when", when(n.created)));
     if (admin) {
-      const del = h("button", "note-del", "tear off");
+      const del = h("button", "note-del", "Tear off");
       del.type = "button";
       del.addEventListener("click", async () => {
         if (!confirm("Tear this note off the wall for good?")) return;
@@ -115,11 +115,11 @@
     moreBtn?.remove();
     moreBtn = null;
     if (!hasMore) return;
-    moreBtn = h("button", "btn board-more", "more notes");
+    moreBtn = h("button", "btn board-more", "More notes");
     moreBtn.type = "button";
     moreBtn.addEventListener("click", async () => {
       moreBtn.disabled = true;
-      moreBtn.textContent = "loading";
+      moreBtn.textContent = "Loading…";
       await load(false);
     });
     wall.append(moreBtn);
@@ -133,7 +133,7 @@
       offset = initial ? d.notes.length : offset + d.notes.length;
       if (initial) {
         wall.replaceChildren(...d.notes.map((n) => note(n)));
-        if (!d.notes.length) wall.append(h("p", "board-msg", "nothing here yet. peel a note off the pad."));
+        if (!d.notes.length) wall.append(h("p", "board-msg", "Nothing here yet. Peel a note off the pad."));
       } else {
         moreBtn?.remove();
         moreBtn = null;
@@ -345,8 +345,8 @@
   $("#notes-submit").addEventListener("click", async (e) => {
     const text = $("#notes-text").value.trim();
     const name = $("#notes-name").value.trim();
-    if (!text) return err("write something on the note first");
-    if (!name) return err("sign it with your name");
+    if (!text) return err("Write something on the note first.");
+    if (!name) return err("Sign it with your name.");
     err("");
     e.target.disabled = true;
     try {

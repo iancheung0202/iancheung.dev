@@ -22,13 +22,36 @@
     <ul class="tree-pages">
     {%- for p in folder.pages %}
       <li class="tree-page" data-slug="{{ p.slug }}">
-        <a class="tree-link {% if p.path == current %}is-active{% endif %}" href="{{ p.permalink | safe }}">{% if p.extra.icon %}<span class="tree-icon">{{ ui::icon(name=p.extra.icon) }}</span>{% endif %}{{ p.title }}</a>
+        <a class="tree-link {% if kind == "class" %}tree-file{% endif %} {% if p.path == current %}is-active{% endif %}" href="{{ p.path | safe }}">{% if p.extra.icon %}<span class="tree-icon">{{ ui::icon(name=p.extra.icon) }}</span>{% elif kind == "class" %}<span class="tree-icon">{{ ui::icon(name="file-md") }}</span>{% endif %}{{ p.title }}{% if kind == "class" %}.md{% endif %}</a>
       </li>
     {%- endfor %}
     {%- if kind == "class" %}{% for a in folder.assets | sort %}
       {%- set name = a | split(pat="/") | last %}
       <li class="tree-page">
-        <a class="tree-link {% if current == folder.path ~ '?' ~ name %}is-active{% endif %}" href="{{ folder.permalink | safe }}?f={{ name }}">{{ name }}</a>
+        {%- set ext = name | split(pat=".") | last | lower %}
+        {%- if ext == "pdf" %}{% set fi = "file-pdf" %}
+        {%- elif ext == "html" or ext == "htm" %}{% set fi = "file-html" %}
+        {%- elif ext == "md" %}{% set fi = "file-md" %}
+        {%- elif ext == "png" or ext == "jpg" or ext == "jpeg" or ext == "gif" or ext == "webp" %}{% set fi = "file-image" %}
+        {%- elif ext == "svg" %}{% set fi = "file-svg" %}
+        {%- elif ext == "mp4" or ext == "mov" or ext == "webm" %}{% set fi = "file-video" %}
+        {%- elif ext == "mp3" or ext == "m4a" or ext == "wav" %}{% set fi = "file-audio" %}
+        {%- elif ext == "ipynb" %}{% set fi = "notebook" %}
+        {%- elif ext == "py" %}{% set fi = "file-py" %}
+        {%- elif ext == "js" %}{% set fi = "file-js" %}
+        {%- elif ext == "ts" %}{% set fi = "file-ts" %}
+        {%- elif ext == "c" or ext == "h" %}{% set fi = "file-c" %}
+        {%- elif ext == "cpp" or ext == "cc" %}{% set fi = "file-cpp" %}
+        {%- elif ext == "sql" %}{% set fi = "file-sql" %}
+        {%- elif ext == "csv" %}{% set fi = "file-csv" %}
+        {%- elif ext == "xlsx" or ext == "xls" %}{% set fi = "file-xls" %}
+        {%- elif ext == "pptx" or ext == "ppt" %}{% set fi = "file-ppt" %}
+        {%- elif ext == "docx" or ext == "doc" %}{% set fi = "file-doc" %}
+        {%- elif ext == "txt" %}{% set fi = "file-txt" %}
+        {%- elif ext == "zip" or ext == "tar" or ext == "gz" %}{% set fi = "file-zip" %}
+        {%- elif ext == "tex" or ext == "json" or ext == "toml" or ext == "yaml" or ext == "yml" or ext == "sh" %}{% set fi = "file-code" %}
+        {%- else %}{% set fi = "file" %}{% endif %}
+        <a class="tree-link tree-file {% if current == folder.path ~ '?' ~ name %}is-active{% endif %}" href="{{ folder.path | safe }}?f={{ name }}"><span class="tree-icon">{{ ui::icon(name=fi) }}</span>{{ name }}</a>
       </li>
     {%- endfor %}{% endif %}
     </ul>

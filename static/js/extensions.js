@@ -60,91 +60,197 @@
 
 
     /**
-     * "right now" line in the hero, fed by the Discord presence endpoint.
-     * Hidden unless the endpoint answers.
+     * The index card on the right of the hero: whether Ian is around, his
+     * custom status, what he is playing or listening to and for how long.
+     * Data from the same endpoint as before, proxied by Flask.
      */
-    (function() {
-        const line = select('#right-now');
-        if (!line) return;
-        const dot = line.querySelector('.right-now-dot');
-        const text = line.querySelector('.right-now-text');
-        const WORDS = {
-            offline: 'away from the keyboard',
-            listening: (a) => `listening to ${a.details || a.name}${a.state ? ', ' + a.state : ''}`,
-            streaming: (a) => `live on twitch`,
-            watching: (a) => `watching ${a.name}`,
-            playing: (a) => `playing ${a.name}${a.details ? ', ' + a.details : ''}`,
-        };
-        const since = (a) => {
-            const start = a.timestamps && parseInt(a.timestamps.start, 10);
-            if (!start) return '';
-            const mins = Math.max(1, Math.floor((Date.now() - start) / 60000));
-            return mins < 60 ? ` for ${mins} min` : ` for ${Math.floor(mins / 60)} h ${mins % 60} min`;
-        };
-
-        async function refresh() {
-            try {
-                const res = await fetch('https://activity.fischl.app');
-                if (!res.ok) throw new Error(res.status);
-                const data = await res.json();
-                const acts = Array.isArray(data.activity) ? data.activity : [];
-                const custom = acts.find(a => parseInt(a.type) === 4);
-                const act = acts.find(a => parseInt(a.type) !== 4);
-                let state = 'offline', words = WORDS.offline;
-                if (act) {
-                    const type = parseInt(act.type);
-                    state = 'busy';
-                    const kind = (type === 2 || act.name === 'Spotify') ? 'listening' : type === 1 ? 'streaming' : type === 3 ? 'watching' : 'playing';
-                    words = WORDS[kind](act) + since(act);
-                } else if (custom && (custom.state || custom.name)) {
-                    state = 'around';
-                    words = custom.state || custom.name;
-                }
-                dot.dataset.state = state;
-                text.textContent = words;
-                line.hidden = false;
-            } catch (e) {
-                line.hidden = true;
-            }
+    const feed = select('#now-feed');
+    const customArea = select('#now-custom');
+    const statusEl = select('#now-status');
+    let activityStart = [];
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    function setStatus(on) {
+        if (!statusEl) return;
+        statusEl.dataset.status = on ? 'dnd' : 'offline';
+        statusEl.title = on ? 'Do Not Disturb' : 'Offline';
+    }
+    function renderActivity(act, idx) {
+        const type = parseInt(act.type);
+        const label = (type === 2 || act.name === 'Spotify') ? 'Listening to Spotify' : type === 1 ? 'Live on Twitch' : type === 3 ? 'Watching' : 'Playing';
+        let img = '';
+        if (act.name === 'Spotify' && act.assets && act.assets.large_image) {
+            const src = act.assets.large_image.startsWith('spotify:') ? `https://i.scdn.co/image/${act.assets.large_image.replace('spotify:', '')}` : act.assets.large_image;
+            img = `<img class="now-thumb" src="${esc(src)}" alt="">`;
+        } else if (act.assets && act.assets.large_image && act.application_id) {
+            img = `<img class="now-thumb" src="https://cdn.discordapp.com/app-assets/${esc(act.application_id)}/${esc(act.assets.large_image)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'now-thumb now-thumb-empty'}))">`;
+        } else {
+            img = '<span class="now-thumb now-thumb-empty"></span>';
         }
-
-        refresh();
-        let timer = setInterval(refresh, 30000);
-        document.addEventListener('visibilitychange', () => {
-            clearInterval(timer);
-            if (!document.hidden) { refresh(); timer = setInterval(refresh, 30000); }
+        const small = (act.assets && act.assets.small_image && act.application_id) ? `<img class="now-thumb-small" src="https://cdn.discordapp.com/app-assets/${esc(act.application_id)}/${esc(act.assets.small_image)}.png" alt="" onerror="this.remove()">` : '';
+        const timer = (act.timestamps && act.timestamps.start) ? `<div class="now-timer" data-idx="${idx}">00:00:00</div>` : '';
+        return `<div class="now-activity">
+            <div class="now-label">${label}</div>
+            <div class="now-activity-row">
+              <div class="now-thumb-wrap">${img}${small}</div>
+              <div class="now-activity-info">
+                <div class="now-activity-name">${esc(act.name || 'Unknown')}</div>
+                ${act.details ? `<div class="now-activity-detail">${esc(act.details)}</div>` : ''}
+                ${act.state ? `<div class="now-activity-detail">${esc(act.state)}</div>` : ''}
+                ${timer}
+              </div>
+            </div>
+          </div>`;
+    }
+    async function fetchActivity() {
+        if (!feed) return;
+        try {
+            const res = await fetch('/api/activity');
+            if (!res.ok) throw new Error('network');
+            const data = await res.json();
+            if (data.discord_user && data.discord_user.avatar) {
+                const av = select('#now-avatar');
+                if (av && !av.src.includes(data.discord_user.avatar)) av.src = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.png?size=128`;
+            }
+            const all = Array.isArray(data.activity) ? data.activity : [];
+            const custom = all.find(a => parseInt(a.type) === 4);
+            const regular = all.filter(a => parseInt(a.type) !== 4);
+            setStatus(all.length > 0);
+            if (customArea) {
+                if (custom) {
+                    let emoji = '';
+                    if (custom.emoji && custom.emoji.name) {
+                        if (custom.emoji.id) {
+                            const anim = String(custom.emoji.animated).toLowerCase() === 'true';
+                            emoji = `<img class="now-custom-emoji" src="https://cdn.discordapp.com/emojis/${esc(custom.emoji.id)}.${anim ? 'gif' : 'png'}" alt="">`;
+                        } else emoji = `<span>${esc(custom.emoji.name)}</span>`;
+                    }
+                    customArea.innerHTML = `<div class="now-custom-box">${emoji}<span>${esc(custom.state || custom.name || '')}</span></div>`;
+                } else customArea.innerHTML = '';
+            }
+            activityStart = regular.map(a => a.timestamps && a.timestamps.start ? parseInt(a.timestamps.start, 10) : null);
+            feed.innerHTML = regular.map(renderActivity).join('');
+            feed.hidden = regular.length === 0;
+            tickTimers();
+        } catch (e) {
+            feed.innerHTML = '';
+            feed.hidden = true;
+        }
+    }
+    function tickTimers() {
+        const now = Date.now();
+        select('.now-timer', true).forEach(el => {
+            const start = activityStart[el.dataset.idx];
+            if (!start) return;
+            const d = Math.max(0, Math.floor((now - start) / 1000));
+            el.textContent = `${String(Math.floor(d / 3600)).padStart(2, '0')}:${String(Math.floor((d % 3600) / 60)).padStart(2, '0')}:${String(d % 60).padStart(2, '0')}`;
         });
-    })();
-
+    }
+    if (feed) {
+        fetchActivity();
+        let poll = setInterval(fetchActivity, 10000);
+        setInterval(tickTimers, 1000);
+        document.addEventListener('visibilitychange', () => {
+            clearInterval(poll);
+            if (!document.hidden) { fetchActivity(); poll = setInterval(fetchActivity, 10000); }
+        });
+        /**
+         * "Message @iancheung.dev": sign in with Discord once (popup), then Enter
+         * posts the text to a webhook. Hidden until Flask says the box is configured.
+         */
+        const msgForm = select('#now-message'), msgInput = select('#now-message-input'), msgWho = select('#now-message-who'), msgNote = select('#now-message-note');
+        let dmUser = null, sendAfterLogin = false, noteTimer = null;
+        const note = (text, kind) => {
+            if (!msgNote) return;
+            msgNote.textContent = text;
+            msgNote.dataset.kind = kind || '';
+            clearTimeout(noteTimer);
+            if (text) noteTimer = setTimeout(() => { msgNote.textContent = ''; }, 6000);
+        };
+        const setWho = user => {
+            dmUser = user || null;
+            if (!msgWho) return;
+            msgWho.hidden = !dmUser;
+            msgForm.classList.toggle('signed-in', !!dmUser);
+            if (dmUser) {
+                msgWho.querySelector('img').src = dmUser.avatar;
+                msgWho.title = `Signed in as ${dmUser.name}. Click to sign out.`;
+            }
+        };
+        const send = async text => {
+            msgForm.classList.add('sending');
+            try {
+                const res = await fetch('/api/message', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' }, body: JSON.stringify({ text }) });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+                msgInput.value = '';
+                msgForm.classList.remove('has-text');
+                msgForm.classList.add('sent');
+                note('');
+            } catch (e) {
+                note(e.message, 'err');
+            } finally {
+                msgForm.classList.remove('sending');
+            }
+        };
+        const login = () => {
+            const w = 500, h = 780, x = window.screenX + (window.outerWidth - w) / 2, y = window.screenY + (window.outerHeight - h) / 2;
+            const popup = window.open('/api/message/login', 'discord-login', `popup=yes,width=${w},height=${h},left=${Math.round(x)},top=${Math.round(y)}`);
+            if (popup) { note('Finish signing in with Discord in the popup.'); return; }
+            try { sessionStorage.setItem('dm-draft', msgInput.value); } catch (_) { /* ignore */ }
+            location.href = '/api/message/login';
+        };
+        if (msgForm) {
+            fetch('/api/message/me').then(r => r.json()).then(data => {
+                if (!data.enabled) return;
+                msgForm.hidden = false;
+                setWho(data.user);
+                let draft = null;
+                try { draft = sessionStorage.getItem('dm-draft'); sessionStorage.removeItem('dm-draft'); } catch (_) { /* ignore */ }
+                if (draft && dmUser) {
+                    msgInput.value = draft;
+                    msgForm.classList.add('has-text');
+                    note(`Signed in as ${dmUser.name}. Press Enter to send.`);
+                    msgInput.focus();
+                }
+            }).catch(() => {});
+            msgInput.addEventListener('input', () => {
+                msgForm.classList.remove('sent');
+                msgForm.classList.toggle('has-text', msgInput.value.trim().length > 0);
+            });
+            msgForm.addEventListener('submit', e => {
+                e.preventDefault();
+                const text = msgInput.value.trim();
+                if (!text || msgForm.classList.contains('sending')) return;
+                if (dmUser) send(text);
+                else { sendAfterLogin = true; login(); }
+            });
+            msgWho.addEventListener('click', () => {
+                fetch('/api/message/logout', { method: 'POST', headers: { 'X-Requested-With': 'fetch' } }).catch(() => {});
+                setWho(null);
+                note('Signed out.');
+            });
+            window.addEventListener('message', e => {
+                if (e.origin !== location.origin || !e.data || e.data.type !== 'iancheung:discord') return;
+                if (!e.data.ok) { sendAfterLogin = false; note('Discord sign-in did not go through.', 'err'); return; }
+                setWho(e.data.user);
+                const text = msgInput.value.trim();
+                if (sendAfterLogin && text) send(text);
+                else note(`Signed in as ${e.data.user.name}.`);
+                sendAfterLogin = false;
+            });
+        }
+        on('click', '#now-copy', function () {
+            navigator.clipboard && navigator.clipboard.writeText('692254240290242601').then(() => {
+                this.classList.add('copied'); this.title = 'Copied';
+                setTimeout(() => { this.classList.remove('copied'); this.title = 'Copy user ID'; }, 1200);
+            });
+        });
+    }
 
     /**
      * Hero toggle buttons
      */
     const toggleLightDarkButton = select('#toggle-button');
-
-    function flipMobileNavToggleColor() { // Flip color of mobile nav toggle if in light mode
-        if (toggleLightDarkButton.getAttribute('data-tip') !== "Enable Dark Mode") return;
-        const rootStyles = getComputedStyle(document.documentElement);
-        const currentColor = rootStyles.getPropertyValue('--mobile-nav-toggle-color').trim();
-
-        if (currentColor === 'rgb(255, 255, 255)') {
-            document.documentElement.style.setProperty('--mobile-nav-toggle-color', 'rgb(0, 0, 0)');
-        } else if (currentColor === 'rgb(0, 0, 0)') {
-            document.documentElement.style.setProperty('--mobile-nav-toggle-color', 'rgb(255, 255, 255)');
-        }
-    }
-
-    select('.page', true).forEach(button => {
-        if (button.classList.contains('non-nav-link')) {return;}
-        button.addEventListener("click", flipMobileNavToggleColor);
-    });
-
-    on('click', '#home', flipMobileNavToggleColor);
-
-    select(".mobile-nav-toggle", true).forEach(element => {
-        element.addEventListener('click', flipMobileNavToggleColor);
-    });
-
 
     /**
      * Initialize nerd button for toggling monospace font
@@ -173,10 +279,12 @@
         if (button.classList.contains("a-active")) {
             audio.pause();
             button.classList.remove("a-active");
+            try { localStorage.setItem('music', 'off'); } catch (_) {}
             document.getElementById("confetti").remove();
         } else {
             audio.play();
             button.classList.add("a-active")
+            try { localStorage.setItem('music', 'on'); } catch (_) {}
             loadConfetti();
         }
     });
@@ -376,6 +484,15 @@
         if (isOut == true) {return 0;} else {poof();}
     };
 
+
+    // music follows you between pages when the browser allows it
+    if (localStorage.getItem('music') === 'on') {
+        const playBtn = select('#btn-play');
+        const audioEl = document.getElementById('audio');
+        if (playBtn && audioEl) {
+            audioEl.play().then(() => { if (!playBtn.classList.contains('a-active')) playBtn.click(); }).catch(() => {});
+        }
+    }
 
     /**
      * Initialize light/dark mode toggle button

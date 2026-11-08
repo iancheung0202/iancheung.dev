@@ -11,6 +11,8 @@ import struct
 import subprocess
 import threading
 import time
+import urllib.error
+import urllib.request
 import uuid
 from contextlib import suppress
 from datetime import datetime, timedelta, timezone
@@ -123,6 +125,18 @@ def client_ip() -> str:
 
 
 PASSWORD = os.getenv("PASSWORD")
+
+# "Message @iancheung.dev" on the home card: visitors sign in with Discord
+# (identify scope only), then the text goes to a webhook in a private channel.
+DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID", "1525674572102238248")
+DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET", "")
+MESSAGE_WEBHOOK_URL = os.getenv("MESSAGE_WEBHOOK_URL", "")
+MESSAGE_MAX_CHARS = 500
+MESSAGE_WINDOW = 10 * 60
+MESSAGE_MAX_PER_USER = 20
+MESSAGE_MAX_PER_IP = 40
+message_sent: dict[str, list[float]] = {}
+MESSAGE_LOCK = threading.Lock()
 
 
 def admin_fingerprint() -> str:
@@ -847,6 +861,197 @@ def public_note(note: dict) -> dict:
         "img": f"/api/notes/{note['id']}.png" if note.get("img") else None,
         "paper": note.get("paper", 0),
     }
+
+
+_activity_cache = {"at": 0.0, "body": None}
+
+
+@app.route("/api/activity")
+def activity():
+    """Discord presence for the home card, fetched server-side (upstream has no CORS)."""
+    now = time.time()
+    if _activity_cache["body"] is None or now - _activity_cache["at"] > 5:
+        try:
+            req = urllib.request.Request(
+                "https://activity.fischl.app",
+                headers={"User-Agent": "iancheung.dev (+https://iancheung.dev)"},
+            )
+            with urllib.request.urlopen(req, timeout=5) as r:
+                _activity_cache["body"] = r.read()
+        except (urllib.error.URLError, OSError):
+            return jsonify(error="upstream unavailable"), 502
+        _activity_cache["at"] = now
+    return app.response_class(_activity_cache["body"], mimetype="application/json")
+
+
+def message_enabled() -> bool:
+    return bool(DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET and MESSAGE_WEBHOOK_URL)
+
+
+def external_url(path: str) -> str:
+    proto = (
+        request.headers.get("X-Forwarded-Proto", "") if TRUSTED_PROXY_HOPS > 0 else ""
+    )
+    scheme = proto or request.scheme
+    return f"{scheme}://{request.host}{path}"
+
+
+def discord_json(req: urllib.request.Request) -> dict:
+    req.add_header("User-Agent", "iancheung.dev (+https://iancheung.dev)")
+    with urllib.request.urlopen(req, timeout=8) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def message_user_public() -> dict | None:
+    user = session.get("dm_user")
+    if not isinstance(user, dict) or "id" not in user:
+        return None
+    return {
+        "id": user["id"],
+        "name": user["name"],
+        "handle": user["handle"],
+        "avatar": user["avatar"],
+    }
+
+
+@app.route("/api/message/me")
+def message_me():
+    return jsonify(enabled=message_enabled(), user=message_user_public())
+
+
+@app.route("/api/message/login")
+def message_login():
+    if not message_enabled():
+        abort(404)
+    state = uuid.uuid4().hex
+    session["dm_state"] = state
+    params = {
+        "response_type": "code",
+        "client_id": DISCORD_CLIENT_ID,
+        "scope": "identify",
+        "state": state,
+        "redirect_uri": external_url("/api/message/callback"),
+        "prompt": "none",
+    }
+    return redirect(
+        "https://discord.com/oauth2/authorize?"
+        + "&".join(f"{k}={quote(v, safe='')}" for k, v in params.items())
+    )
+
+
+@app.route("/api/message/callback")
+def message_callback():
+    if not message_enabled():
+        abort(404)
+    state = session.pop("dm_state", None)
+    code = request.args.get("code", "")
+    ok = (
+        bool(state)
+        and hmac.compare_digest(str(request.args.get("state", "")), state)
+        and bool(code)
+    )
+    if ok:
+        try:
+            body = "&".join(
+                f"{k}={quote(v, safe='')}"
+                for k, v in {
+                    "grant_type": "authorization_code",
+                    "code": code,
+                    "redirect_uri": external_url("/api/message/callback"),
+                }.items()
+            ).encode()
+            auth = base64.b64encode(
+                f"{DISCORD_CLIENT_ID}:{DISCORD_CLIENT_SECRET}".encode()
+            ).decode()
+            token = discord_json(
+                urllib.request.Request(
+                    "https://discord.com/api/oauth2/token",
+                    data=body,
+                    headers={
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Authorization": f"Basic {auth}",
+                    },
+                )
+            )
+            me = discord_json(
+                urllib.request.Request(
+                    "https://discord.com/api/users/@me",
+                    headers={"Authorization": f"Bearer {token['access_token']}"},
+                )
+            )
+            uid = str(me["id"])
+            avatar = (
+                f"https://cdn.discordapp.com/avatars/{uid}/{me['avatar']}.png?size=64"
+                if me.get("avatar")
+                else f"https://cdn.discordapp.com/embed/avatars/{(int(uid) >> 22) % 6}.png"
+            )
+            session["dm_user"] = {
+                "id": uid,
+                "name": clean_text(me.get("global_name") or me.get("username"), 40),
+                "handle": clean_text(me.get("username"), 40),
+                "avatar": avatar,
+            }
+        except (urllib.error.URLError, OSError, KeyError, ValueError, TypeError):
+            ok = False
+    return render_template(
+        "message_callback.html", ok=ok, user=message_user_public() if ok else None
+    )
+
+
+@app.route("/api/message/logout", methods=["POST"])
+def message_logout():
+    session.pop("dm_user", None)
+    return jsonify(ok=True)
+
+
+@app.route("/api/message", methods=["POST"])
+def message_send():
+    if not message_enabled():
+        return jsonify(error="Messages are off right now."), 503
+    user = session.get("dm_user")
+    if not isinstance(user, dict) or "id" not in user:
+        return jsonify(error="Sign in with Discord first."), 401
+    data = request.get_json(silent=True) or {}
+    text = clean_text(data.get("text"), MESSAGE_MAX_CHARS)
+    if not text:
+        return jsonify(error="Write something first."), 400
+    ip, now = client_ip(), time.time()
+    with MESSAGE_LOCK:
+        for key, cap in (
+            (f"u:{user['id']}", MESSAGE_MAX_PER_USER),
+            (f"ip:{ip}", MESSAGE_MAX_PER_IP),
+        ):
+            message_sent[key] = [
+                t for t in message_sent.get(key, []) if now - t < MESSAGE_WINDOW
+            ]
+            if len(message_sent[key]) >= cap:
+                return (
+                    jsonify(
+                        error="That is plenty for now. Try again in a few minutes."
+                    ),
+                    429,
+                )
+        message_sent[f"u:{user['id']}"].append(now)
+        message_sent[f"ip:{ip}"].append(now)
+    payload = {
+        "username": f"{user['name']} (@{user['handle']})",
+        "avatar_url": user["avatar"],
+        "content": f"{text}\n-# via iancheung.dev · <@{user['id']}> · `{user['id']}`",
+        "allowed_mentions": {"parse": []},
+    }
+    try:
+        discord_json(
+            urllib.request.Request(
+                MESSAGE_WEBHOOK_URL
+                + ("&" if "?" in MESSAGE_WEBHOOK_URL else "?")
+                + "wait=true",
+                data=json.dumps(payload).encode(),
+                headers={"Content-Type": "application/json"},
+            )
+        )
+    except (urllib.error.URLError, OSError, ValueError):
+        return jsonify(error="Discord did not take it. Try again in a moment."), 502
+    return jsonify(ok=True)
 
 
 @app.route("/api/notes")

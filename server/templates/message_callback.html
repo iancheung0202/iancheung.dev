@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ian Cheung - Discord</title>
+<meta name="robots" content="noindex">
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: rgb(20, 21, 20); color: rgb(246, 245, 240); font: 15px/1.5 "Open Sans", system-ui, sans-serif; }
+  p { margin: 0; padding: 0 24px; text-align: center; }
+  a { color: rgb(121, 205, 158); }
+</style>
+</head>
+<body>
+<p>{% if ok %}Signed in as {{ user.name }}. You can close this window.{% else %}Discord sign-in didn&rsquo;t go through. <a href="/">Back to iancheung.dev</a>{% endif %}</p>
+<script>
+  (function () {
+    var payload = { type: "iancheung:discord", ok: {{ "true" if ok else "false" }}, user: {{ user | tojson }} };
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, location.origin);
+      window.close();
+    } else if (payload.ok) {
+      location.replace("/");
+    }
+  })();
+</script>
+</body>
+</html>

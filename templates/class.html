@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% import "macros/explorer.html" as explorer %}
-{% block title %}class / {{ config.title }}{% endblock title %}
+{% block title %}{{ config.title }} - Class{% endblock title %}
 {% block body_class %}has-explorer{% endblock body_class %}
 {% block content %}
 {%- set root = get_section(path="class/_index.md") -%}

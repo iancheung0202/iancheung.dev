@@ -67,17 +67,23 @@
   let dialog = null;
   function buildDialog() {
     const d = document.createElement("dialog");
-    d.className = "admin-dialog";
+    d.className = "dialog admin-dialog";
     d.setAttribute("aria-label", "Admin login");
     d.innerHTML =
-      '<div class="admin-dialog-body">' +
-      '<label class="admin-dialog-label" for="admin-pw">Admin password</label>' +
-      '<input id="admin-pw" class="admin-dialog-input" type="password" autocomplete="current-password" spellcheck="false">' +
-      '<p class="admin-dialog-error" role="alert"></p>' +
-      '<div class="admin-dialog-actions">' +
-      '<button type="button" class="admin-dialog-btn admin-dialog-go">Log in</button>' +
-      '<button type="button" class="admin-dialog-btn admin-dialog-cancel">Cancel</button>' +
-      "</div></div>";
+      '<div class="ticket ticket-dark">' +
+      '<div class="ticket-main">' +
+      '<p class="ticket-kicker">Ian&rsquo;s Site <span>·</span> Stage Door</p>' +
+      '<h2 class="ticket-title">Backstage</h2>' +
+      '<label class="ticket-label" for="admin-pw">Password</label>' +
+      '<input id="admin-pw" class="ticket-input admin-dialog-input" type="password" autocomplete="current-password" spellcheck="false">' +
+      '<p class="ticket-error admin-dialog-error" role="alert"></p>' +
+      '<div class="ticket-actions">' +
+      '<button type="button" class="btn btn-primary admin-dialog-go">Let me in</button>' +
+      '</div></div>' +
+      '<div class="ticket-stub"><span class="ticket-stub-text">All Access</span>' +
+      '<button type="button" class="ticket-close admin-dialog-cancel" aria-label="Close">' +
+      '<svg class="icon" viewBox="0 0 256 256" width="1em" height="1em" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>' +
+      '</button></div></div>';
     document.body.append(d);
     return d;
   }

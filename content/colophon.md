@@ -4,8 +4,6 @@ description = "How iancheung.dev is made: type, colour, icons, and the rules tha
 template = "colophon.html"
 +++
 
-<p class="aside">Draft. The facts are right, the voice is not mine yet.</p>
-
 This page is the rulebook for the site. If something on another page breaks a rule here, the page is wrong, not the rule.
 
 ## type
@@ -28,17 +26,18 @@ Rules:
 
 ## colour
 
-One accent, a small set of neutrals, nothing else. Components never introduce their own colours.
+One accent per mode, a small set of neutrals, nothing else. Components never introduce their own colours.
 
 {{ swatches(tokens="green, green-ink, green-tint, paper, surface, ink, ink-muted, ink-faint, line, code-bg") }}
 
-- `green` is the accent, for underlines, active states, the odd highlight. `green-ink` is the same green dark enough to read as text on paper.
+- `accent` is navy (`rgb(4, 58, 116)`) in light mode, the colour the site has had since the first version, and `green` in dark mode. It is used for section labels, active links, the explorer marker, the odd highlight. `accent-tint` is the same colour at 10% for hover backgrounds.
+- `green` stays the colour of the hero on every page (the header bar is always on a photo, so the underline and the hover state there are green in both modes). `green-ink` is the same green dark enough to read as text on paper.
 - `paper` is the page, `surface` is anything that sits on the page (cards, dialogs, editor panes).
 - Light mode keeps today's values exactly. Dark mode keeps the hue of the green but lowers its saturation so it stops glowing on black.
 
-### the dark green (decision pending)
+### the dark green
 
-Click a candidate to preview it on this page in dark mode. The site currently uses B. The choice is Ian's.
+Click a candidate to preview it on this page in dark mode. The site uses B.
 
 {{ green_candidates() }}
 

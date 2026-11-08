@@ -15,6 +15,8 @@
   --green: rgb(24, 210, 110);                 /* the accent, unchanged */
   --green-ink: rgb(23, 130, 73);              /* accent as text on paper */
   --green-tint: rgba(24, 210, 110, 0.16);     /* highlights, selection, hover fills */
+  --accent: rgb(4, 58, 116);                  /* labels, active nav, links: navy on paper */
+  --accent-tint: rgba(4, 58, 116, 0.10);
   --paper: rgb(246, 245, 240);                /* page background */
   --surface: rgb(255, 255, 255);              /* cards, dialogs, editor panes */
   --ink: rgb(0, 0, 0);                        /* primary text */
@@ -43,6 +45,8 @@
   --green: rgb(89, 197, 139);                 /* same hue, less saturation and glare */
   --green-ink: rgb(121, 205, 158);
   --green-tint: rgba(89, 197, 139, 0.18);
+  --accent: var(--green);                     /* dark mode: the green takes over */
+  --accent-tint: var(--green-tint);
   --paper: rgb(0, 0, 0);
   --surface: rgb(20, 21, 20);
   --ink: rgb(246, 245, 240);
@@ -75,4 +79,5 @@
   --folder-name-font: var(--font-display);
   --file-name-font: var(--font-tree);
   --story-code-bg: var(--code-bg);
+  --header-text-color: var(--accent);
 }

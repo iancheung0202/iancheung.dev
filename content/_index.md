@@ -4,6 +4,17 @@ description = "Ian Cheung is a sophomore at UC Berkeley, currently studying Appl
 template = "home.html"
 
 [extra]
+# role chips on the home card, in order. colours are chosen to read on both paper and black.
+roles = [
+  { name = "Full-stack developer", color = "rgb(72, 136, 214)" },
+  { name = "Data engineer", color = "rgb(232, 160, 52)" },
+  { name = "Social media manager", color = "rgb(222, 92, 128)" },
+  { name = "Hong Konger", color = "rgb(206, 62, 62)" },
+  { name = "UC Berkeley", color = "rgb(253, 181, 21)" },
+  { name = "Violinist", color = "rgb(146, 104, 206)" },
+  { name = "Cyclist", color = "rgb(252, 82, 0)" },
+]
+
 # social links in the hero, in order. `menu` turns the icon into a small list.
 [[extra.socials]]
 id = "email-icon-link"
@@ -59,7 +70,7 @@ menu = [
 [[extra.socials]]
 id = "strava-icon-link"
 label = "Strava"
-icon = "sneaker-move"
+icon = "bicycle"
 href = "https://www.strava.com/athletes/126909167"
 +++
 

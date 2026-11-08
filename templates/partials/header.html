@@ -1,0 +1,83 @@
+{% import "macros/ui.html" as ui %}
+{% set here = current_path | default(value="/") %}
+    <header id="header" class="{% if not hero %}header-top{% endif %}">
+      <div class="header-photo"></div>
+      <div class="container hero">
+        <div class="hero-main">
+        <h1>
+          <a>Ian Cheung</a>
+          <span class="h1-tools">
+            <span class="tooltips" id="btn-code" data-tip="Toggle Nerd Mode"><a>{{ ui::icon(name="code") }}</a></span>
+            <span class="tooltips" id="btn-play" data-tip="Toggle Music &amp; Confetti"><a>{{ ui::icon(name="music-notes") }}</a></span>
+            <span class="tooltips" id="toggle-button" data-tip="Enable Dark Mode"><a>{{ ui::icon(name="sun", class="when-light") }}{{ ui::icon(name="moon", class="when-dark") }}</a></span>
+          </span>
+        </h1>
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link{% if here == "/" %} active{% endif %}" href="/" id="home" data-pitch="C4">home</a></li>
+            <li class="nav-divider page">/</li>
+            <li><a class="non-nav-link page{% if here is starting_with("/story/") %} active{% endif %}" href="/story/" id="nav-story" data-pitch="E4">story</a></li>
+            <li class="nav-divider page">/</li>
+            <li><a class="non-nav-link page{% if here is starting_with("/wall/") %} active{% endif %}" href="/wall/" id="nav-notes" data-pitch="G4">wall</a></li>
+            <li class="nav-divider page">/</li>
+            <li><a class="nav-link page{% if here is starting_with("/class/") %} active{% endif %}" href="/class/" id="nav-class" data-pitch="Bb4">class</a></li>
+            <li class="nav-divider page">/</li>
+            <li><a class="non-nav-link page" href="/resume.pdf" data-pitch="C5" id="resume-nav-link">resume</a></li>
+          </ul>
+          <button class="mobile-nav-toggle" id="mobile-nav-toggle" type="button" aria-label="Menu" aria-expanded="false">{{ ui::icon(name="list", class="when-closed") }}{{ ui::icon(name="x", class="when-open") }}</button>
+        </nav>
+        {% if hero %}
+        <div class="intro">
+          {{ section.content | safe }}
+        </div>
+        <div class="social-links">
+          {% for s in section.extra.socials %}
+          {% if s.menu %}
+          <div class="social-dropdown">
+            <a href="#" id="{{ s.id }}" class="has-menu" data-tip="{{ s.label }}" aria-label="{{ s.label }}" aria-haspopup="true" aria-expanded="false">{{ ui::icon(name=s.icon) }}<span class="social-caret" aria-hidden="true">{{ ui::icon(name="caret-down") }}</span></a>
+            <ul class="social-dropdown-menu" role="menu">
+              {% for item in s.menu %}
+              <li role="none"><a role="menuitem" href="{{ item.1 }}" target="_blank" rel="noopener noreferrer">{{ item.0 }}{{ ui::icon(name="arrow-up-right") }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% else %}
+          <a href="{{ s.href }}" id="{{ s.id }}" data-tip="{{ s.label }}" aria-label="{{ s.label }}"{% if s.href is not starting_with("mailto:") %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ ui::icon(name=s.icon) }}</a>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+        </div>
+        {% if hero %}
+        <aside class="now-card" id="now-card" aria-label="What Ian is up to right now">
+          <div class="now-banner"></div>
+          <div class="now-head">
+            <div class="now-avatar-wrap">
+              <img class="now-avatar" id="now-avatar" src="https://cdn.discordapp.com/avatars/692254240290242601/f2629db9da31f30fb3b8738b39e7346f.png?size=128" alt="ian.">
+              <span class="now-status" id="now-status" data-status="offline" title="Offline"></span>
+            </div>
+            <div class="now-custom" id="now-custom"></div>
+          </div>
+          <div class="now-body">
+            <div class="now-name">ian.
+              <a class="now-badge" href="https://discord.gg/mysticraft" target="_blank" rel="noopener" title="MysticRaft"><img src="https://cdn.discordapp.com/clan-badges/1136662635039952988/2246b3310985976e65452a96219ee8f8.png?size=16" alt="">MYST</a>
+              <button class="now-copy" id="now-copy" type="button" title="Copy user ID" aria-label="Copy Discord user ID">{{ ui::icon(name="copy") }}</button>
+            </div>
+            <div class="now-handle">iancheung.dev <span aria-hidden="true">·</span> he/him</div>
+            <div class="now-feed" id="now-feed" hidden></div>
+            <ul class="now-roles" aria-label="Roles">
+              {% for r in section.extra.roles %}<li class="now-role" style="--role: {{ r.color }}">{{ r.name }}</li>{% endfor %}
+            </ul>
+            <form class="now-message" id="now-message" autocomplete="off" hidden>
+              <button class="now-message-who" id="now-message-who" type="button" hidden title="Signed in with Discord. Click to sign out." aria-label="Sign out of Discord"><img src="" alt=""></button>
+              <input class="now-message-input" id="now-message-input" type="text" maxlength="500" placeholder="Message @iancheung.dev" aria-label="Message Ian on Discord" enterkeyhint="send">
+              <span class="now-message-mark" aria-hidden="true">{{ ui::icon(name="discord-logo") }}</span>
+              <button class="now-message-send" type="submit" aria-label="Send">{{ ui::icon(name="paper-plane-right") }}</button>
+              <span class="now-message-done" aria-hidden="true">{{ ui::icon(name="check") }}</span>
+              <output class="now-message-note" id="now-message-note" for="now-message-input" aria-live="polite"></output>
+            </form>
+          </div>
+        </aside>
+        {% endif %}
+      </div>
+    </header>

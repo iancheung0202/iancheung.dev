@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% import "macros/explorer.html" as explorer %}
-{% block title %}{{ page.title }} / class / {{ config.title }}{% endblock title %}
+{% block title %}{{ config.title }} - Class{% endblock title %}
 {% block body_class %}has-explorer{% endblock body_class %}
 {% block head %}{% if page.content is containing("$") %}{% include "partials/katex.html" %}{% endif %}{% endblock head %}
 {% block content %}

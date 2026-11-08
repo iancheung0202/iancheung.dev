@@ -6,7 +6,7 @@ Personal site. Zola builds the pages, Flask serves them and adds the dynamic bit
 
 ```
 config.toml        zola settings
-content/           markdown. _index.md is home, wall.md, pricing.md, colophon.md,
+content/           markdown. _index.md is home, wall.md, colophon.md,
                    story/<folder>/<page>.md and class/<course>/... the explorers
                    (TOML front matter: title, weight, updated, [extra] icon)
 templates/         zola (tera) templates: base.html, home.html, wall.html,
@@ -31,7 +31,7 @@ main.py            entry point: python3 main.py
 git clone git@github.com:iancheung0202/iancheung.dev.git && cd iancheung.dev
 pip install -r requirements.txt     # flask, python-dotenv
 # zola: brew install zola  (or the release tarball from getzola.org, 0.21+)
-cp .env.example .env                # fill in FLASK_SECRET_KEY and PASSWORD
+cp .env.example .env                # fill in FLASK_SECRET_KEY and PASSWORD (Discord values optional, see "Message box")
 pre-commit install                  # formats python and fixes whitespace on commit
 ```
 
@@ -106,3 +106,12 @@ are referenced as `/story/<folder>/<file>`.
 See `/colophon` on the live site, or `content/colophon.md`. Tokens live in
 `static/css/tokens.css`; `static/css/style.css` is the older stylesheet that
 shrinks as pages move onto the tokens.
+
+## Message box
+
+The home card has a "Message @iancheung.dev" field. A visitor types, signs in with Discord once (a popup, `identify` scope only), and the text is posted to a webhook in a private channel with their Discord name, avatar and user id, so it is clear who wrote it. Three env values turn it on; without them the field is hidden:
+
+- `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET`: from the Discord developer portal. Under OAuth2 -> Redirects add `https://iancheung.dev/api/message/callback` (and `http://localhost:8085/api/message/callback` for local runs).
+- `MESSAGE_WEBHOOK_URL`: channel settings -> Integrations -> Webhooks in the channel the messages should land in.
+
+Limits: 500 characters, 20 messages per Discord user and 40 per IP every 10 minutes (flood protection only). Mentions in the text are never pinged.

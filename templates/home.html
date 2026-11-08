@@ -30,55 +30,8 @@
   </head>
   <body style="cursor: url('/img/custom-purple-cursor.png'), auto;">
     <audio id="audio" src="/audio/The Circadian Rhythm - Ian Cheung.m4a"></audio>
-    <header id="header">
-      <div class="header-photo"></div>
-      <div class="container hero">
-        <h1>
-          <a>Ian Cheung</a>
-          <span class="tooltips" id="btn-code" data-tip="Toggle Nerd Mode"><a>{{ ui::icon(name="code") }}</a></span>
-          <span class="tooltips" id="btn-play" data-tip="Toggle Music &amp; Confetti"><a>{{ ui::icon(name="music-notes") }}</a></span>
-          <span class="tooltips" id="toggle-button" data-tip="Enable Dark Mode"><a>{{ ui::icon(name="sun", class="when-light") }}{{ ui::icon(name="moon", class="when-dark") }}</a></span>
-        </h1>
-        <nav id="navbar" class="navbar">
-          <ul>
-            <li><a class="nav-link active" href="/" id="home" data-pitch="C4">home</a></li>
-            <li class="nav-divider page">/</li>
-            <li><a class="non-nav-link page" href="/story/" id="nav-story" data-pitch="E4">story</a></li>
-            <li class="nav-divider page">/</li>
-            <li><a class="non-nav-link page" href="/wall/" id="nav-notes" data-pitch="G4">wall</a></li>
-            <li class="nav-divider page">/</li>
-            <li><a class="nav-link page" href="/class/" id="nav-class" data-pitch="Bb4">class</a></li>
-            <li class="nav-divider page">/</li>
-            <li><a class="non-nav-link page" href="/resume.pdf" data-pitch="C5" id="resume-nav-link">resume</a></li>
-          </ul>
-          <button class="mobile-nav-toggle" id="mobile-nav-toggle" type="button" aria-label="Menu" aria-expanded="false">{{ ui::icon(name="list", class="when-closed") }}{{ ui::icon(name="x", class="when-open") }}</button>
-        </nav>
-        <div class="intro">
-          {{ section.content | safe }}
-        </div>
-        <p class="right-now" id="right-now" hidden>
-          <span class="right-now-dot" aria-hidden="true"></span>
-          <span class="right-now-label">right now</span>
-          <span class="right-now-text"></span>
-        </p>
-        <div class="social-links">
-          {% for s in section.extra.socials %}
-          {% if s.menu %}
-          <div class="social-dropdown">
-            <a href="#" id="{{ s.id }}" aria-label="{{ s.label }}" aria-haspopup="true" aria-expanded="false">{{ ui::icon(name=s.icon) }}</a>
-            <ul class="social-dropdown-menu">
-              {% for item in s.menu %}
-              <li><a href="{{ item.1 }}" target="_blank" rel="noopener noreferrer">{{ item.0 }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-          {% else %}
-          <a href="{{ s.href }}" id="{{ s.id }}" aria-label="{{ s.label }}"{% if s.href is not starting_with("mailto:") %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ ui::icon(name=s.icon) }}</a>
-          {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    </header>
+    {% set hero = true %}
+    {% include "partials/header.html" %}
 
     <div class="footer">
       <span id="photo-filename"></span>
