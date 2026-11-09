@@ -16,9 +16,9 @@
     <p class="section-label">story</p>
     <h2 class="section-heading">about me</h2>
     <p class="section-blurb">A small collection of pages about how I got here.</p>
-    {{ explorer::tree(root=root, current=page.path, kind="story") }}
+    {{ explorer::tree(root=root, current=page.path | default(value=first_folder.path), kind="story") }}
   </aside>
-  <article class="explorer-page" id="page" data-folder="{{ first_folder.components | last }}" data-slug="{{ page.slug }}">
+  <article class="explorer-page" id="page" data-folder="{{ first_folder.components | last }}"{% if page %} data-slug="{{ page.slug }}"{% endif %}>
     {% if page %}
     {{ explorer::page_head(folder=first_folder, page=page, kind="story") }}
     <div class="prose" id="page-content">{{ page.content | safe }}</div>

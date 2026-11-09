@@ -372,18 +372,33 @@ def zola(args: list[str], cwd: str) -> None:
         raise BuildError(detail[-1] if detail else "unknown error")
 
 
+def swap_in(fresh: str, live: str) -> None:
+    """Put a finished build where the site is served from. Renames when the
+    filesystem allows; in the container public/ starts out in the image layer,
+    which overlayfs will not rename, so that first time it is emptied instead."""
+    old = live + ".old"
+    shutil.rmtree(old, ignore_errors=True)
+    if os.path.isdir(live):
+        try:
+            os.rename(live, old)
+        except OSError:
+            shutil.rmtree(live)
+    try:
+        os.rename(fresh, live)
+    except OSError:
+        shutil.copytree(fresh, live)
+        shutil.rmtree(fresh, ignore_errors=True)
+    shutil.rmtree(old, ignore_errors=True)
+
+
 def rebuild() -> None:
     """Build next to public/ and swap it in, so a failed build never leaves the
     live site half-written."""
-    fresh, old = PUBLIC_DIR + ".new", PUBLIC_DIR + ".old"
+    fresh = PUBLIC_DIR + ".new"
     with BUILD_LOCK:
         shutil.rmtree(fresh, ignore_errors=True)
         zola(["build", "-o", fresh, "--force"], ROOT_DIR)
-        shutil.rmtree(old, ignore_errors=True)
-        if os.path.isdir(PUBLIC_DIR):
-            os.rename(PUBLIC_DIR, old)
-        os.rename(fresh, PUBLIC_DIR)
-        shutil.rmtree(old, ignore_errors=True)
+        swap_in(fresh, PUBLIC_DIR)
 
 
 @app.errorhandler(BuildError)
