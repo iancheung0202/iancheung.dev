@@ -373,8 +373,17 @@ def zola(args: list[str], cwd: str) -> None:
 
 
 def rebuild() -> None:
+    """Build next to public/ and swap it in, so a failed build never leaves the
+    live site half-written."""
+    fresh, old = PUBLIC_DIR + ".new", PUBLIC_DIR + ".old"
     with BUILD_LOCK:
-        zola(["build"], ROOT_DIR)
+        shutil.rmtree(fresh, ignore_errors=True)
+        zola(["build", "-o", fresh, "--force"], ROOT_DIR)
+        shutil.rmtree(old, ignore_errors=True)
+        if os.path.isdir(PUBLIC_DIR):
+            os.rename(PUBLIC_DIR, old)
+        os.rename(fresh, PUBLIC_DIR)
+        shutil.rmtree(old, ignore_errors=True)
 
 
 @app.errorhandler(BuildError)

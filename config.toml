@@ -3,4 +3,4 @@ title = "Ian Cheung"
 compile_sass = false
 build_search_index = false
 generate_feeds = false
-hard_link_static = true
+hard_link_static = false  # copies: the server rebuilds with content/ on another filesystem (docker bind mount), where hard links fail

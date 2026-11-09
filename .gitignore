@@ -12,3 +12,5 @@ todos.json
 notes/
 .flask_secret
 __pycache__/
+public.new/
+public.old/

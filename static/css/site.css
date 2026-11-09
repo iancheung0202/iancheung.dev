@@ -28,6 +28,8 @@ body {
 }
 a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 a:hover { color: var(--accent); }
+.prose a { color: var(--accent); text-decoration: none; }
+.prose a:hover { text-decoration: underline; }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 .icon { display: inline-block; vertical-align: -0.15em; fill: currentColor; }
 :root:not([data-theme="dark"]) .when-dark { display: none; }
